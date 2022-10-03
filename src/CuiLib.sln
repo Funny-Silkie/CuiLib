@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CuiLib", "CuiLib\CuiLib.csproj", "{C60F0822-30F9-4C43-A5C2-8C32A59B4B63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{89D59369-85F1-4369-8E13-0976F3C15F58}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C60F0822-30F9-4C43-A5C2-8C32A59B4B63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C60F0822-30F9-4C43-A5C2-8C32A59B4B63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C60F0822-30F9-4C43-A5C2-8C32A59B4B63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C60F0822-30F9-4C43-A5C2-8C32A59B4B63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89D59369-85F1-4369-8E13-0976F3C15F58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89D59369-85F1-4369-8E13-0976F3C15F58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89D59369-85F1-4369-8E13-0976F3C15F58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89D59369-85F1-4369-8E13-0976F3C15F58}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A01EC17C-7747-4B47-8C81-85A263ACA518}
+	EndGlobalSection
+EndGlobal
