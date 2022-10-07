@@ -6,10 +6,25 @@ namespace CuiLib.Options
     /// フラグを表すオプションです。
     /// </summary>
     [Serializable]
-    public class FlagOption : Option<bool>
+    public sealed class FlagOption : Option<bool>
     {
         /// <inheritdoc/>
         public override sealed bool IsValued => false;
+
+        /// <inheritdoc/>
+        public override string? RawValue => null;
+
+        /// <inheritdoc/>
+        public override bool Requied
+        {
+            get => false;
+            set
+            {
+            }
+        }
+
+        /// <inheritdoc/>
+        public override bool Value => ValueAvailable && DefaultValue;
 
         /// <summary>
         /// <see cref="FlagOption"/>の新しいインスタンスを初期化します。

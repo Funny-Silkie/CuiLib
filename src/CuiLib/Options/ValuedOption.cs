@@ -7,13 +7,8 @@ namespace CuiLib.Options
     /// </summary>
     /// <typeparam name="T">オプションの値の型</typeparam>
     [Serializable]
-    public abstract class ValuedOption<T> : Option<T>
+    public class ValuedOption<T> : Option<T>
     {
-        /// <summary>
-        /// デフォルトの値を取得または設定します。
-        /// </summary>
-        public T? DefaultValue { get; set; }
-
         /// <summary>
         /// 必須かどうかを取得または設定します。
         /// </summary>
@@ -21,6 +16,9 @@ namespace CuiLib.Options
 
         /// <inheritdoc/>
         public override bool IsValued => true;
+
+        /// <inheritdoc/>
+        public override sealed bool Requied { get; set; }
 
         /// <summary>
         /// <see cref="ValuedOption{T}"/>の新しいインスタンスを初期化します。

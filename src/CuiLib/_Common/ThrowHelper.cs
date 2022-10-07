@@ -2,6 +2,7 @@
 using System.IO;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using CuiLib.Options;
 
 namespace CuiLib
 {
@@ -249,7 +250,42 @@ namespace CuiLib
 
         #endregion Catch
 
-        #region Throw
+        #region ThrowAs
+
+        /// <summary>
+        /// オプションの値変換の失敗として<see cref="OptionParseException"/>をスローします。
+        /// </summary>
+        /// <param name="exception">変換時の例外</param>
+        public static void ThrowAsOptionParseFailed(Exception? exception)
+        {
+            throw new OptionParseException(exception?.Message, exception);
+        }
+
+        /// <summary>
+        /// 未入力のオプションとして<see cref="OptionParseException"/>をスローします。
+        /// </summary>
+        /// <param name="option">当該オプション</param>
+        public static void ThrowAsEmptyOption(Option? option)
+        {
+            if (option == null) return;
+
+            string message = "オプション";
+            if (option.FullName != null)
+            {
+                if (option.ShortName != null) message += $"'--{option.FullName}' ('-{option.ShortName}') ";
+                else message += $"'--{option.FullName}'";
+            }
+            else if (option.ShortName != null) message += $"'-{option.ShortName}'";
+            else return;
+
+            message += "を入力してください";
+
+            throw new OptionParseException(message);
+        }
+
+        #endregion ThrowAs
+
+        #region ThrowIf
 
         /// <summary>
         /// 文字列がnullまたか空文字であるかどうかを検証します。
@@ -288,6 +324,16 @@ namespace CuiLib
             if (index >= 0) throw new ArgumentException($"パスに使用できない文字'{path[index]}'が含まれています", name);
         }
 
-        #endregion Throw
+        /// <summary>
+        /// オプションの変換結果が無効であるかどうかを検証します。
+        /// </summary>
+        /// <param name="state">オプションの変換結果</param>
+        /// <exception cref="OptionParseException"><paramref name="state"/>が無効</exception>
+        public static void ThrowIfInvalidState(ValueCheckState state)
+        {
+            if (!state.IsValid) throw new OptionParseException(state.Error);
+        }
+
+        #endregion ThrowIf
     }
 }
