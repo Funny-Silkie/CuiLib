@@ -11,3 +11,6 @@ dotnet_diagnostic.IDE0130.severity = none
 
 # CS8963: CallerArgumentExpressionAttribute が無効なパラメーター名で適用されています。
 dotnet_diagnostic.CS8963.severity = error
+
+# IDE0046: 条件式に変換します
+dotnet_diagnostic.IDE0046.severity = silent
