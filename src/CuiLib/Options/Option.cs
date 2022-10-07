@@ -271,6 +271,7 @@ namespace CuiLib.Options
         {
             _rawValue = rawValue;
             _valueAvailable = true;
+            _ = ValueAvailable;
         }
     }
 }

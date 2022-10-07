@@ -24,7 +24,7 @@ namespace CuiLib.Options
         }
 
         /// <inheritdoc/>
-        public override bool Value => ValueAvailable && DefaultValue;
+        public override bool Value => ValueAvailable || DefaultValue;
 
         /// <summary>
         /// <see cref="FlagOption"/>の新しいインスタンスを初期化します。

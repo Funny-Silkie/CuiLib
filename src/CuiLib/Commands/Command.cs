@@ -87,7 +87,7 @@ namespace CuiLib.Commands
         {
             Option? currentOption = null;
             string? currentOptionName = null;
-            int commandIndex = -1;
+            int lastIndex = -1;
             for (int i = 0; i < args.Length; i++)
             {
                 string argument = args[i];
@@ -107,14 +107,18 @@ namespace CuiLib.Commands
                             currentOption = option;
                             currentOptionName = argument;
                         }
-                        else option.SetValue(null);
+                        else
+                        {
+                            if (option.ValueAvailable) throw new ArgumentAnalysisException($"オプション'{argument}'が複数指定されています");
+                            option.SetValue(null);
+                        }
                         continue;
                     }
 
                     // --XXX
                     if (argument[1] == '-')
                     {
-                        if (argument.Length < 3 || argument[2] != '-') throw new ArgumentAnalysisException($"オプション'{argument}'は無効です");
+                        if (argument.Length < 3 || argument[1] != '-') throw new ArgumentAnalysisException($"オプション'{argument}'は無効です");
                         if (!Options.TryGetValue(argument[2..], out Option? option)) throw new ArgumentAnalysisException($"オプション'{argument}'は無効です");
                         if (currentOption is not null) throw new ArgumentAnalysisException($"オプション'{currentOptionName}'に値が設定されていません");
                         if (option.IsValued)
@@ -122,35 +126,45 @@ namespace CuiLib.Commands
                             currentOption = option;
                             currentOptionName = argument;
                         }
-                        else option.SetValue(null);
+                        else
+                        {
+                            if (option.ValueAvailable) throw new ArgumentAnalysisException($"オプション'{argument}'が複数指定されています");
+                            option.SetValue(null);
+                        }
                         continue;
                     }
 
-                    if (currentOption is not null)
-                    {
-                        currentOption.SetValue(argument);
-                        currentOption = null;
-                        currentOptionName = null;
-                        continue;
-                    }
-
-                    commandIndex = i + 1;
-                    break;
+                    throw new ArgumentAnalysisException($"オプション'{argument}'は無効です");
                 }
+                if (currentOption is not null)
+                {
+                    if (currentOption.ValueAvailable) throw new ArgumentAnalysisException($"オプション'{currentOptionName}'が複数指定されています");
+                    currentOption.SetValue(argument);
+                    currentOption = null;
+                    currentOptionName = null;
+                    continue;
+                }
+
+                lastIndex = i;
+                break;
             }
 
             if (currentOption is not null) throw new ArgumentAnalysisException($"オプション'{currentOptionName}'に値が設定されていません");
 
-            ReadOnlySpan<string> values = commandIndex >= 0 && commandIndex < args.Length ? args[commandIndex..] : ReadOnlySpan<string>.Empty;
-
             if (Children.Count > 0)
             {
-                if (commandIndex < 0 || commandIndex >= Children.Count) throw new ArgumentAnalysisException("子コマンド名が指定されていません");
+                if (lastIndex < 0 || lastIndex >= Children.Count) throw new ArgumentAnalysisException("子コマンド名が指定されていません");
 
-                if (!Children.TryGetCommand(args[commandIndex], out Command? next)) throw new ArgumentAnalysisException($"コマンド'{args[commandIndex]}'は無効です");
+                if (!Children.TryGetCommand(args[lastIndex], out Command? next)) throw new ArgumentAnalysisException($"コマンド'{args[lastIndex]}'は無効です");
+                lastIndex++;
+                ReadOnlySpan<string> values = lastIndex >= 0 && lastIndex < args.Length ? args[lastIndex..] : ReadOnlySpan<string>.Empty;
                 next.Invoke(values);
             }
-            else Execute(values);
+            else
+            {
+                ReadOnlySpan<string> values = lastIndex >= 0 && lastIndex < args.Length ? args[lastIndex..] : ReadOnlySpan<string>.Empty;
+                Execute(values);
+            }
         }
 
         /// <summary>
