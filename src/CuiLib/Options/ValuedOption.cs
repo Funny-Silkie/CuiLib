@@ -18,7 +18,7 @@ namespace CuiLib.Options
         public override bool IsValued => true;
 
         /// <inheritdoc/>
-        public override sealed bool Requied { get; set; }
+        public override sealed bool Required { get; set; }
 
         /// <summary>
         /// <see cref="ValuedOption{T}"/>の新しいインスタンスを初期化します。

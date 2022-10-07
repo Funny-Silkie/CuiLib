@@ -2,8 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CuiLib.Options
 {
@@ -27,6 +25,21 @@ namespace CuiLib.Options
         /// オプションの説明を取得または設定します。
         /// </summary>
         public string? Description { get; set; }
+
+        /// <summary>
+        /// オプションが値をとるかどうかを取得します。
+        /// </summary>
+        public abstract bool IsValued { get; }
+
+        /// <summary>
+        /// 値を受け取ったかどうかを表す値を取得します。
+        /// </summary>
+        public abstract bool ValueAvailable { get; }
+
+        /// <summary>
+        /// 必須のオプションかどうかを取得または設定します。
+        /// </summary>
+        public abstract bool Required { get; set; }
 
         /// <summary>
         /// <see cref="Option"/>の新しいインスタンスを初期化します。
@@ -64,6 +77,17 @@ namespace CuiLib.Options
             FullName = fullName;
             ShortName = shortName.ToString();
         }
+
+        /// <summary>
+        /// 設定されている値をクリアします。
+        /// </summary>
+        internal abstract void ClearValue();
+
+        /// <summary>
+        /// 値を設定します。
+        /// </summary>
+        /// <param name="rawValue">文字列としての値</param>
+        internal abstract void SetValue(string? rawValue);
     }
 
     /// <summary>
@@ -74,11 +98,6 @@ namespace CuiLib.Options
     public abstract class Option<T> : Option
     {
         /// <summary>
-        /// オプションが値をとるかどうかを取得します。
-        /// </summary>
-        public abstract bool IsValued { get; }
-
-        /// <summary>
         /// 文字列としての値を取得します。
         /// </summary>
         public virtual string? RawValue => _rawValue;
@@ -88,17 +107,14 @@ namespace CuiLib.Options
         /// <summary>
         /// 値を受け取ったかどうかを表す値を取得します。
         /// </summary>
-        public bool ValueAvailable { get; private set; }
+        public override sealed bool ValueAvailable => _valueAvailable;
+
+        private bool _valueAvailable;
 
         /// <summary>
         /// デフォルトの値を取得または設定します。
         /// </summary>
         public T? DefaultValue { get; set; }
-
-        /// <summary>
-        /// 必須のオプションかどうかを取得または設定します。
-        /// </summary>
-        public abstract bool Requied { get; set; }
 
         /// <summary>
         /// 値の妥当性を検証する関数を取得または設定します。
@@ -121,7 +137,7 @@ namespace CuiLib.Options
         /// <summary>
         /// オプションの値を取得します。
         /// </summary>
-        /// <exception cref="OptionParseException">値の変換に失敗-または-変換後の値が無効</exception>
+        /// <exception cref="ArgumentAnalysisException">値の変換に失敗-または-変換後の値が無効</exception>
         public virtual T? Value
         {
             get
@@ -241,9 +257,9 @@ namespace CuiLib.Options
         /// <summary>
         /// 設定されている値をクリアします。
         /// </summary>
-        internal void ClearValue()
+        internal override void ClearValue()
         {
-            ValueAvailable = false;
+            _valueAvailable = false;
             _rawValue = null;
         }
 
@@ -251,10 +267,10 @@ namespace CuiLib.Options
         /// 値を設定します。
         /// </summary>
         /// <param name="rawValue">文字列としての値</param>
-        internal void SetValue(string? rawValue)
+        internal override void SetValue(string? rawValue)
         {
             _rawValue = rawValue;
-            ValueAvailable = true;
+            _valueAvailable = true;
         }
     }
 }

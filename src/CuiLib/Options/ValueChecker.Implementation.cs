@@ -58,7 +58,7 @@ namespace CuiLib.Options
                 {
                     return func.Invoke(value);
                 }
-                catch (Exception e) when (e is not OptionParseException)
+                catch (Exception e) when (e is not ArgumentAnalysisException)
                 {
                     ThrowHelper.ThrowAsOptionParseFailed(e);
                     return default;

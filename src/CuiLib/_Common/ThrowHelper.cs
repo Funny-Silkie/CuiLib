@@ -253,16 +253,16 @@ namespace CuiLib
         #region ThrowAs
 
         /// <summary>
-        /// オプションの値変換の失敗として<see cref="OptionParseException"/>をスローします。
+        /// オプションの値変換の失敗として<see cref="ArgumentAnalysisException"/>をスローします。
         /// </summary>
         /// <param name="exception">変換時の例外</param>
         public static void ThrowAsOptionParseFailed(Exception? exception)
         {
-            throw new OptionParseException(exception?.Message, exception);
+            throw new ArgumentAnalysisException(exception?.Message, exception);
         }
 
         /// <summary>
-        /// 未入力のオプションとして<see cref="OptionParseException"/>をスローします。
+        /// 未入力のオプションとして<see cref="ArgumentAnalysisException"/>をスローします。
         /// </summary>
         /// <param name="option">当該オプション</param>
         public static void ThrowAsEmptyOption(Option? option)
@@ -280,7 +280,7 @@ namespace CuiLib
 
             message += "を入力してください";
 
-            throw new OptionParseException(message);
+            throw new ArgumentAnalysisException(message);
         }
 
         #endregion ThrowAs
@@ -328,10 +328,10 @@ namespace CuiLib
         /// オプションの変換結果が無効であるかどうかを検証します。
         /// </summary>
         /// <param name="state">オプションの変換結果</param>
-        /// <exception cref="OptionParseException"><paramref name="state"/>が無効</exception>
+        /// <exception cref="ArgumentAnalysisException"><paramref name="state"/>が無効</exception>
         public static void ThrowIfInvalidState(ValueCheckState state)
         {
-            if (!state.IsValid) throw new OptionParseException(state.Error);
+            if (!state.IsValid) throw new ArgumentAnalysisException(state.Error);
         }
 
         #endregion ThrowIf
