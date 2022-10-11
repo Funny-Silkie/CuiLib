@@ -1,4 +1,4 @@
-﻿using CuiLib.Commands;
+using CuiLib.Commands;
 using CuiLib.Options;
 using NUnit.Framework;
 using System;
@@ -18,9 +18,10 @@ namespace Test
             string[] args = new[] { "A", "B", "C" };
 
             var main = new MainCommand();
+            Parameter<string> param = main.Parameters.CreateandAppendArray<string>();
             main.Invoke(args);
 
-            Assert.That(Enumerable.SequenceEqual(args, main.Arguments!), Is.True);
+            Assert.That(Enumerable.SequenceEqual(args, param.Values!), Is.True);
         }
 
         [Test]
@@ -31,9 +32,10 @@ namespace Test
             var parent = new Command("parent");
             var main = new MainCommand();
             parent.Children.Add(main);
+            Parameter<string> param = main.Parameters.CreateandAppendArray<string>();
             parent.Invoke(args);
 
-            Assert.That(Enumerable.SequenceEqual(args[1..], main.Arguments!), Is.True);
+            Assert.That(Enumerable.SequenceEqual(args[1..], param.Values!), Is.True);
         }
 
         [Test]
@@ -53,9 +55,11 @@ namespace Test
             main.Options.Add(opValue1);
             main.Options.Add(opValue2);
 
+            Parameter<string> param = main.Parameters.CreateandAppendArray<string>();
+
             main.Invoke(args);
 
-            Assert.That(Enumerable.SequenceEqual(main.Arguments!, new[] { "A", "B", "C" }), Is.True);
+            Assert.That(Enumerable.SequenceEqual(param.Values!, new[] { "A", "B", "C" }), Is.True);
             Assert.That(opFlag1.Value, Is.True);
             Assert.That(opFlag2.Value, Is.False);
             Assert.That(opValue1.Value, Is.EqualTo(1));
@@ -80,11 +84,13 @@ namespace Test
             main.Options.Add(opValue1);
             main.Options.Add(opValue2);
 
+            Parameter<string> param = main.Parameters.CreateandAppendArray<string>();
+
             parent.Children.Add(main);
 
             parent.Invoke(args);
 
-            Assert.That(Enumerable.SequenceEqual(main.Arguments!, new[] { "A", "B", "C" }), Is.True);
+            Assert.That(Enumerable.SequenceEqual(param.Values!, new[] { "A", "B", "C" }), Is.True);
             Assert.That(opFlag1.Value, Is.True);
             Assert.That(opFlag2.Value, Is.False);
             Assert.That(opValue1.Value, Is.EqualTo(1));
@@ -93,15 +99,12 @@ namespace Test
 
         private sealed class MainCommand : Command
         {
-            public string[]? Arguments { get; private set; }
-
             public MainCommand() : base("main")
             {
             }
 
-            protected override void Execute(ReadOnlySpan<string> args)
+            protected override void Execute()
             {
-                Arguments = args.ToArray();
             }
         }
     }

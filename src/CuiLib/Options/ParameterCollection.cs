@@ -1,0 +1,258 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+
+namespace CuiLib.Options
+{
+    /// <summary>
+    /// パラメータのコレクションのクラスです。
+    /// </summary>
+    [Serializable]
+    public class ParameterCollection : ICollection<Parameter>, IReadOnlyCollection<Parameter>, ICollection
+    {
+        private int arrayStart = -1;
+        private readonly SortedList<int, Parameter> items;
+
+        /// <inheritdoc/>
+        public int Count => items.Count;
+
+        /// <summary>
+        /// <see cref="ParameterCollection"/>の新しいインスタンスを初期化します。
+        /// </summary>
+        public ParameterCollection()
+        {
+            items = new SortedList<int, Parameter>();
+        }
+
+        /// <summary>
+        /// 指定したインデックスの要素を取得します。
+        /// </summary>
+        /// <param name="index">インデックス</param>
+        /// <returns><paramref name="index"/>に対応する要素</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が無効な値</exception>
+        public Parameter this[int index]
+        {
+            get
+            {
+                ThrowHelper.ThrowIfNegative(index);
+
+                if (index < arrayStart) return items[arrayStart];
+                try
+                {
+                    return items[index];
+                }
+                catch (KeyNotFoundException)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(index), "無効なインデックスです");
+                }
+            }
+        }
+
+        /// <summary>
+        /// 値を設定します。
+        /// </summary>
+        /// <param name="values">設定する値</param>
+        internal void SetValues(ReadOnlySpan<string> values)
+        {
+            if (arrayStart == -1)
+            {
+                for (int i = 0; i < values.Length; i++) items[i].SetValue(values[i]);
+            }
+            else
+            {
+                for (int i = 0; i < arrayStart; ++i) items[i].SetValue(values[i]);
+                items[arrayStart].SetValue(values[arrayStart..]);
+            }
+        }
+
+        #region Collection Opreation
+
+        /// <summary>
+        /// 空きインデックスを取得します。
+        /// </summary>
+        /// <returns>空きインデックス。存在しない場合は-1</returns>
+        private int GetNextIndex()
+        {
+            int result = 0;
+            foreach ((int index, _) in items)
+            {
+                if (index != result) return result;
+                result++;
+            }
+            if (arrayStart != -1) return -1;
+            return result;
+        }
+
+        /// <summary>
+        /// 要素を追加します。
+        /// </summary>
+        /// <param name="parameter">追加するパラメータ</param>
+        /// <exception cref="ArgumentNullException"><paramref name="parameter"/>がnull</exception>
+        /// <exception cref="InvalidOperationException"><paramref name="parameter"/>が配列を表す且つ既に配列が含まれている</exception>
+        /// <exception cref="ArgumentException"><paramref name="parameter"/>のインデックスが配列の領域を指すまたはインデックスが衝突している</exception>
+        public void Add(Parameter parameter)
+        {
+            ArgumentNullException.ThrowIfNull(parameter);
+
+            if (arrayStart >= 0)
+            {
+                if (parameter.IsArray) throw new InvalidOperationException("既に配列が含まれています");
+                if (parameter.Index < arrayStart) throw new ArgumentException("配列に指定されているインデックスです", nameof(parameter));
+            }
+            if (parameter.IsArray) arrayStart = parameter.Index;
+            items.Add(parameter.Index, parameter);
+        }
+
+        /// <summary>
+        /// <see cref="Parameter{T}"/>の新しいインスタンスを生成して空きインデックスのうち先頭のものに追加します。
+        /// </summary>
+        /// <typeparam name="T">値の型</typeparam>
+        /// <returns>追加された<see cref="Parameter{T}"/>のインスタンス</returns>
+        /// <exception cref="InvalidOperationException">追加できる空きインデックスが存在しない</exception>
+        public Parameter<T> CreateAndAdd<T>()
+        {
+            int next = GetNextIndex();
+            if (next < 0) throw new InvalidOperationException("空きインデックスが存在しません");
+
+            Parameter<T> result = Parameter.Create<T>(next);
+            items.Add(next, result);
+            return result;
+        }
+
+        /// <summary>
+        /// <see cref="Parameter{T}"/>の新しいインスタンスを生成して末尾の空きインデックスに追加します。
+        /// </summary>
+        /// <typeparam name="T">値の型</typeparam>
+        /// <returns>追加された<see cref="Parameter{T}"/>のインスタンス</returns>
+        /// <exception cref="InvalidOperationException">配列が既に含まれている</exception>
+        public Parameter<T> CreateandAppendArray<T>()
+        {
+            if (arrayStart != -1) throw new InvalidOperationException("既に配列が含まれています");
+
+            int index = Count == 0 ? 0 : items.Keys[^1];
+            Parameter<T> result = Parameter.CreateAsArray<T>(index);
+            items.Add(index, result);
+            arrayStart = index;
+            return result;
+        }
+
+        /// <summary>
+        /// 指定した要素が格納されているかどうかを検証します。
+        /// </summary>
+        /// <param name="parameter">検索する要素</param>
+        /// <returns><paramref name="parameter"/>が格納されていたらtrue，それ以外でfalse</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="parameter"/>がnull</exception>
+        public bool Contains(Parameter parameter)
+        {
+            ArgumentNullException.ThrowIfNull(parameter);
+
+            return TryGetValue(parameter.Index, out Parameter? actual) && parameter == actual;
+        }
+
+        /// <summary>
+        /// 指定したインデックスに対応する要素が格納されているかどうかを検証します。
+        /// </summary>
+        /// <param name="index">検索する要素のインデックス</param>
+        /// <returns><paramref name="index"/>に対応する要素が格納されていたらtrue，それ以外でfalse</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
+        public bool ContainsAt(int index)
+        {
+            ThrowHelper.ThrowIfNegative(index);
+
+            return items.ContainsKey(index);
+        }
+
+        /// <summary>
+        /// 全ての要素を削除します。
+        /// </summary>
+        public void Clear()
+        {
+            if (Count == 0) return;
+
+            items.Clear();
+            arrayStart = -1;
+        }
+
+        /// <inheritdoc/>
+        public void CopyTo(Parameter[] array, int arrayIndex) => items.Values.CopyTo(array, arrayIndex);
+
+        /// <inheritdoc/>
+        public IEnumerator<Parameter> GetEnumerator() => items.Values.GetEnumerator();
+
+        /// <summary>
+        /// 指定した要素を削除します。
+        /// </summary>
+        /// <param name="parameter">削除する要素</param>
+        /// <returns><paramref name="parameter"/>を削除できたらtrue，それ以外でfalse</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="parameter"/>がnull</exception>
+        public bool Remove(Parameter parameter)
+        {
+            ArgumentNullException.ThrowIfNull(parameter);
+
+            if (!Contains(parameter) && items.Remove(parameter.Index)) return false;
+            if (parameter.IsArray) arrayStart = -1;
+            return true;
+        }
+
+        /// <summary>
+        /// 指定したインデックスの要素を削除します。
+        /// </summary>
+        /// <param name="index">インデックス</param>
+        /// <returns><paramref name="index"/>に対応する値を削除できたらtrue，それ以外でfalse</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
+        public bool RemoveAt(int index)
+        {
+            ThrowHelper.ThrowIfNegative(index);
+
+            if (!items.Remove(index, out Parameter? removed)) return false;
+            if (removed.IsArray) arrayStart = -1;
+            return true;
+        }
+
+        /// <summary>
+        /// 指定したインデックスの要素を取得します。
+        /// </summary>
+        /// <param name="index">インデックス</param>
+        /// <param name="parameter"><paramref name="index"/>に対応する要素。存在しなかったらnull</param>
+        /// <returns><paramref name="parameter"/>を取得できたらtrue，それ以外でfalse</returns>
+        public bool TryGetValue(int index, [NotNullWhen(true)] out Parameter? parameter)
+        {
+            if (index < 0)
+            {
+                parameter = null;
+                return false;
+            }
+            if (index < arrayStart)
+            {
+                parameter = items[arrayStart];
+                return true;
+            }
+            return items.TryGetValue(index, out parameter);
+        }
+
+        #region IEnumerable
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        #endregion IEnumerable
+
+        #region ICollection
+
+        bool ICollection.IsSynchronized => false;
+
+        object ICollection.SyncRoot => this;
+
+        #endregion ICollection
+
+        #region ICollection<T>
+
+        bool ICollection<Parameter>.IsReadOnly => false;
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)items.Values).CopyTo(array, index);
+
+        #endregion ICollection<T>
+
+        #endregion Collection Opreation
+    }
+}

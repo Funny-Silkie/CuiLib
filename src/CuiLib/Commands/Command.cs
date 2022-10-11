@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CuiLib.Options;
 
 namespace CuiLib.Commands
@@ -30,6 +30,11 @@ namespace CuiLib.Commands
         public CommandCollection Children { get; }
 
         /// <summary>
+        /// パラメータ引数を取得します。
+        /// </summary>
+        public ParameterCollection Parameters { get; }
+
+        /// <summary>
         /// <see cref="Command"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="name">コマンド名</param>
@@ -42,6 +47,7 @@ namespace CuiLib.Commands
             Name = name;
             Children = new CommandCollection(this);
             Options = new OptionCollection();
+            Parameters = new ParameterCollection();
         }
 
         /// <summary>
@@ -163,16 +169,16 @@ namespace CuiLib.Commands
             else
             {
                 ReadOnlySpan<string> values = lastIndex >= 0 && lastIndex < args.Length ? args[lastIndex..] : ReadOnlySpan<string>.Empty;
-                Execute(values);
+                Parameters.SetValues(values);
+                Execute();
             }
         }
 
         /// <summary>
         /// オーバーライドしてコマンドの処理を記述します。
         /// </summary>
-        /// <param name="args">コマンドライン引数</param>
         /// <remarks>子コマンドが存在する場合は実行されません</remarks>
-        protected virtual void Execute(ReadOnlySpan<string> args)
+        protected virtual void Execute()
         {
         }
     }

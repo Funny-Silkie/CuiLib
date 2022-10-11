@@ -256,6 +256,7 @@ namespace CuiLib
         /// オプションの値変換の失敗として<see cref="ArgumentAnalysisException"/>をスローします。
         /// </summary>
         /// <param name="exception">変換時の例外</param>
+        [DoesNotReturn]
         public static void ThrowAsOptionParseFailed(Exception? exception)
         {
             throw new ArgumentAnalysisException(exception?.Message, exception);
@@ -281,6 +282,15 @@ namespace CuiLib
             message += "を入力してください";
 
             throw new ArgumentAnalysisException(message);
+        }
+
+        /// <summary>
+        /// 空のインスタンスとして<see cref="InvalidOperationException"/>をスローします。
+        /// </summary>
+        [DoesNotReturn]
+        public static void ThrowAsEmptyCollection()
+        {
+            throw new InvalidOperationException("インスタンスが空です");
         }
 
         #endregion ThrowAs
@@ -322,6 +332,50 @@ namespace CuiLib
         {
             int index = path.IndexOfAny(GetInvalidPathChars());
             if (index >= 0) throw new ArgumentException($"パスに使用できない文字'{path[index]}'が含まれています", name);
+        }
+
+        /// <summary>
+        /// 値が0未満であるかどうかを検証します。
+        /// </summary>
+        /// <param name="value">値</param>
+        /// <param name="name">引数名</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static void ThrowIfNegative(int value, [CallerArgumentExpression("value")] string? name = null)
+        {
+            if (value < 0) throw new ArgumentOutOfRangeException(name, $"値が0未満です ('{value}')");
+        }
+
+        /// <summary>
+        /// 値が0未満であるかどうかを検証します。
+        /// </summary>
+        /// <param name="value">値</param>
+        /// <param name="name">引数名</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static void ThrowIfNegative(long value, [CallerArgumentExpression("value")] string? name = null)
+        {
+            if (value < 0) throw new ArgumentOutOfRangeException(name, $"値が0未満です ('{value}')");
+        }
+
+        /// <summary>
+        /// 値が0未満であるかどうかを検証します。
+        /// </summary>
+        /// <param name="value">値</param>
+        /// <param name="name">引数名</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static void ThrowIfNegative(double value, [CallerArgumentExpression("value")] string? name = null)
+        {
+            if (value < 0) throw new ArgumentOutOfRangeException(name, $"値が0未満です ('{value}')");
+        }
+
+        /// <summary>
+        /// 値が0未満であるかどうかを検証します。
+        /// </summary>
+        /// <param name="value">値</param>
+        /// <param name="name">引数名</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static void ThrowIfNegative(decimal value, [CallerArgumentExpression("value")] string? name = null)
+        {
+            if (value < 0) throw new ArgumentOutOfRangeException(name, $"値が0未満です ('{value}')");
         }
 
         /// <summary>
