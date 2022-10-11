@@ -15,6 +15,9 @@ namespace CuiLib.Options
         public override string? RawValue => null;
 
         /// <inheritdoc/>
+        public override string? ValueTypeName => null;
+
+        /// <inheritdoc/>
         public override bool Required
         {
             get => false;

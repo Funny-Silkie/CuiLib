@@ -108,14 +108,17 @@ namespace CuiLib.Options
         /// <see cref="Parameter{T}"/>の新しいインスタンスを生成して空きインデックスのうち先頭のものに追加します。
         /// </summary>
         /// <typeparam name="T">値の型</typeparam>
+        /// <param name="name">パラメータ名</param>
         /// <returns>追加された<see cref="Parameter{T}"/>のインスタンス</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/>がnull</exception>
+        /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         /// <exception cref="InvalidOperationException">追加できる空きインデックスが存在しない</exception>
-        public Parameter<T> CreateAndAdd<T>()
+        public Parameter<T> CreateAndAdd<T>(string name)
         {
             int next = GetNextIndex();
             if (next < 0) throw new InvalidOperationException("空きインデックスが存在しません");
 
-            Parameter<T> result = Parameter.Create<T>(next);
+            Parameter<T> result = Parameter.Create<T>(name, next);
             items.Add(next, result);
             return result;
         }
@@ -124,14 +127,17 @@ namespace CuiLib.Options
         /// <see cref="Parameter{T}"/>の新しいインスタンスを生成して末尾の空きインデックスに追加します。
         /// </summary>
         /// <typeparam name="T">値の型</typeparam>
+        /// <param name="name">パラメータ名</param>
         /// <returns>追加された<see cref="Parameter{T}"/>のインスタンス</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/>がnull</exception>
+        /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         /// <exception cref="InvalidOperationException">配列が既に含まれている</exception>
-        public Parameter<T> CreateandAppendArray<T>()
+        public Parameter<T> CreateAndAppendArray<T>(string name)
         {
             if (arrayStart != -1) throw new InvalidOperationException("既に配列が含まれています");
 
             int index = Count == 0 ? 0 : items.Keys[^1];
-            Parameter<T> result = Parameter.CreateAsArray<T>(index);
+            Parameter<T> result = Parameter.CreateAsArray<T>(name, index);
             items.Add(index, result);
             arrayStart = index;
             return result;

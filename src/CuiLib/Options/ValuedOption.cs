@@ -18,6 +18,9 @@ namespace CuiLib.Options
         public override bool IsValued => true;
 
         /// <inheritdoc/>
+        public override string? ValueTypeName => ValueConverter.GetValueTypeString<T>();
+
+        /// <inheritdoc/>
         public override sealed bool Required { get; set; }
 
         /// <summary>

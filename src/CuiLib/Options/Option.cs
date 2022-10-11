@@ -24,6 +24,11 @@ namespace CuiLib.Options
         public string? Description { get; set; }
 
         /// <summary>
+        /// 取得する値の種類を取得します。
+        /// </summary>
+        public abstract string? ValueTypeName { get; }
+
+        /// <summary>
         /// オプションが値をとるかどうかを取得します。
         /// </summary>
         public abstract bool IsValued { get; }

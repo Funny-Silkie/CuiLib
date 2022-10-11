@@ -14,7 +14,7 @@ namespace CuiLib.Options
         /// <summary>
         /// 文字列から値を変換します。
         /// </summary>
-        /// <typeparam name="T">オプションの値の型</typeparam>
+        /// <typeparam name="T">値の型</typeparam>
         /// <param name="value">文字列</param>
         /// <param name="error">変換時のエラー</param>
         /// <param name="result">変換後の値</param>
@@ -62,6 +62,38 @@ namespace CuiLib.Options
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// 値の種類を表す文字列を取得します。
+        /// </summary>
+        /// <typeparam name="T">値の型</typeparam>
+        /// <returns><typeparamref name="T"/>に対応する文字列。存在しない場合はnull</returns>
+        public static string? GetValueTypeString<T>()
+        {
+            var type = typeof(T);
+            if (type == typeof(string)) return "string";
+            else if (type == typeof(FileInfo)) return "file";
+            else if (type == typeof(DirectoryInfo)) return "directory";
+            else if (type == typeof(int)) return "int";
+            else if (type == typeof(sbyte)) return "int";
+            else if (type == typeof(double)) return "float";
+            else if (type == typeof(long)) return "long";
+            else if (type == typeof(ulong)) return "long";
+            else if (type == typeof(DateTime)) return "date time";
+            else if (type == typeof(short)) return "int";
+            else if (type == typeof(byte)) return "int";
+            else if (type == typeof(ushort)) return "int";
+            else if (type == typeof(uint)) return "uint";
+            else if (type == typeof(float)) return "float";
+            else if (type == typeof(decimal)) return "decimal";
+            else if (type == typeof(char)) return "char";
+            else if (type == typeof(bool)) return "bool";
+            else if (type == typeof(TimeSpan)) return "date time";
+            else if (type == typeof(DateOnly)) return "date";
+            else if (type == typeof(TimeOnly)) return "time";
+            else if (type.IsEnum) return "string";
+            return null;
         }
     }
 }

@@ -20,6 +20,11 @@ namespace CuiLib.Options
         public string? Description { get; set; }
 
         /// <summary>
+        /// パラメータ名を取得します。
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
         /// 配列かどうかを取得します。
         /// </summary>
         public bool IsArray { get; }
@@ -60,13 +65,18 @@ namespace CuiLib.Options
         /// <summary>
         /// <see cref="Parameter"/>の新しいインスタンスを初期化します。
         /// </summary>
+        /// <param name="name">パラメータ名</param>
         /// <param name="index">インデックス</param>
         /// <param name="isArray">配列かどうか</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/>がnull</exception>
+        /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
-        protected Parameter(int index, bool isArray)
+        protected Parameter(string name, int index, bool isArray)
         {
+            ThrowHelper.ThrowIfNullOrEmpty(name);
             ThrowHelper.ThrowIfNegative(index);
 
+            Name = name;
             Index = index;
             IsArray = isArray;
         }
@@ -75,19 +85,25 @@ namespace CuiLib.Options
         /// 単一の値をとる<see cref="Parameter{T}"/>の新しいインスタンスを生成します。
         /// </summary>
         /// <typeparam name="T">パラメータの値の型</typeparam>
+        /// <param name="name">パラメータ名</param>
         /// <param name="index">インデックス</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/>がnull</exception>
+        /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
         /// <returns>単一の値をとる<see cref="Parameter{T}"/>の新しいインスタンス</returns>
-        public static Parameter<T> Create<T>(int index) => new Parameter<T>(index, false);
+        public static Parameter<T> Create<T>(string name, int index) => new Parameter<T>(name, index, false);
 
         /// <summary>
         /// 配列をとしての<see cref="Parameter{T}"/>の新しいインスタンスを生成します。
         /// </summary>
         /// <typeparam name="T">パラメータの値の型</typeparam>
+        /// <param name="name">パラメータ名</param>
         /// <param name="index">インデックス</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/>がnull</exception>
+        /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
         /// <returns>配列をとしての<see cref="Parameter{T}"/>の新しいインスタンス</returns>
-        public static Parameter<T> CreateAsArray<T>(int index) => new Parameter<T>(index, true);
+        public static Parameter<T> CreateAsArray<T>(string name, int index) => new Parameter<T>(name, index, true);
 
         /// <summary>
         /// 設定されている値をクリアします。
@@ -171,11 +187,14 @@ namespace CuiLib.Options
         /// <summary>
         /// <see cref="Parameter{T}"/>の新しいインスタンスを初期化します。
         /// </summary>
+        /// <param name="name">パラメータ名</param>
         /// <param name="index">インデックス</param>
         /// <param name="isArray">配列かどうか</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/>がnull</exception>
+        /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
-        internal Parameter(int index, bool isArray)
-            : base(index, isArray)
+        internal Parameter(string name, int index, bool isArray)
+            : base(name, index, isArray)
         {
         }
     }

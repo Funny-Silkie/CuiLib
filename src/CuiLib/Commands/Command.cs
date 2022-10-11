@@ -1,4 +1,6 @@
-using System;
+﻿using System;
+using System.Linq;
+using CuiLib.Log;
 using CuiLib.Options;
 
 namespace CuiLib.Commands
@@ -13,6 +15,11 @@ namespace CuiLib.Commands
         /// コマンド名を取得します。
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// コマンドの説明を取得または設定します。
+        /// </summary>
+        public string? Description { get; set; }
 
         /// <summary>
         /// 親コマンドを取得します。
@@ -39,10 +46,9 @@ namespace CuiLib.Commands
         /// </summary>
         /// <param name="name">コマンド名</param>
         /// <exception cref="ArgumentNullException"><paramref name="name"/>がnull</exception>
-        /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         public Command(string name)
         {
-            ThrowHelper.ThrowIfNullOrEmpty(name);
+            ArgumentNullException.ThrowIfNull(name);
 
             Name = name;
             Children = new CommandCollection(this);
@@ -180,6 +186,136 @@ namespace CuiLib.Commands
         /// <remarks>子コマンドが存在する場合は実行されません</remarks>
         protected virtual void Execute()
         {
+        }
+
+        /// <summary>
+        /// ヘルプを表示します。
+        /// </summary>
+        /// <param name="logger">出力先</param>
+        /// <exception cref="ArgumentNullException"><paramref name="logger"/>がnull</exception>
+        public virtual void WriteHelp(Logger logger)
+        {
+            ArgumentNullException.ThrowIfNull(logger);
+
+            // Title
+            logger.WriteLine(Name);
+            logger.WriteLine();
+            logger.WriteLine("Description:");
+            logger.WriteLine(Description);
+            logger.WriteLine();
+
+            // Usage
+            logger.WriteLine("Usage:");
+            if (!string.IsNullOrEmpty(Name))
+            {
+                logger.Write(Name);
+                logger.Write(' ');
+            }
+            if (Options.Count > 0) logger.Write("[Options] ");
+            if (Children.Count > 0) logger.Write("[Subcommand]");
+            else if (Parameters.Count > 0)
+                foreach (Parameter current in Parameters)
+                {
+                    logger.Write(current.Name);
+                    if (current.IsArray) logger.Write("..");
+                    logger.Write(' ');
+                }
+            logger.WriteLine();
+            logger.WriteLine();
+
+            // Options
+            if (Options.Count > 0)
+            {
+                logger.WriteLine("Options:");
+                int maxNameLength = Options.Max(x => x.FullName?.Length ?? 0);
+                foreach (Option option in Options)
+                {
+                    logger.Write("  ");
+                    if (option.ShortName != null)
+                    {
+                        logger.Write('-');
+                        logger.Write(option.ShortName);
+                        if (option.FullName != null) logger.Write(", ");
+                        else logger.Write("  ");
+                    }
+                    else logger.Write("    ");
+                    if (option.FullName != null)
+                    {
+                        logger.Write("--");
+                        logger.Write(option.FullName);
+                        int surplus = maxNameLength - option.FullName.Length;
+                        if (surplus > 0) logger.Write(new string(' ', surplus));
+                    }
+                    else logger.Write(new string(' ', maxNameLength + 2));
+
+                    logger.Write(": ");
+
+                    string? desc = option.Description;
+                    if (option.ValueTypeName is not null) desc = $"type={option.ValueTypeName}\n" + desc;
+                    if (option.Required) desc += " (required)";
+                    string[] descriptions = desc?.Split('\n') ?? Array.Empty<string>();
+                    if (descriptions.Length > 0)
+                    {
+                        logger.WriteLine(descriptions[0]);
+                        for (int i = 1; i < descriptions.Length; i++)
+                        {
+                            logger.Write(new string(' ', maxNameLength + 10));
+                            logger.WriteLine(descriptions[i]);
+                        }
+                    }
+                }
+            }
+
+            // Subcommands
+            if (Children.Count > 0)
+            {
+                logger.WriteLine("Subcommands:");
+                int maxLength = Children.Max(x => x.Name.Length);
+                foreach (Command child in Children)
+                {
+                    logger.Write("  ");
+                    int surplus = maxLength - child.Name.Length;
+                    if (surplus > 0) logger.Write(new string(' ', surplus));
+                    logger.Write(child.Name);
+                    logger.Write(": ");
+
+                    string[] descriptions = child.Description?.Split('\n') ?? Array.Empty<string>();
+                    if (descriptions.Length > 0)
+                    {
+                        logger.WriteLine(descriptions[0]);
+                        for (int i = 1; i < descriptions.Length; i++)
+                        {
+                            logger.Write(new string(' ', maxLength + 4));
+                            logger.WriteLine(descriptions[i]);
+                        }
+                    }
+                }
+            }
+            // Parameters
+            else if (Parameters.Count > 0)
+            {
+                logger.WriteLine("Parameters:");
+                int maxLength = Parameters.Max(x => x.Name.Length);
+                foreach (Parameter parameter in Parameters)
+                {
+                    logger.Write("  ");
+                    int surplus = maxLength - parameter.Name.Length;
+                    if (surplus > 0) logger.Write(new string(' ', surplus));
+                    logger.Write(parameter.Name);
+                    logger.Write(": ");
+
+                    string[] descriptions = parameter.Description?.Split('\n') ?? Array.Empty<string>();
+                    if (descriptions.Length > 0)
+                    {
+                        logger.WriteLine(descriptions[0]);
+                        for (int i = 1; i < descriptions.Length; i++)
+                        {
+                            logger.Write(new string(' ', maxLength + 4));
+                            logger.WriteLine(descriptions[i]);
+                        }
+                    }
+                }
+            }
         }
     }
 }

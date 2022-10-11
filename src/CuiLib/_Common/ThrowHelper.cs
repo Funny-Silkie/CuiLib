@@ -304,7 +304,7 @@ namespace CuiLib
         /// <param name="name">引数名</param>
         /// <exception cref="ArgumentNullException"><paramref name="value"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="value"/>が空文字</exception>
-        public static void ThrowIfNullOrEmpty(string? value, [CallerArgumentExpression("value")] string? name = null)
+        public static void ThrowIfNullOrEmpty([NotNull] string? value, [CallerArgumentExpression("value")] string? name = null)
         {
             ArgumentNullException.ThrowIfNull(value, name);
             if (value.Length == 0) throw new ArgumentException("空文字です", name);
