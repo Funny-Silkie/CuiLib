@@ -163,28 +163,26 @@ namespace CuiLib.Commands
 
             if (currentOption is not null) throw new ArgumentAnalysisException($"オプション'{currentOptionName}'に値が設定されていません");
 
-            if (Children.Count > 0)
+            if (Children.Count > 0 && 0 <= lastIndex && lastIndex <= args.Length - 1 && Children.TryGetCommand(args[lastIndex], out Command? next))
             {
-                if (lastIndex < 0 || lastIndex >= Children.Count) throw new ArgumentAnalysisException("子コマンド名が指定されていません");
-
-                if (!Children.TryGetCommand(args[lastIndex], out Command? next)) throw new ArgumentAnalysisException($"コマンド'{args[lastIndex]}'は無効です");
                 lastIndex++;
                 ReadOnlySpan<string> values = lastIndex >= 0 && lastIndex < args.Length ? args[lastIndex..] : ReadOnlySpan<string>.Empty;
                 next.Invoke(values);
+                return;
             }
             else
             {
                 ReadOnlySpan<string> values = lastIndex >= 0 && lastIndex < args.Length ? args[lastIndex..] : ReadOnlySpan<string>.Empty;
                 Parameters.SetValues(values);
-                Execute();
+                OnExecution();
             }
         }
 
         /// <summary>
         /// オーバーライドしてコマンドの処理を記述します。
         /// </summary>
-        /// <remarks>子コマンドが存在する場合は実行されません</remarks>
-        protected virtual void Execute()
+        /// <remarks>子コマンドが実行された場合は実行されません</remarks>
+        protected virtual void OnExecution()
         {
         }
 

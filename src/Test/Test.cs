@@ -148,7 +148,7 @@ namespace Test
             {
             }
 
-            protected override void Execute()
+            protected override void OnExecution()
             {
             }
         }
