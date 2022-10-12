@@ -250,5 +250,108 @@ namespace CuiLib.Options
                 return ValueCheckState.AsError($"値が含まれていません。[{string.Join(", ", source)}]の何れかを選択してください");
             }
         }
+
+        /// <summary>
+        /// 文字列が空でないかを検証します。
+        /// </summary>
+        [Serializable]
+        private sealed class NotEmptyValueChecker : ValueChecker<string>
+        {
+            /// <summary>
+            /// <see cref="NotEmptyValueChecker"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            internal NotEmptyValueChecker()
+            {
+            }
+
+            /// <inheritdoc/>
+            public override ValueCheckState CheckValue(string? value)
+            {
+                if (string.IsNullOrEmpty(value)) return ValueCheckState.AsError("空文字です");
+                return ValueCheckState.Success;
+            }
+
+            /// <inheritdoc/>
+            public override bool Equals(object? obj) => obj is NotEmptyValueChecker;
+
+            /// <inheritdoc/>
+            public override int GetHashCode() => GetType().Name.GetHashCode();
+        }
+
+        /// <summary>
+        /// 文字列が指定の値で始まるかどうかを検証します。
+        /// </summary>
+        [Serializable]
+        private sealed class StartWithValueChecker : ValueChecker<string>
+        {
+            private readonly string comparison;
+
+            /// <summary>
+            /// <see cref="StartWithValueChecker"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="comparison">開始文字</param>
+            internal StartWithValueChecker(char comparison)
+            {
+                this.comparison = comparison.ToString();
+            }
+
+            /// <summary>
+            /// <see cref="StartWithValueChecker"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="comparison">開始文字列</param>
+            /// <exception cref="ArgumentNullException"><paramref name="comparison"/>がnull</exception>
+            /// <exception cref="ArgumentException"><paramref name="comparison"/>が空文字</exception>
+            internal StartWithValueChecker(string comparison)
+            {
+                ThrowHelper.ThrowIfNullOrEmpty(comparison);
+
+                this.comparison = comparison;
+            }
+
+            /// <inheritdoc/>
+            public override ValueCheckState CheckValue(string? value)
+            {
+                if (value is null || !value.StartsWith(comparison)) return ValueCheckState.AsError($"値は'{comparison}'で始まる必要があります");
+                return ValueCheckState.Success;
+            }
+        }
+
+        /// <summary>
+        /// 文字列が指定の値で終わるかどうかを検証します。
+        /// </summary>
+        [Serializable]
+        private sealed class EndWithValueChecker : ValueChecker<string>
+        {
+            private readonly string comparison;
+
+            /// <summary>
+            /// <see cref="EndWithValueChecker"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="comparison">終了文字</param>
+            internal EndWithValueChecker(char comparison)
+            {
+                this.comparison = comparison.ToString();
+            }
+
+            /// <summary>
+            /// <see cref="EndWithValueChecker"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="comparison">終了文字列</param>
+            /// <exception cref="ArgumentNullException"><paramref name="comparison"/>がnull</exception>
+            /// <exception cref="ArgumentException"><paramref name="comparison"/>が空文字</exception>
+            internal EndWithValueChecker(string comparison)
+            {
+                ThrowHelper.ThrowIfNullOrEmpty(comparison);
+
+                this.comparison = comparison;
+            }
+
+            /// <inheritdoc/>
+            public override ValueCheckState CheckValue(string? value)
+            {
+                if (value is null || !value.EndsWith(comparison)) return ValueCheckState.AsError($"値は'{comparison}'で終わる必要があります");
+                return ValueCheckState.Success;
+            }
+        }
     }
 }

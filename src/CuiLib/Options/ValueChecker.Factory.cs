@@ -155,5 +155,45 @@ namespace CuiLib.Options
         {
             return new ContainsValueChecker<TCollection, TElement>(source, comparer);
         }
+
+        /// <summary>
+        /// 文字列が指定の値で始まるかどうかを検証します。
+        /// </summary>
+        /// <param name="comparison">開始文字</param>
+        public static ValueChecker<string> StartWith(char comparison)
+        {
+            return new StartWithValueChecker(comparison);
+        }
+
+        /// <summary>
+        /// 文字列が指定の値で始まるかどうかを検証します。
+        /// </summary>
+        /// <param name="comparison">開始文字列</param>
+        /// <exception cref="ArgumentNullException"><paramref name="comparison"/>がnull</exception>
+        /// <exception cref="ArgumentException"><paramref name="comparison"/>が空文字</exception>
+        public static ValueChecker<string> StartWith(string comparison)
+        {
+            return new StartWithValueChecker(comparison);
+        }
+
+        /// <summary>
+        /// 文字列が指定の値で終わるかどうかを検証します。
+        /// </summary>
+        /// <param name="comparison">終了文字</param>
+        public static ValueChecker<string> EndWith(char comparison)
+        {
+            return new EndWithValueChecker(comparison);
+        }
+
+        /// <summary>
+        /// 文字列が指定の値で終わるかどうかを検証します。
+        /// </summary>
+        /// <param name="comparison">終了文字列</param>
+        /// <exception cref="ArgumentNullException"><paramref name="comparison"/>がnull</exception>
+        /// <exception cref="ArgumentException"><paramref name="comparison"/>が空文字</exception>
+        public static ValueChecker<string> EndWith(string comparison)
+        {
+            return new EndWithValueChecker(comparison);
+        }
     }
 }

@@ -97,8 +97,6 @@ namespace Test
         [Test]
         public void Help()
         {
-            string[] args = new[] { "main", "--flag1", "-n", "1", "A", "B", "C" };
-
             var parent = new Command("parent")
             {
                 Description = "Parent Command",
