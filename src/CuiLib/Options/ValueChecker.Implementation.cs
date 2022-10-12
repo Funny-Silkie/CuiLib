@@ -205,7 +205,7 @@ namespace CuiLib.Options
             public override ValueCheckState CheckValue(T value)
             {
                 if (Enum.IsDefined(value)) return ValueCheckState.Success;
-                return ValueCheckState.AsError($"定義されていない値です。'[{string.Join(", ", Enum.GetNames<T>())}]'の中から選択してください");
+                return ValueCheckState.AsError($"定義されていない値です。[{string.Join(", ", Enum.GetNames<T>())}]の中から選択してください");
             }
 
             /// <inheritdoc/>
@@ -247,7 +247,7 @@ namespace CuiLib.Options
             public override ValueCheckState CheckValue(TElement? value)
             {
                 if (source.Contains(value, comparer)) return ValueCheckState.Success;
-                return ValueCheckState.AsError($"値が含まれていません。['{string.Join(", ", source)}']の何れかを選択してください");
+                return ValueCheckState.AsError($"値が含まれていません。[{string.Join(", ", source)}]の何れかを選択してください");
             }
         }
     }
