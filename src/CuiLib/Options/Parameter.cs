@@ -176,6 +176,8 @@ namespace CuiLib.Options
                 _values = Array.ConvertAll(RawValues, x =>
                 {
                     if (!ValueConverter.Convert(x, out Exception? error, out T? result)) throw error;
+                    ValueCheckState state = Checker.CheckValue(result);
+                    ThrowHelper.ThrowIfInvalidState(state);
                     return result;
                 });
                 return _values;
@@ -183,6 +185,24 @@ namespace CuiLib.Options
         }
 
         private T?[]? _values;
+
+        /// <summary>
+        /// 値の妥当性を検証する関数を取得または設定します。
+        /// </summary>
+        /// <remarks>既定値では無条件でOK</remarks>
+        /// <exception cref="ArgumentNullException">設定しようとした値がnull</exception>
+        public ValueChecker<T> Checker
+        {
+            get => _checker;
+            set
+            {
+                ArgumentNullException.ThrowIfNull(_checker);
+
+                _checker = value;
+            }
+        }
+
+        private ValueChecker<T> _checker = ValueChecker.AlwaysSuccess<T>();
 
         /// <summary>
         /// <see cref="Parameter{T}"/>の新しいインスタンスを初期化します。
