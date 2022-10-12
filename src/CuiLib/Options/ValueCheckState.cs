@@ -43,7 +43,7 @@ namespace CuiLib.Options
         /// <returns>無効な結果を表すインスタンス</returns>
         public static ValueCheckState AsError(string? error)
         {
-            return new ValueCheckState(true, error);
+            return new ValueCheckState(false, error);
         }
 
         /// <inheritdoc/>
