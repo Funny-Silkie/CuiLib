@@ -157,6 +157,8 @@ namespace CuiLib.Options
 
                     return result;
                 }
+                if (Required) ThrowHelper.ThrowAsEmptyOption(this);
+
                 return DefaultValue;
             }
         }
