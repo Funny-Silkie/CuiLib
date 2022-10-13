@@ -157,6 +157,14 @@ namespace CuiLib.Options
         }
 
         /// <summary>
+        /// 文字列が空でないかを検証します。
+        /// </summary>
+        public static ValueChecker<string> NotEmpty()
+        {
+            return new NotEmptyValueChecker();
+        }
+
+        /// <summary>
         /// 文字列が指定の値で始まるかどうかを検証します。
         /// </summary>
         /// <param name="comparison">開始文字</param>
