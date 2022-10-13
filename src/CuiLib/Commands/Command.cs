@@ -251,6 +251,8 @@ namespace CuiLib.Commands
                     string? desc = option.Description;
                     if (option.ValueTypeName is not null) desc = $"type={option.ValueTypeName}\n" + desc;
                     if (option.Required) desc += " (required)";
+                    string? defaultValue = option.DefaultValueString;
+                    if (defaultValue is not null) desc += $"\n(Default: {defaultValue.ReplaceSpecialCharacters()})";
                     string[] descriptions = desc?.Split('\n') ?? Array.Empty<string>();
                     if (descriptions.Length > 0)
                     {

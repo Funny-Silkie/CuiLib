@@ -44,6 +44,11 @@ namespace CuiLib.Options
         public abstract bool Required { get; set; }
 
         /// <summary>
+        /// 既定値の文字列を取得します。
+        /// </summary>
+        internal abstract string? DefaultValueString { get; }
+
+        /// <summary>
         /// <see cref="Option"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="shortName">短縮名</param>
@@ -117,6 +122,9 @@ namespace CuiLib.Options
         /// デフォルトの値を取得または設定します。
         /// </summary>
         public T? DefaultValue { get; set; }
+
+        /// <inheritdoc/>
+        internal override sealed string? DefaultValueString => DefaultValue?.ToString();
 
         /// <summary>
         /// 値の妥当性を検証する関数を取得または設定します。
