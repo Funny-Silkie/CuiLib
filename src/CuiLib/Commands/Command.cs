@@ -196,11 +196,19 @@ namespace CuiLib.Commands
             ArgumentNullException.ThrowIfNull(logger);
 
             // Title
-            logger.WriteLine(Name);
-            logger.WriteLine();
-            logger.WriteLine("Description:");
-            logger.WriteLine(Description);
-            logger.WriteLine();
+            if (!string.IsNullOrEmpty(Name))
+            {
+                logger.WriteLine(Name);
+                logger.WriteLine();
+            }
+
+            // Description
+            if (!string.IsNullOrEmpty(Description))
+            {
+                logger.WriteLine("Description:");
+                logger.WriteLine(Description);
+                logger.WriteLine();
+            }
 
             // Usage
             logger.WriteLine("Usage:");
@@ -246,7 +254,7 @@ namespace CuiLib.Commands
                     }
                     else logger.Write(new string(' ', maxNameLength + 2));
 
-                    logger.Write(": ");
+                    logger.Write("  ");
 
                     string? desc = option.Description;
                     if (option.ValueTypeName is not null) desc = $"type={option.ValueTypeName}\n" + desc;
@@ -278,7 +286,7 @@ namespace CuiLib.Commands
                     int surplus = maxLength - child.Name.Length;
                     if (surplus > 0) logger.Write(new string(' ', surplus));
                     logger.Write(child.Name);
-                    logger.Write(": ");
+                    logger.Write("  ");
 
                     string[] descriptions = child.Description?.Split('\n') ?? Array.Empty<string>();
                     if (descriptions.Length > 0)
@@ -304,7 +312,7 @@ namespace CuiLib.Commands
                     int surplus = maxLength - parameter.Name.Length;
                     if (surplus > 0) logger.Write(new string(' ', surplus));
                     logger.Write(parameter.Name);
-                    logger.Write(": ");
+                    logger.Write("  ");
 
                     string[] descriptions = parameter.Description?.Split('\n') ?? Array.Empty<string>();
                     if (descriptions.Length > 0)
