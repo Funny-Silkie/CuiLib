@@ -252,7 +252,7 @@ namespace CuiLib.Commands
                     if (option.ValueTypeName is not null) desc = $"type={option.ValueTypeName}\n" + desc;
                     if (option.Required) desc += " (required)";
                     string? defaultValue = option.DefaultValueString;
-                    if (defaultValue is not null) desc += $"\n(Default: {defaultValue.ReplaceSpecialCharacters()})";
+                    if (defaultValue is not null && option is not FlagOption) desc += $"\n(Default: {defaultValue.ReplaceSpecialCharacters()})";
                     string[] descriptions = desc?.Split('\n') ?? Array.Empty<string>();
                     if (descriptions.Length > 0)
                     {
@@ -263,6 +263,7 @@ namespace CuiLib.Commands
                             logger.WriteLine(descriptions[i]);
                         }
                     }
+                    else logger.WriteLine();
                 }
             }
 
@@ -289,6 +290,7 @@ namespace CuiLib.Commands
                             logger.WriteLine(descriptions[i]);
                         }
                     }
+                    else logger.WriteLine();
                 }
             }
             // Parameters
@@ -314,6 +316,7 @@ namespace CuiLib.Commands
                             logger.WriteLine(descriptions[i]);
                         }
                     }
+                    else logger.WriteLine();
                 }
             }
         }
