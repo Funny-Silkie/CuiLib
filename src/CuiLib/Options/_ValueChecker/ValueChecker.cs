@@ -79,9 +79,14 @@ namespace CuiLib.Options
 
 #pragma warning disable CS1591 // 公開されている型またはメンバーの XML コメントがありません
 
-        public static ValueChecker<T> operator +(ValueChecker<T> left, ValueChecker<T> right)
+        public static ValueChecker<T> operator &(ValueChecker<T> left, ValueChecker<T> right)
         {
             return And(left, right);
+        }
+
+        public static ValueChecker<T> operator |(ValueChecker<T> left, ValueChecker<T> right)
+        {
+            return Or(left, right);
         }
 
 #pragma warning restore CS1591 // 公開されている型またはメンバーの XML コメントがありません
