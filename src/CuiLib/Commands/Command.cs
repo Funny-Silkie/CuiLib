@@ -257,10 +257,12 @@ namespace CuiLib.Commands
                     logger.Write("  ");
 
                     string? desc = option.Description;
-                    if (option.ValueTypeName is not null) desc = $"type={option.ValueTypeName}\n" + desc;
-                    if (option.Required) desc += " (required)";
+                    string header = string.Empty;
+                    if (option.ValueTypeName is not null) header += $"* type={option.ValueTypeName}";
                     string? defaultValue = option.DefaultValueString;
-                    if (defaultValue is not null && option is not FlagOption) desc += $"\n(Default: {defaultValue.ReplaceSpecialCharacters()})";
+                    if (defaultValue is not null && option is not FlagOption) header += $", default={defaultValue.ReplaceSpecialCharacters()}";
+                    if (option.Required) header += " (required)";
+                    if (!string.IsNullOrEmpty(header)) desc += '\n' + header;
                     string[] descriptions = desc?.Split('\n') ?? Array.Empty<string>();
                     if (descriptions.Length > 0)
                     {
