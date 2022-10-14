@@ -379,6 +379,19 @@ namespace CuiLib
         }
 
         /// <summary>
+        /// 列挙型が定義されていないかどうかを検証します。
+        /// </summary>
+        /// <typeparam name="TEnum">検証する列挙型</typeparam>
+        /// <param name="value">検証する値</param>
+        /// <param name="name">引数名</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/>が未定義の値</exception>
+        public static void ThrowIfNotDefined<TEnum>(TEnum value, [CallerArgumentExpression("value")] string? name = null)
+            where TEnum : struct, Enum
+        {
+            if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(name, "定義されていない列挙型の値です");
+        }
+
+        /// <summary>
         /// オプションの変換結果が無効であるかどうかを検証します。
         /// </summary>
         /// <param name="state">オプションの変換結果</param>

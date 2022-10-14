@@ -176,12 +176,36 @@ namespace CuiLib.Options
         /// <summary>
         /// 文字列が指定の値で始まるかどうかを検証します。
         /// </summary>
+        /// <param name="comparison">開始文字</param>
+        /// <param name="stringComparison">文字列の比較方法</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="stringComparison"/>が非定義の値</exception>
+        public static ValueChecker<string> StartWith(char comparison, StringComparison stringComparison)
+        {
+            return new StartWithValueChecker(comparison, stringComparison);
+        }
+
+        /// <summary>
+        /// 文字列が指定の値で始まるかどうかを検証します。
+        /// </summary>
         /// <param name="comparison">開始文字列</param>
         /// <exception cref="ArgumentNullException"><paramref name="comparison"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="comparison"/>が空文字</exception>
         public static ValueChecker<string> StartWith(string comparison)
         {
             return new StartWithValueChecker(comparison);
+        }
+
+        /// <summary>
+        /// 文字列が指定の値で始まるかどうかを検証します。
+        /// </summary>
+        /// <param name="comparison">開始文字列</param>
+        /// <param name="stringComparison">文字列の比較方法</param>
+        /// <exception cref="ArgumentNullException"><paramref name="comparison"/>がnull</exception>
+        /// <exception cref="ArgumentException"><paramref name="comparison"/>が空文字</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="stringComparison"/>が非定義の値</exception>
+        public static ValueChecker<string> StartWith(string comparison, StringComparison stringComparison)
+        {
+            return new StartWithValueChecker(comparison, stringComparison);
         }
 
         /// <summary>
@@ -196,12 +220,78 @@ namespace CuiLib.Options
         /// <summary>
         /// 文字列が指定の値で終わるかどうかを検証します。
         /// </summary>
+        /// <param name="comparison">終了文字</param>
+        /// <param name="stringComparison">文字列の比較方法</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="stringComparison"/>が非定義の値</exception>
+        public static ValueChecker<string> EndWith(char comparison, StringComparison stringComparison)
+        {
+            return new EndWithValueChecker(comparison, stringComparison);
+        }
+
+        /// <summary>
+        /// 文字列が指定の値で終わるかどうかを検証します。
+        /// </summary>
         /// <param name="comparison">終了文字列</param>
         /// <exception cref="ArgumentNullException"><paramref name="comparison"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="comparison"/>が空文字</exception>
         public static ValueChecker<string> EndWith(string comparison)
         {
             return new EndWithValueChecker(comparison);
+        }
+
+        /// <summary>
+        /// 文字列が指定の値で終わるかどうかを検証します。
+        /// </summary>
+        /// <param name="comparison">終了文字列</param>
+        /// <param name="stringComparison">文字列の比較方法</param>
+        /// <exception cref="ArgumentNullException"><paramref name="comparison"/>がnull</exception>
+        /// <exception cref="ArgumentException"><paramref name="comparison"/>が空文字</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="stringComparison"/>が非定義の値</exception>
+        public static ValueChecker<string> EndWith(string comparison, StringComparison stringComparison)
+        {
+            return new EndWithValueChecker(comparison, stringComparison);
+        }
+
+        /// <summary>
+        /// 値が等しいかどうかを検証します。
+        /// </summary>
+        /// <typeparam name="T">検証する値の型</typeparam>
+        /// <param name="comparison">比較対象</param>
+        public static ValueChecker<T> Equals<T>(T? comparison)
+        {
+            return new EqualsValueChecker<T>(null, comparison);
+        }
+
+        /// <summary>
+        /// 値が等しいかどうかを検証します。
+        /// </summary>
+        /// <typeparam name="T">検証する値の型</typeparam>
+        /// <param name="comparer">比較を行うオブジェクト。nullで<see cref="EqualityComparer{T}.Default"/></param>
+        /// <param name="comparison">比較対象</param>
+        public static ValueChecker<T> Equals<T>(T? comparison, IEqualityComparer<T>? comparer)
+        {
+            return new EqualsValueChecker<T>(comparer, comparison);
+        }
+
+        /// <summary>
+        /// 値が異なるかどうかを検証します。
+        /// </summary>
+        /// <typeparam name="T">検証する値の型</typeparam>
+        /// <param name="comparison">比較対象</param>
+        public static ValueChecker<T> NotEquals<T>(T? comparison)
+        {
+            return new NotEqualsValueChecker<T>(null, comparison);
+        }
+
+        /// <summary>
+        /// 値が異なるかどうかを検証します。
+        /// </summary>
+        /// <typeparam name="T">検証する値の型</typeparam>
+        /// <param name="comparer">比較を行うオブジェクト。nullで<see cref="EqualityComparer{T}.Default"/></param>
+        /// <param name="comparison">比較対象</param>
+        public static ValueChecker<T> NotEquals<T>(T? comparison, IEqualityComparer<T>? comparer)
+        {
+            return new NotEqualsValueChecker<T>(comparer, comparison);
         }
     }
 }

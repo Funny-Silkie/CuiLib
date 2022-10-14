@@ -285,33 +285,43 @@ namespace CuiLib.Options
         private sealed class StartWithValueChecker : ValueChecker<string>
         {
             private readonly string comparison;
+            private readonly StringComparison stringComparison;
 
             /// <summary>
             /// <see cref="StartWithValueChecker"/>の新しいインスタンスを初期化します。
             /// </summary>
             /// <param name="comparison">開始文字</param>
-            internal StartWithValueChecker(char comparison)
+            /// <param name="stringComparison">文字列の比較方法</param>
+            /// <exception cref="ArgumentOutOfRangeException"><paramref name="stringComparison"/>が非定義の値</exception>
+            internal StartWithValueChecker(char comparison, StringComparison stringComparison = StringComparison.CurrentCulture)
             {
+                ThrowHelper.ThrowIfNotDefined(stringComparison);
+
                 this.comparison = comparison.ToString();
+                this.stringComparison = stringComparison;
             }
 
             /// <summary>
             /// <see cref="StartWithValueChecker"/>の新しいインスタンスを初期化します。
             /// </summary>
             /// <param name="comparison">開始文字列</param>
+            /// <param name="stringComparison">文字列の比較方法</param>
             /// <exception cref="ArgumentNullException"><paramref name="comparison"/>がnull</exception>
             /// <exception cref="ArgumentException"><paramref name="comparison"/>が空文字</exception>
-            internal StartWithValueChecker(string comparison)
+            /// <exception cref="ArgumentOutOfRangeException"><paramref name="stringComparison"/>が非定義の値</exception>
+            internal StartWithValueChecker(string comparison, StringComparison stringComparison = StringComparison.CurrentCulture)
             {
                 ThrowHelper.ThrowIfNullOrEmpty(comparison);
+                ThrowHelper.ThrowIfNotDefined(stringComparison);
 
                 this.comparison = comparison;
+                this.stringComparison = stringComparison;
             }
 
             /// <inheritdoc/>
             public override ValueCheckState CheckValue(string? value)
             {
-                if (value is null || !value.StartsWith(comparison)) return ValueCheckState.AsError($"値は'{comparison}'で始まる必要があります");
+                if (value is null || !value.StartsWith(comparison, stringComparison)) return ValueCheckState.AsError($"値は'{comparison}'で始まる必要があります");
                 return ValueCheckState.Success;
             }
         }
@@ -323,34 +333,102 @@ namespace CuiLib.Options
         private sealed class EndWithValueChecker : ValueChecker<string>
         {
             private readonly string comparison;
+            private readonly StringComparison stringComparison;
 
             /// <summary>
             /// <see cref="EndWithValueChecker"/>の新しいインスタンスを初期化します。
             /// </summary>
             /// <param name="comparison">終了文字</param>
-            internal EndWithValueChecker(char comparison)
+            /// <param name="stringComparison">文字列の比較方法</param>
+            /// <exception cref="ArgumentOutOfRangeException"><paramref name="stringComparison"/>が非定義の値</exception>
+            internal EndWithValueChecker(char comparison, StringComparison stringComparison = StringComparison.CurrentCulture)
             {
+                ThrowHelper.ThrowIfNotDefined(stringComparison);
+
                 this.comparison = comparison.ToString();
+                this.stringComparison = stringComparison;
             }
 
             /// <summary>
             /// <see cref="EndWithValueChecker"/>の新しいインスタンスを初期化します。
             /// </summary>
             /// <param name="comparison">終了文字列</param>
+            /// <param name="stringComparison">文字列の比較方法</param>
             /// <exception cref="ArgumentNullException"><paramref name="comparison"/>がnull</exception>
             /// <exception cref="ArgumentException"><paramref name="comparison"/>が空文字</exception>
-            internal EndWithValueChecker(string comparison)
+            /// <exception cref="ArgumentOutOfRangeException"><paramref name="stringComparison"/>が非定義の値</exception>
+            internal EndWithValueChecker(string comparison, StringComparison stringComparison = StringComparison.CurrentCulture)
             {
                 ThrowHelper.ThrowIfNullOrEmpty(comparison);
+                ThrowHelper.ThrowIfNotDefined(stringComparison);
 
                 this.comparison = comparison;
+                this.stringComparison = stringComparison;
             }
 
             /// <inheritdoc/>
             public override ValueCheckState CheckValue(string? value)
             {
-                if (value is null || !value.EndsWith(comparison)) return ValueCheckState.AsError($"値は'{comparison}'で終わる必要があります");
+                if (value is null || !value.EndsWith(comparison, stringComparison)) return ValueCheckState.AsError($"値は'{comparison}'で終わる必要があります");
                 return ValueCheckState.Success;
+            }
+        }
+
+        /// <summary>
+        /// 値が等しいかどうかを検証します。
+        /// </summary>
+        /// <typeparam name="T">検証する値の型</typeparam>
+        [Serializable]
+        private sealed class EqualsValueChecker<T> : ValueChecker<T>
+        {
+            private readonly IEqualityComparer<T> comparer;
+            private readonly T? comparison;
+
+            /// <summary>
+            /// <see cref="EqualsValueChecker{T}"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="comparer">比較を行うオブジェクト。nullで<see cref="EqualityComparer{T}.Default"/></param>
+            /// <param name="comparison">比較対象</param>
+            internal EqualsValueChecker(IEqualityComparer<T>? comparer, T? comparison)
+            {
+                this.comparer = comparer ?? EqualityComparer<T>.Default;
+                this.comparison = comparison;
+            }
+
+            /// <inheritdoc/>
+            public override ValueCheckState CheckValue(T? value)
+            {
+                if (comparer.Equals(value, comparison)) return ValueCheckState.Success;
+                return ValueCheckState.AsError($"値は'{comparison}'と等しい必要があります");
+            }
+        }
+
+        /// <summary>
+        /// 値が異なるかどうかを検証します。
+        /// </summary>
+        /// <typeparam name="T">検証する値の型</typeparam>
+        [Serializable]
+        private sealed class NotEqualsValueChecker<T> : ValueChecker<T>
+        {
+            private readonly IEqualityComparer<T> comparer;
+            private readonly T? comparison;
+
+            /// <summary>
+            /// <see cref="NotEqualsValueChecker{T}"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="comparer">比較を行うオブジェクト。nullで<see cref="EqualityComparer{T}.Default"/></param>
+            /// <param name="comparison">比較対象</param>
+            internal NotEqualsValueChecker(IEqualityComparer<T>? comparer, T? comparison)
+            {
+                this.comparer = comparer ?? EqualityComparer<T>.Default;
+                this.comparison = comparison;
+            }
+
+            /// <inheritdoc/>
+            public override ValueCheckState CheckValue(T? value)
+            {
+                if (!comparer.Equals(value, comparison)) return ValueCheckState.Success;
+                return ValueCheckState.AsError($"値は'{comparison}'と異なる必要があります");
             }
         }
     }
