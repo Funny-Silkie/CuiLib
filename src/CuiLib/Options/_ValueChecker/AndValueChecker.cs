@@ -4,32 +4,32 @@ using System.Diagnostics.CodeAnalysis;
 namespace CuiLib.Options
 {
     /// <summary>
-    /// 複数の評価を実装します。
+    /// 複数の評価をAND結合で実行します。
     /// </summary>
     /// <typeparam name="T">検証する値の型</typeparam>
     [Serializable]
-    internal class CombinedValueChecker<T> : ValueChecker<T>
+    internal class AndValueChecker<T> : ValueChecker<T>
     {
         private ValueChecker<T>[] checkers;
 
         /// <summary>
-        /// <see cref="CombinedValueChecker{T}"/>の新しいインスタンスを初期化します。
+        /// <see cref="AndValueChecker{T}"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="first">最初の評価</param>
         /// <param name="second">2番目の評価</param>
         /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="second"/>がnull</exception>
-        internal CombinedValueChecker(ValueChecker<T> first, ValueChecker<T> second)
+        internal AndValueChecker(ValueChecker<T> first, ValueChecker<T> second)
         {
             Initialize(first, second);
         }
 
         /// <summary>
-        /// <see cref="CombinedValueChecker{T}"/>の新しいインスタンスを初期化します。
+        /// <see cref="AndValueChecker{T}"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="source">評価する関数のリスト</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
-        internal CombinedValueChecker(params ValueChecker<T>[] source)
+        internal AndValueChecker(params ValueChecker<T>[] source)
         {
             ArgumentNullException.ThrowIfNull(source);
 
@@ -54,9 +54,9 @@ namespace CuiLib.Options
             ArgumentNullException.ThrowIfNull(first);
             ArgumentNullException.ThrowIfNull(second);
 
-            if (first is CombinedValueChecker<T> c1)
+            if (first is AndValueChecker<T> c1)
             {
-                if (second is CombinedValueChecker<T> c2)
+                if (second is AndValueChecker<T> c2)
                 {
                     checkers = new ValueChecker<T>[c1.checkers.Length + c2.checkers.Length];
                     Array.Copy(c1.checkers, 0, checkers, 0, c1.checkers.Length);
@@ -69,7 +69,7 @@ namespace CuiLib.Options
                     checkers[^1] = second;
                 }
             }
-            else if (second is CombinedValueChecker<T> c2)
+            else if (second is AndValueChecker<T> c2)
             {
                 checkers = new ValueChecker<T>[c2.checkers.Length + 1];
                 checkers[0] = first;
@@ -93,7 +93,7 @@ namespace CuiLib.Options
                 ValueChecker<T> current = source[i];
                 if (current == null) throw new ArgumentException("要素がnullです", nameof(source));
 
-                length += current is CombinedValueChecker<T> c ? c.checkers.Length : 1;
+                length += current is AndValueChecker<T> c ? c.checkers.Length : 1;
             }
 
             checkers = new ValueChecker<T>[length];
@@ -102,7 +102,7 @@ namespace CuiLib.Options
             for (int i = 0; i < source.Length; i++)
             {
                 ValueChecker<T> current = source[i];
-                if (current is CombinedValueChecker<T> c)
+                if (current is AndValueChecker<T> c)
                 {
                     int currentLength = c.checkers.Length;
                     Array.Copy(c.checkers, 0, checkers, index, currentLength);

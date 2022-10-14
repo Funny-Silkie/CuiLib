@@ -27,6 +27,28 @@ namespace CuiLib.Options
         }
 
         /// <summary>
+        /// 複数の<see cref="ValueChecker{T}"/>をAND結合します。
+        /// </summary>
+        /// <param name="source">評価する関数のリスト</param>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
+        /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
+        public static ValueChecker<T> And<T>(params ValueChecker<T>[] source)
+        {
+            return ValueChecker<T>.And(source);
+        }
+
+        /// <summary>
+        /// 複数の<see cref="ValueChecker{T}"/>をOR結合します。
+        /// </summary>
+        /// <param name="source">評価する関数のリスト</param>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
+        /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
+        public static ValueChecker<T> Or<T>(params ValueChecker<T>[] source)
+        {
+            return OrValueChecker<T>.Or(source);
+        }
+
+        /// <summary>
         /// 値が対象より大きいかを検証します。
         /// </summary>
         /// <param name="comparison">比較対象</param>

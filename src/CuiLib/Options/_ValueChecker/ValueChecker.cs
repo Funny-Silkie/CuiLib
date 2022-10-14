@@ -17,32 +17,57 @@ namespace CuiLib.Options
         }
 
         /// <summary>
-        /// 二つの<see cref="ValueChecker{T}"/>を結合します。
+        /// 二つの<see cref="ValueChecker{T}"/>をAND結合します。
         /// </summary>
         /// <param name="first">最初の評価</param>
         /// <param name="second">2番目の評価</param>
         /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="second"/>がnull</exception>
-        /// <remarks>AND結合です</remarks>
-        public static ValueChecker<T> Combine(ValueChecker<T> first, ValueChecker<T> second)
+        public static ValueChecker<T> And(ValueChecker<T> first, ValueChecker<T> second)
         {
             ArgumentNullException.ThrowIfNull(first);
             ArgumentNullException.ThrowIfNull(second);
 
             if (first == second) return first;
 
-            return new CombinedValueChecker<T>(first, second);
+            return new AndValueChecker<T>(first, second);
         }
 
         /// <summary>
-        /// 複数の<see cref="ValueChecker{T}"/>を結合します。
+        /// 複数の<see cref="ValueChecker{T}"/>をAND結合します。
         /// </summary>
         /// <param name="source">評価する関数のリスト</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
-        /// <remarks>AND結合です</remarks>
-        public static ValueChecker<T> Combine(params ValueChecker<T>[] source)
+        public static ValueChecker<T> And(params ValueChecker<T>[] source)
         {
-            return new CombinedValueChecker<T>(source);
+            return new AndValueChecker<T>(source);
+        }
+
+        /// <summary>
+        /// 二つの<see cref="ValueChecker{T}"/>をOR結合します。
+        /// </summary>
+        /// <param name="first">最初の評価</param>
+        /// <param name="second">2番目の評価</param>
+        /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="second"/>がnull</exception>
+        public static ValueChecker<T> Or(ValueChecker<T> first, ValueChecker<T> second)
+        {
+            ArgumentNullException.ThrowIfNull(first);
+            ArgumentNullException.ThrowIfNull(second);
+
+            if (first == second) return first;
+
+            return new OrValueChecker<T>(first, second);
+        }
+
+        /// <summary>
+        /// 複数の<see cref="ValueChecker{T}"/>をOR結合します。
+        /// </summary>
+        /// <param name="source">評価する関数のリスト</param>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
+        /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
+        public static ValueChecker<T> Or(params ValueChecker<T>[] source)
+        {
+            return new OrValueChecker<T>(source);
         }
 
         /// <summary>
@@ -56,7 +81,7 @@ namespace CuiLib.Options
 
         public static ValueChecker<T> operator +(ValueChecker<T> left, ValueChecker<T> right)
         {
-            return Combine(left, right);
+            return And(left, right);
         }
 
 #pragma warning restore CS1591 // 公開されている型またはメンバーの XML コメントがありません
