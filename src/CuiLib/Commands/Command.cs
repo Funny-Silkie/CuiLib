@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using CuiLib.Log;
 using CuiLib.Options;
 
@@ -64,6 +65,7 @@ namespace CuiLib.Commands
         /// <exception cref="ArgumentNullException"><paramref name="args"/>または<paramref name="commands"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="args"/>内の値がnull</exception>
         /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
+        [Obsolete($"代わりに{nameof(Invoke)}メソッドまたは{nameof(InvokeAsync)}メソッドを使用してください")]
         public static void InvokeFromCollection(string[] args, CommandCollection commands)
         {
             ArgumentNullException.ThrowIfNull(args);
@@ -76,30 +78,17 @@ namespace CuiLib.Commands
         }
 
         /// <summary>
-        /// コマンドを実行します。
+        /// 引数を解析します。
         /// </summary>
         /// <param name="args">コマンド引数</param>
-        /// <exception cref="ArgumentNullException"><paramref name="args"/>がnull</exception>
+        /// <returns><paramref name="args"/>における非オプションのコマンド引数の開始インデックス</returns>
         /// <exception cref="ArgumentException"><paramref name="args"/>内の値がnull</exception>
         /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
-        public void Invoke(string[] args)
-        {
-            ArgumentNullException.ThrowIfNull(args);
-
-            Invoke(args.AsSpan());
-        }
-
-        /// <summary>
-        /// コマンドを実行します。
-        /// </summary>
-        /// <param name="args">引数</param>
-        /// <exception cref="ArgumentException"><paramref name="args"/>内の値がnull</exception>
-        /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
-        private void Invoke(ReadOnlySpan<string> args)
+        private int ParseArguments(ReadOnlySpan<string> args)
         {
             Option? currentOption = null;
             string? currentOptionName = null;
-            int lastIndex = -1;
+            int result = -1;
             for (int i = 0; i < args.Length; i++)
             {
                 string argument = args[i];
@@ -157,11 +146,52 @@ namespace CuiLib.Commands
                     continue;
                 }
 
-                lastIndex = i;
+                result = i;
                 break;
             }
 
             if (currentOption is not null) throw new ArgumentAnalysisException($"オプション'{currentOptionName}'に値が設定されていません");
+
+            return result;
+        }
+
+        /// <summary>
+        /// コマンドを実行します。
+        /// </summary>
+        /// <param name="args">コマンド引数</param>
+        /// <exception cref="ArgumentNullException"><paramref name="args"/>がnull</exception>
+        /// <exception cref="ArgumentException"><paramref name="args"/>内の値がnull</exception>
+        /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
+        public void Invoke(string[] args)
+        {
+            ArgumentNullException.ThrowIfNull(args);
+
+            Invoke(args.AsSpan());
+        }
+
+        /// <summary>
+        /// コマンドを実行します。
+        /// </summary>
+        /// <param name="args">コマンド引数</param>
+        /// <exception cref="ArgumentNullException"><paramref name="args"/>がnull</exception>
+        /// <exception cref="ArgumentException"><paramref name="args"/>内の値がnull</exception>
+        /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
+        public async Task InvokeAsync(string[] args)
+        {
+            ArgumentNullException.ThrowIfNull(args);
+
+            await InvokeAsync(new ArraySegment<string>(args));
+        }
+
+        /// <summary>
+        /// コマンドを実行します。
+        /// </summary>
+        /// <param name="args">引数</param>
+        /// <exception cref="ArgumentException"><paramref name="args"/>内の値がnull</exception>
+        /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
+        private void Invoke(ReadOnlySpan<string> args)
+        {
+            int lastIndex = ParseArguments(args);
 
             if (Children.Count > 0 && 0 <= lastIndex && lastIndex <= args.Length - 1 && Children.TryGetCommand(args[lastIndex], out Command? next))
             {
@@ -175,6 +205,33 @@ namespace CuiLib.Commands
                 ReadOnlySpan<string> values = lastIndex >= 0 && lastIndex < args.Length ? args[lastIndex..] : ReadOnlySpan<string>.Empty;
                 Parameters.SetValues(values);
                 OnExecution();
+                OnExecutionAsync().Wait();
+            }
+        }
+
+        /// <summary>
+        /// コマンドを実行します。
+        /// </summary>
+        /// <param name="args">引数</param>
+        /// <exception cref="ArgumentException"><paramref name="args"/>内の値がnull</exception>
+        /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
+        private async Task InvokeAsync(ArraySegment<string> args)
+        {
+            int lastIndex = ParseArguments(args);
+
+            if (Children.Count > 0 && 0 <= lastIndex && lastIndex <= args.Count - 1 && Children.TryGetCommand(args[lastIndex], out Command? next))
+            {
+                lastIndex++;
+                ArraySegment<string> values = lastIndex >= 0 && lastIndex < args.Count ? args[lastIndex..] : ArraySegment<string>.Empty;
+                next.Invoke(values);
+                return;
+            }
+            else
+            {
+                ArraySegment<string> values = lastIndex >= 0 && lastIndex < args.Count ? args[lastIndex..] : ArraySegment<string>.Empty;
+                Parameters.SetValues(values);
+                OnExecution();
+                await OnExecutionAsync();
             }
         }
 
@@ -184,6 +241,15 @@ namespace CuiLib.Commands
         /// <remarks>子コマンドが実行された場合は実行されません</remarks>
         protected virtual void OnExecution()
         {
+        }
+
+        /// <summary>
+        /// オーバーライドしてコマンドの処理を記述します。
+        /// </summary>
+        /// <remarks>子コマンドが実行された場合は実行されません</remarks>
+        protected virtual Task OnExecutionAsync()
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>
