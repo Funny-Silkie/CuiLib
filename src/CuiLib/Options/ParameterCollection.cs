@@ -57,13 +57,33 @@ namespace CuiLib.Options
         {
             if (arrayStart == -1)
             {
-                for (int i = 0; i < values.Length; i++) items[i].SetValue(values[i]);
+                for (int i = 0; i < values.Length; i++) SetOrCreate(i, values[i]);
             }
             else
             {
-                for (int i = 0; i < arrayStart; ++i) items[i].SetValue(values[i]);
+                for (int i = 0; i < arrayStart; ++i) SetOrCreate(i, values[i]);
                 items[arrayStart].SetValue(values[arrayStart..]);
             }
+        }
+
+        /// <summary>
+        /// 指定したインデックスの値を設定し，存在しない場合は新たにパラメータを生成して設定します。
+        /// </summary>
+        /// <param name="index">インデックス</param>
+        /// <param name="value">設定する値</param>
+        /// <returns>値を設定したパラメータ</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
+        private Parameter SetOrCreate(int index, string value)
+        {
+            if (index < 0) ThrowHelper.ThrowIfNegative(index);
+
+            if (!items.TryGetValue(index, out Parameter? result))
+            {
+                result = Parameter.Create<string>($"Param {index}", index);
+                items[index] = result;
+            }
+            result.SetValue(value);
+            return result;
         }
 
         #region Collection Opreation
