@@ -75,10 +75,10 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         /// <param name="comparison">比較対象</param>
-        public static ValueChecker<T> LargerThan<T>(T? comparison)
+        public static ValueChecker<T> LargerOrEqual<T>(T? comparison)
             where T : IComparable<T>
         {
-            return new LargerThanValueChecker<T>(comparison, null);
+            return new LargerOrEqualValueChecker<T>(comparison, null);
         }
 
         /// <summary>
@@ -87,10 +87,10 @@ namespace CuiLib.Options
         /// <typeparam name="T">検証する値の型</typeparam>
         /// <param name="comparison">比較対象</param>
         /// <param name="comparer">比較オブジェクト。nullで<see cref="Comparer{T}.Default"/></param>
-        public static ValueChecker<T> LargerThan<T>(T? comparison, IComparer<T>? comparer)
+        public static ValueChecker<T> LargerOrEqual<T>(T? comparison, IComparer<T>? comparer)
             where T : IComparable<T>
         {
-            return new LargerThanValueChecker<T>(comparison, comparer);
+            return new LargerOrEqualValueChecker<T>(comparison, comparer);
         }
 
         /// <summary>
@@ -121,10 +121,10 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         /// <param name="comparison">比較対象</param>
-        public static ValueChecker<T> LowerThan<T>(T? comparison)
+        public static ValueChecker<T> LowerOrEqual<T>(T? comparison)
             where T : IComparable<T>
         {
-            return new LowerThanValueChecker<T>(comparison, null);
+            return new LowerOrEqualValueChecker<T>(comparison, null);
         }
 
         /// <summary>
@@ -133,10 +133,10 @@ namespace CuiLib.Options
         /// <typeparam name="T">検証する値の型</typeparam>
         /// <param name="comparison">比較対象</param>
         /// <param name="comparer">比較オブジェクト。nullで<see cref="Comparer{T}.Default"/></param>
-        public static ValueChecker<T> LowerThan<T>(T? comparison, IComparer<T>? comparer)
+        public static ValueChecker<T> LowerOrEqual<T>(T? comparison, IComparer<T>? comparer)
             where T : IComparable<T>
         {
-            return new LowerThanValueChecker<T>(comparison, comparer);
+            return new LowerOrEqualValueChecker<T>(comparison, comparer);
         }
 
         /// <summary>
@@ -314,6 +314,22 @@ namespace CuiLib.Options
         public static ValueChecker<T> NotEquals<T>(T? comparison, IEqualityComparer<T>? comparer)
         {
             return new NotEqualsValueChecker<T>(comparer, comparison);
+        }
+
+        /// <summary>
+        /// ファイルパスが存在するかどうかを検証します。
+        /// </summary>
+        public static ValueChecker<string> FileExists()
+        {
+            return new FileExistsValueChecker();
+        }
+
+        /// <summary>
+        /// ディレクトリパスが存在するかどうかを検証します。
+        /// </summary>
+        public static ValueChecker<string> DirectoryExists()
+        {
+            return new DirectoryExistsValueChecker();
         }
     }
 }

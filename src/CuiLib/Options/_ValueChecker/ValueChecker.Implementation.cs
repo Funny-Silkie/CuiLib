@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace CuiLib.Options
@@ -101,18 +102,18 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         [Serializable]
-        private sealed class LargerThanValueChecker<T> : ValueChecker<T>
+        private sealed class LargerOrEqualValueChecker<T> : ValueChecker<T>
             where T : IComparable<T>
         {
             private readonly IComparer<T> comparer;
             private readonly T? comparison;
 
             /// <summary>
-            /// <see cref="LargerThanValueChecker{T}"/>の新しいインスタンスを初期化します。
+            /// <see cref="LargerOrEqualValueChecker{T}"/>の新しいインスタンスを初期化します。
             /// </summary>
             /// <param name="comparison">比較対象</param>
             /// <param name="comparer">比較オブジェクト。nullで<see cref="Comparer{T}.Default"/></param>
-            internal LargerThanValueChecker(T? comparison, IComparer<T>? comparer)
+            internal LargerOrEqualValueChecker(T? comparison, IComparer<T>? comparer)
             {
                 this.comparison = comparison;
                 this.comparer = comparer ?? Comparer<T>.Default;
@@ -161,18 +162,18 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         [Serializable]
-        private sealed class LowerThanValueChecker<T> : ValueChecker<T>
+        private sealed class LowerOrEqualValueChecker<T> : ValueChecker<T>
             where T : IComparable<T>
         {
             private readonly IComparer<T> comparer;
             private readonly T? comparison;
 
             /// <summary>
-            /// <see cref="LowerThanValueChecker{T}"/>の新しいインスタンスを初期化します。
+            /// <see cref="LowerOrEqualValueChecker{T}"/>の新しいインスタンスを初期化します。
             /// </summary>
             /// <param name="comparison">比較対象</param>
             /// <param name="comparer">比較オブジェクト。nullで<see cref="Comparer{T}.Default"/></param>
-            internal LowerThanValueChecker(T? comparison, IComparer<T>? comparer)
+            internal LowerOrEqualValueChecker(T? comparison, IComparer<T>? comparer)
             {
                 this.comparison = comparison;
                 this.comparer = comparer ?? Comparer<T>.Default;
@@ -429,6 +430,72 @@ namespace CuiLib.Options
             {
                 if (!comparer.Equals(value, comparison)) return ValueCheckState.Success;
                 return ValueCheckState.AsError($"値は'{comparison}'と異なる必要があります");
+            }
+        }
+
+        /// <summary>
+        /// ファイルパスが存在するかどうかを検証します。
+        /// </summary>
+        [Serializable]
+        private sealed class FileExistsValueChecker : ValueChecker<string>
+        {
+            /// <summary>
+            /// <see cref="FileExistsValueChecker"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            internal FileExistsValueChecker()
+            {
+            }
+
+            /// <inheritdoc/>
+            public override ValueCheckState CheckValue(string? value)
+            {
+                if (File.Exists(value)) return ValueCheckState.Success;
+                return ValueCheckState.AsError($"ファイル'{value}'が存在しません");
+            }
+
+            /// <inheritdoc/>
+            public override bool Equals(object? obj)
+            {
+                return obj is FileExistsValueChecker;
+            }
+
+            /// <inheritdoc/>
+            public override int GetHashCode()
+            {
+                return GetType().Name.GetHashCode();
+            }
+        }
+
+        /// <summary>
+        /// ディレクトリが存在するかどうかを検証します。
+        /// </summary>
+        [Serializable]
+        private sealed class DirectoryExistsValueChecker : ValueChecker<string>
+        {
+            /// <summary>
+            /// <see cref="DirectoryExistsValueChecker"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            internal DirectoryExistsValueChecker()
+            {
+            }
+
+            /// <inheritdoc/>
+            public override ValueCheckState CheckValue(string? value)
+            {
+                if (Directory.Exists(value)) return ValueCheckState.Success;
+                return ValueCheckState.AsError($"ディレクトリ'{value}'が存在しません");
+            }
+
+            /// <inheritdoc/>
+            public override bool Equals(object? obj)
+            {
+                return obj is DirectoryExistsValueChecker;
+            }
+
+            /// <inheritdoc/>
+            public override int GetHashCode()
+            {
+                return GetType().Name.GetHashCode();
             }
         }
     }
