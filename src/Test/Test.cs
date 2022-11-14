@@ -95,6 +95,36 @@ namespace Test
         }
 
         [Test]
+        public void NonDefinedParams()
+        {
+            string[] args = new[] { "--flag1", "-n", "1", "A", "B", "C" };
+
+            var main = new MainCommand();
+
+            var opFlag1 = new FlagOption("flag1");
+            var opFlag2 = new FlagOption("flag2");
+            var opValue1 = new ValuedOption<int>('n', "number");
+            var opValue2 = new ValuedOption<string>('i', "in");
+
+            main.Options.Add(opFlag1);
+            main.Options.Add(opFlag2);
+            main.Options.Add(opValue1);
+            main.Options.Add(opValue2);
+
+            main.Invoke(args);
+            Assert.Multiple(() =>
+            {
+                Assert.That(((Parameter<string>)main.Parameters[0]).Values![0], Is.EqualTo("A"));
+                Assert.That(((Parameter<string>)main.Parameters[1]).Values![0], Is.EqualTo("B"));
+                Assert.That(((Parameter<string>)main.Parameters[2]).Values![0], Is.EqualTo("C"));
+                Assert.That(opFlag1.Value, Is.True);
+                Assert.That(opFlag2.Value, Is.False);
+                Assert.That(opValue1.Value, Is.EqualTo(1));
+                Assert.That(opValue2.Value, Is.Null);
+            });
+        }
+
+        [Test]
         public void Help()
         {
             var parent = new Command("parent")
