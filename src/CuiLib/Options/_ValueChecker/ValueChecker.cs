@@ -75,7 +75,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <param name="value">検証する値</param>
         /// <returns>検証結果</returns>
-        public abstract ValueCheckState CheckValue(T? value);
+        public abstract ValueCheckState CheckValue(T value);
 
 #pragma warning disable CS1591 // 公開されている型またはメンバーの XML コメントがありません
 

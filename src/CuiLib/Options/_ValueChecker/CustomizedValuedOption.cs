@@ -10,13 +10,13 @@ namespace CuiLib.Options
     public abstract class CustomizedValuedOption<T> : ValuedOption<T>
     {
         /// <inheritdoc/>
-        public override T? Value
+        public override T Value
         {
             get
             {
                 if (ValueAvailable)
                 {
-                    T? result = ConvertFromRaw(RawValue);
+                    T result = ConvertFromRaw(RawValue);
 
                     ValueCheckState state = Checker.CheckValue(result);
                     ThrowHelper.ThrowIfInvalidState(state);
@@ -63,6 +63,6 @@ namespace CuiLib.Options
         /// </summary>
         /// <param name="value">使用する文字列</param>
         /// <returns><paramref name="value"/>から生成された<typeparamref name="T"/>の値。失敗したら既定値</returns>
-        protected abstract T? ConvertFromRaw(string? value);
+        protected abstract T ConvertFromRaw(string? value);
     }
 }

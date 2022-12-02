@@ -147,11 +147,11 @@ namespace CuiLib.Options
         /// 値を取得します。
         /// </summary>
         /// <exception cref="InvalidOperationException">インスタンスが空の配列を表す</exception>
-        public T? Value
+        public T Value
         {
             get
             {
-                if (Values is null) return default;
+                if (Values is null) return default!;
                 try
                 {
                     return Values[0];
@@ -167,7 +167,7 @@ namespace CuiLib.Options
         /// <summary>
         /// 値を取得します。
         /// </summary>
-        public T?[]? Values
+        public T[]? Values
         {
             get
             {
@@ -175,7 +175,9 @@ namespace CuiLib.Options
                 if (!ValueAvailable) return null;
                 _values = Array.ConvertAll(RawValues, x =>
                 {
-                    if (!ValueConverter.Convert(x, out Exception? error, out T? result)) throw error;
+#pragma warning disable CS8600 // Null リテラルまたは Null の可能性がある値を Null 非許容型に変換しています。
+                    if (!ValueConverter.Convert(x, out Exception? error, out T result)) throw error;
+#pragma warning restore CS8600 // Null リテラルまたは Null の可能性がある値を Null 非許容型に変換しています。
                     ValueCheckState state = Checker.CheckValue(result);
                     ThrowHelper.ThrowIfInvalidState(state);
                     return result;
@@ -184,7 +186,7 @@ namespace CuiLib.Options
             }
         }
 
-        private T?[]? _values;
+        private T[]? _values;
 
         /// <summary>
         /// 値の妥当性を検証する関数を取得または設定します。

@@ -17,7 +17,7 @@ namespace CuiLib.Options
         }
 
         /// <inheritdoc/>
-        public override ValueCheckState CheckValue(FileInfo? value)
+        public override ValueCheckState CheckValue(FileInfo value)
         {
             ArgumentNullException.ThrowIfNull(value);
 
@@ -54,7 +54,7 @@ namespace CuiLib.Options
         }
 
         /// <inheritdoc/>
-        public override ValueCheckState CheckValue(FileInfo? value)
+        public override ValueCheckState CheckValue(FileInfo value)
         {
             ArgumentNullException.ThrowIfNull(value);
 
@@ -79,7 +79,7 @@ namespace CuiLib.Options
         }
 
         /// <inheritdoc/>
-        public override ValueCheckState CheckValue(DirectoryInfo? value)
+        public override ValueCheckState CheckValue(DirectoryInfo value)
         {
             ArgumentNullException.ThrowIfNull(value);
 

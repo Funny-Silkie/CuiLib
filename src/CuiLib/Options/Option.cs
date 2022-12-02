@@ -121,7 +121,7 @@ namespace CuiLib.Options
         /// <summary>
         /// デフォルトの値を取得または設定します。
         /// </summary>
-        public T? DefaultValue { get; set; }
+        public T DefaultValue { get; set; } = default!;
 
         /// <inheritdoc/>
         internal override sealed string? DefaultValueString => DefaultValue?.ToString();
@@ -148,13 +148,15 @@ namespace CuiLib.Options
         /// オプションの値を取得します。
         /// </summary>
         /// <exception cref="ArgumentAnalysisException">値の変換に失敗-または-変換後の値が無効</exception>
-        public virtual T? Value
+        public virtual T Value
         {
             get
             {
                 if (ValueAvailable)
                 {
-                    if (!ValueConverter.Convert(RawValue, out Exception? error, out T? result))
+#pragma warning disable CS8600 // Null リテラルまたは Null の可能性がある値を Null 非許容型に変換しています。
+                    if (!ValueConverter.Convert(RawValue, out Exception? error, out T result))
+#pragma warning restore CS8600 // Null リテラルまたは Null の可能性がある値を Null 非許容型に変換しています。
                     {
                         ThrowHelper.ThrowAsOptionParseFailed(error);
                         return default;

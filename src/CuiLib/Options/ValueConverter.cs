@@ -16,48 +16,62 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">値の型</typeparam>
         /// <param name="value">文字列</param>
-        /// <param name="error">変換時のエラー</param>
+        /// <param name="error">
+        /// 変換時のエラー
+        /// <list type="bullet">
+        /// <item>
+        /// <term><see cref="FormatException"/></term>
+        /// <description><paramref name="value"/>のフォーマットが無効</description>
+        /// </item>
+        /// <item>
+        /// <term><see cref="NotSupportedException"/></term>
+        /// <description><typeparamref name="T"/>が変換不能な型</description>
+        /// </item>
+        /// </list>
+        /// </param>
         /// <param name="result">変換後の値</param>
         /// <returns><paramref name="value"/>の変換に成功したらtrue，それ以外でfalse</returns>
-        public static bool Convert<T>(string? value, [NotNullWhen(false)] out Exception? error, [MaybeNullWhen(true)] out T? result)
+        public static bool Convert<T>(string? value, [NotNullWhen(false)] out Exception? error, [MaybeNullWhen(false)] out T result)
         {
             error = null;
             var type = typeof(T);
-            result = default;
+            result = default!;
             if (value is null) return default(T) is null;
 
             try
             {
-                if (type == typeof(string)) Unsafe.As<T?, string>(ref result) = value;
-                else if (type == typeof(FileInfo)) Unsafe.As<T?, FileInfo>(ref result) = new FileInfo(value);
-                else if (type == typeof(DirectoryInfo)) Unsafe.As<T?, DirectoryInfo>(ref result) = new DirectoryInfo(value);
-                else if (type == typeof(int)) Unsafe.As<T?, int>(ref result) = int.Parse(value);
-                else if (type == typeof(sbyte)) Unsafe.As<T?, sbyte>(ref result) = sbyte.Parse(value);
-                else if (type == typeof(double)) Unsafe.As<T?, double>(ref result) = double.Parse(value);
-                else if (type == typeof(long)) Unsafe.As<T?, long>(ref result) = long.Parse(value);
-                else if (type == typeof(ulong)) Unsafe.As<T?, ulong>(ref result) = ulong.Parse(value);
-                else if (type == typeof(DateTime)) Unsafe.As<T?, DateTime>(ref result) = DateTime.Parse(value);
-                else if (type == typeof(short)) Unsafe.As<T?, short>(ref result) = short.Parse(value);
-                else if (type == typeof(byte)) Unsafe.As<T?, byte>(ref result) = byte.Parse(value);
-                else if (type == typeof(ushort)) Unsafe.As<T?, ushort>(ref result) = ushort.Parse(value);
-                else if (type == typeof(uint)) Unsafe.As<T?, uint>(ref result) = uint.Parse(value);
-                else if (type == typeof(float)) Unsafe.As<T?, float>(ref result) = float.Parse(value);
-                else if (type == typeof(decimal)) Unsafe.As<T?, decimal>(ref result) = decimal.Parse(value);
-                else if (type == typeof(char)) Unsafe.As<T?, char>(ref result) = char.Parse(value);
-                else if (type == typeof(bool)) Unsafe.As<T?, bool>(ref result) = bool.Parse(value);
-                else if (type == typeof(TimeSpan)) Unsafe.As<T?, TimeSpan>(ref result) = TimeSpan.Parse(value);
-                else if (type == typeof(DateOnly)) Unsafe.As<T?, DateOnly>(ref result) = DateOnly.Parse(value);
-                else if (type == typeof(TimeOnly)) Unsafe.As<T?, TimeOnly>(ref result) = TimeOnly.Parse(value);
-                else if (type.IsEnum) Unsafe.As<T?, object>(ref result) = Enum.Parse(type, value);
+                if (type == typeof(string)) Unsafe.As<T, string>(ref result) = value;
+                else if (type == typeof(FileInfo)) Unsafe.As<T, FileInfo>(ref result) = new FileInfo(value);
+                else if (type == typeof(DirectoryInfo)) Unsafe.As<T, DirectoryInfo>(ref result) = new DirectoryInfo(value);
+                else if (type == typeof(int)) Unsafe.As<T, int>(ref result) = int.Parse(value);
+                else if (type == typeof(sbyte)) Unsafe.As<T, sbyte>(ref result) = sbyte.Parse(value);
+                else if (type == typeof(double)) Unsafe.As<T, double>(ref result) = double.Parse(value);
+                else if (type == typeof(long)) Unsafe.As<T, long>(ref result) = long.Parse(value);
+                else if (type == typeof(ulong)) Unsafe.As<T, ulong>(ref result) = ulong.Parse(value);
+                else if (type == typeof(DateTime)) Unsafe.As<T, DateTime>(ref result) = DateTime.Parse(value);
+                else if (type == typeof(short)) Unsafe.As<T, short>(ref result) = short.Parse(value);
+                else if (type == typeof(byte)) Unsafe.As<T, byte>(ref result) = byte.Parse(value);
+                else if (type == typeof(ushort)) Unsafe.As<T, ushort>(ref result) = ushort.Parse(value);
+                else if (type == typeof(uint)) Unsafe.As<T, uint>(ref result) = uint.Parse(value);
+                else if (type == typeof(float)) Unsafe.As<T, float>(ref result) = float.Parse(value);
+                else if (type == typeof(decimal)) Unsafe.As<T, decimal>(ref result) = decimal.Parse(value);
+                else if (type == typeof(char)) Unsafe.As<T, char>(ref result) = char.Parse(value);
+                else if (type == typeof(bool)) Unsafe.As<T, bool>(ref result) = bool.Parse(value);
+                else if (type == typeof(TimeSpan)) Unsafe.As<T, TimeSpan>(ref result) = TimeSpan.Parse(value);
+                else if (type == typeof(DateOnly)) Unsafe.As<T, DateOnly>(ref result) = DateOnly.Parse(value);
+                else if (type == typeof(TimeOnly)) Unsafe.As<T, TimeOnly>(ref result) = TimeOnly.Parse(value);
+                else if (type.IsEnum) Unsafe.As<T, object>(ref result) = Enum.Parse(type, value);
                 else
                 {
                     error = new NotSupportedException("無効な型への変換です");
+                    result = default;
                     return false;
                 }
             }
             catch (Exception e)
             {
                 error = e;
+                result = default;
                 return false;
             }
 

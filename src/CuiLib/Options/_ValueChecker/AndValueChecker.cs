@@ -113,7 +113,7 @@ namespace CuiLib.Options
         }
 
         /// <inheritdoc/>
-        public override ValueCheckState CheckValue(T? value)
+        public override ValueCheckState CheckValue(T value)
         {
             if (checkers.Length == 0) return ValueCheckState.Success;
 
