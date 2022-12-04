@@ -150,6 +150,31 @@ namespace Test
         }
 
         [Test]
+        public void ShortOptions()
+        {
+            string[] args = new[] { "-1n", "1", "-i", "hoge" };
+
+            var main = new MainCommand();
+
+            var opFlag1 = new FlagOption('1', "flag1");
+            var opFlag2 = new FlagOption('2', "flag2");
+            var opValue1 = new SingleValuedOption<int>('n', "number");
+            var opValue2 = new SingleValuedOption<string>('i', "in");
+
+            main.Options.Add(opFlag1);
+            main.Options.Add(opFlag2);
+            main.Options.Add(opValue1);
+            main.Options.Add(opValue2);
+
+            main.Invoke(args);
+
+            Assert.That(opFlag1.Value, Is.True);
+            Assert.That(opFlag2.Value, Is.False);
+            Assert.That(opValue1.Value, Is.EqualTo(1));
+            Assert.That(opValue2.Value, Is.EqualTo("hoge"));
+        }
+
+        [Test]
         public void Help()
         {
             var parent = new Command("parent")

@@ -115,25 +115,6 @@ namespace CuiLib.Commands
                 // オプション
                 if (argument.StartsWith('-') && argument.Length >= 2)
                 {
-                    // -X
-                    if (argument.Length == 2)
-                    {
-                        if (argument[1] == '-') throw new ArgumentAnalysisException("オプション'--'は無効です");
-                        if (!Options.TryGetValue(argument[1], out Option? option)) throw new ArgumentAnalysisException($"オプション'{argument}'は無効です");
-                        if (currentOption is not null) throw new ArgumentAnalysisException($"オプション'{currentOptionName}'に値が設定されていません");
-                        if (option.IsValued)
-                        {
-                            currentOption = option;
-                            currentOptionName = argument;
-                        }
-                        else
-                        {
-                            if (!option.CanMultiValue && option.ValueAvailable) throw new ArgumentAnalysisException($"オプション'{argument}'が複数指定されています");
-                            option.ApplyValue(string.Empty);
-                        }
-                        continue;
-                    }
-
                     // --XXX
                     if (argument[1] == '-')
                     {
@@ -153,7 +134,25 @@ namespace CuiLib.Commands
                         continue;
                     }
 
-                    throw new ArgumentAnalysisException($"オプション'{argument}'は無効です");
+                    // -X
+                    {
+                        if (currentOption is not null) throw new ArgumentAnalysisException($"オプション'{currentOptionName}'に値が設定されていません");
+
+                        for (int j = 1; j < argument.Length; j++)
+                        {
+                            char c = argument[j];
+                            if (!Options.TryGetValue(c, out Option? option)) throw new ArgumentAnalysisException($"オプション'-{c}'は無効です");
+                            if (!option.CanMultiValue && option.ValueAvailable) throw new ArgumentAnalysisException($"オプション'-{c}'が複数指定されています");
+                            if (option.IsValued)
+                            {
+                                if (j != argument.Length - 1) throw new ArgumentAnalysisException($"オプション'-{c}'に値が設定されていません");
+                                currentOption = option;
+                                currentOptionName = $"{c}";
+                            }
+                            else option.ApplyValue(string.Empty);
+                        }
+                        continue;
+                    }
                 }
                 if (currentOption is not null)
                 {
