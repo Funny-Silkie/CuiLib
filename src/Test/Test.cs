@@ -44,8 +44,8 @@ namespace Test
 
             var opFlag1 = new FlagOption("flag1");
             var opFlag2 = new FlagOption("flag2");
-            var opValue1 = new SingleValuedOption<int>('n', "number");
-            var opValue2 = new SingleValuedOption<string>('i', "in");
+            var opValue1 = new SingleValueOption<int>('n', "number");
+            var opValue2 = new SingleValueOption<string>('i', "in");
 
             main.Options.Add(opFlag1);
             main.Options.Add(opFlag2);
@@ -73,8 +73,8 @@ namespace Test
 
             var opFlag1 = new FlagOption("flag1");
             var opFlag2 = new FlagOption("flag2");
-            var opValue1 = new SingleValuedOption<int>('n', "number");
-            var opValue2 = new SingleValuedOption<string>('i', "in");
+            var opValue1 = new SingleValueOption<int>('n', "number");
+            var opValue2 = new SingleValueOption<string>('i', "in");
 
             main.Options.Add(opFlag1);
             main.Options.Add(opFlag2);
@@ -103,8 +103,8 @@ namespace Test
 
             var opFlag1 = new FlagOption("flag1");
             var opFlag2 = new FlagOption("flag2");
-            var opValue1 = new SingleValuedOption<int>('n', "number");
-            var opValue2 = new SingleValuedOption<string>('i', "in");
+            var opValue1 = new SingleValueOption<int>('n', "number");
+            var opValue2 = new SingleValueOption<string>('i', "in");
 
             main.Options.Add(opFlag1);
             main.Options.Add(opFlag2);
@@ -133,8 +133,8 @@ namespace Test
 
             var opFlag1 = new FlagOption("flag1");
             var opFlag2 = new FlagOption("flag2");
-            var opValue1 = new MultipleValuedOption<int>('n', "number");
-            var opValue2 = new SingleValuedOption<string>('i', "in");
+            var opValue1 = new MultipleValueOption<int>('n', "number");
+            var opValue2 = new SingleValueOption<string>('i', "in");
 
             main.Options.Add(opFlag1);
             main.Options.Add(opFlag2);
@@ -158,8 +158,8 @@ namespace Test
 
             var opFlag1 = new FlagOption('1', "flag1");
             var opFlag2 = new FlagOption('2', "flag2");
-            var opValue1 = new SingleValuedOption<int>('n', "number");
-            var opValue2 = new SingleValuedOption<string>('i', "in");
+            var opValue1 = new SingleValueOption<int>('n', "number");
+            var opValue2 = new SingleValueOption<string>('i', "in");
 
             main.Options.Add(opFlag1);
             main.Options.Add(opFlag2);
@@ -194,12 +194,12 @@ namespace Test
             {
                 Description = "フラグ2",
             };
-            var opValue1 = new SingleValuedOption<int>('n', "number")
+            var opValue1 = new SingleValueOption<int>('n', "number")
             {
                 Description = "数値",
                 Required = true,
             };
-            var opValue2 = new SingleValuedOption<string>('i', "in")
+            var opValue2 = new SingleValueOption<string>('i', "in")
             {
                 Description = "文字",
             };

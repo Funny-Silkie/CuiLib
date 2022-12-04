@@ -1,34 +1,39 @@
 ﻿using System;
+using System.Linq;
 
 namespace CuiLib.Options
 {
     /// <summary>
-    /// 1つの値をとるコマンドのオプションを表します。
+    /// 複数の値をとるコマンドのオプションを表します。
     /// </summary>
     /// <typeparam name="T">オプションの値の型</typeparam>
     [Serializable]
-    public class SingleValuedOption<T> : ValuedOption<T>
+    public class MultipleValueOption<T> : ValuedOption<T[]>
     {
         /// <inheritdoc/>
-        internal override OptionType OptionType => OptionType.Valued | OptionType.SingleValue;
+        internal override OptionType OptionType => OptionType.Valued | OptionType.MultiValue;
 
         /// <inheritdoc/>
         public override string? ValueTypeName => ValueConverter.GetValueTypeString<T>();
 
         /// <inheritdoc/>
-        public override T Value
+        public override T[] Value
         {
             get
             {
                 if (ValueAvailable)
                 {
-#pragma warning disable CS8600 // Null リテラルまたは Null の可能性がある値を Null 非許容型に変換しています。
-                    if (!ValueConverter.Convert(RawValues[0], out Exception? error, out T result))
-#pragma warning restore CS8600 // Null リテラルまたは Null の可能性がある値を Null 非許容型に変換しています。
+                    T[] result = Array.ConvertAll(RawValues.ToArray(), x =>
                     {
-                        ThrowHelper.ThrowAsOptionParseFailed(error);
-                        return default;
-                    }
+#pragma warning disable CS8600 // Null リテラルまたは Null の可能性がある値を Null 非許容型に変換しています。
+                        if (!ValueConverter.Convert(x, out Exception? error, out T ret))
+#pragma warning restore CS8600 // Null リテラルまたは Null の可能性がある値を Null 非許容型に変換しています。
+                        {
+                            ThrowHelper.ThrowAsOptionParseFailed(error);
+                            return default;
+                        }
+                        return ret;
+                    });
 
                     ValueCheckState state = Checker.CheckValue(result);
                     ThrowHelper.ThrowIfInvalidState(state);
@@ -42,32 +47,35 @@ namespace CuiLib.Options
         }
 
         /// <summary>
-        /// <see cref="SingleValuedOption{T}"/>の新しいインスタンスを初期化します。
+        /// <see cref="MultipleValueOption{T}"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="shortName">短縮名</param>
-        public SingleValuedOption(char shortName) : base(shortName)
+        public MultipleValueOption(char shortName) : base(shortName)
         {
+            DefaultValue = Array.Empty<T>();
         }
 
         /// <summary>
-        /// <see cref="SingleValuedOption{T}"/>の新しいインスタンスを初期化します。
+        /// <see cref="MultipleValueOption{T}"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="fullName">完全名</param>
         /// <exception cref="ArgumentNullException"><paramref name="fullName"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="fullName"/>が空文字</exception>
-        public SingleValuedOption(string fullName) : base(fullName)
+        public MultipleValueOption(string fullName) : base(fullName)
         {
+            DefaultValue = Array.Empty<T>();
         }
 
         /// <summary>
-        /// <see cref="SingleValuedOption{T}"/>の新しいインスタンスを初期化します。
+        /// <see cref="MultipleValueOption{T}"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="shortName">短縮名</param>
         /// <param name="fullName">完全名</param>
         /// <exception cref="ArgumentNullException"><paramref name="fullName"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="fullName"/>が空文字</exception>
-        public SingleValuedOption(char shortName, string fullName) : base(shortName, fullName)
+        public MultipleValueOption(char shortName, string fullName) : base(shortName, fullName)
         {
+            DefaultValue = Array.Empty<T>();
         }
     }
 }
