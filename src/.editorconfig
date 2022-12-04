@@ -14,3 +14,6 @@ dotnet_diagnostic.CS8963.severity = error
 
 # IDE0046: 条件式に変換します
 dotnet_diagnostic.IDE0046.severity = silent
+
+# IDE0061: ローカル関数に式本体を使用します
+dotnet_diagnostic.IDE0061.severity = silent

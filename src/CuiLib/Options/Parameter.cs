@@ -144,6 +144,17 @@ namespace CuiLib.Options
         public override bool ValueAvailable => base.ValueAvailable;
 
         /// <summary>
+        /// 値の変換を行う<see cref="ValueChecker{T}"/>を取得または設定します。
+        /// </summary>
+        public ValueConverter<string?, T> Converter
+        {
+            get => _converter ?? ValueConverter.GetDefault<T>();
+            set => _converter = value;
+        }
+
+        private ValueConverter<string?, T>? _converter;
+
+        /// <summary>
         /// 値を取得します。
         /// </summary>
         /// <exception cref="InvalidOperationException">インスタンスが空の配列を表す</exception>
@@ -175,9 +186,16 @@ namespace CuiLib.Options
                 if (!ValueAvailable) return null;
                 _values = Array.ConvertAll(RawValues, x =>
                 {
-#pragma warning disable CS8600 // Null リテラルまたは Null の可能性がある値を Null 非許容型に変換しています。
-                    if (!ValueConverter.Convert(x, out Exception? error, out T result)) throw error;
-#pragma warning restore CS8600 // Null リテラルまたは Null の可能性がある値を Null 非許容型に変換しています。
+                    T result;
+                    try
+                    {
+                        result = Converter.Convert(x);
+                    }
+                    catch (Exception e)
+                    {
+                        ThrowHelper.ThrowAsOptionParseFailed(e);
+                        return default;
+                    }
                     ValueCheckState state = Checker.CheckValue(result);
                     ThrowHelper.ThrowIfInvalidState(state);
                     return result;

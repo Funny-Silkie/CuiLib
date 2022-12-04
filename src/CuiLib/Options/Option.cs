@@ -141,24 +141,6 @@ namespace CuiLib.Options
         internal override sealed string? DefaultValueString => DefaultValue?.ToString();
 
         /// <summary>
-        /// 値の妥当性を検証する関数を取得または設定します。
-        /// </summary>
-        /// <remarks>既定値では無条件でOK</remarks>
-        /// <exception cref="ArgumentNullException">設定しようとした値がnull</exception>
-        public ValueChecker<T> Checker
-        {
-            get => _checker;
-            set
-            {
-                ArgumentNullException.ThrowIfNull(_checker);
-
-                _checker = value;
-            }
-        }
-
-        private ValueChecker<T> _checker = ValueChecker.AlwaysSuccess<T>();
-
-        /// <summary>
         /// オプションの値を取得します。
         /// </summary>
         /// <exception cref="ArgumentAnalysisException">値の変換に失敗-または-変換後の値が無効</exception>
