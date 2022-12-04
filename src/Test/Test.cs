@@ -44,8 +44,8 @@ namespace Test
 
             var opFlag1 = new FlagOption("flag1");
             var opFlag2 = new FlagOption("flag2");
-            var opValue1 = new ValuedOption<int>('n', "number");
-            var opValue2 = new ValuedOption<string>('i', "in");
+            var opValue1 = new SingleValuedOption<int>('n', "number");
+            var opValue2 = new SingleValuedOption<string>('i', "in");
 
             main.Options.Add(opFlag1);
             main.Options.Add(opFlag2);
@@ -73,8 +73,8 @@ namespace Test
 
             var opFlag1 = new FlagOption("flag1");
             var opFlag2 = new FlagOption("flag2");
-            var opValue1 = new ValuedOption<int>('n', "number");
-            var opValue2 = new ValuedOption<string>('i', "in");
+            var opValue1 = new SingleValuedOption<int>('n', "number");
+            var opValue2 = new SingleValuedOption<string>('i', "in");
 
             main.Options.Add(opFlag1);
             main.Options.Add(opFlag2);
@@ -103,8 +103,8 @@ namespace Test
 
             var opFlag1 = new FlagOption("flag1");
             var opFlag2 = new FlagOption("flag2");
-            var opValue1 = new ValuedOption<int>('n', "number");
-            var opValue2 = new ValuedOption<string>('i', "in");
+            var opValue1 = new SingleValuedOption<int>('n', "number");
+            var opValue2 = new SingleValuedOption<string>('i', "in");
 
             main.Options.Add(opFlag1);
             main.Options.Add(opFlag2);
@@ -122,6 +122,31 @@ namespace Test
                 Assert.That(opValue1.Value, Is.EqualTo(1));
                 Assert.That(opValue2.Value, Is.Null);
             });
+        }
+
+        [Test]
+        public void MultiValueOption()
+        {
+            string[] args = new[] { "--flag1", "-n", "1", "-n", "2" };
+
+            var main = new MainCommand();
+
+            var opFlag1 = new FlagOption("flag1");
+            var opFlag2 = new FlagOption("flag2");
+            var opValue1 = new MultipleValuedOption<int>('n', "number");
+            var opValue2 = new SingleValuedOption<string>('i', "in");
+
+            main.Options.Add(opFlag1);
+            main.Options.Add(opFlag2);
+            main.Options.Add(opValue1);
+            main.Options.Add(opValue2);
+
+            main.Invoke(args);
+
+            Assert.That(opFlag1.Value, Is.True);
+            Assert.That(opFlag2.Value, Is.False);
+            Assert.That(Enumerable.SequenceEqual(opValue1.Value, new[] { 1, 2 }), Is.True);
+            Assert.That(opValue2.Value, Is.Null);
         }
 
         [Test]
@@ -144,12 +169,12 @@ namespace Test
             {
                 Description = "フラグ2",
             };
-            var opValue1 = new ValuedOption<int>('n', "number")
+            var opValue1 = new SingleValuedOption<int>('n', "number")
             {
                 Description = "数値",
                 Required = true,
             };
-            var opValue2 = new ValuedOption<string>('i', "in")
+            var opValue2 = new SingleValuedOption<string>('i', "in")
             {
                 Description = "文字",
             };

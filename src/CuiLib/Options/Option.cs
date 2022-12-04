@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CuiLib.Options
 {
@@ -29,14 +32,24 @@ namespace CuiLib.Options
         public abstract string? ValueTypeName { get; }
 
         /// <summary>
-        /// オプションが値をとるかどうかを取得します。
-        /// </summary>
-        public abstract bool IsValued { get; }
-
-        /// <summary>
         /// 値を受け取ったかどうかを表す値を取得します。
         /// </summary>
         public abstract bool ValueAvailable { get; }
+
+        /// <summary>
+        /// オプションの種類を取得します。
+        /// </summary>
+        internal abstract OptionType OptionType { get; }
+
+        /// <summary>
+        /// オプションが値をとるかどうかを取得します。
+        /// </summary>
+        internal bool IsValued => OptionType.HasFlag(OptionType.Valued);
+
+        /// <summary>
+        /// 複数の値を取れるかどうかを取得します。
+        /// </summary>
+        internal bool CanMultiValue => OptionType.HasFlag(OptionType.MultiValue);
 
         /// <summary>
         /// 必須のオプションかどうかを取得または設定します。
@@ -94,7 +107,7 @@ namespace CuiLib.Options
         /// 値を設定します。
         /// </summary>
         /// <param name="rawValue">文字列としての値</param>
-        internal abstract void SetValue(string? rawValue);
+        internal abstract void ApplyValue(string rawValue);
     }
 
     /// <summary>
@@ -107,13 +120,14 @@ namespace CuiLib.Options
         /// <summary>
         /// 文字列としての値を取得します。
         /// </summary>
-        public virtual string? RawValue => _rawValue;
+        protected virtual ReadOnlyCollection<string>? RawValues => _rawValues?.AsReadOnly();
 
-        private string? _rawValue;
+        private List<string>? _rawValues;
 
         /// <summary>
         /// 値を受け取ったかどうかを表す値を取得します。
         /// </summary>
+        [MemberNotNullWhen(true, nameof(RawValues))]
         public override sealed bool ValueAvailable => _valueAvailable;
 
         private bool _valueAvailable;
@@ -148,30 +162,7 @@ namespace CuiLib.Options
         /// オプションの値を取得します。
         /// </summary>
         /// <exception cref="ArgumentAnalysisException">値の変換に失敗-または-変換後の値が無効</exception>
-        public virtual T Value
-        {
-            get
-            {
-                if (ValueAvailable)
-                {
-#pragma warning disable CS8600 // Null リテラルまたは Null の可能性がある値を Null 非許容型に変換しています。
-                    if (!ValueConverter.Convert(RawValue, out Exception? error, out T result))
-#pragma warning restore CS8600 // Null リテラルまたは Null の可能性がある値を Null 非許容型に変換しています。
-                    {
-                        ThrowHelper.ThrowAsOptionParseFailed(error);
-                        return default;
-                    }
-
-                    ValueCheckState state = Checker.CheckValue(result);
-                    ThrowHelper.ThrowIfInvalidState(state);
-
-                    return result;
-                }
-                if (Required) ThrowHelper.ThrowAsEmptyOption(this);
-
-                return DefaultValue;
-            }
-        }
+        public abstract T Value { get; }
 
         /// <summary>
         /// <see cref="Option{T}"/>の新しいインスタンスを初期化します。
@@ -222,16 +213,17 @@ namespace CuiLib.Options
         internal override void ClearValue()
         {
             _valueAvailable = false;
-            _rawValue = null;
+            _rawValues = null;
         }
 
         /// <summary>
         /// 値を設定します。
         /// </summary>
         /// <param name="rawValue">文字列としての値</param>
-        internal override void SetValue(string? rawValue)
+        internal override void ApplyValue(string rawValue)
         {
-            _rawValue = rawValue;
+            _rawValues ??= new List<string>();
+            _rawValues.Add(rawValue);
             _valueAvailable = true;
             _ = ValueAvailable;
         }

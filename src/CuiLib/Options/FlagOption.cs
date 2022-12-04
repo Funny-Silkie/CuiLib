@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace CuiLib.Options
 {
@@ -9,21 +11,21 @@ namespace CuiLib.Options
     public sealed class FlagOption : Option<bool>
     {
         /// <inheritdoc/>
-        public override sealed bool IsValued => false;
+        internal override OptionType OptionType => OptionType.Flag | OptionType.SingleValue;
 
         /// <inheritdoc/>
-        public override string? RawValue => null;
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected override ReadOnlyCollection<string>? RawValues => null;
 
         /// <inheritdoc/>
         public override string? ValueTypeName => null;
 
         /// <inheritdoc/>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Required
         {
             get => false;
-            set
-            {
-            }
+            set => throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
