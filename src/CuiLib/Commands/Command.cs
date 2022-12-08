@@ -305,8 +305,10 @@ namespace CuiLib.Commands
             else if (Parameters.Count > 0)
                 foreach (Parameter current in Parameters)
                 {
+                    logger.Write('<');
                     logger.Write(current.Name);
-                    if (current.IsArray) logger.Write("..");
+                    if (current.IsArray) logger.Write(" ..");
+                    logger.Write('>');
                     logger.Write(' ');
                 }
             logger.WriteLine();
