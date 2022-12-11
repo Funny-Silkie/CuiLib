@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace CuiLib.Options
 {
@@ -55,7 +56,7 @@ namespace CuiLib.Options
         /// <param name="values">設定する値</param>
         internal void SetValues(ReadOnlySpan<string> values)
         {
-            if (arrayStart == -1)
+            if (arrayStart == -1 || values.Length - 1 < arrayStart)
             {
                 for (int i = 0; i < values.Length; i++) SetOrCreate(i, values[i]);
             }
@@ -156,7 +157,7 @@ namespace CuiLib.Options
         {
             if (arrayStart != -1) throw new InvalidOperationException("既に配列が含まれています");
 
-            int index = Count == 0 ? 0 : items.Keys[^1];
+            int index = Count == 0 ? 0 : items.Last().Key + 1;
             Parameter<T> result = Parameter.CreateAsArray<T>(name, index);
             items.Add(index, result);
             arrayStart = index;

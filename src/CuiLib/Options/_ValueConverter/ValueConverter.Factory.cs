@@ -153,8 +153,8 @@ namespace CuiLib.Options
             else if (type == typeof(FileInfo)) return "file";
             else if (type == typeof(DirectoryInfo)) return "directory";
             else if (type == typeof(int)) return "int";
-            if (type.IsSubclassOf(typeof(TextReader))) return "file";
-            if (type.IsSubclassOf(typeof(TextWriter))) return "file";
+            if (type == typeof(TextReader)) return "file";
+            if (type == typeof(TextWriter)) return "file";
             else if (type == typeof(sbyte)) return "int";
             else if (type == typeof(double)) return "float";
             else if (type == typeof(long)) return "long";
