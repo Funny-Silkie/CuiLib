@@ -7,8 +7,31 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>CuiLib</Title>
+    <Authors>Funny_Silkie</Authors>
+    <Company />
+    <Description>Library for  .NET CUI application.
+Provides a framework for parsing parameter arguments and command processing.</Description>
+    <PackageProjectUrl>https://github.com/Funny-Silkie/CuiLib</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/Funny-Silkie/CuiLib</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>cui;console app;cuilib</PackageTags>
+    <NeutralLanguage>ja-JP</NeutralLanguage>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
