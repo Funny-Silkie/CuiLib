@@ -198,7 +198,7 @@ namespace CuiLib.Options
         /// <see cref="TextWriter"/>を生成する<see cref="ValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         [Serializable]
-        private sealed class FileOrConsoleWriterValueConverter : ValueConverter<string?, TextWriter>
+        private sealed class FileOrConsoleWriterValueConverter : ValueConverter<string, TextWriter>
         {
             private readonly bool append;
             private readonly Encoding encoding;
@@ -218,7 +218,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override TextWriter Convert(string? value)
+            public override TextWriter Convert(string value)
             {
                 if (value is null) return Console.Out;
                 return new StreamWriter(value, append, encoding);
@@ -229,7 +229,7 @@ namespace CuiLib.Options
         /// <see cref="TextReader"/>を生成する<see cref="ValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         [Serializable]
-        private sealed class FileOrConsoleReaderValueConverter : ValueConverter<string?, TextReader>
+        private sealed class FileOrConsoleReaderValueConverter : ValueConverter<string, TextReader>
         {
             private readonly Encoding encoding;
 
@@ -246,7 +246,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override TextReader Convert(string? value)
+            public override TextReader Convert(string value)
             {
                 if (value is null) return Console.In;
                 return new StreamReader(value, encoding);

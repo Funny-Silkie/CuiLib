@@ -100,6 +100,7 @@ namespace Test
             string[] args = new[] { "--flag1", "-n", "1", "A", "B", "C" };
 
             var main = new MainCommand();
+            main.Parameters.AllowAutomaticallyCreate = true;
 
             var opFlag1 = new FlagOption("flag1");
             var opFlag2 = new FlagOption("flag2");

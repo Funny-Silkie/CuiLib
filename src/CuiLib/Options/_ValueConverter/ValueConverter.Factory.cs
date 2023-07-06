@@ -82,7 +82,7 @@ namespace CuiLib.Options
         /// <param name="encoding">エンコーディング</param>
         /// <param name="append">上書きせずに末尾に追加するかどうか</param>
         /// <returns>ファイルまたはコンソールウィンドウへ文字を出力する<see cref="TextWriter"/>を生成するインスタンス</returns>
-        public static ValueConverter<string?, TextWriter> ToConsoleOrFileWriter(Encoding? encoding = null, bool append = false)
+        public static ValueConverter<string, TextWriter> ToConsoleOrFileWriter(Encoding? encoding = null, bool append = false)
         {
             return new FileOrConsoleWriterValueConverter(encoding ?? Encoding.UTF8, append);
         }
@@ -92,7 +92,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <param name="encoding">エンコーディング</param>
         /// <returns>ファイルまたはコンソールウィンドウから文字を読み取る<see cref="TextReader"/>を生成するインスタンス</returns>
-        public static ValueConverter<string?, TextReader> ToConsoleOrFileReader(Encoding? encoding = null)
+        public static ValueConverter<string, TextReader> ToConsoleOrFileReader(Encoding? encoding = null)
         {
             return new FileOrConsoleReaderValueConverter(encoding ?? Encoding.UTF8);
         }
@@ -103,17 +103,15 @@ namespace CuiLib.Options
         /// <typeparam name="T">変換先の型</typeparam>
         /// <returns>デフォルトのインスタンス</returns>
         /// <exception cref="NotSupportedException"><typeparamref name="T"/>が無効</exception>
-        public static ValueConverter<string?, T> GetDefault<T>()
+        public static ValueConverter<string, T> GetDefault<T>()
         {
             Type type = typeof(T);
 
             if (type == typeof(string)) return Cast(new ThroughValueConverter());
             if (type == typeof(FileInfo)) return Cast(new FileInfoValueConverter());
             if (type == typeof(DirectoryInfo)) return Cast(new DirectoryInfoValueConverter());
-#pragma warning disable CS8620 // 参照型の NULL 値の許容の違いにより、パラメーターに引数を使用できません。
             if (type == typeof(TextReader)) return Cast(new FileOrConsoleReaderValueConverter(new UTF8Encoding(false)));
             if (type == typeof(TextWriter)) return Cast(new FileOrConsoleWriterValueConverter(new UTF8Encoding(false), false));
-#pragma warning restore CS8620 // 参照型の NULL 値の許容の違いにより、パラメーターに引数を使用できません。
             if (type == typeof(int)) return Cast(new ParsableValueConverter<int>());
             if (type == typeof(double)) return Cast(new ParsableValueConverter<double>());
             if (type == typeof(DateTime)) return Cast(new ParsableValueConverter<DateTime>());
@@ -135,9 +133,9 @@ namespace CuiLib.Options
 
             throw new NotSupportedException();
 
-            static ValueConverter<string?, T> Cast<TIn>(ValueConverter<string, TIn> converter)
+            static ValueConverter<string, T> Cast<TIn>(ValueConverter<string, TIn> converter)
             {
-                return Unsafe.As<ValueConverter<string, TIn>, ValueConverter<string?, T>>(ref converter);
+                return Unsafe.As<ValueConverter<string, TIn>, ValueConverter<string, T>>(ref converter);
             }
         }
 
@@ -150,28 +148,29 @@ namespace CuiLib.Options
         {
             var type = typeof(T);
             if (type == typeof(string)) return "string";
-            else if (type == typeof(FileInfo)) return "file";
-            else if (type == typeof(DirectoryInfo)) return "directory";
-            else if (type == typeof(int)) return "int";
+            if (type.IsSZArray) return $"{type.GetGenericArguments()[0]}[]";
+            if (type == typeof(FileInfo)) return "file";
+            if (type == typeof(DirectoryInfo)) return "directory";
+            if (type == typeof(int)) return "int";
             if (type == typeof(TextReader)) return "file";
             if (type == typeof(TextWriter)) return "file";
-            else if (type == typeof(sbyte)) return "int";
-            else if (type == typeof(double)) return "float";
-            else if (type == typeof(long)) return "long";
-            else if (type == typeof(ulong)) return "long";
-            else if (type == typeof(DateTime)) return "date time";
-            else if (type == typeof(short)) return "int";
-            else if (type == typeof(byte)) return "int";
-            else if (type == typeof(ushort)) return "int";
-            else if (type == typeof(uint)) return "uint";
-            else if (type == typeof(float)) return "float";
-            else if (type == typeof(decimal)) return "decimal";
-            else if (type == typeof(char)) return "char";
-            else if (type == typeof(bool)) return "bool";
-            else if (type == typeof(TimeSpan)) return "date time";
-            else if (type == typeof(DateOnly)) return "date";
-            else if (type == typeof(TimeOnly)) return "time";
-            else if (type.IsEnum) return "string";
+            if (type == typeof(sbyte)) return "int";
+            if (type == typeof(double)) return "float";
+            if (type == typeof(long)) return "long";
+            if (type == typeof(ulong)) return "long";
+            if (type == typeof(DateTime)) return "date time";
+            if (type == typeof(short)) return "int";
+            if (type == typeof(byte)) return "int";
+            if (type == typeof(ushort)) return "int";
+            if (type == typeof(uint)) return "uint";
+            if (type == typeof(float)) return "float";
+            if (type == typeof(decimal)) return "decimal";
+            if (type == typeof(char)) return "char";
+            if (type == typeof(bool)) return "bool";
+            if (type == typeof(TimeSpan)) return "date time";
+            if (type == typeof(DateOnly)) return "date";
+            if (type == typeof(TimeOnly)) return "time";
+            if (type.IsEnum) return "string";
             return null;
         }
     }

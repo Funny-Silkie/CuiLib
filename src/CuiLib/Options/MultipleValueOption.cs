@@ -18,13 +18,13 @@ namespace CuiLib.Options
         /// <summary>
         /// 値の変換を行う<see cref="ValueChecker{T}"/>を取得または設定します。
         /// </summary>
-        public ValueConverter<string?, T> Converter
+        public ValueConverter<string, T> Converter
         {
             get => _converter ?? ValueConverter.GetDefault<T>();
             set => _converter = value;
         }
 
-        private ValueConverter<string?, T>? _converter;
+        private ValueConverter<string, T>? _converter;
 
         /// <summary>
         /// 値の妥当性を検証する関数を取得または設定します。
@@ -80,6 +80,9 @@ namespace CuiLib.Options
         }
 
         private T[]? _valueCache;
+
+        /// <inheritdoc/>
+        internal override string? DefaultValueString => $"[{string.Join(", ", DefaultValue)}]";
 
         /// <summary>
         /// <see cref="MultipleValueOption{T}"/>の新しいインスタンスを初期化します。

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CuiLib.Log;
@@ -342,12 +343,13 @@ namespace CuiLib.Commands
                     logger.Write("  ");
 
                     string? desc = option.Description;
-                    string header = string.Empty;
-                    if (option.ValueTypeName is not null) header += $"* type={option.ValueTypeName}";
+                    var headerValues = new List<string>();
+                    if (option.ValueTypeName is not null) headerValues.Add($"type={option.ValueTypeName}");
                     string? defaultValue = option.DefaultValueString;
-                    if (defaultValue is not null && option is not FlagOption) header += $", default={defaultValue.ReplaceSpecialCharacters()}";
-                    if (option.Required) header += " (required)";
-                    if (!string.IsNullOrEmpty(header)) desc += '\n' + header;
+                    if (defaultValue is not null && option is not FlagOption) headerValues.Add($"default={defaultValue.ReplaceSpecialCharacters()}");
+                    if (option.Required) headerValues.Add("required");
+                    if (option.CanMultiValue) headerValues.Add("multi valued");
+                    if (headerValues.Count > 0) desc += '\n' + string.Join(", ", headerValues);
                     string[] descriptions = desc?.Split('\n') ?? Array.Empty<string>();
                     if (descriptions.Length > 0)
                     {

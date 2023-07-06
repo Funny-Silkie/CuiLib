@@ -138,7 +138,7 @@ namespace CuiLib.Options
         public T DefaultValue { get; set; } = default!;
 
         /// <inheritdoc/>
-        internal override sealed string? DefaultValueString => DefaultValue?.ToString();
+        internal override string? DefaultValueString => DefaultValue?.ToString();
 
         /// <summary>
         /// オプションの値を取得します。

@@ -32,7 +32,7 @@ namespace CuiLib.Options
         /// <summary>
         /// 値を受け取ったかどうかを表す値を取得します。
         /// </summary>
-        [MemberNotNullWhen(true, "_rawValues", "RawValue", "RawValues")]
+        [MemberNotNullWhen(true, nameof(_rawValues), nameof(RawValue), nameof(RawValues))]
         public virtual bool ValueAvailable => _rawValues is not null;
 
         /// <summary>
@@ -140,19 +140,19 @@ namespace CuiLib.Options
     public class Parameter<T> : Parameter
     {
         /// <inheritdoc/>
-        [MemberNotNullWhen(true, "Values")]
+        [MemberNotNullWhen(true, nameof(Values))]
         public override bool ValueAvailable => base.ValueAvailable;
 
         /// <summary>
         /// 値の変換を行う<see cref="ValueChecker{T}"/>を取得または設定します。
         /// </summary>
-        public ValueConverter<string?, T> Converter
+        public ValueConverter<string, T> Converter
         {
             get => _converter ?? ValueConverter.GetDefault<T>();
             set => _converter = value;
         }
 
-        private ValueConverter<string?, T>? _converter;
+        private ValueConverter<string, T>? _converter;
 
         /// <summary>
         /// 値を取得します。
