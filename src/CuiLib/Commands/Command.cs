@@ -301,7 +301,17 @@ namespace CuiLib.Commands
                 logger.Write(Name);
                 logger.Write(' ');
             }
-            if (Options.Count > 0) logger.Write("[Options] ");
+            if (Options.Count > 0)
+                foreach (var option in Options)
+                {
+                    if (!option.Required) logger.Write('[');
+                    if (option.ShortName is not null) logger.Write($"-{option.ShortName}");
+                    else logger.Write($"--{option.FullName}");
+                    if (option.IsValued) logger.Write($" {option.ValueTypeName}");
+                    if (!option.Required) logger.Write(']');
+                    logger.Write(' ');
+                }
+
             if (Children.Count > 0) logger.Write("[Subcommand]");
             else if (Parameters.Count > 0)
                 foreach (Parameter current in Parameters)
@@ -343,13 +353,13 @@ namespace CuiLib.Commands
                     logger.Write("  ");
 
                     string? desc = option.Description;
-                    var headerValues = new List<string>();
-                    if (option.ValueTypeName is not null) headerValues.Add($"type={option.ValueTypeName}");
-                    string? defaultValue = option.DefaultValueString;
-                    if (defaultValue is not null && option is not FlagOption) headerValues.Add($"default={defaultValue.ReplaceSpecialCharacters()}");
-                    if (option.Required) headerValues.Add("required");
-                    if (option.CanMultiValue) headerValues.Add("multi valued");
-                    if (headerValues.Count > 0) desc += '\n' + string.Join(", ", headerValues);
+                    //var headerValues = new List<string>();
+                    //if (option.ValueTypeName is not null) headerValues.Add($"type={option.ValueTypeName}");
+                    //string? defaultValue = option.DefaultValueString;
+                    //if (defaultValue is not null && option is not FlagOption) headerValues.Add($"default={defaultValue.ReplaceSpecialCharacters()}");
+                    //if (option.Required) headerValues.Add("required");
+                    //if (option.CanMultiValue) headerValues.Add("multi valued");
+                    //if (headerValues.Count > 0) desc += "\n* " + string.Join(", ", headerValues);
                     string[] descriptions = desc?.Split('\n') ?? Array.Empty<string>();
                     if (descriptions.Length > 0)
                     {

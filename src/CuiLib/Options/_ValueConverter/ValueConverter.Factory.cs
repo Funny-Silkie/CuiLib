@@ -171,7 +171,7 @@ namespace CuiLib.Options
             if (type == typeof(DateOnly)) return "date";
             if (type == typeof(TimeOnly)) return "time";
             if (type.IsEnum) return "string";
-            return null;
+            return "string";
         }
     }
 }

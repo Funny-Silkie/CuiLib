@@ -101,8 +101,11 @@ class ConcatCommand : Command
         foreach (FileInfo currentInput in input)
         {
             using StreamReader reader = currentInput.OpenText();
-            string? line = reader.ReadLine();
-            writer.WriteLine(line);
+            while (reader.EndOfStream)
+            {
+                string? line = reader.ReadLine();
+                writer.WriteLine(line);
+            }
         }
     }
 }
