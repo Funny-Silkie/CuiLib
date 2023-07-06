@@ -15,6 +15,11 @@ namespace CuiLib.Options
         private int arrayStart = -1;
         private readonly SortedList<int, Parameter> items;
 
+        /// <summary>
+        /// 未定義のパラメータの自動生成を許すかどうかを取得または設定します。
+        /// </summary>
+        public bool AllowAutomaticallyCreate { get; set; }
+
         /// <inheritdoc/>
         public int Count => items.Count;
 
@@ -74,12 +79,14 @@ namespace CuiLib.Options
         /// <param name="value">設定する値</param>
         /// <returns>値を設定したパラメータ</returns>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
+        /// <exception cref="InvalidOperationException"><see cref="AllowAutomaticallyCreate"/>が<see langword="false"/>の時に未定義インデックスのパラメータが存在</exception>
         private Parameter SetOrCreate(int index, string value)
         {
             if (index < 0) ThrowHelper.ThrowIfNegative(index);
 
             if (!items.TryGetValue(index, out Parameter? result))
             {
+                if (!AllowAutomaticallyCreate) throw new InvalidOperationException($"{index}番目のパラメータは存在しません");
                 result = Parameter.Create<string>($"Param {index}", index);
                 items[index] = result;
             }
@@ -152,10 +159,10 @@ namespace CuiLib.Options
         /// <returns>追加された<see cref="Parameter{T}"/>のインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="name"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
-        /// <exception cref="InvalidOperationException">配列が既に含まれている</exception>
+        /// <exception cref="ArgumentAnalysisException">配列が既に含まれている</exception>
         public Parameter<T> CreateAndAppendArray<T>(string name)
         {
-            if (arrayStart != -1) throw new InvalidOperationException("既に配列が含まれています");
+            if (arrayStart != -1) throw new ArgumentAnalysisException("既に配列が含まれています");
 
             int index = Count == 0 ? 0 : items.Last().Key + 1;
             Parameter<T> result = Parameter.CreateAsArray<T>(name, index);
