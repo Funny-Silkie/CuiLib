@@ -82,7 +82,7 @@ namespace CuiLib.Options
         /// <param name="encoding">エンコーディング</param>
         /// <param name="append">上書きせずに末尾に追加するかどうか</param>
         /// <returns>ファイルまたはコンソールウィンドウへ文字を出力する<see cref="TextWriter"/>を生成するインスタンス</returns>
-        public static ValueConverter<string?, TextWriter> ToConsoleOrFileWriter(Encoding? encoding = null, bool append = false)
+        public static ValueConverter<string, TextWriter> ToConsoleOrFileWriter(Encoding? encoding = null, bool append = false)
         {
             return new FileOrConsoleWriterValueConverter(encoding ?? Encoding.UTF8, append);
         }
@@ -92,7 +92,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <param name="encoding">エンコーディング</param>
         /// <returns>ファイルまたはコンソールウィンドウから文字を読み取る<see cref="TextReader"/>を生成するインスタンス</returns>
-        public static ValueConverter<string?, TextReader> ToConsoleOrFileReader(Encoding? encoding = null)
+        public static ValueConverter<string, TextReader> ToConsoleOrFileReader(Encoding? encoding = null)
         {
             return new FileOrConsoleReaderValueConverter(encoding ?? Encoding.UTF8);
         }
@@ -103,17 +103,15 @@ namespace CuiLib.Options
         /// <typeparam name="T">変換先の型</typeparam>
         /// <returns>デフォルトのインスタンス</returns>
         /// <exception cref="NotSupportedException"><typeparamref name="T"/>が無効</exception>
-        public static ValueConverter<string?, T> GetDefault<T>()
+        public static ValueConverter<string, T> GetDefault<T>()
         {
             Type type = typeof(T);
 
             if (type == typeof(string)) return Cast(new ThroughValueConverter());
             if (type == typeof(FileInfo)) return Cast(new FileInfoValueConverter());
             if (type == typeof(DirectoryInfo)) return Cast(new DirectoryInfoValueConverter());
-#pragma warning disable CS8620 // 参照型の NULL 値の許容の違いにより、パラメーターに引数を使用できません。
             if (type == typeof(TextReader)) return Cast(new FileOrConsoleReaderValueConverter(new UTF8Encoding(false)));
             if (type == typeof(TextWriter)) return Cast(new FileOrConsoleWriterValueConverter(new UTF8Encoding(false), false));
-#pragma warning restore CS8620 // 参照型の NULL 値の許容の違いにより、パラメーターに引数を使用できません。
             if (type == typeof(int)) return Cast(new ParsableValueConverter<int>());
             if (type == typeof(double)) return Cast(new ParsableValueConverter<double>());
             if (type == typeof(DateTime)) return Cast(new ParsableValueConverter<DateTime>());
@@ -135,9 +133,9 @@ namespace CuiLib.Options
 
             throw new NotSupportedException();
 
-            static ValueConverter<string?, T> Cast<TIn>(ValueConverter<string, TIn> converter)
+            static ValueConverter<string, T> Cast<TIn>(ValueConverter<string, TIn> converter)
             {
-                return Unsafe.As<ValueConverter<string, TIn>, ValueConverter<string?, T>>(ref converter);
+                return Unsafe.As<ValueConverter<string, TIn>, ValueConverter<string, T>>(ref converter);
             }
         }
 
