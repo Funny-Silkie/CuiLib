@@ -23,6 +23,9 @@ Provides a framework for parsing parameter arguments and command processing.</De
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <Version>1.0.1</Version>
+    <PackageReleaseNotes>version 1.0.1:
+- ヘルプメッセージの変更
+- 未定義のParameterを自動的に追加するかどうかをフラグ管理できるように変更</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE.txt">
