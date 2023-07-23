@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -20,7 +20,7 @@ namespace CuiLib.Options
         /// <param name="second">次に変換を行う<see cref="ValueConverter{TIn, TOut}"/></param>
         /// <returns><typeparamref name="TIn"/>から<typeparamref name="TOut"/>へ変換を行う<see cref="ValueConverter{TIn, TOut}"/>のインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="second"/>がnull</exception>
-        public static ValueConverter<TIn, TOut> Combine<TIn, TMid, TOut>(this ValueConverter<TIn, TMid> first, ValueConverter<TMid, TOut> second)
+        public static IValueConverter<TIn, TOut> Combine<TIn, TMid, TOut>(this IValueConverter<TIn, TMid> first, IValueConverter<TMid, TOut> second)
         {
             return new CombinedValueConverter<TIn, TMid, TOut>(first, second);
         }
@@ -31,7 +31,7 @@ namespace CuiLib.Options
         /// <param name="converter">使用するデリゲート</param>
         /// <returns><paramref name="converter"/>で変換する<see cref="ValueConverter{TIn, TOut}"/>のインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="converter"/>がnull</exception>
-        public static ValueConverter<TIn, TOut> FromDelegate<TIn, TOut>(Converter<TIn, TOut> converter)
+        public static IValueConverter<TIn, TOut> FromDelegate<TIn, TOut>(Converter<TIn, TOut> converter)
         {
             return new DelegateValueConverter<TIn, TOut>(converter);
         }
@@ -41,7 +41,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="TParsable"><see cref="IParsable{TSelf}"/>を実装する型</typeparam>
         /// <returns>文字列から<typeparamref name="TParsable"/>に変換するインスタンス</returns>
-        public static ValueConverter<string, TParsable> StringToIParsable<TParsable>()
+        public static IValueConverter<string, TParsable> StringToIParsable<TParsable>()
             where TParsable : IParsable<TParsable>
         {
             return new ParsableValueConverter<TParsable>();
@@ -52,7 +52,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="TEnum">列挙型</typeparam>
         /// <returns>文字列から列挙型に変換するインスタンス</returns>
-        public static ValueConverter<string, TEnum> StringToEnum<TEnum>()
+        public static IValueConverter<string, TEnum> StringToEnum<TEnum>()
             where TEnum : struct, Enum
         {
             return new EnumValueConverter<TEnum>();
@@ -62,7 +62,7 @@ namespace CuiLib.Options
         /// 文字列から<see cref="FileInfo"/>に変換するインスタンスを生成します。
         /// </summary>
         /// <returns>文字列から<see cref="FileInfo"/>に変換するインスタンス</returns>
-        public static ValueConverter<string, FileInfo> StringToFileInfo()
+        public static IValueConverter<string, FileInfo> StringToFileInfo()
         {
             return new FileInfoValueConverter();
         }
@@ -71,7 +71,7 @@ namespace CuiLib.Options
         /// 文字列から<see cref="DirectoryInfo"/>に変換するインスタンスを生成します。
         /// </summary>
         /// <returns>文字列から<see cref="DirectoryInfo"/>に変換するインスタンス</returns>
-        public static ValueConverter<string, DirectoryInfo> StringToDirectoryInfo()
+        public static IValueConverter<string, DirectoryInfo> StringToDirectoryInfo()
         {
             return new DirectoryInfoValueConverter();
         }
@@ -82,7 +82,7 @@ namespace CuiLib.Options
         /// <param name="encoding">エンコーディング</param>
         /// <param name="append">上書きせずに末尾に追加するかどうか</param>
         /// <returns>ファイルまたはコンソールウィンドウへ文字を出力する<see cref="TextWriter"/>を生成するインスタンス</returns>
-        public static ValueConverter<string, TextWriter> ToConsoleOrFileWriter(Encoding? encoding = null, bool append = false)
+        public static IValueConverter<string, TextWriter> ToConsoleOrFileWriter(Encoding? encoding = null, bool append = false)
         {
             return new FileOrConsoleWriterValueConverter(encoding ?? Encoding.UTF8, append);
         }
@@ -92,7 +92,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <param name="encoding">エンコーディング</param>
         /// <returns>ファイルまたはコンソールウィンドウから文字を読み取る<see cref="TextReader"/>を生成するインスタンス</returns>
-        public static ValueConverter<string, TextReader> ToConsoleOrFileReader(Encoding? encoding = null)
+        public static IValueConverter<string, TextReader> ToConsoleOrFileReader(Encoding? encoding = null)
         {
             return new FileOrConsoleReaderValueConverter(encoding ?? Encoding.UTF8);
         }
@@ -103,7 +103,7 @@ namespace CuiLib.Options
         /// <typeparam name="T">変換先の型</typeparam>
         /// <returns>デフォルトのインスタンス</returns>
         /// <exception cref="NotSupportedException"><typeparamref name="T"/>が無効</exception>
-        public static ValueConverter<string, T> GetDefault<T>()
+        public static IValueConverter<string, T> GetDefault<T>()
         {
             Type type = typeof(T);
 
@@ -111,7 +111,9 @@ namespace CuiLib.Options
             if (type == typeof(FileInfo)) return Cast(new FileInfoValueConverter());
             if (type == typeof(DirectoryInfo)) return Cast(new DirectoryInfoValueConverter());
             if (type == typeof(TextReader)) return Cast(new FileOrConsoleReaderValueConverter(new UTF8Encoding(false)));
+            if (type == typeof(StreamReader)) return Cast(new StreamReaderValueConverter(new UTF8Encoding(false)));
             if (type == typeof(TextWriter)) return Cast(new FileOrConsoleWriterValueConverter(new UTF8Encoding(false), false));
+            if (type == typeof(StreamWriter)) return Cast(new StreamWriterValueConverter(new UTF8Encoding(false), false));
             if (type == typeof(int)) return Cast(new ParsableValueConverter<int>());
             if (type == typeof(double)) return Cast(new ParsableValueConverter<double>());
             if (type == typeof(DateTime)) return Cast(new ParsableValueConverter<DateTime>());

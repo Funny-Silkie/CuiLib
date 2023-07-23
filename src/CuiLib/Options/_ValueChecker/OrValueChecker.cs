@@ -11,7 +11,7 @@ namespace CuiLib.Options
     [Serializable]
     internal class OrValueChecker<T> : ValueChecker<T>
     {
-        private ValueChecker<T>[] checkers;
+        private IValueChecker<T>[] checkers;
 
         /// <summary>
         /// <see cref="OrValueChecker{T}"/>の新しいインスタンスを初期化します。
@@ -19,7 +19,7 @@ namespace CuiLib.Options
         /// <param name="first">最初の評価</param>
         /// <param name="second">2番目の評価</param>
         /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="second"/>がnull</exception>
-        internal OrValueChecker(ValueChecker<T> first, ValueChecker<T> second)
+        internal OrValueChecker(IValueChecker<T> first, IValueChecker<T> second)
         {
             Initialize(first, second);
         }
@@ -30,7 +30,7 @@ namespace CuiLib.Options
         /// <param name="source">評価する関数のリスト</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
-        internal OrValueChecker(params ValueChecker<T>[] source)
+        internal OrValueChecker(params IValueChecker<T>[] source)
         {
             ArgumentNullException.ThrowIfNull(source);
 
@@ -49,8 +49,8 @@ namespace CuiLib.Options
         /// <param name="first">最初の評価</param>
         /// <param name="second">2番目の評価</param>
         /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="second"/>がnull</exception>
-        [MemberNotNull("checkers")]
-        private void Initialize(ValueChecker<T> first, ValueChecker<T> second)
+        [MemberNotNull(nameof(checkers))]
+        private void Initialize(IValueChecker<T> first, IValueChecker<T> second)
         {
             ArgumentNullException.ThrowIfNull(first);
             ArgumentNullException.ThrowIfNull(second);
@@ -85,24 +85,24 @@ namespace CuiLib.Options
         /// <param name="source">評価する関数のリスト</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
-        [MemberNotNull("checkers")]
-        private void Initialize(ValueChecker<T>[] source)
+        [MemberNotNull(nameof(checkers))]
+        private void Initialize(IValueChecker<T>[] source)
         {
             int length = 0;
             for (int i = 0; i < source.Length; i++)
             {
-                ValueChecker<T> current = source[i];
+                IValueChecker<T> current = source[i];
                 if (current == null) throw new ArgumentException("要素がnullです", nameof(source));
 
                 length += current is OrValueChecker<T> c ? c.checkers.Length : 1;
             }
 
-            checkers = new ValueChecker<T>[length];
+            checkers = new IValueChecker<T>[length];
             int index = 0;
 
             for (int i = 0; i < source.Length; i++)
             {
-                ValueChecker<T> current = source[i];
+                IValueChecker<T> current = source[i];
                 if (current is OrValueChecker<T> c)
                 {
                     int currentLength = c.checkers.Length;

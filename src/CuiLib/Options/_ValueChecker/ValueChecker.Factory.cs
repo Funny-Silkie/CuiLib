@@ -11,7 +11,7 @@ namespace CuiLib.Options
         /// <summary>
         /// 必ず<see cref="ValueCheckState.Success"/>を返すインスタンスを取得します。
         /// </summary>
-        public static ValueChecker<T> AlwaysSuccess<T>()
+        public static IValueChecker<T> AlwaysSuccess<T>()
         {
             return new AlwaysSuccessValueChecker<T>();
         }
@@ -21,7 +21,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <param name="func">検証関数</param>
         /// <exception cref="ArgumentNullException"><paramref name="func"/>がnull</exception>
-        public static ValueChecker<T> FromDelegate<T>(Func<T?, ValueCheckState> func)
+        public static IValueChecker<T> FromDelegate<T>(Func<T?, ValueCheckState> func)
         {
             return new DelegateValueChecker<T>(func);
         }
@@ -32,7 +32,7 @@ namespace CuiLib.Options
         /// <param name="source">評価する関数のリスト</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
-        public static ValueChecker<T> And<T>(params ValueChecker<T>[] source)
+        public static IValueChecker<T> And<T>(params ValueChecker<T>[] source)
         {
             return ValueChecker<T>.And(source);
         }
@@ -43,7 +43,7 @@ namespace CuiLib.Options
         /// <param name="source">評価する関数のリスト</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
-        public static ValueChecker<T> Or<T>(params ValueChecker<T>[] source)
+        public static IValueChecker<T> Or<T>(params ValueChecker<T>[] source)
         {
             return OrValueChecker<T>.Or(source);
         }
@@ -52,7 +52,7 @@ namespace CuiLib.Options
         /// 値が対象より大きいかを検証します。
         /// </summary>
         /// <param name="comparison">比較対象</param>
-        public static ValueChecker<T> Larger<T>(T comparison)
+        public static IValueChecker<T> Larger<T>(T comparison)
             where T : IComparable<T>
         {
             return new LargerValueChecker<T>(comparison, null);
@@ -64,7 +64,7 @@ namespace CuiLib.Options
         /// <typeparam name="T">検証する値の型</typeparam>
         /// <param name="comparison">比較対象</param>
         /// <param name="comparer">比較オブジェクト。nullで<see cref="Comparer{T}.Default"/></param>
-        public static ValueChecker<T> Larger<T>(T comparison, IComparer<T>? comparer)
+        public static IValueChecker<T> Larger<T>(T comparison, IComparer<T>? comparer)
             where T : IComparable<T>
         {
             return new LargerValueChecker<T>(comparison, comparer);
@@ -75,7 +75,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         /// <param name="comparison">比較対象</param>
-        public static ValueChecker<T> LargerOrEqual<T>(T comparison)
+        public static IValueChecker<T> LargerOrEqual<T>(T comparison)
             where T : IComparable<T>
         {
             return new LargerOrEqualValueChecker<T>(comparison, null);
@@ -87,7 +87,7 @@ namespace CuiLib.Options
         /// <typeparam name="T">検証する値の型</typeparam>
         /// <param name="comparison">比較対象</param>
         /// <param name="comparer">比較オブジェクト。nullで<see cref="Comparer{T}.Default"/></param>
-        public static ValueChecker<T> LargerOrEqual<T>(T comparison, IComparer<T>? comparer)
+        public static IValueChecker<T> LargerOrEqual<T>(T comparison, IComparer<T>? comparer)
             where T : IComparable<T>
         {
             return new LargerOrEqualValueChecker<T>(comparison, comparer);
@@ -98,7 +98,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         /// <param name="comparison">比較対象</param>
-        public static ValueChecker<T> Lower<T>(T comparison)
+        public static IValueChecker<T> Lower<T>(T comparison)
             where T : IComparable<T>
         {
             return new LowerValueChecker<T>(comparison, null);
@@ -110,7 +110,7 @@ namespace CuiLib.Options
         /// <typeparam name="T">検証する値の型</typeparam>
         /// <param name="comparison">比較対象</param>
         /// <param name="comparer">比較オブジェクト。nullで<see cref="Comparer{T}.Default"/></param>
-        public static ValueChecker<T> Lower<T>(T comparison, IComparer<T>? comparer)
+        public static IValueChecker<T> Lower<T>(T comparison, IComparer<T>? comparer)
             where T : IComparable<T>
         {
             return new LowerValueChecker<T>(comparison, comparer);
@@ -121,7 +121,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         /// <param name="comparison">比較対象</param>
-        public static ValueChecker<T> LowerOrEqual<T>(T comparison)
+        public static IValueChecker<T> LowerOrEqual<T>(T comparison)
             where T : IComparable<T>
         {
             return new LowerOrEqualValueChecker<T>(comparison, null);
@@ -133,7 +133,7 @@ namespace CuiLib.Options
         /// <typeparam name="T">検証する値の型</typeparam>
         /// <param name="comparison">比較対象</param>
         /// <param name="comparer">比較オブジェクト。nullで<see cref="Comparer{T}.Default"/></param>
-        public static ValueChecker<T> LowerOrEqual<T>(T comparison, IComparer<T>? comparer)
+        public static IValueChecker<T> LowerOrEqual<T>(T comparison, IComparer<T>? comparer)
             where T : IComparable<T>
         {
             return new LowerOrEqualValueChecker<T>(comparison, comparer);
@@ -143,7 +143,7 @@ namespace CuiLib.Options
         /// 列挙型が定義された値かどうかを検証します。
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        public static ValueChecker<T> Defined<T>()
+        public static IValueChecker<T> Defined<T>()
             where T : struct, Enum
         {
             return new DefinedEnumValueChecker<T>();
@@ -157,7 +157,7 @@ namespace CuiLib.Options
         /// <param name="source">候補のコレクション</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>が空</exception>
-        public static ValueChecker<TElement> Contains<TCollection, TElement>(TCollection source)
+        public static IValueChecker<TElement> Contains<TCollection, TElement>(TCollection source)
             where TCollection : IEnumerable<TElement>
         {
             return new ContainsValueChecker<TCollection, TElement>(source, null);
@@ -172,7 +172,7 @@ namespace CuiLib.Options
         /// <param name="comparer">要素を比較するオブジェクト。nullで<see cref="EqualityComparer{T}.Default"/></param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>が空</exception>
-        public static ValueChecker<TElement> Contains<TCollection, TElement>(TCollection source, IEqualityComparer<TElement?>? comparer)
+        public static IValueChecker<TElement> Contains<TCollection, TElement>(TCollection source, IEqualityComparer<TElement?>? comparer)
             where TCollection : IEnumerable<TElement>
         {
             return new ContainsValueChecker<TCollection, TElement>(source, comparer);
@@ -181,7 +181,7 @@ namespace CuiLib.Options
         /// <summary>
         /// 文字列が空でないかを検証します。
         /// </summary>
-        public static ValueChecker<string?> NotEmpty()
+        public static IValueChecker<string?> NotEmpty()
         {
             return new NotEmptyValueChecker();
         }
@@ -190,7 +190,7 @@ namespace CuiLib.Options
         /// 文字列が指定の値で始まるかどうかを検証します。
         /// </summary>
         /// <param name="comparison">開始文字</param>
-        public static ValueChecker<string> StartWith(char comparison)
+        public static IValueChecker<string> StartWith(char comparison)
         {
             return new StartWithValueChecker(comparison);
         }
@@ -201,7 +201,7 @@ namespace CuiLib.Options
         /// <param name="comparison">開始文字</param>
         /// <param name="stringComparison">文字列の比較方法</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="stringComparison"/>が非定義の値</exception>
-        public static ValueChecker<string> StartWith(char comparison, StringComparison stringComparison)
+        public static IValueChecker<string> StartWith(char comparison, StringComparison stringComparison)
         {
             return new StartWithValueChecker(comparison, stringComparison);
         }
@@ -212,7 +212,7 @@ namespace CuiLib.Options
         /// <param name="comparison">開始文字列</param>
         /// <exception cref="ArgumentNullException"><paramref name="comparison"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="comparison"/>が空文字</exception>
-        public static ValueChecker<string> StartWith(string comparison)
+        public static IValueChecker<string> StartWith(string comparison)
         {
             return new StartWithValueChecker(comparison);
         }
@@ -225,7 +225,7 @@ namespace CuiLib.Options
         /// <exception cref="ArgumentNullException"><paramref name="comparison"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="comparison"/>が空文字</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="stringComparison"/>が非定義の値</exception>
-        public static ValueChecker<string> StartWith(string comparison, StringComparison stringComparison)
+        public static IValueChecker<string> StartWith(string comparison, StringComparison stringComparison)
         {
             return new StartWithValueChecker(comparison, stringComparison);
         }
@@ -234,7 +234,7 @@ namespace CuiLib.Options
         /// 文字列が指定の値で終わるかどうかを検証します。
         /// </summary>
         /// <param name="comparison">終了文字</param>
-        public static ValueChecker<string> EndWith(char comparison)
+        public static IValueChecker<string> EndWith(char comparison)
         {
             return new EndWithValueChecker(comparison);
         }
@@ -245,7 +245,7 @@ namespace CuiLib.Options
         /// <param name="comparison">終了文字</param>
         /// <param name="stringComparison">文字列の比較方法</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="stringComparison"/>が非定義の値</exception>
-        public static ValueChecker<string> EndWith(char comparison, StringComparison stringComparison)
+        public static IValueChecker<string> EndWith(char comparison, StringComparison stringComparison)
         {
             return new EndWithValueChecker(comparison, stringComparison);
         }
@@ -256,7 +256,7 @@ namespace CuiLib.Options
         /// <param name="comparison">終了文字列</param>
         /// <exception cref="ArgumentNullException"><paramref name="comparison"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="comparison"/>が空文字</exception>
-        public static ValueChecker<string> EndWith(string comparison)
+        public static IValueChecker<string> EndWith(string comparison)
         {
             return new EndWithValueChecker(comparison);
         }
@@ -269,7 +269,7 @@ namespace CuiLib.Options
         /// <exception cref="ArgumentNullException"><paramref name="comparison"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="comparison"/>が空文字</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="stringComparison"/>が非定義の値</exception>
-        public static ValueChecker<string> EndWith(string comparison, StringComparison stringComparison)
+        public static IValueChecker<string> EndWith(string comparison, StringComparison stringComparison)
         {
             return new EndWithValueChecker(comparison, stringComparison);
         }
@@ -279,7 +279,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         /// <param name="comparison">比較対象</param>
-        public static ValueChecker<T> Equals<T>(T comparison)
+        public static IValueChecker<T> Equals<T>(T comparison)
         {
             return new EqualsValueChecker<T>(null, comparison);
         }
@@ -290,7 +290,7 @@ namespace CuiLib.Options
         /// <typeparam name="T">検証する値の型</typeparam>
         /// <param name="comparer">比較を行うオブジェクト。nullで<see cref="EqualityComparer{T}.Default"/></param>
         /// <param name="comparison">比較対象</param>
-        public static ValueChecker<T> Equals<T>(T comparison, IEqualityComparer<T>? comparer)
+        public static IValueChecker<T> Equals<T>(T comparison, IEqualityComparer<T>? comparer)
         {
             return new EqualsValueChecker<T>(comparer, comparison);
         }
@@ -300,7 +300,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         /// <param name="comparison">比較対象</param>
-        public static ValueChecker<T> NotEquals<T>(T comparison)
+        public static IValueChecker<T> NotEquals<T>(T comparison)
         {
             return new NotEqualsValueChecker<T>(null, comparison);
         }
@@ -311,7 +311,7 @@ namespace CuiLib.Options
         /// <typeparam name="T">検証する値の型</typeparam>
         /// <param name="comparer">比較を行うオブジェクト。nullで<see cref="EqualityComparer{T}.Default"/></param>
         /// <param name="comparison">比較対象</param>
-        public static ValueChecker<T> NotEquals<T>(T comparison, IEqualityComparer<T>? comparer)
+        public static IValueChecker<T> NotEquals<T>(T comparison, IEqualityComparer<T>? comparer)
         {
             return new NotEqualsValueChecker<T>(comparer, comparison);
         }
@@ -319,7 +319,7 @@ namespace CuiLib.Options
         /// <summary>
         /// ファイルパスが存在するかどうかを検証します。
         /// </summary>
-        public static ValueChecker<string> FileExists()
+        public static IValueChecker<string> FileExists()
         {
             return new FileExistsValueChecker();
         }
@@ -327,7 +327,7 @@ namespace CuiLib.Options
         /// <summary>
         /// ディレクトリパスが存在するかどうかを検証します。
         /// </summary>
-        public static ValueChecker<string> DirectoryExists()
+        public static IValueChecker<string> DirectoryExists()
         {
             return new DirectoryExistsValueChecker();
         }

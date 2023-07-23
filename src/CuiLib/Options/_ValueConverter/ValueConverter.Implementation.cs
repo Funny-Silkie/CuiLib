@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 
@@ -249,6 +249,63 @@ namespace CuiLib.Options
             public override TextReader Convert(string value)
             {
                 if (value is null) return Console.In;
+                return new StreamReader(value, encoding);
+            }
+        }
+
+        /// <summary>
+        /// <see cref="StreamWriter"/>を生成する<see cref="ValueConverter{TIn, TOut}"/>のクラスです。
+        /// </summary>
+        [Serializable]
+        private sealed class StreamWriterValueConverter : ValueConverter<string, StreamWriter>
+        {
+            private readonly bool append;
+            private readonly Encoding encoding;
+
+            /// <summary>
+            /// <see cref="StreamWriterValueConverter"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="encoding">エンコーディング</param>
+            /// <param name="append">上書きせずに末尾に追加するかどうか</param>
+            /// <exception cref="ArgumentNullException"><paramref name="encoding"/>がnull</exception>
+            internal StreamWriterValueConverter(Encoding encoding, bool append)
+            {
+                ArgumentNullException.ThrowIfNull(encoding);
+
+                this.encoding = encoding;
+                this.append = append;
+            }
+
+            /// <inheritdoc/>
+            public override StreamWriter Convert(string value)
+            {
+                return new StreamWriter(value, append, encoding);
+            }
+        }
+
+        /// <summary>
+        /// <see cref="StreamReader"/>を生成する<see cref="ValueConverter{TIn, TOut}"/>のクラスです。
+        /// </summary>
+        [Serializable]
+        private sealed class StreamReaderValueConverter : ValueConverter<string, StreamReader>
+        {
+            private readonly Encoding encoding;
+
+            /// <summary>
+            /// <see cref="StreamReaderValueConverter"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="encoding">エンコーディング</param>
+            /// <exception cref="ArgumentNullException"><paramref name="encoding"/>がnull</exception>
+            internal StreamReaderValueConverter(Encoding encoding)
+            {
+                ArgumentNullException.ThrowIfNull(encoding);
+
+                this.encoding = encoding;
+            }
+
+            /// <inheritdoc/>
+            public override StreamReader Convert(string value)
+            {
                 return new StreamReader(value, encoding);
             }
         }
