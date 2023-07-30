@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using CuiLib.Log;
 using CuiLib.Options;
 
 namespace CuiLib.Commands
@@ -110,8 +109,7 @@ namespace CuiLib.Commands
             int result = -1;
             for (int i = 0; i < args.Length; i++)
             {
-                string argument = args[i];
-                if (argument is null) throw new ArgumentException("コマンド引数にnullが含まれています", nameof(args));
+                string argument = args[i] ?? throw new ArgumentException("コマンド引数にnullが含まれています", nameof(args));
 
                 // オプション
                 if (argument.StartsWith('-') && argument.Length >= 2)
@@ -273,84 +271,84 @@ namespace CuiLib.Commands
         /// <summary>
         /// ヘルプを表示します。
         /// </summary>
-        /// <param name="logger">出力先</param>
-        /// <exception cref="ArgumentNullException"><paramref name="logger"/>がnull</exception>
-        public virtual void WriteHelp(Logger logger)
+        /// <param name="writer">出力先</param>
+        /// <exception cref="ArgumentNullException"><paramref name="writer"/>がnull</exception>
+        public virtual void WriteHelp(TextWriter writer)
         {
-            ArgumentNullException.ThrowIfNull(logger);
+            ArgumentNullException.ThrowIfNull(writer);
 
             // Title
             if (!string.IsNullOrEmpty(Name))
             {
-                logger.WriteLine(Name);
-                logger.WriteLine();
+                writer.WriteLine(Name);
+                writer.WriteLine();
             }
 
             // Description
             if (!string.IsNullOrEmpty(Description))
             {
-                logger.WriteLine("Description:");
-                logger.WriteLine(Description);
-                logger.WriteLine();
+                writer.WriteLine("Description:");
+                writer.WriteLine(Description);
+                writer.WriteLine();
             }
 
             // Usage
-            logger.WriteLine("Usage:");
+            writer.WriteLine("Usage:");
             if (!string.IsNullOrEmpty(Name))
             {
-                logger.Write(Name);
-                logger.Write(' ');
+                writer.Write(Name);
+                writer.Write(' ');
             }
             if (Options.Count > 0)
                 foreach (var option in Options)
                 {
-                    if (!option.Required) logger.Write('[');
-                    if (option.ShortName is not null) logger.Write($"-{option.ShortName}");
-                    else logger.Write($"--{option.FullName}");
-                    if (option.IsValued) logger.Write($" {option.ValueTypeName}");
-                    if (!option.Required) logger.Write(']');
-                    logger.Write(' ');
+                    if (!option.Required) writer.Write('[');
+                    if (option.ShortName is not null) writer.Write($"-{option.ShortName}");
+                    else writer.Write($"--{option.FullName}");
+                    if (option.IsValued) writer.Write($" {option.ValueTypeName}");
+                    if (!option.Required) writer.Write(']');
+                    writer.Write(' ');
                 }
 
-            if (Children.Count > 0) logger.Write("[Subcommand]");
+            if (Children.Count > 0) writer.Write("[Subcommand]");
             else if (Parameters.Count > 0)
                 foreach (Parameter current in Parameters)
                 {
-                    logger.Write('<');
-                    logger.Write(current.Name);
-                    if (current.IsArray) logger.Write(" ..");
-                    logger.Write('>');
-                    logger.Write(' ');
+                    writer.Write('<');
+                    writer.Write(current.Name);
+                    if (current.IsArray) writer.Write(" ..");
+                    writer.Write('>');
+                    writer.Write(' ');
                 }
-            logger.WriteLine();
-            logger.WriteLine();
+            writer.WriteLine();
+            writer.WriteLine();
 
             // Options
             if (Options.Count > 0)
             {
-                logger.WriteLine("Options:");
+                writer.WriteLine("Options:");
                 int maxNameLength = Options.Max(x => x.FullName?.Length ?? 0);
                 foreach (Option option in Options)
                 {
-                    logger.Write("  ");
+                    writer.Write("  ");
                     if (option.ShortName != null)
                     {
-                        logger.Write('-');
-                        logger.Write(option.ShortName);
-                        if (option.FullName != null) logger.Write(", ");
-                        else logger.Write("  ");
+                        writer.Write('-');
+                        writer.Write(option.ShortName);
+                        if (option.FullName != null) writer.Write(", ");
+                        else writer.Write("  ");
                     }
-                    else logger.Write("    ");
+                    else writer.Write("    ");
                     if (option.FullName != null)
                     {
-                        logger.Write("--");
-                        logger.Write(option.FullName);
+                        writer.Write("--");
+                        writer.Write(option.FullName);
                         int surplus = maxNameLength - option.FullName.Length;
-                        if (surplus > 0) logger.Write(new string(' ', surplus));
+                        if (surplus > 0) writer.Write(new string(' ', surplus));
                     }
-                    else logger.Write(new string(' ', maxNameLength + 2));
+                    else writer.Write(new string(' ', maxNameLength + 2));
 
-                    logger.Write("  ");
+                    writer.Write("  ");
 
                     string? desc = option.Description;
                     //var headerValues = new List<string>();
@@ -363,67 +361,67 @@ namespace CuiLib.Commands
                     string[] descriptions = desc?.Split('\n') ?? Array.Empty<string>();
                     if (descriptions.Length > 0)
                     {
-                        logger.WriteLine(descriptions[0]);
+                        writer.WriteLine(descriptions[0]);
                         for (int i = 1; i < descriptions.Length; i++)
                         {
-                            logger.Write(new string(' ', maxNameLength + 10));
-                            logger.WriteLine(descriptions[i]);
+                            writer.Write(new string(' ', maxNameLength + 10));
+                            writer.WriteLine(descriptions[i]);
                         }
                     }
-                    else logger.WriteLine();
+                    else writer.WriteLine();
                 }
             }
 
             // Subcommands
             if (Children.Count > 0)
             {
-                logger.WriteLine("Subcommands:");
+                writer.WriteLine("Subcommands:");
                 int maxLength = Children.Max(x => x.Name.Length);
                 foreach (Command child in Children)
                 {
-                    logger.Write("  ");
+                    writer.Write("  ");
                     int surplus = maxLength - child.Name.Length;
-                    if (surplus > 0) logger.Write(new string(' ', surplus));
-                    logger.Write(child.Name);
-                    logger.Write("  ");
+                    if (surplus > 0) writer.Write(new string(' ', surplus));
+                    writer.Write(child.Name);
+                    writer.Write("  ");
 
                     string[] descriptions = child.Description?.Split('\n') ?? Array.Empty<string>();
                     if (descriptions.Length > 0)
                     {
-                        logger.WriteLine(descriptions[0]);
+                        writer.WriteLine(descriptions[0]);
                         for (int i = 1; i < descriptions.Length; i++)
                         {
-                            logger.Write(new string(' ', maxLength + 4));
-                            logger.WriteLine(descriptions[i]);
+                            writer.Write(new string(' ', maxLength + 4));
+                            writer.WriteLine(descriptions[i]);
                         }
                     }
-                    else logger.WriteLine();
+                    else writer.WriteLine();
                 }
             }
             // Parameters
             else if (Parameters.Count > 0)
             {
-                logger.WriteLine("Parameters:");
+                writer.WriteLine("Parameters:");
                 int maxLength = Parameters.Max(x => x.Name.Length);
                 foreach (Parameter parameter in Parameters)
                 {
-                    logger.Write("  ");
+                    writer.Write("  ");
                     int surplus = maxLength - parameter.Name.Length;
-                    if (surplus > 0) logger.Write(new string(' ', surplus));
-                    logger.Write(parameter.Name);
-                    logger.Write("  ");
+                    if (surplus > 0) writer.Write(new string(' ', surplus));
+                    writer.Write(parameter.Name);
+                    writer.Write("  ");
 
                     string[] descriptions = parameter.Description?.Split('\n') ?? Array.Empty<string>();
                     if (descriptions.Length > 0)
                     {
-                        logger.WriteLine(descriptions[0]);
+                        writer.WriteLine(descriptions[0]);
                         for (int i = 1; i < descriptions.Length; i++)
                         {
-                            logger.Write(new string(' ', maxLength + 4));
-                            logger.WriteLine(descriptions[i]);
+                            writer.Write(new string(' ', maxLength + 4));
+                            writer.WriteLine(descriptions[i]);
                         }
                     }
-                    else logger.WriteLine();
+                    else writer.WriteLine();
                 }
             }
         }
