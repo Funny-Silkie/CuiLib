@@ -55,7 +55,19 @@ namespace CuiLib.Options
         public static IValueConverter<string, TEnum> StringToEnum<TEnum>()
             where TEnum : struct, Enum
         {
-            return new EnumValueConverter<TEnum>();
+            return StringToEnum<TEnum>(false);
+        }
+
+        /// <summary>
+        /// 文字列から列挙型に変換するインスタンスを生成します。
+        /// </summary>
+        /// <typeparam name="TEnum">列挙型</typeparam>
+        /// <param name="ignoreCase">文字列の大文字小文字の区別を無視するかどうか</param>
+        /// <returns>文字列から列挙型に変換するインスタンス</returns>
+        public static IValueConverter<string, TEnum> StringToEnum<TEnum>(bool ignoreCase)
+            where TEnum : struct, Enum
+        {
+            return new EnumValueConverter<TEnum>(ignoreCase);
         }
 
         /// <summary>

@@ -122,24 +122,22 @@ namespace CuiLib.Options
         private sealed class EnumValueConverter<T> : ValueConverter<string, T>
             where T : struct, Enum
         {
+            private readonly bool ignoreCase;
+
             /// <summary>
             /// <see cref="EnumValueConverter{T}"/>の新しいインスタンスを初期化します。
             /// </summary>
-            internal EnumValueConverter()
+            /// <param name="ignoreCase">文字列の大文字小文字の区別を無視するかどうか</param>
+            internal EnumValueConverter(bool ignoreCase)
             {
+                this.ignoreCase = ignoreCase;
             }
 
             /// <inheritdoc/>
             public override T Convert(string value)
             {
-                return Enum.Parse<T>(value);
+                return Enum.Parse<T>(value, ignoreCase);
             }
-
-            /// <inheritdoc/>
-            public override bool Equals(object? obj) => obj is EnumValueConverter<T>;
-
-            /// <inheritdoc/>
-            public override int GetHashCode() => GetType().GetHashCode();
         }
 
         /// <summary>
