@@ -7,7 +7,7 @@ namespace CuiLib.Options
     /// </summary>
     /// <typeparam name="T">オプションの値の型</typeparam>
     [Serializable]
-    public class MultipleValueOption<T> : ValuedOption<T[]>
+    public class MultipleValueOption<T> : ValueSpecifiedOption<T[]>
     {
         /// <inheritdoc/>
         internal override OptionType OptionType => OptionType.Valued | OptionType.MultiValue;

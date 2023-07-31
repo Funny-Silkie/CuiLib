@@ -303,8 +303,11 @@ namespace CuiLib.Commands
                 foreach (var option in Options)
                 {
                     if (!option.Required) writer.Write('[');
-                    if (option.ShortName is not null) writer.Write($"-{option.ShortName}");
-                    else writer.Write($"--{option.FullName}");
+                    if (option is NamedOption named)
+                    {
+                        if (named.ShortName is not null) writer.Write($"-{named.ShortName}");
+                        else writer.Write($"--{named.FullName}");
+                    }
                     if (option.IsValued) writer.Write($" {option.ValueTypeName}");
                     if (!option.Required) writer.Write(']');
                     writer.Write(' ');
@@ -327,48 +330,57 @@ namespace CuiLib.Commands
             if (Options.Count > 0)
             {
                 writer.WriteLine("Options:");
-                int maxNameLength = Options.Max(x => x.FullName?.Length ?? 0);
+                int maxNameLength = Options.SelectMany(x => x.GetAllNames(), (_, x) => x.Length).Max();
                 foreach (Option option in Options)
                 {
-                    writer.Write("  ");
-                    if (option.ShortName != null)
+                    if (option is NamedOption named)
                     {
-                        writer.Write('-');
-                        writer.Write(option.ShortName);
-                        if (option.FullName != null) writer.Write(", ");
-                        else writer.Write("  ");
+                        WriteOption(writer, named, maxNameLength);
+                        continue;
                     }
-                    else writer.Write("    ");
-                    if (option.FullName != null)
-                    {
-                        writer.Write("--");
-                        writer.Write(option.FullName);
-                        int surplus = maxNameLength - option.FullName.Length;
-                        if (surplus > 0) writer.Write(new string(' ', surplus));
-                    }
-                    else writer.Write(new string(' ', maxNameLength + 2));
 
-                    writer.Write("  ");
-
-                    string? desc = option.Description;
-                    //var headerValues = new List<string>();
-                    //if (option.ValueTypeName is not null) headerValues.Add($"type={option.ValueTypeName}");
-                    //string? defaultValue = option.DefaultValueString;
-                    //if (defaultValue is not null && option is not FlagOption) headerValues.Add($"default={defaultValue.ReplaceSpecialCharacters()}");
-                    //if (option.Required) headerValues.Add("required");
-                    //if (option.CanMultiValue) headerValues.Add("multi valued");
-                    //if (headerValues.Count > 0) desc += "\n* " + string.Join(", ", headerValues);
-                    string[] descriptions = desc?.Split('\n') ?? Array.Empty<string>();
-                    if (descriptions.Length > 0)
+                    static void WriteOption(TextWriter writer, NamedOption option, int maxNameLength)
                     {
-                        writer.WriteLine(descriptions[0]);
-                        for (int i = 1; i < descriptions.Length; i++)
+                        writer.Write("  ");
+                        if (option.ShortName != null)
                         {
-                            writer.Write(new string(' ', maxNameLength + 10));
-                            writer.WriteLine(descriptions[i]);
+                            writer.Write('-');
+                            writer.Write(option.ShortName);
+                            if (option.FullName != null) writer.Write(", ");
+                            else writer.Write("  ");
                         }
+                        else writer.Write("    ");
+                        if (option.FullName != null)
+                        {
+                            writer.Write("--");
+                            writer.Write(option.FullName);
+                            int surplus = maxNameLength - option.FullName.Length;
+                            if (surplus > 0) writer.Write(new string(' ', surplus));
+                        }
+                        else writer.Write(new string(' ', maxNameLength + 2));
+
+                        writer.Write("  ");
+
+                        string? desc = option.Description;
+                        //var headerValues = new List<string>();
+                        //if (option.ValueTypeName is not null) headerValues.Add($"type={option.ValueTypeName}");
+                        //string? defaultValue = option.DefaultValueString;
+                        //if (defaultValue is not null && option is not FlagOption) headerValues.Add($"default={defaultValue.ReplaceSpecialCharacters()}");
+                        //if (option.Required) headerValues.Add("required");
+                        //if (option.CanMultiValue) headerValues.Add("multi valued");
+                        //if (headerValues.Count > 0) desc += "\n* " + string.Join(", ", headerValues);
+                        string[] descriptions = desc?.Split('\n') ?? Array.Empty<string>();
+                        if (descriptions.Length > 0)
+                        {
+                            writer.WriteLine(descriptions[0]);
+                            for (int i = 1; i < descriptions.Length; i++)
+                            {
+                                writer.Write(new string(' ', maxNameLength + 10));
+                                writer.WriteLine(descriptions[i]);
+                            }
+                        }
+                        else writer.WriteLine();
                     }
-                    else writer.WriteLine();
                 }
             }
 
