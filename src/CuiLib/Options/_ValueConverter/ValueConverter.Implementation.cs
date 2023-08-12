@@ -309,5 +309,83 @@ namespace CuiLib.Options
                 return new StreamReader(value, encoding);
             }
         }
+
+        /// <summary>
+        /// 配列を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
+        /// </summary>
+        [Serializable]
+        private sealed class ArrayValueConverter : ValueConverter<string, Array>
+        {
+            private readonly IValueConverter<string, object?> elementConverter;
+            private readonly Type elementType;
+            private readonly string separator;
+            private readonly StringSplitOptions splitOptions;
+
+            /// <summary>
+            /// <see cref="ArrayValueConverter{T}"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="elementType">要素の型</param>
+            /// <param name="separator">区切り文字</param>
+            /// <param name="converter">要素の変換を行う<see cref="IValueConverter{TIn, TOut}"/>のインスタンス</param>
+            /// <param name="splitOptions">文字列分割時のオプション</param>
+            internal ArrayValueConverter(string separator, Type elementType, IValueConverter<string, object?> converter, StringSplitOptions splitOptions)
+            {
+                ArgumentNullException.ThrowIfNull(elementType);
+                ArgumentNullException.ThrowIfNull(converter);
+                ArgumentException.ThrowIfNullOrEmpty(separator);
+
+                this.separator = separator;
+                this.elementType = elementType;
+                elementConverter = converter;
+                this.splitOptions = splitOptions;
+            }
+
+            /// <inheritdoc/>
+            public override Array Convert(string value)
+            {
+                if (value.Length == 0) return Array.CreateInstance(elementType, 0);
+
+                string[] elements = value.Split(separator, splitOptions);
+                Array result = Array.CreateInstance(elementType, elements.Length);
+                for (int i = 0; i < elements.Length; i++) result.SetValue(elementConverter.Convert(elements[i]), i);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// 配列を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
+        /// </summary>
+        /// <typeparam name="T">配列の要素の型</typeparam>
+        [Serializable]
+        private sealed class ArrayValueConverter<T> : ValueConverter<string, T[]>
+        {
+            private readonly IValueConverter<string, T> elementConverter;
+            private readonly string separator;
+            private readonly StringSplitOptions splitOptions;
+
+            /// <summary>
+            /// <see cref="ArrayValueConverter{T}"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="separator">区切り文字</param>
+            /// <param name="converter">要素の変換を行う<see cref="IValueConverter{TIn, TOut}"/>のインスタンス</param>
+            /// <param name="splitOptions">文字列分割時のオプション</param>
+            internal ArrayValueConverter(string separator, IValueConverter<string, T> converter, StringSplitOptions splitOptions)
+            {
+                ArgumentNullException.ThrowIfNull(converter);
+                ArgumentException.ThrowIfNullOrEmpty(separator);
+
+                this.separator = separator;
+                elementConverter = converter;
+                this.splitOptions = splitOptions;
+            }
+
+            /// <inheritdoc/>
+            public override T[] Convert(string value)
+            {
+                if (value.Length == 0) return Array.Empty<T>();
+                string[] elements = value.Split(separator, splitOptions);
+                return Array.ConvertAll(elements, elementConverter.Convert);
+            }
+        }
     }
 }

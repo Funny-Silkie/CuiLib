@@ -110,6 +110,34 @@ namespace CuiLib.Options
         }
 
         /// <summary>
+        /// 文字列を分割して配列に変換するインスタンスを生成します。
+        /// </summary>
+        /// <param name="elementType">要素の型</param>
+        /// <param name="separator">区切り文字</param>
+        /// <param name="elementConverter">要素の変換を行う<see cref="IValueConverter{TIn, TOut}"/>のインスタンス</param>
+        /// <param name="splitOptions">文字列分割時のオプション</param>
+        /// <exception cref="ArgumentNullException"><paramref name="elementType"/>または<paramref name="separator"/>，<paramref name="elementConverter"/>の何れかが<see langword="null"/></exception>
+        /// <exception cref="ArgumentException"><paramref name="separator"/>が空文字</exception>
+        public static IValueConverter<string, Array> SplitToArray(Type elementType, string separator, IValueConverter<string, object?> elementConverter, StringSplitOptions splitOptions = StringSplitOptions.None)
+        {
+            return new ArrayValueConverter(separator, elementType, elementConverter, splitOptions);
+        }
+
+        /// <summary>
+        /// 文字列を分割して配列に変換するインスタンスを生成します。
+        /// </summary>
+        /// <typeparam name="T">配列の要素の型</typeparam>
+        /// <param name="separator">区切り文字</param>
+        /// <param name="elementConverter">要素の変換を行う<see cref="IValueConverter{TIn, TOut}"/>のインスタンス</param>
+        /// <param name="splitOptions">文字列分割時のオプション</param>
+        /// <exception cref="ArgumentNullException"><paramref name="separator"/>または<paramref name="elementConverter"/>が<see langword="null"/></exception>
+        /// <exception cref="ArgumentException"><paramref name="separator"/>が空文字</exception>
+        public static IValueConverter<string, T[]> SplitToArray<T>(string separator, IValueConverter<string, T> elementConverter, StringSplitOptions splitOptions = StringSplitOptions.None)
+        {
+            return new ArrayValueConverter<T>(separator, elementConverter, splitOptions);
+        }
+
+        /// <summary>
         /// デフォルトのインスタンスを取得します。
         /// </summary>
         /// <typeparam name="T">変換先の型</typeparam>

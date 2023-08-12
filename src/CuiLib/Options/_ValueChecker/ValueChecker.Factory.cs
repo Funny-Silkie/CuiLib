@@ -1,6 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace CuiLib.Options
 {
@@ -367,6 +369,57 @@ namespace CuiLib.Options
 #pragma warning disable CS0618 // 型またはメンバーが旧型式です
             return new SourceDirectoryChecker();
 #pragma warning restore CS0618 // 型またはメンバーが旧型式です
+        }
+
+        /// <summary>
+        /// 正規表現にマッチするかどうかを検証します。
+        /// </summary>
+        /// <param name="pattern">正規表現</param>
+        /// <exception cref="ArgumentNullException"><paramref name="pattern"/>が<see langword="null"/></exception>
+        /// <exception cref="ArgumentException">正規表現解析エラー</exception>
+        public static IValueChecker<string> IsRegexMatch([StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
+        {
+            var regex = new Regex(pattern);
+            return IsRegexMatch(regex);
+        }
+
+        /// <summary>
+        /// 正規表現にマッチするかどうかを検証します。
+        /// </summary>
+        /// <param name="pattern">正規表現</param>
+        /// <param name="options">正規表現オプション</param>
+        /// <exception cref="ArgumentNullException"><paramref name="pattern"/>が<see langword="null"/></exception>
+        /// <exception cref="ArgumentException">正規表現解析エラー</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="options"/>が無効な範囲</exception>
+        public static IValueChecker<string> IsRegexMatch([StringSyntax(StringSyntaxAttribute.Regex)] string pattern, RegexOptions options)
+        {
+            var regex = new Regex(pattern, options);
+            return IsRegexMatch(regex);
+        }
+
+        /// <summary>
+        /// 正規表現にマッチするかどうかを検証します。
+        /// </summary>
+        /// <param name="pattern">正規表現</param>
+        /// <param name="options">正規表現オプション</param>
+        /// <param name="matchTimeout">マッチ判定時のタイムアウト時間</param>
+        /// <exception cref="ArgumentNullException"><paramref name="pattern"/>が<see langword="null"/></exception>
+        /// <exception cref="ArgumentException">正規表現解析エラー</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="options"/>または<paramref name="matchTimeout"/>が無効な範囲</exception>
+        public static IValueChecker<string> IsRegexMatch([StringSyntax(StringSyntaxAttribute.Regex)] string pattern, RegexOptions options, TimeSpan matchTimeout)
+        {
+            var regex = new Regex(pattern, options, matchTimeout);
+            return IsRegexMatch(regex);
+        }
+
+        /// <summary>
+        /// 正規表現にマッチするかどうかを検証します。
+        /// </summary>
+        /// <param name="regex">正規表現オブジェクト</param>
+        /// <exception cref="ArgumentNullException"><paramref name="regex"/>が<see langword="null"/></exception>
+        public static IValueChecker<string> IsRegexMatch(Regex regex)
+        {
+            return new RegexMatchValueChecker(regex);
         }
     }
 }

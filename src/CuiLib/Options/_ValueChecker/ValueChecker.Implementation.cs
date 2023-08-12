@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CuiLib.Options
 {
@@ -496,6 +497,33 @@ namespace CuiLib.Options
             public override int GetHashCode()
             {
                 return GetType().Name.GetHashCode();
+            }
+        }
+
+        /// <summary>
+        /// 正規表現にマッチするかどうかを検証します。
+        /// </summary>
+        [Serializable]
+        private sealed class RegexMatchValueChecker : ValueChecker<string>
+        {
+            private readonly Regex regex;
+
+            /// <summary>
+            /// <see cref="RegexMatchValueChecker"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="regex">使用する正規表現オブジェクト</param>
+            /// <exception cref="ArgumentNullException"><paramref name="regex"/>が<see langword="null"/></exception>
+            internal RegexMatchValueChecker(Regex regex)
+            {
+                ArgumentNullException.ThrowIfNull(regex);
+
+                this.regex = regex;
+            }
+
+            public override ValueCheckState CheckValue(string value)
+            {
+                if (regex.IsMatch(value)) return ValueCheckState.Success;
+                return ValueCheckState.AsError($"正規表現'{regex}'にマッチしません");
             }
         }
     }
