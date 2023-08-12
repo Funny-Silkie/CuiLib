@@ -10,7 +10,7 @@ namespace CuiLib.Log
     /// <summary>
     /// ロガーのクラスです。
     /// </summary>
-    public class Logger : TextWriter, IDisposable
+    public class Logger : TextWriter
     {
         private readonly List<WriterEntry> writers;
 
@@ -32,7 +32,7 @@ namespace CuiLib.Log
                 if (_consoleStdoutLogEnabled == value) return;
                 _consoleStdoutLogEnabled = value;
                 if (value) writers.Add(new WriterEntry(Console.Out));
-                else RemoveLogFile(Console.Out);
+                else RemoveLog(Console.Out);
             }
         }
 
@@ -49,7 +49,7 @@ namespace CuiLib.Log
                 if (_consoleErrorLogEnabled == value) return;
                 _consoleErrorLogEnabled = value;
                 if (value) writers.Add(new WriterEntry(Console.Error));
-                else RemoveLogFile(Console.Error);
+                else RemoveLog(Console.Error);
             }
         }
 
@@ -155,6 +155,18 @@ namespace CuiLib.Log
         }
 
         /// <summary>
+        /// ログ出力先を追加します。
+        /// </summary>
+        /// <param name="writer">追加するログ出力先</param>
+        /// <exception cref="ArgumentNullException"><paramref name="writer"/>がnull</exception>
+        public void AddLog(TextWriter writer)
+        {
+            ArgumentNullException.ThrowIfNull(writer);
+
+            writers.Add(new WriterEntry(writer));
+        }
+
+        /// <summary>
         /// 指定したログファイルを管理中かどうかを検索します。
         /// </summary>
         /// <param name="path">検索するログファイルのパス</param>
@@ -170,13 +182,13 @@ namespace CuiLib.Log
         }
 
         /// <summary>
-        /// ログファイルを削除します。
+        /// ログ出力を解除します。
         /// </summary>
-        /// <param name="path">削除するログファイルのパス</param>
-        /// <exception cref="ArgumentNullException"><paramref name="path"/>がnull</exception>
+        /// <param name="path">出力解除するログファイルのパス</param>
+        /// <returns>ログ出力を解除できたら<see langword="true"/>，それ以外で<see langword="false"/></returns>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/>が<see langword="null"/></exception>
         /// <exception cref="ArgumentException"><paramref name="path"/>が無効</exception>
         /// <exception cref="PathTooLongException"><paramref name="path"/>が長すぎる</exception>
-        /// <returns>ログファイルを削除できたらtrue，それ以外でfalse</returns>
         public bool RemoveLogFile(string path)
         {
             int index = GetLogIndex(Path.GetFullPath(path));
@@ -188,12 +200,15 @@ namespace CuiLib.Log
         }
 
         /// <summary>
-        /// ログファイルを削除します。
+        /// ログ出力を解除します。
         /// </summary>
-        /// <param name="writer">削除するログファイルのライター</param>
-        /// <returns>ログファイルを削除できたらtrue，それ以外でfalse</returns>
-        private bool RemoveLogFile(TextWriter writer)
+        /// <param name="writer">出力解除するログファイルのライター</param>
+        /// <returns>ログ出力を解除できたら<see langword="true"/>，それ以外で<see langword="false"/></returns>
+        /// <exception cref="ArgumentNullException"><paramref name="writer"/>が<see langword="null"/></exception>
+        public bool RemoveLog(TextWriter writer)
         {
+            ArgumentNullException.ThrowIfNull(writer);
+
             int index = GetLogIndex(writer);
             if (index < 0) return false;
             WriterEntry entry = writers[index];
@@ -538,7 +553,7 @@ namespace CuiLib.Log
         {
             public bool MustDisposed;
             public string? Path;
-            public TextWriter Writer;
+            public readonly TextWriter Writer;
 
             internal WriterEntry(TextWriter writer)
             {
