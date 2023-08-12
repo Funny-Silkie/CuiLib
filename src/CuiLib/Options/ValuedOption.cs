@@ -79,11 +79,8 @@ namespace CuiLib.Options
             _rawValues = null;
         }
 
-        /// <summary>
-        /// 値を設定します。
-        /// </summary>
-        /// <param name="rawValue">文字列としての値</param>
-        internal override void ApplyValue(string rawValue)
+        /// <inheritdoc/>
+        internal override void ApplyValue(string name, string rawValue)
         {
             _rawValues ??= new List<string>();
             _rawValues.Add(rawValue);

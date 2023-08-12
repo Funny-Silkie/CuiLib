@@ -89,9 +89,9 @@ namespace CuiLib.Options
         public void Add(Option option)
         {
             ArgumentNullException.ThrowIfNull(option);
-            if (option.GetAllNames().Any(keys.ContainsKey)) throw new ArgumentException("オプション名が重複しています");
+            if (option.GetAllNames(false).Any(keys.ContainsKey)) throw new ArgumentException("オプション名が重複しています");
 
-            var key = new OptionKey(option.GetAllNames());
+            var key = new OptionKey(option.GetAllNames(false));
             foreach (string currentName in key) keys.Add(currentName, key);
             options.Add(key, option);
         }

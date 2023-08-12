@@ -71,10 +71,10 @@ namespace CuiLib.Options
         }
 
         /// <inheritdoc/>
-        internal override IEnumerable<string> GetAllNames()
+        internal override IEnumerable<string> GetAllNames(bool includeHyphen)
         {
-            if (ShortName is not null) yield return ShortName;
-            if (FullName is not null) yield return FullName;
+            if (ShortName is not null) yield return includeHyphen ? $"-{ShortName}" : ShortName;
+            if (FullName is not null) yield return includeHyphen ? $"--{FullName}" : FullName;
         }
     }
 }

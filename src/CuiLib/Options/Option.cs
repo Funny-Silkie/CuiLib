@@ -64,8 +64,9 @@ namespace CuiLib.Options
         /// <summary>
         /// 値を設定します。
         /// </summary>
+        /// <param name="name">オプション名</param>
         /// <param name="rawValue">文字列としての値</param>
-        internal abstract void ApplyValue(string rawValue);
+        internal abstract void ApplyValue(string name, string rawValue);
 
         /// <summary>
         /// 指定した名前がインスタンスのオプション名に一致するかどうかを判定します。
@@ -86,7 +87,8 @@ namespace CuiLib.Options
         /// <summary>
         /// 全てのオプション名を取得します。
         /// </summary>
+        /// <param name="includeHyphen">ハイフンを含めるかどうか</param>
         /// <returns>全てのオプション名</returns>
-        internal abstract IEnumerable<string> GetAllNames();
+        internal abstract IEnumerable<string> GetAllNames(bool includeHyphen);
     }
 }

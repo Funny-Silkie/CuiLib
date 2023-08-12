@@ -39,5 +39,10 @@ namespace CuiLib.Options
         /// グループを表します。
         /// </summary>
         Group = 1 << 4,
+
+        /// <summary>
+        /// グループのうちXORを表します。
+        /// </summary>
+        Xor = 1 << 5,
     }
 }

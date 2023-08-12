@@ -124,9 +124,9 @@ namespace CuiLib.Options
         }
 
         /// <inheritdoc/>
-        internal override void ApplyValue(string rawValue)
+        internal override void ApplyValue(string name, string rawValue)
         {
-            base.ApplyValue(rawValue);
+            base.ApplyValue(name, rawValue);
             _valueCache = null;
         }
     }

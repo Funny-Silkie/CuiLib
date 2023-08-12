@@ -176,6 +176,114 @@ namespace Test
         }
 
         [Test]
+        public void GroupOr()
+        {
+            string[] args = new[] { "-1", "1", "-3", "5" };
+
+            var main = new MainCommand();
+
+            var option1 = new SingleValueOption<int>('1')
+            {
+                Description = "数値1",
+                Required = true,
+            };
+            var option2 = new SingleValueOption<string>('2')
+            {
+                Description = "文字列",
+                Required = true,
+            };
+            var option3 = new SingleValueOption<int>('3')
+            {
+                Description = "数値2",
+                Required = true,
+            };
+            var group = new OrGroupOption(option1, option2, option3);
+
+            main.Options.Add(group);
+
+            main.Invoke(args);
+
+            Assert.That(group.ValueAvailable, Is.True);
+            Assert.That(option1.ValueAvailable, Is.True);
+            Assert.That(option1.Value, Is.EqualTo(1));
+            Assert.That(option2.ValueAvailable, Is.False);
+            Assert.That(option3.ValueAvailable, Is.True);
+            Assert.That(option3.Value, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void GroupAnd()
+        {
+            string[] args = new[] { "-1", "1", "-2", "10", "-3", "5" };
+
+            var main = new MainCommand();
+
+            var option1 = new SingleValueOption<int>('1')
+            {
+                Description = "数値1",
+                Required = true,
+            };
+            var option2 = new SingleValueOption<string>('2')
+            {
+                Description = "文字列",
+                Required = true,
+            };
+            var option3 = new SingleValueOption<int>('3')
+            {
+                Description = "数値2",
+                Required = true,
+            };
+            var group = new AndGroupOption(option1, option2, option3);
+
+            main.Options.Add(group);
+
+            main.Invoke(args);
+
+            Assert.That(group.ValueAvailable, Is.True);
+            Assert.That(option1.ValueAvailable, Is.True);
+            Assert.That(option1.Value, Is.EqualTo(1));
+            Assert.That(option2.ValueAvailable, Is.True);
+            Assert.That(option2.Value, Is.EqualTo("10"));
+            Assert.That(option3.ValueAvailable, Is.True);
+            Assert.That(option3.Value, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void GroupXor()
+        {
+            string[] args = new[] { "-3", "5" };
+
+            var main = new MainCommand();
+
+            var option1 = new SingleValueOption<int>('1')
+            {
+                Description = "数値1",
+                Required = true,
+            };
+            var option2 = new SingleValueOption<string>('2')
+            {
+                Description = "文字列",
+                Required = true,
+            };
+            var option3 = new SingleValueOption<int>('3')
+            {
+                Description = "数値2",
+                Required = true,
+            };
+            var group = new XorGroupOption(option1, option2, option3);
+
+            main.Options.Add(group);
+
+            main.Invoke(args);
+
+            Assert.That(group.ValueAvailable, Is.True);
+            Assert.That(option1.ValueAvailable, Is.False);
+            Assert.That(option2.ValueAvailable, Is.False);
+            Assert.That(option3.ValueAvailable, Is.True);
+            Assert.That(option3.Value, Is.EqualTo(5));
+        }
+
+        [Test]
         public void Help()
         {
             var parent = new Command("parent")
