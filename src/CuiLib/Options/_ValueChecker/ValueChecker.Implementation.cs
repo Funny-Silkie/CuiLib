@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,7 +8,7 @@ namespace CuiLib.Options
     public static partial class ValueChecker
     {
         /// <summary>
-        /// 必ず<see cref="ValueCheckState.Success"/>を返す<see cref="ValueChecker{T}"/>の実装です。
+        /// 常に<see cref="ValueCheckState.Success"/>を返す<see cref="IValueChecker{T}"/>の実装です。
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         [Serializable]
@@ -32,7 +32,7 @@ namespace CuiLib.Options
         }
 
         /// <summary>
-        /// デリゲートを使用する<see cref="ValueChecker{T}"/>の実装です。
+        /// デリゲートを使用する<see cref="IValueChecker{T}"/>の実装です。
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         [Serializable]

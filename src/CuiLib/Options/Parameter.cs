@@ -144,7 +144,7 @@ namespace CuiLib.Options
         public override bool ValueAvailable => base.ValueAvailable;
 
         /// <summary>
-        /// 値の変換を行う<see cref="ValueChecker{T}"/>を取得または設定します。
+        /// 値の変換を行う<see cref="IValueConverter{TIn, TOut}"/>を取得または設定します。
         /// </summary>
         public IValueConverter<string, T> Converter
         {

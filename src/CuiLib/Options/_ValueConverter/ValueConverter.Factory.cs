@@ -11,14 +11,14 @@ namespace CuiLib.Options
     public static partial class ValueConverter
     {
         /// <summary>
-        /// <see cref="ValueConverter{TIn, TOut}"/>を結合します。
+        /// <see cref="IValueConverter{TIn, TOut}"/>を結合します。
         /// </summary>
         /// <typeparam name="TIn">変換前の型</typeparam>
         /// <typeparam name="TMid">変換途上の型</typeparam>
         /// <typeparam name="TOut">変換後の型</typeparam>
-        /// <param name="first">最初に変換を行う<see cref="ValueConverter{TIn, TOut}"/></param>
-        /// <param name="second">次に変換を行う<see cref="ValueConverter{TIn, TOut}"/></param>
-        /// <returns><typeparamref name="TIn"/>から<typeparamref name="TOut"/>へ変換を行う<see cref="ValueConverter{TIn, TOut}"/>のインスタンス</returns>
+        /// <param name="first">最初に変換を行う<see cref="IValueConverter{TIn, TOut}"/></param>
+        /// <param name="second">次に変換を行う<see cref="IValueConverter{TIn, TOut}"/></param>
+        /// <returns><typeparamref name="TIn"/>から<typeparamref name="TOut"/>へ変換を行う<see cref="IValueConverter{TIn, TOut}"/>のインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="second"/>がnull</exception>
         public static IValueConverter<TIn, TOut> Combine<TIn, TMid, TOut>(this IValueConverter<TIn, TMid> first, IValueConverter<TMid, TOut> second)
         {
@@ -26,10 +26,10 @@ namespace CuiLib.Options
         }
 
         /// <summary>
-        /// デリゲートから<see cref="ValueConverter{TIn, TOut}"/>の新しいインスタンスを初期化します。
+        /// デリゲートから<see cref="IValueConverter{TIn, TOut}"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="converter">使用するデリゲート</param>
-        /// <returns><paramref name="converter"/>で変換する<see cref="ValueConverter{TIn, TOut}"/>のインスタンス</returns>
+        /// <returns><paramref name="converter"/>で変換する<see cref="IValueConverter{TIn, TOut}"/>のインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="converter"/>がnull</exception>
         public static IValueConverter<TIn, TOut> FromDelegate<TIn, TOut>(Converter<TIn, TOut> converter)
         {
@@ -118,8 +118,29 @@ namespace CuiLib.Options
         public static IValueConverter<string, T> GetDefault<T>()
         {
             Type type = typeof(T);
+            return Cast(GetDefault(type));
 
-            if (type == typeof(string)) return Cast(new ThroughValueConverter());
+            static IValueConverter<string, T> Cast<TIn>(IValueConverter<string, TIn> converter)
+            {
+                return Unsafe.As<IValueConverter<string, TIn>, IValueConverter<string, T>>(ref converter);
+            }
+        }
+
+        /// <summary>
+        /// デフォルトのインスタンスを取得します。
+        /// </summary>
+        /// <param name="type">変換先の型</param>
+        /// <returns>デフォルトのインスタンス</returns>
+        /// <exception cref="NotSupportedException"><paramref name="type"/>が無効</exception>
+        private static IValueConverter<string, object?> GetDefault(Type type)
+        {
+            if (type == typeof(string)) return Cast(new ThroughValueConverter<string>());
+            if (type.IsSZArray)
+            {
+                Type elementType = type.GetGenericArguments()[0];
+                return Cast(SplitToArray(elementType, ",", GetDefault(elementType)));
+            }
+
             if (type == typeof(FileInfo)) return Cast(new FileInfoValueConverter());
             if (type == typeof(DirectoryInfo)) return Cast(new DirectoryInfoValueConverter());
             if (type == typeof(TextReader)) return Cast(new FileOrConsoleReaderValueConverter(new UTF8Encoding(false)));
@@ -147,9 +168,9 @@ namespace CuiLib.Options
 
             throw new NotSupportedException();
 
-            static ValueConverter<string, T> Cast<TIn>(ValueConverter<string, TIn> converter)
+            static IValueConverter<string, object?> Cast<TIn>(IValueConverter<string, TIn> converter)
             {
-                return Unsafe.As<ValueConverter<string, TIn>, ValueConverter<string, T>>(ref converter);
+                return Unsafe.As<IValueConverter<string, TIn>, IValueConverter<string, object?>>(ref converter);
             }
         }
 

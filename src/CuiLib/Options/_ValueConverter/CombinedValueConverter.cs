@@ -3,7 +3,7 @@ using System;
 namespace CuiLib.Options
 {
     /// <summary>
-    /// 結合された<see cref="ValueConverter{TIn, TOut}"/>のクラスです。
+    /// 結合された<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
     /// </summary>
     /// <typeparam name="TIn">変換前の型</typeparam>
     /// <typeparam name="TMid">変換途上の型</typeparam>

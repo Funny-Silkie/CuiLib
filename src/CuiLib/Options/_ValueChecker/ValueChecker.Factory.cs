@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace CuiLib.Options
 {
     /// <summary>
-    /// <see cref="ValueChecker{T}"/>を提供するクラスです。
+    /// <see cref="IValueChecker{T}"/>を提供するクラスです。
     /// </summary>
     public static partial class ValueChecker
     {
@@ -27,25 +28,25 @@ namespace CuiLib.Options
         }
 
         /// <summary>
-        /// 複数の<see cref="ValueChecker{T}"/>をAND結合します。
+        /// 複数の<see cref="IValueChecker{T}"/>をAND結合します。
         /// </summary>
         /// <param name="source">評価する関数のリスト</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
-        public static IValueChecker<T> And<T>(params ValueChecker<T>[] source)
+        public static IValueChecker<T> And<T>(params IValueChecker<T>[] source)
         {
-            return ValueChecker<T>.And(source);
+            return IValueChecker<T>.And(source);
         }
 
         /// <summary>
-        /// 複数の<see cref="ValueChecker{T}"/>をOR結合します。
+        /// 複数の<see cref="IValueChecker{T}"/>をOR結合します。
         /// </summary>
         /// <param name="source">評価する関数のリスト</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
-        public static IValueChecker<T> Or<T>(params ValueChecker<T>[] source)
+        public static IValueChecker<T> Or<T>(params IValueChecker<T>[] source)
         {
-            return OrValueChecker<T>.Or(source);
+            return IValueChecker<T>.Or(source);
         }
 
         /// <summary>
@@ -330,6 +331,42 @@ namespace CuiLib.Options
         public static IValueChecker<string> DirectoryExists()
         {
             return new DirectoryExistsValueChecker();
+        }
+
+        /// <summary>
+        /// ファイルが読み込める状態にあるかどうかを検証します。
+        /// </summary>
+        public static IValueChecker<FileInfo> VerifySourceFile()
+        {
+#pragma warning disable CS0618 // 型またはメンバーが旧型式です
+            return new SourceFileChecker();
+#pragma warning restore CS0618 // 型またはメンバーが旧型式です
+        }
+
+        /// <summary>
+        /// ファイルが書き込める状態にあるかどうかを検証します。
+        /// </summary>
+        /// <param name="allowMissedDir">ディレクトリの非存在を許容するかどうか</param>
+        /// <param name="allowOverwrite">ファイルの上書きを許容するかどうか</param>
+        public static IValueChecker<FileInfo> VerifyDestinationFile(bool allowMissedDir, bool allowOverwrite)
+        {
+#pragma warning disable CS0618 // 型またはメンバーが旧型式です
+            return new DestinationFileChecker()
+            {
+                AllowMissedDirectory = allowMissedDir,
+                AllowOverwrite = allowOverwrite,
+            };
+#pragma warning restore CS0618 // 型またはメンバーが旧型式です
+        }
+
+        /// <summary>
+        /// ディレクトリが読み込める状態にあるかどうかを検証します。
+        /// </summary>
+        public static IValueChecker<DirectoryInfo> VerifySourceDirectory()
+        {
+#pragma warning disable CS0618 // 型またはメンバーが旧型式です
+            return new SourceDirectoryChecker();
+#pragma warning restore CS0618 // 型またはメンバーが旧型式です
         }
     }
 }

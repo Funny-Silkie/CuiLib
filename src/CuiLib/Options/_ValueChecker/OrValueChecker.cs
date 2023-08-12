@@ -59,20 +59,20 @@ namespace CuiLib.Options
             {
                 if (second is OrValueChecker<T> c2)
                 {
-                    checkers = new ValueChecker<T>[c1.checkers.Length + c2.checkers.Length];
+                    checkers = new IValueChecker<T>[c1.checkers.Length + c2.checkers.Length];
                     Array.Copy(c1.checkers, 0, checkers, 0, c1.checkers.Length);
                     Array.Copy(c2.checkers, 0, checkers, c1.checkers.Length, c2.checkers.Length);
                 }
                 else
                 {
-                    checkers = new ValueChecker<T>[c1.checkers.Length + 1];
+                    checkers = new IValueChecker<T>[c1.checkers.Length + 1];
                     Array.Copy(c1.checkers, 0, checkers, 0, c1.checkers.Length);
                     checkers[^1] = second;
                 }
             }
             else if (second is OrValueChecker<T> c2)
             {
-                checkers = new ValueChecker<T>[c2.checkers.Length + 1];
+                checkers = new IValueChecker<T>[c2.checkers.Length + 1];
                 checkers[0] = first;
                 Array.Copy(c2.checkers, 0, checkers, 1, c2.checkers.Length);
             }

@@ -7,6 +7,7 @@ namespace CuiLib.Options
     /// </summary>
     /// <typeparam name="TIn">変換前の型</typeparam>
     /// <typeparam name="TOut">変換後の型</typeparam>
+    [Obsolete($"{nameof(IValueConverter<TIn, TOut>)}を代わりに使用してください")]
     [Serializable]
     public abstract class ValueConverter<TIn, TOut> : IValueConverter<TIn, TOut>
     {
