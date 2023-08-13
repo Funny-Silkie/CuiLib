@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 
@@ -7,7 +7,7 @@ namespace CuiLib.Options
     public static partial class ValueConverter
     {
         /// <summary>
-        /// デリゲートで変換を行う<see cref="ValueConverter{TIn, TOut}"/>のクラスです。
+        /// デリゲートで変換を行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         /// <typeparam name="TIn">変換前の型</typeparam>
         /// <typeparam name="TOut">変換後の型</typeparam>
@@ -36,32 +36,34 @@ namespace CuiLib.Options
         }
 
         /// <summary>
-        /// 値の素通しを行う<see cref="ValueConverter{TIn, TOut}"/>のクラスです。
+        /// 値の素通しを行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
-        private sealed class ThroughValueConverter : ValueConverter<string, string>
+        /// <typeparam name="T">扱う値の型</typeparam>
+        [Serializable]
+        private sealed class ThroughValueConverter<T> : ValueConverter<T, T>
         {
             /// <summary>
-            /// <see cref="ThroughValueConverter"/>の新しいインスタンスを初期化します。
+            /// <see cref="ThroughValueConverter{T}"/>の新しいインスタンスを初期化します。
             /// </summary>
             internal ThroughValueConverter()
             {
             }
 
             /// <inheritdoc/>
-            public override string Convert(string value)
+            public override T Convert(T value)
             {
                 return value;
             }
 
             /// <inheritdoc/>
-            public override bool Equals(object? obj) => obj is ThroughValueConverter;
+            public override bool Equals(object? obj) => obj is ThroughValueConverter<T>;
 
             /// <inheritdoc/>
             public override int GetHashCode() => GetType().GetHashCode();
         }
 
         /// <summary>
-        /// <see cref="IParsable{TSelf}"/>を変換する<see cref="ValueConverter{TIn, TOut}"/>のクラスです。
+        /// <see cref="IParsable{TSelf}"/>を変換する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         /// <typeparam name="T">変換する<see cref="IParsable{TSelf}"/>を実装する型</typeparam>
         [Serializable]
@@ -89,7 +91,7 @@ namespace CuiLib.Options
         }
 
         /// <summary>
-        /// 列挙型の変換を行う<see cref="ValueConverter{TIn, TOut}"/>のクラスです。
+        /// 列挙型の変換を行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         [Serializable]
         private sealed class EnumValueConverter : ValueConverter<string, Enum>
@@ -115,35 +117,33 @@ namespace CuiLib.Options
         }
 
         /// <summary>
-        /// 列挙型の変換を行う<see cref="ValueConverter{TIn, TOut}"/>のクラスです。
+        /// 列挙型の変換を行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         /// <typeparam name="T">列挙型の型</typeparam>
         [Serializable]
         private sealed class EnumValueConverter<T> : ValueConverter<string, T>
             where T : struct, Enum
         {
+            private readonly bool ignoreCase;
+
             /// <summary>
             /// <see cref="EnumValueConverter{T}"/>の新しいインスタンスを初期化します。
             /// </summary>
-            internal EnumValueConverter()
+            /// <param name="ignoreCase">文字列の大文字小文字の区別を無視するかどうか</param>
+            internal EnumValueConverter(bool ignoreCase)
             {
+                this.ignoreCase = ignoreCase;
             }
 
             /// <inheritdoc/>
             public override T Convert(string value)
             {
-                return Enum.Parse<T>(value);
+                return Enum.Parse<T>(value, ignoreCase);
             }
-
-            /// <inheritdoc/>
-            public override bool Equals(object? obj) => obj is EnumValueConverter<T>;
-
-            /// <inheritdoc/>
-            public override int GetHashCode() => GetType().GetHashCode();
         }
 
         /// <summary>
-        /// <see cref="FileInfo"/>を生成する<see cref="ValueConverter{TIn, TOut}"/>のクラスです。
+        /// <see cref="FileInfo"/>を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         [Serializable]
         private sealed class FileInfoValueConverter : ValueConverter<string, FileInfo>
@@ -169,7 +169,7 @@ namespace CuiLib.Options
         }
 
         /// <summary>
-        /// <see cref="DirectoryInfo"/>を生成する<see cref="ValueConverter{TIn, TOut}"/>のクラスです。
+        /// <see cref="DirectoryInfo"/>を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         [Serializable]
         private sealed class DirectoryInfoValueConverter : ValueConverter<string, DirectoryInfo>
@@ -195,7 +195,7 @@ namespace CuiLib.Options
         }
 
         /// <summary>
-        /// <see cref="TextWriter"/>を生成する<see cref="ValueConverter{TIn, TOut}"/>のクラスです。
+        /// <see cref="TextWriter"/>を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         [Serializable]
         private sealed class FileOrConsoleWriterValueConverter : ValueConverter<string, TextWriter>
@@ -226,7 +226,7 @@ namespace CuiLib.Options
         }
 
         /// <summary>
-        /// <see cref="TextReader"/>を生成する<see cref="ValueConverter{TIn, TOut}"/>のクラスです。
+        /// <see cref="TextReader"/>を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         [Serializable]
         private sealed class FileOrConsoleReaderValueConverter : ValueConverter<string, TextReader>
@@ -250,6 +250,141 @@ namespace CuiLib.Options
             {
                 if (value is null) return Console.In;
                 return new StreamReader(value, encoding);
+            }
+        }
+
+        /// <summary>
+        /// <see cref="StreamWriter"/>を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
+        /// </summary>
+        [Serializable]
+        private sealed class StreamWriterValueConverter : ValueConverter<string, StreamWriter>
+        {
+            private readonly bool append;
+            private readonly Encoding encoding;
+
+            /// <summary>
+            /// <see cref="StreamWriterValueConverter"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="encoding">エンコーディング</param>
+            /// <param name="append">上書きせずに末尾に追加するかどうか</param>
+            /// <exception cref="ArgumentNullException"><paramref name="encoding"/>がnull</exception>
+            internal StreamWriterValueConverter(Encoding encoding, bool append)
+            {
+                ArgumentNullException.ThrowIfNull(encoding);
+
+                this.encoding = encoding;
+                this.append = append;
+            }
+
+            /// <inheritdoc/>
+            public override StreamWriter Convert(string value)
+            {
+                return new StreamWriter(value, append, encoding);
+            }
+        }
+
+        /// <summary>
+        /// <see cref="StreamReader"/>を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
+        /// </summary>
+        [Serializable]
+        private sealed class StreamReaderValueConverter : ValueConverter<string, StreamReader>
+        {
+            private readonly Encoding encoding;
+
+            /// <summary>
+            /// <see cref="StreamReaderValueConverter"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="encoding">エンコーディング</param>
+            /// <exception cref="ArgumentNullException"><paramref name="encoding"/>がnull</exception>
+            internal StreamReaderValueConverter(Encoding encoding)
+            {
+                ArgumentNullException.ThrowIfNull(encoding);
+
+                this.encoding = encoding;
+            }
+
+            /// <inheritdoc/>
+            public override StreamReader Convert(string value)
+            {
+                return new StreamReader(value, encoding);
+            }
+        }
+
+        /// <summary>
+        /// 配列を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
+        /// </summary>
+        [Serializable]
+        private sealed class ArrayValueConverter : ValueConverter<string, Array>
+        {
+            private readonly IValueConverter<string, object?> elementConverter;
+            private readonly Type elementType;
+            private readonly string separator;
+            private readonly StringSplitOptions splitOptions;
+
+            /// <summary>
+            /// <see cref="ArrayValueConverter{T}"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="elementType">要素の型</param>
+            /// <param name="separator">区切り文字</param>
+            /// <param name="converter">要素の変換を行う<see cref="IValueConverter{TIn, TOut}"/>のインスタンス</param>
+            /// <param name="splitOptions">文字列分割時のオプション</param>
+            internal ArrayValueConverter(string separator, Type elementType, IValueConverter<string, object?> converter, StringSplitOptions splitOptions)
+            {
+                ArgumentNullException.ThrowIfNull(elementType);
+                ArgumentNullException.ThrowIfNull(converter);
+                ArgumentException.ThrowIfNullOrEmpty(separator);
+
+                this.separator = separator;
+                this.elementType = elementType;
+                elementConverter = converter;
+                this.splitOptions = splitOptions;
+            }
+
+            /// <inheritdoc/>
+            public override Array Convert(string value)
+            {
+                if (value.Length == 0) return Array.CreateInstance(elementType, 0);
+
+                string[] elements = value.Split(separator, splitOptions);
+                Array result = Array.CreateInstance(elementType, elements.Length);
+                for (int i = 0; i < elements.Length; i++) result.SetValue(elementConverter.Convert(elements[i]), i);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// 配列を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
+        /// </summary>
+        /// <typeparam name="T">配列の要素の型</typeparam>
+        [Serializable]
+        private sealed class ArrayValueConverter<T> : ValueConverter<string, T[]>
+        {
+            private readonly IValueConverter<string, T> elementConverter;
+            private readonly string separator;
+            private readonly StringSplitOptions splitOptions;
+
+            /// <summary>
+            /// <see cref="ArrayValueConverter{T}"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="separator">区切り文字</param>
+            /// <param name="converter">要素の変換を行う<see cref="IValueConverter{TIn, TOut}"/>のインスタンス</param>
+            /// <param name="splitOptions">文字列分割時のオプション</param>
+            internal ArrayValueConverter(string separator, IValueConverter<string, T> converter, StringSplitOptions splitOptions)
+            {
+                ArgumentNullException.ThrowIfNull(converter);
+                ArgumentException.ThrowIfNullOrEmpty(separator);
+
+                this.separator = separator;
+                elementConverter = converter;
+                this.splitOptions = splitOptions;
+            }
+
+            /// <inheritdoc/>
+            public override T[] Convert(string value)
+            {
+                if (value.Length == 0) return Array.Empty<T>();
+                string[] elements = value.Split(separator, splitOptions);
+                return Array.ConvertAll(elements, elementConverter.Convert);
             }
         }
     }

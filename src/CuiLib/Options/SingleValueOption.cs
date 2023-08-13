@@ -7,7 +7,7 @@ namespace CuiLib.Options
     /// </summary>
     /// <typeparam name="T">オプションの値の型</typeparam>
     [Serializable]
-    public class SingleValueOption<T> : ValuedOption<T>
+    public class SingleValueOption<T> : ValueSpecifiedOption<T>
     {
         /// <inheritdoc/>
         internal override OptionType OptionType => OptionType.Valued | OptionType.SingleValue;
@@ -16,22 +16,22 @@ namespace CuiLib.Options
         public override string? ValueTypeName => ValueConverter.GetValueTypeString<T>();
 
         /// <summary>
-        /// 値の変換を行う<see cref="ValueChecker{T}"/>を取得または設定します。
+        /// 値の変換を行う<see cref="IValueConverter{TIn, TOut}"/>を取得または設定します。
         /// </summary>
-        public ValueConverter<string, T> Converter
+        public IValueConverter<string, T> Converter
         {
             get => _converter ?? ValueConverter.GetDefault<T>();
             set => _converter = value;
         }
 
-        private ValueConverter<string, T>? _converter;
+        private IValueConverter<string, T>? _converter;
 
         /// <summary>
         /// 値の妥当性を検証する関数を取得または設定します。
         /// </summary>
         /// <remarks>既定値では無条件でOK</remarks>
         /// <exception cref="ArgumentNullException">設定しようとした値がnull</exception>
-        public ValueChecker<T> Checker
+        public IValueChecker<T> Checker
         {
             get => _checker;
             set
@@ -41,7 +41,7 @@ namespace CuiLib.Options
             }
         }
 
-        private ValueChecker<T> _checker = ValueChecker.AlwaysSuccess<T>();
+        private IValueChecker<T> _checker = ValueChecker.AlwaysSuccess<T>();
 
         /// <inheritdoc/>
         public override T Value

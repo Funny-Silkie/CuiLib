@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 
 namespace CuiLib.Options
 {
     /// <summary>
-    /// 結合された<see cref="ValueConverter{TIn, TOut}"/>のクラスです。
+    /// 結合された<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
     /// </summary>
     /// <typeparam name="TIn">変換前の型</typeparam>
     /// <typeparam name="TMid">変換途上の型</typeparam>
@@ -11,8 +11,8 @@ namespace CuiLib.Options
     [Serializable]
     internal sealed class CombinedValueConverter<TIn, TMid, TOut> : ValueConverter<TIn, TOut>
     {
-        private readonly ValueConverter<TIn, TMid> first;
-        private readonly ValueConverter<TMid, TOut> second;
+        private readonly IValueConverter<TIn, TMid> first;
+        private readonly IValueConverter<TMid, TOut> second;
 
         /// <summary>
         /// <see cref="CombinedValueConverter{TIn, TMid, TOut}"/>の新しいインスタンスを初期化します。
@@ -20,7 +20,7 @@ namespace CuiLib.Options
         /// <param name="first">最初に変換を行うインスタンス</param>
         /// <param name="second">次に変換を行うインスタンス</param>
         /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="second"/>がnull</exception>
-        internal CombinedValueConverter(ValueConverter<TIn, TMid> first, ValueConverter<TMid, TOut> second)
+        internal CombinedValueConverter(IValueConverter<TIn, TMid> first, IValueConverter<TMid, TOut> second)
         {
             ArgumentNullException.ThrowIfNull(first);
             ArgumentNullException.ThrowIfNull(second);

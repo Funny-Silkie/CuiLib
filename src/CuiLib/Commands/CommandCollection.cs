@@ -1,6 +1,8 @@
-﻿using System;
+﻿using CuiLib.Internal;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace CuiLib.Commands
@@ -9,6 +11,8 @@ namespace CuiLib.Commands
     /// コマンドのコレクションのクラスです。
     /// </summary>
     [Serializable]
+    [DebuggerDisplay("Count = {Count}")]
+    [DebuggerTypeProxy(typeof(CollectionDebugViewer<Command>))]
     public class CommandCollection : ICollection<Command>, IReadOnlyCollection<Command>, ICollection
     {
         private readonly Command? parent;

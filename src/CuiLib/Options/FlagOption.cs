@@ -8,7 +8,7 @@ namespace CuiLib.Options
     /// フラグを表すオプションです。
     /// </summary>
     [Serializable]
-    public sealed class FlagOption : Option<bool>
+    public sealed class FlagOption : ValuedOption<bool>
     {
         /// <inheritdoc/>
         internal override OptionType OptionType => OptionType.Flag | OptionType.SingleValue;

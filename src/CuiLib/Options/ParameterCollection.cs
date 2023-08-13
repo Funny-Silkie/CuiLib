@@ -1,6 +1,8 @@
-﻿using System;
+﻿using CuiLib.Internal;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -10,6 +12,8 @@ namespace CuiLib.Options
     /// パラメータのコレクションのクラスです。
     /// </summary>
     [Serializable]
+    [DebuggerDisplay("Count = {Count}")]
+    [DebuggerTypeProxy(typeof(CollectionDebugViewer<Parameter>))]
     public class ParameterCollection : ICollection<Parameter>, IReadOnlyCollection<Parameter>, ICollection
     {
         private int arrayStart = -1;

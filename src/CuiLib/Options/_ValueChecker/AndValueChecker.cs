@@ -10,7 +10,7 @@ namespace CuiLib.Options
     [Serializable]
     internal class AndValueChecker<T> : ValueChecker<T>
     {
-        private ValueChecker<T>[] checkers;
+        private IValueChecker<T>[] checkers;
 
         /// <summary>
         /// <see cref="AndValueChecker{T}"/>の新しいインスタンスを初期化します。
@@ -18,7 +18,7 @@ namespace CuiLib.Options
         /// <param name="first">最初の評価</param>
         /// <param name="second">2番目の評価</param>
         /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="second"/>がnull</exception>
-        internal AndValueChecker(ValueChecker<T> first, ValueChecker<T> second)
+        internal AndValueChecker(IValueChecker<T> first, IValueChecker<T> second)
         {
             Initialize(first, second);
         }
@@ -29,7 +29,7 @@ namespace CuiLib.Options
         /// <param name="source">評価する関数のリスト</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
-        internal AndValueChecker(params ValueChecker<T>[] source)
+        internal AndValueChecker(params IValueChecker<T>[] source)
         {
             ArgumentNullException.ThrowIfNull(source);
 
@@ -48,8 +48,8 @@ namespace CuiLib.Options
         /// <param name="first">最初の評価</param>
         /// <param name="second">2番目の評価</param>
         /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="second"/>がnull</exception>
-        [MemberNotNull("checkers")]
-        private void Initialize(ValueChecker<T> first, ValueChecker<T> second)
+        [MemberNotNull(nameof(checkers))]
+        private void Initialize(IValueChecker<T> first, IValueChecker<T> second)
         {
             ArgumentNullException.ThrowIfNull(first);
             ArgumentNullException.ThrowIfNull(second);
@@ -58,20 +58,20 @@ namespace CuiLib.Options
             {
                 if (second is AndValueChecker<T> c2)
                 {
-                    checkers = new ValueChecker<T>[c1.checkers.Length + c2.checkers.Length];
+                    checkers = new IValueChecker<T>[c1.checkers.Length + c2.checkers.Length];
                     Array.Copy(c1.checkers, 0, checkers, 0, c1.checkers.Length);
                     Array.Copy(c2.checkers, 0, checkers, c1.checkers.Length, c2.checkers.Length);
                 }
                 else
                 {
-                    checkers = new ValueChecker<T>[c1.checkers.Length + 1];
+                    checkers = new IValueChecker<T>[c1.checkers.Length + 1];
                     Array.Copy(c1.checkers, 0, checkers, 0, c1.checkers.Length);
                     checkers[^1] = second;
                 }
             }
             else if (second is AndValueChecker<T> c2)
             {
-                checkers = new ValueChecker<T>[c2.checkers.Length + 1];
+                checkers = new IValueChecker<T>[c2.checkers.Length + 1];
                 checkers[0] = first;
                 Array.Copy(c2.checkers, 0, checkers, 1, c2.checkers.Length);
             }
@@ -84,24 +84,24 @@ namespace CuiLib.Options
         /// <param name="source">評価する関数のリスト</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
-        [MemberNotNull("checkers")]
-        private void Initialize(ValueChecker<T>[] source)
+        [MemberNotNull(nameof(checkers))]
+        private void Initialize(IValueChecker<T>[] source)
         {
             int length = 0;
             for (int i = 0; i < source.Length; i++)
             {
-                ValueChecker<T> current = source[i];
+                IValueChecker<T> current = source[i];
                 if (current == null) throw new ArgumentException("要素がnullです", nameof(source));
 
                 length += current is AndValueChecker<T> c ? c.checkers.Length : 1;
             }
 
-            checkers = new ValueChecker<T>[length];
+            checkers = new IValueChecker<T>[length];
             int index = 0;
 
             for (int i = 0; i < source.Length; i++)
             {
-                ValueChecker<T> current = source[i];
+                IValueChecker<T> current = source[i];
                 if (current is AndValueChecker<T> c)
                 {
                     int currentLength = c.checkers.Length;

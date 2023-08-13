@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CuiLib.Options
 {
     public static partial class ValueChecker
     {
         /// <summary>
-        /// 必ず<see cref="ValueCheckState.Success"/>を返す<see cref="ValueChecker{T}"/>の実装です。
+        /// 常に<see cref="ValueCheckState.Success"/>を返す<see cref="IValueChecker{T}"/>の実装です。
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         [Serializable]
@@ -32,7 +33,7 @@ namespace CuiLib.Options
         }
 
         /// <summary>
-        /// デリゲートを使用する<see cref="ValueChecker{T}"/>の実装です。
+        /// デリゲートを使用する<see cref="IValueChecker{T}"/>の実装です。
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         [Serializable]
@@ -496,6 +497,33 @@ namespace CuiLib.Options
             public override int GetHashCode()
             {
                 return GetType().Name.GetHashCode();
+            }
+        }
+
+        /// <summary>
+        /// 正規表現にマッチするかどうかを検証します。
+        /// </summary>
+        [Serializable]
+        private sealed class RegexMatchValueChecker : ValueChecker<string>
+        {
+            private readonly Regex regex;
+
+            /// <summary>
+            /// <see cref="RegexMatchValueChecker"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="regex">使用する正規表現オブジェクト</param>
+            /// <exception cref="ArgumentNullException"><paramref name="regex"/>が<see langword="null"/></exception>
+            internal RegexMatchValueChecker(Regex regex)
+            {
+                ArgumentNullException.ThrowIfNull(regex);
+
+                this.regex = regex;
+            }
+
+            public override ValueCheckState CheckValue(string value)
+            {
+                if (regex.IsMatch(value)) return ValueCheckState.Success;
+                return ValueCheckState.AsError($"正規表現'{regex}'にマッチしません");
             }
         }
     }

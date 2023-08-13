@@ -266,7 +266,7 @@ namespace CuiLib
         /// 未入力のオプションとして<see cref="ArgumentAnalysisException"/>をスローします。
         /// </summary>
         /// <param name="option">当該オプション</param>
-        public static void ThrowAsEmptyOption(Option? option)
+        public static void ThrowAsEmptyOption(NamedOption? option)
         {
             if (option == null) return;
 
@@ -304,7 +304,7 @@ namespace CuiLib
         /// <param name="name">引数名</param>
         /// <exception cref="ArgumentNullException"><paramref name="value"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="value"/>が空文字</exception>
-        public static void ThrowIfNullOrEmpty([NotNull] string? value, [CallerArgumentExpression("value")] string? name = null)
+        public static void ThrowIfNullOrEmpty([NotNull] string? value, [CallerArgumentExpression(nameof(value))] string? name = null)
         {
             ArgumentNullException.ThrowIfNull(value, name);
             if (value.Length == 0) throw new ArgumentException("空文字です", name);
@@ -316,7 +316,7 @@ namespace CuiLib
         /// <param name="fileName">ファイル名またはファイルパス</param>
         /// <param name="name">引数名</param>
         /// <exception cref="ArgumentException"><paramref name="fileName"/>に使用できない文字が含まれている</exception>
-        public static void ThrowIfHasInvalidFileNameChar(string fileName, [CallerArgumentExpression("fileName")] string? name = null)
+        public static void ThrowIfHasInvalidFileNameChar(string fileName, [CallerArgumentExpression(nameof(fileName))] string? name = null)
         {
             int index = fileName.IndexOfAny(GetInvalidFileNameChars());
             if (index >= 0) throw new ArgumentException($"ファイル名に使用できない文字'{fileName[index]}'が含まれています", name);
@@ -328,7 +328,7 @@ namespace CuiLib
         /// <param name="path">パス</param>
         /// <param name="name">引数名</param>
         /// <exception cref="ArgumentException"><paramref name="path"/>に使用できない文字が含まれている</exception>
-        public static void ThrowIfHasInvalidPathChar(string path, [CallerArgumentExpression("path")] string? name = null)
+        public static void ThrowIfHasInvalidPathChar(string path, [CallerArgumentExpression(nameof(path))] string? name = null)
         {
             int index = path.IndexOfAny(GetInvalidPathChars());
             if (index >= 0) throw new ArgumentException($"パスに使用できない文字'{path[index]}'が含まれています", name);
@@ -340,7 +340,7 @@ namespace CuiLib
         /// <param name="value">値</param>
         /// <param name="name">引数名</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void ThrowIfNegative(int value, [CallerArgumentExpression("value")] string? name = null)
+        public static void ThrowIfNegative(int value, [CallerArgumentExpression(nameof(value))] string? name = null)
         {
             if (value < 0) throw new ArgumentOutOfRangeException(name, $"値が0未満です ('{value}')");
         }
@@ -351,7 +351,7 @@ namespace CuiLib
         /// <param name="value">値</param>
         /// <param name="name">引数名</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void ThrowIfNegative(long value, [CallerArgumentExpression("value")] string? name = null)
+        public static void ThrowIfNegative(long value, [CallerArgumentExpression(nameof(value))] string? name = null)
         {
             if (value < 0) throw new ArgumentOutOfRangeException(name, $"値が0未満です ('{value}')");
         }
@@ -362,7 +362,7 @@ namespace CuiLib
         /// <param name="value">値</param>
         /// <param name="name">引数名</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void ThrowIfNegative(double value, [CallerArgumentExpression("value")] string? name = null)
+        public static void ThrowIfNegative(double value, [CallerArgumentExpression(nameof(value))] string? name = null)
         {
             if (value < 0) throw new ArgumentOutOfRangeException(name, $"値が0未満です ('{value}')");
         }
@@ -373,7 +373,7 @@ namespace CuiLib
         /// <param name="value">値</param>
         /// <param name="name">引数名</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void ThrowIfNegative(decimal value, [CallerArgumentExpression("value")] string? name = null)
+        public static void ThrowIfNegative(decimal value, [CallerArgumentExpression(nameof(value))] string? name = null)
         {
             if (value < 0) throw new ArgumentOutOfRangeException(name, $"値が0未満です ('{value}')");
         }
@@ -385,7 +385,7 @@ namespace CuiLib
         /// <param name="value">検証する値</param>
         /// <param name="name">引数名</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/>が未定義の値</exception>
-        public static void ThrowIfNotDefined<TEnum>(TEnum value, [CallerArgumentExpression("value")] string? name = null)
+        public static void ThrowIfNotDefined<TEnum>(TEnum value, [CallerArgumentExpression(nameof(value))] string? name = null)
             where TEnum : struct, Enum
         {
             if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(name, "定義されていない列挙型の値です");

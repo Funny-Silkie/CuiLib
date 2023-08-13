@@ -1,7 +1,10 @@
-﻿using System;
+﻿using CuiLib.Internal;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace CuiLib.Options
 {
@@ -9,11 +12,65 @@ namespace CuiLib.Options
     /// オプションのコレクションのクラスです。
     /// </summary>
     [Serializable]
+    [DebuggerDisplay("Count = {Count}")]
+    [DebuggerTypeProxy(typeof(CollectionDebugViewer<Option>))]
     public class OptionCollection : ICollection<Option>, IReadOnlyCollection<Option>, ICollection
     {
-        private static readonly IEqualityComparer<Option> Comparer = new OptionEqualityComparer();
+        /// <summary>
+        /// オプション比較時のキーを表します。
+        /// </summary>
+        [Serializable]
+        internal sealed class OptionKey : IEquatable<OptionKey>, IEnumerable<string>
+        {
+            private readonly HashSet<string> names;
 
-        private readonly HashSet<Option> options;
+            /// <summary>
+            /// <see cref="OptionKey"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="names">名前一覧</param>
+            /// <exception cref="ArgumentException"><paramref name="names"/>の名前が指定されていない</exception>
+            public OptionKey(IEnumerable<string> names)
+            {
+                this.names = names.ToHashSet(StringComparer.Ordinal);
+                if (this.names.Count == 0) throw new ArgumentException("名前が指定されていません", nameof(names));
+            }
+
+            /// <summary>
+            /// 指定した名前が存在するかどうかを検証します。
+            /// </summary>
+            /// <param name="name">検証する名前</param>
+            /// <returns><paramref name="name"/>が存在していたら<see langword="true"/>，それ以外で<see langword="false"/></returns>
+            public bool ContainName(string name) => names.Contains(name);
+
+            /// <summary>
+            /// 指定した名前セットと一致するかどうかを検証します。
+            /// </summary>
+            /// <param name="names">検証する名前セット</param>
+            /// <returns><paramref name="names"/>と一致していたら<see langword="true"/>，それ以外で<see langword="false"/></returns>
+            public bool HasSameNames(IEnumerable<string> names) => this.names.SetEquals(names);
+
+            /// <inheritdoc/>
+            public override bool Equals(object? obj) => Equals(obj as OptionKey);
+
+            /// <inheritdoc/>
+            public bool Equals(OptionKey? other) => other is not null && names.SetEquals(other.names);
+
+            /// <inheritdoc/>
+            public override int GetHashCode()
+            {
+                var hashCode = new HashCode();
+                foreach (string current in names) hashCode.Add(current, names.Comparer);
+                return hashCode.ToHashCode();
+            }
+
+            /// <inheritdoc/>
+            public IEnumerator<string> GetEnumerator() => names.GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        private readonly Dictionary<string, OptionKey> keys;
+        private readonly Dictionary<OptionKey, Option> options;
 
         /// <inheritdoc/>
         public int Count => options.Count;
@@ -23,7 +80,8 @@ namespace CuiLib.Options
         /// </summary>
         public OptionCollection()
         {
-            options = new HashSet<Option>(Comparer);
+            keys = new Dictionary<string, OptionKey>(StringComparer.Ordinal);
+            options = new Dictionary<OptionKey, Option>();
         }
 
         /// <summary>
@@ -35,14 +93,21 @@ namespace CuiLib.Options
         public void Add(Option option)
         {
             ArgumentNullException.ThrowIfNull(option);
+            if (option.GetAllNames(false).Any(keys.ContainsKey)) throw new ArgumentException("オプション名が重複しています");
 
-            if (!options.Add(option)) throw new ArgumentException("オプション名が重複しています");
+            var key = new OptionKey(option.GetAllNames(false));
+            foreach (string currentName in key) keys.Add(currentName, key);
+            options.Add(key, option);
         }
 
         /// <summary>
         /// 全ての要素を削除します。
         /// </summary>
-        public void Clear() => options.Clear();
+        public void Clear()
+        {
+            keys.Clear();
+            options.Clear();
+        }
 
         /// <summary>
         /// 指定したオプションが存在するかどうかを取得します。
@@ -53,20 +118,14 @@ namespace CuiLib.Options
         {
             if (name is null) return false;
 
-            foreach (Option current in options)
-                if (current.ShortName == name || current.FullName == name)
-                    return true;
-            return false;
+            return keys.ContainsKey(name);
         }
 
         /// <inheritdoc/>
-        public bool Contains(Option option)
-        {
-            return options.TryGetValue(option, out Option? actual) && option == actual;
-        }
+        public bool Contains(Option option) => options.ContainsValue(option);
 
         /// <inheritdoc/>
-        public IEnumerator<Option> GetEnumerator() => options.GetEnumerator();
+        public IEnumerator<Option> GetEnumerator() => options.Values.GetEnumerator();
 
         /// <summary>
         /// 指定したオプションを削除します。
@@ -76,7 +135,15 @@ namespace CuiLib.Options
         public bool Remove(Option? option)
         {
             if (option is null) return false;
-            return options.Remove(option);
+
+            foreach ((OptionKey key, Option value) in options)
+                if (option == value)
+                {
+                    options.Remove(key);
+                    foreach (string name in key) keys.Remove(name);
+                    return true;
+                }
+            return false;
         }
 
         /// <summary>
@@ -87,12 +154,11 @@ namespace CuiLib.Options
         /// <returns><paramref name="option"/>を取得できたらtrue，それ以外でfalse</returns>
         public bool TryGetValue(char shortName, [NotNullWhen(true)] out Option? option)
         {
-            foreach (Option current in options)
-                if (current.ShortName != null && current.ShortName[0] == shortName)
-                {
-                    option = current;
-                    return true;
-                }
+            if (keys.TryGetValue(shortName.ToString(), out OptionKey? key))
+            {
+                option = options[key];
+                return true;
+            }
 
             option = null;
             return false;
@@ -111,12 +177,12 @@ namespace CuiLib.Options
                 option = null;
                 return false;
             }
-            foreach (Option current in options)
-                if (current.ShortName == name || current.FullName == name)
-                {
-                    option = current;
-                    return true;
-                }
+
+            if (keys.TryGetValue(name, out OptionKey? key))
+            {
+                option = options[key];
+                return true;
+            }
 
             option = null;
             return false;
@@ -142,7 +208,7 @@ namespace CuiLib.Options
 
         bool ICollection<Option>.IsReadOnly => false;
 
-        void ICollection<Option>.CopyTo(Option[] array, int arrayIndex) => options.CopyTo(array, arrayIndex);
+        void ICollection<Option>.CopyTo(Option[] array, int arrayIndex) => options.Values.CopyTo(array, arrayIndex);
 
         #endregion ICollection<T>
     }

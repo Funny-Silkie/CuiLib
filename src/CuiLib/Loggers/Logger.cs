@@ -10,9 +10,16 @@ namespace CuiLib.Log
     /// <summary>
     /// ロガーのクラスです。
     /// </summary>
-    public class Logger : IDisposable
+    public class Logger : TextWriter
     {
         private readonly List<WriterEntry> writers;
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <exception cref="NotSupportedException"></exception>
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        public override Encoding Encoding => throw new NotSupportedException();
 
         /// <summary>
         /// <see cref="Console.Out"/>へのログ出力をするかどうかの値を取得または設定します。
@@ -25,7 +32,7 @@ namespace CuiLib.Log
                 if (_consoleStdoutLogEnabled == value) return;
                 _consoleStdoutLogEnabled = value;
                 if (value) writers.Add(new WriterEntry(Console.Out));
-                else RemoveLogFile(Console.Out);
+                else RemoveLog(Console.Out);
             }
         }
 
@@ -42,7 +49,7 @@ namespace CuiLib.Log
                 if (_consoleErrorLogEnabled == value) return;
                 _consoleErrorLogEnabled = value;
                 if (value) writers.Add(new WriterEntry(Console.Error));
-                else RemoveLogFile(Console.Error);
+                else RemoveLog(Console.Error);
             }
         }
 
@@ -148,6 +155,18 @@ namespace CuiLib.Log
         }
 
         /// <summary>
+        /// ログ出力先を追加します。
+        /// </summary>
+        /// <param name="writer">追加するログ出力先</param>
+        /// <exception cref="ArgumentNullException"><paramref name="writer"/>がnull</exception>
+        public void AddLog(TextWriter writer)
+        {
+            ArgumentNullException.ThrowIfNull(writer);
+
+            writers.Add(new WriterEntry(writer));
+        }
+
+        /// <summary>
         /// 指定したログファイルを管理中かどうかを検索します。
         /// </summary>
         /// <param name="path">検索するログファイルのパス</param>
@@ -163,13 +182,13 @@ namespace CuiLib.Log
         }
 
         /// <summary>
-        /// ログファイルを削除します。
+        /// ログ出力を解除します。
         /// </summary>
-        /// <param name="path">削除するログファイルのパス</param>
-        /// <exception cref="ArgumentNullException"><paramref name="path"/>がnull</exception>
+        /// <param name="path">出力解除するログファイルのパス</param>
+        /// <returns>ログ出力を解除できたら<see langword="true"/>，それ以外で<see langword="false"/></returns>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/>が<see langword="null"/></exception>
         /// <exception cref="ArgumentException"><paramref name="path"/>が無効</exception>
         /// <exception cref="PathTooLongException"><paramref name="path"/>が長すぎる</exception>
-        /// <returns>ログファイルを削除できたらtrue，それ以外でfalse</returns>
         public bool RemoveLogFile(string path)
         {
             int index = GetLogIndex(Path.GetFullPath(path));
@@ -181,12 +200,15 @@ namespace CuiLib.Log
         }
 
         /// <summary>
-        /// ログファイルを削除します。
+        /// ログ出力を解除します。
         /// </summary>
-        /// <param name="writer">削除するログファイルのライター</param>
-        /// <returns>ログファイルを削除できたらtrue，それ以外でfalse</returns>
-        private bool RemoveLogFile(TextWriter writer)
+        /// <param name="writer">出力解除するログファイルのライター</param>
+        /// <returns>ログ出力を解除できたら<see langword="true"/>，それ以外で<see langword="false"/></returns>
+        /// <exception cref="ArgumentNullException"><paramref name="writer"/>が<see langword="null"/></exception>
+        public bool RemoveLog(TextWriter writer)
         {
+            ArgumentNullException.ThrowIfNull(writer);
+
             int index = GetLogIndex(writer);
             if (index < 0) return false;
             WriterEntry entry = writers[index];
@@ -199,314 +221,302 @@ namespace CuiLib.Log
 
         #region Write Operation
 
-        /// <inheritdoc cref="TextWriter.Write(char)"/>
-        public void Write(char value)
+        /// <inheritdoc/>
+        public override void Write(char value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(ReadOnlySpan{char})"/>
-        public void Write(ReadOnlySpan<char> buffer)
+        /// <inheritdoc/>
+        public override void Write(ReadOnlySpan<char> buffer)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(buffer);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(char[])"/>
-        public void Write(char[]? buffer)
+        /// <inheritdoc/>
+        public override void Write(char[]? buffer)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(buffer);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(char[], int, int)"/>
-        public void Write(char[] buffer, int index, int count)
+        /// <inheritdoc/>
+        public override void Write(char[] buffer, int index, int count)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(buffer, index, count);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(int)"/>
-        public void Write(int value)
+        /// <inheritdoc/>
+        public override void Write(int value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(uint)"/>
-        public void Write(uint value)
+        /// <inheritdoc/>
+        public override void Write(uint value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(ulong)"/>
-        public void Write(ulong value)
+        /// <inheritdoc/>
+        public override void Write(ulong value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(long)"/>
-        public void Write(long value)
+        /// <inheritdoc/>
+        public override void Write(long value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(float)"/>
-        public void Write(float value)
+        /// <inheritdoc/>
+        public override void Write(float value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(double)"/>
-        public void Write(double value)
+        /// <inheritdoc/>
+        public override void Write(double value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(decimal)"/>
-        public void Write(decimal value)
+        /// <inheritdoc/>
+        public override void Write(decimal value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(bool)"/>
-        public void Write(bool value)
+        /// <inheritdoc/>
+        public override void Write(bool value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(object)"/>
-        public void Write(object? value)
+        /// <inheritdoc/>
+        public override void Write(object? value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(StringBuilder)"/>
-        public void Write(StringBuilder? value)
+        /// <inheritdoc/>
+        public override void Write(StringBuilder? value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(string)"/>
-        public void Write(string? value)
+        /// <inheritdoc/>
+        public override void Write(string? value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(string, object)"/>
-        public void Write(string format, object? arg0)
+        /// <inheritdoc/>
+        public override void Write(string format, object? arg0)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(format, arg0);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(string, object, object)"/>
-        public void Write(string format, object? arg0, object? arg1)
+        /// <inheritdoc/>
+        public override void Write(string format, object? arg0, object? arg1)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(format, arg0, arg1);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(string, object, object, object)"/>
-        public void Write(string format, object? arg0, object? arg1, object? arg2)
+        /// <inheritdoc/>
+        public override void Write(string format, object? arg0, object? arg1, object? arg2)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(format, arg0, arg1, arg2);
         }
 
-        /// <inheritdoc cref="TextWriter.Write(string, object[])"/>
-        public void Write(string format, params object?[] arg)
+        /// <inheritdoc/>
+        public override void Write(string format, params object?[] arg)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(format, arg);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteAsync(char)"/>
-        public async Task WriteAsync(char value)
+        /// <inheritdoc/>
+        public override async Task WriteAsync(char value)
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteAsync(value);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteAsync(ReadOnlyMemory{char}, CancellationToken)"/>
-        public async Task WriteAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
+        /// <inheritdoc/>
+        public override async Task WriteAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteAsync(buffer, cancellationToken);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteAsync(char[])"/>
-        public async Task WriteAsync(char[]? buffer)
-        {
-            foreach (WriterEntry entry in writers) await entry.Writer.WriteAsync(buffer);
-        }
-
-        /// <inheritdoc cref="TextWriter.WriteAsync(char[], int, int)"/>
-        public async Task WriteAsync(char[] buffer, int index, int count)
+        /// <inheritdoc/>
+        public override async Task WriteAsync(char[] buffer, int index, int count)
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteAsync(buffer, index, count);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteAsync(StringBuilder, CancellationToken)"/>
-        public async Task WriteAsync(StringBuilder? value, CancellationToken cancellationToken = default)
+        /// <inheritdoc/>
+        public override async Task WriteAsync(StringBuilder? value, CancellationToken cancellationToken = default)
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteAsync(value, cancellationToken);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteAsync(string)"/>
-        public async Task WriteAsync(string? value)
+        /// <inheritdoc/>
+        public override async Task WriteAsync(string? value)
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteAsync(value);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine()"/>
-        public void WriteLine()
+        /// <inheritdoc/>
+        public override void WriteLine()
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine();
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(char)"/>
-        public void WriteLine(char value)
+        /// <inheritdoc/>
+        public override void WriteLine(char value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(value);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(ReadOnlySpan{char})"/>
-        public void WriteLine(ReadOnlySpan<char> buffer)
+        /// <inheritdoc/>
+        public override void WriteLine(ReadOnlySpan<char> buffer)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(buffer);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(char[])"/>
-        public void WriteLine(char[]? buffer)
+        /// <inheritdoc/>
+        public override void WriteLine(char[]? buffer)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(buffer);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(char[], int, int)"/>
-        public void WriteLine(char[] buffer, int index, int count)
+        /// <inheritdoc/>
+        public override void WriteLine(char[] buffer, int index, int count)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(buffer, index, count);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(int)"/>
-        public void WriteLine(int value)
+        /// <inheritdoc/>
+        public override void WriteLine(int value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(value);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(uint)"/>
-        public void WriteLine(uint value)
+        /// <inheritdoc/>
+        public override void WriteLine(uint value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(value);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(ulong)"/>
-        public void WriteLine(ulong value)
+        /// <inheritdoc/>
+        public override void WriteLine(ulong value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(value);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(long)"/>
-        public void WriteLine(long value)
+        /// <inheritdoc/>
+        public override void WriteLine(long value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(value);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(float)"/>
-        public void WriteLine(float value)
+        /// <inheritdoc/>
+        public override void WriteLine(float value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(value);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(double)"/>
-        public void WriteLine(double value)
+        /// <inheritdoc/>
+        public override void WriteLine(double value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(value);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(decimal)"/>
-        public void WriteLine(decimal value)
+        /// <inheritdoc/>
+        public override void WriteLine(decimal value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(value);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(bool)"/>
-        public void WriteLine(bool value)
+        /// <inheritdoc/>
+        public override void WriteLine(bool value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(value);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(object)"/>
-        public void WriteLine(object? value)
+        /// <inheritdoc/>
+        public override void WriteLine(object? value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(value);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(StringBuilder)"/>
-        public void WriteLine(StringBuilder? value)
+        /// <inheritdoc/>
+        public override void WriteLine(StringBuilder? value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(value);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(string)"/>
-        public void WriteLine(string? value)
+        /// <inheritdoc/>
+        public override void WriteLine(string? value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(value);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(string, object)"/>
-        public void WriteLine(string format, object? arg0)
+        /// <inheritdoc/>
+        public override void WriteLine(string format, object? arg0)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(format, arg0);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(string, object, object)"/>
-        public void WriteLine(string format, object? arg0, object? arg1)
+        /// <inheritdoc/>
+        public override void WriteLine(string format, object? arg0, object? arg1)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(format, arg0, arg1);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(string, object, object, object)"/>
-        public void WriteLine(string format, object? arg0, object? arg1, object? arg2)
+        /// <inheritdoc/>
+        public override void WriteLine(string format, object? arg0, object? arg1, object? arg2)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(format, arg0, arg1, arg2);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLine(string, object[])"/>
-        public void WriteLine(string format, params object?[] arg)
+        /// <inheritdoc/>
+        public override void WriteLine(string format, params object?[] arg)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(format, arg);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLineAsync()"/>
-        public async Task WriteLineAsync()
+        /// <inheritdoc/>
+        public override async Task WriteLineAsync()
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync();
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLineAsync(char)"/>
-        public async Task WriteLineAsync(char value)
+        /// <inheritdoc/>
+        public override async Task WriteLineAsync(char value)
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(value);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLineAsync(ReadOnlyMemory{char}, CancellationToken)"/>
-        public async Task WriteLineAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
+        /// <inheritdoc/>
+        public override async Task WriteLineAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(buffer, cancellationToken);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLineAsync(char[])"/>
-        public async Task WriteLineAsync(char[]? buffer)
-        {
-            foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(buffer);
-        }
-
-        /// <inheritdoc cref="TextWriter.WriteLineAsync(char[], int, int)"/>
-        public async Task WriteLineAsync(char[] buffer, int index, int count)
+        /// <inheritdoc/>
+        public override async Task WriteLineAsync(char[] buffer, int index, int count)
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(buffer, index, count);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLineAsync(StringBuilder, CancellationToken)"/>
-        public async Task WriteLineAsync(StringBuilder? value, CancellationToken cancellationToken = default)
+        /// <inheritdoc/>
+        public override async Task WriteLineAsync(StringBuilder? value, CancellationToken cancellationToken = default)
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(value, cancellationToken);
         }
 
-        /// <inheritdoc cref="TextWriter.WriteLineAsync(string)"/>
-        public async Task WriteLineAsync(string? value)
+        /// <inheritdoc/>
+        public override async Task WriteLineAsync(string? value)
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(value);
         }
@@ -517,11 +527,8 @@ namespace CuiLib.Log
 
         private bool disposedValue;
 
-        /// <summary>
-        /// インスタンスを破棄します。
-        /// </summary>
-        /// <param name="disposing">アンマネージドリソースも破棄するかどうか</param>
-        protected virtual void Dispose(bool disposing)
+        /// <inheritdoc/>
+        protected override void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
@@ -537,15 +544,6 @@ namespace CuiLib.Log
             }
         }
 
-        /// <summary>
-        /// インスタンスを破棄します。
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
-
         #endregion IDisposable
 
         /// <summary>
@@ -555,7 +553,7 @@ namespace CuiLib.Log
         {
             public bool MustDisposed;
             public string? Path;
-            public TextWriter Writer;
+            public readonly TextWriter Writer;
 
             internal WriterEntry(TextWriter writer)
             {

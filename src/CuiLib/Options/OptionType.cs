@@ -13,26 +13,31 @@ namespace CuiLib.Options
         /// デフォルト値
         /// </summary>
         /// <remarks>この値であってはならない</remarks>
-        None = 0b0000,
+        None = 0,
 
         /// <summary>
         /// フラグを表します。
         /// </summary>
-        Flag = 0b0001,
+        Flag = 1 << 0,
 
         /// <summary>
         /// 値を取るオプションを表します。
         /// </summary>
-        Valued = 0b0010,
+        Valued = 1 << 1,
 
         /// <summary>
         /// 1つの値をとります。
         /// </summary>
-        SingleValue = 0b0100,
+        SingleValue = 1 << 2,
 
         /// <summary>
         /// 複数の値をとります。
         /// </summary>
-        MultiValue = 0b1000,
+        MultiValue = 1 << 3,
+
+        /// <summary>
+        /// グループを表します。
+        /// </summary>
+        Group = 1 << 4,
     }
 }

@@ -6,6 +6,7 @@ namespace CuiLib.Options
     /// <summary>
     /// 読み込むファイルを検証します。
     /// </summary>
+    [Obsolete($"{nameof(ValueChecker.VerifySourceFile)}を代わりに使用してください")]
     [Serializable]
     public class SourceFileChecker : ValueChecker<FileInfo>
     {
@@ -31,6 +32,7 @@ namespace CuiLib.Options
     /// <summary>
     /// 出力ファイルを検証します。
     /// </summary>
+    [Obsolete($"{nameof(ValueChecker.VerifyDestinationFile)}を代わりに使用してください")]
     [Serializable]
     public class DestinationFileChecker : ValueChecker<FileInfo>
     {
@@ -68,6 +70,7 @@ namespace CuiLib.Options
     /// <summary>
     /// 読み込むディレクトリを検証します。
     /// </summary>
+    [Obsolete($"{nameof(ValueChecker.VerifySourceDirectory)}を代わりに使用してください")]
     [Serializable]
     public class SourceDirectoryChecker : ValueChecker<DirectoryInfo>
     {
