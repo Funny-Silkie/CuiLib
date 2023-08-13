@@ -22,7 +22,7 @@ Provides a framework for parsing parameter arguments and command processing.</De
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <Version>1.1.0</Version>
-    <PackageReleaseNotes>Ref: https://github.com/Funny-Silkie/CuiLib/docs/RelHistory.md</PackageReleaseNotes>
+    <PackageReleaseNotes>Ref: https://github.com/Funny-Silkie/CuiLib/blob/master/docs/RelHistory.md</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE.txt">

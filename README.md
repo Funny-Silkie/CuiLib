@@ -3,7 +3,7 @@
 .NETのCUIアプリケーション制作用ライブラリです。
 コマンドライン引数を解析してオプションやパラメータなどの情報を取得します。
 
-リリースログ：[RelHistory.md](https://github.com/Funny-Silkie/CuiLib/docs/RelHistory.md)
+リリースログ：[RelHistory.md](https://github.com/Funny-Silkie/CuiLib/blob/master/docs/RelHistory.md)
 
 ## Usage
 
