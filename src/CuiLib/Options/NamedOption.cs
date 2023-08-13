@@ -71,6 +71,19 @@ namespace CuiLib.Options
         }
 
         /// <inheritdoc/>
+        internal override Option GetActualOption(string name, bool isSingle)
+        {
+            if (isSingle)
+            {
+                if (name == ShortName) return this;
+                throw new ArgumentException($"無効なオプション名'-{name}'です");
+            }
+
+            if (name == FullName) return this;
+            throw new ArgumentException($"無効なオプション名'--{name}'です");
+        }
+
+        /// <inheritdoc/>
         internal override IEnumerable<string> GetAllNames(bool includeHyphen)
         {
             if (ShortName is not null) yield return includeHyphen ? $"-{ShortName}" : ShortName;

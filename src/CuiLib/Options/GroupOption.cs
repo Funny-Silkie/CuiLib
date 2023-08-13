@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace CuiLib.Options
@@ -21,12 +22,16 @@ namespace CuiLib.Options
         internal override string? DefaultValueString => null;
 
         /// <inheritdoc/>
+        internal override OptionType OptionType => OptionType.Group;
+
+        /// <inheritdoc/>
         public override string? ValueTypeName => null;
 
         /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Required
         {
+            [DoesNotReturn]
             set => throw new NotSupportedException();
         }
 
@@ -53,6 +58,12 @@ namespace CuiLib.Options
 
         /// <inheritdoc/>
         internal override sealed IEnumerable<string> GetAllNames(bool includeHyphen) => Children.SelectMany(x => x.GetAllNames(includeHyphen));
+
+        /// <inheritdoc/>
+        internal override sealed Option GetActualOption(string name, bool isSingle)
+        {
+            return Children.SingleOrDefault(x => x.MatchName(name)) ?? throw new ArgumentException($"無効なオプション名'-{(isSingle ? string.Empty : "-")}{name}'です");
+        }
 
         /// <inheritdoc/>
         public override sealed bool MatchName(char name) => Children.TryGetValue(name.ToString(), out _);

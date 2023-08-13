@@ -40,6 +40,11 @@ namespace CuiLib.Options
         internal bool CanMultiValue => OptionType.HasFlag(OptionType.MultiValue);
 
         /// <summary>
+        /// グループを表すかどうかを取得します。
+        /// </summary>
+        internal bool IsGroup => OptionType.HasFlag(OptionType.Group);
+
+        /// <summary>
         /// 必須のオプションかどうかを取得または設定します。
         /// </summary>
         public abstract bool Required { get; set; }
@@ -60,6 +65,15 @@ namespace CuiLib.Options
         /// 設定されている値をクリアします。
         /// </summary>
         internal abstract void ClearValue();
+
+        /// <summary>
+        /// 名前に応じた実際のオプションを取得します。
+        /// </summary>
+        /// <param name="name">オプション名</param>
+        /// <param name="isSingle">ハイフン一つの短いオプションであるかどうか</param>
+        /// <returns><paramref name="name"/>に応じたオプション</returns>
+        /// <exception cref="ArgumentException"><paramref name="name"/>が無効</exception>
+        internal abstract Option GetActualOption(string name, bool isSingle);
 
         /// <summary>
         /// 値を設定します。

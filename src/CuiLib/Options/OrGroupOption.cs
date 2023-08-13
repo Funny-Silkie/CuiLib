@@ -16,9 +16,6 @@ namespace CuiLib.Options
         /// <inheritdoc/>
         public override sealed bool Required => Children.All(x => x.Required);
 
-        /// <inheritdoc/>
-        internal override sealed OptionType OptionType => OptionType.Group | OptionType.Valued | OptionType.MultiValue;
-
         /// <summary>
         /// <see cref="OrGroupOption"/>の新しいインスタンスを初期化します。
         /// </summary>

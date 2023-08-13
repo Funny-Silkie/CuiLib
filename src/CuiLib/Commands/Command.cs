@@ -119,6 +119,7 @@ namespace CuiLib.Commands
                     {
                         if (argument.Length < 3 || argument[1] != '-') throw new ArgumentAnalysisException($"オプション'{argument}'は無効です");
                         if (!Options.TryGetValue(argument[2..], out Option? option)) throw new ArgumentAnalysisException($"オプション'{argument}'は無効です");
+                        option = option.GetActualOption(argument[2..], false);
                         if (currentOption is not null) throw new ArgumentAnalysisException($"オプション'{currentOptionName}'に値が設定されていません");
                         if (option.IsValued)
                         {
@@ -141,12 +142,13 @@ namespace CuiLib.Commands
                         {
                             char c = argument[j];
                             if (!Options.TryGetValue(c, out Option? option)) throw new ArgumentAnalysisException($"オプション'-{c}'は無効です");
-                            if (!option.CanMultiValue && option.ValueAvailable && !option.OptionType.HasFlag(OptionType.Xor)) throw new ArgumentAnalysisException($"オプション'-{c}'が複数指定されています");
+                            option = option.GetActualOption(c.ToString(), true);
+                            if (!option.CanMultiValue && option.ValueAvailable) throw new ArgumentAnalysisException($"オプション'-{c}'が複数指定されています");
                             if (option.IsValued)
                             {
                                 if (j != argument.Length - 1) throw new ArgumentAnalysisException($"オプション'-{c}'に値が設定されていません");
                                 currentOption = option;
-                                currentOptionName = $"{c}";
+                                currentOptionName = c.ToString();
                             }
                             else option.ApplyValue(string.Empty, string.Empty);
                         }
@@ -155,7 +157,7 @@ namespace CuiLib.Commands
                 }
                 if (currentOption is not null)
                 {
-                    if (!currentOption.CanMultiValue && currentOption.ValueAvailable && !currentOption.OptionType.HasFlag(OptionType.Xor)) throw new ArgumentAnalysisException($"オプション'{currentOptionName}'が複数指定されています");
+                    if (!currentOption.CanMultiValue && currentOption.ValueAvailable) throw new ArgumentAnalysisException($"オプション'{currentOptionName}'が複数指定されています");
                     currentOption.ApplyValue(currentOptionName!, argument);
                     currentOption = null;
                     currentOptionName = null;
@@ -300,7 +302,7 @@ namespace CuiLib.Commands
                 writer.Write(' ');
             }
             if (Options.Count > 0)
-                foreach (var option in Options)
+                foreach (Option option in Options)
                 {
                     if (!option.Required) writer.Write('[');
                     WriteOption(writer, option);
@@ -314,6 +316,7 @@ namespace CuiLib.Commands
                         {
                             if (named.ShortName is not null) writer.Write($"-{named.ShortName}");
                             else writer.Write($"--{named.FullName}");
+                            return;
                         }
                         if (option is GroupOption group)
                         {
@@ -329,7 +332,7 @@ namespace CuiLib.Commands
                             foreach (Option child in group)
                             {
                                 if (index > 0) writer.Write(separator);
-                                WriteOption(writer, option);
+                                WriteOption(writer, child);
                                 index++;
                             }
                             writer.Write(')');
