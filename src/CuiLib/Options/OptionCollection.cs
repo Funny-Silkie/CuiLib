@@ -1,6 +1,8 @@
-﻿using System;
+﻿using CuiLib.Internal;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -10,6 +12,8 @@ namespace CuiLib.Options
     /// オプションのコレクションのクラスです。
     /// </summary>
     [Serializable]
+    [DebuggerDisplay("Count = {Count}")]
+    [DebuggerTypeProxy(typeof(CollectionDebugViewer<Option>))]
     public class OptionCollection : ICollection<Option>, IReadOnlyCollection<Option>, ICollection
     {
         /// <summary>
