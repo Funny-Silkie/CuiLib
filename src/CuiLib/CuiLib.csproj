@@ -13,19 +13,16 @@
     <Company />
     <Description>Library for  .NET CUI application.
 Provides a framework for parsing parameter arguments and command processing.</Description>
-    <PackageProjectUrl>https://github.com/Funny-Silkie/CuiLib</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/Funny-Silkie/CuiLib</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>cui;console app;cuilib</PackageTags>
+    <PackageTags>cui;console-app;cuilib</PackageTags>
     <NeutralLanguage>ja-JP</NeutralLanguage>
-    <AssemblyVersion>1.0.1</AssemblyVersion>
+    <AssemblyVersion>1.1.0</AssemblyVersion>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>1.0.1</Version>
-    <PackageReleaseNotes>version 1.0.1:
-- ヘルプメッセージの変更
-- 未定義のParameterを自動的に追加するかどうかをフラグ管理できるように変更</PackageReleaseNotes>
+    <Version>1.1.0</Version>
+    <PackageReleaseNotes>Ref: https://github.com/Funny-Silkie/CuiLib/docs/RelHistory.md</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE.txt">
