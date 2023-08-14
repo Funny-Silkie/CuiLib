@@ -9,7 +9,7 @@ namespace CuiLib.Options
     /// <typeparam name="TMid">変換途上の型</typeparam>
     /// <typeparam name="TOut">変換後の型</typeparam>
     [Serializable]
-    internal sealed class CombinedValueConverter<TIn, TMid, TOut> : ValueConverter<TIn, TOut>
+    internal sealed class CombinedValueConverter<TIn, TMid, TOut> : IValueConverter<TIn, TOut>
     {
         private readonly IValueConverter<TIn, TMid> first;
         private readonly IValueConverter<TMid, TOut> second;
@@ -30,7 +30,7 @@ namespace CuiLib.Options
         }
 
         /// <inheritdoc/>
-        public override TOut Convert(TIn value)
+        public TOut Convert(TIn value)
         {
             TMid intermidiate = first.Convert(value);
             return second.Convert(intermidiate);

@@ -8,7 +8,7 @@ namespace CuiLib.Options
     /// </summary>
     /// <typeparam name="T">検証する値の型</typeparam>
     [Serializable]
-    internal class AndValueChecker<T> : ValueChecker<T>
+    internal class AndValueChecker<T> : IValueChecker<T>
     {
         private IValueChecker<T>[] checkers;
 
@@ -113,7 +113,7 @@ namespace CuiLib.Options
         }
 
         /// <inheritdoc/>
-        public override ValueCheckState CheckValue(T value)
+        public ValueCheckState CheckValue(T value)
         {
             if (checkers.Length == 0) return ValueCheckState.Success;
 

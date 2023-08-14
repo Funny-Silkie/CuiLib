@@ -12,7 +12,7 @@ namespace CuiLib.Options
         /// <typeparam name="TIn">変換前の型</typeparam>
         /// <typeparam name="TOut">変換後の型</typeparam>
         [Serializable]
-        private sealed class DelegateValueConverter<TIn, TOut> : ValueConverter<TIn, TOut>
+        private sealed class DelegateValueConverter<TIn, TOut> : IValueConverter<TIn, TOut>
         {
             private readonly Converter<TIn, TOut> converter;
 
@@ -29,7 +29,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override TOut Convert(TIn value)
+            public TOut Convert(TIn value)
             {
                 return converter.Invoke(value);
             }
@@ -40,7 +40,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">扱う値の型</typeparam>
         [Serializable]
-        private sealed class ThroughValueConverter<T> : ValueConverter<T, T>
+        private sealed class ThroughValueConverter<T> : IValueConverter<T, T>
         {
             /// <summary>
             /// <see cref="ThroughValueConverter{T}"/>の新しいインスタンスを初期化します。
@@ -50,7 +50,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override T Convert(T value)
+            public T Convert(T value)
             {
                 return value;
             }
@@ -67,7 +67,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">変換する<see cref="IParsable{TSelf}"/>を実装する型</typeparam>
         [Serializable]
-        private sealed class ParsableValueConverter<T> : ValueConverter<string, T>
+        private sealed class ParsableValueConverter<T> : IValueConverter<string, T>
             where T : IParsable<T>
         {
             /// <summary>
@@ -78,7 +78,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override T Convert(string value)
+            public T Convert(string value)
             {
                 return T.Parse(value, null);
             }
@@ -94,7 +94,7 @@ namespace CuiLib.Options
         /// 列挙型の変換を行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         [Serializable]
-        private sealed class EnumValueConverter : ValueConverter<string, Enum>
+        private sealed class EnumValueConverter : IValueConverter<string, Enum>
         {
             private readonly Type enumType;
 
@@ -110,7 +110,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override Enum Convert(string value)
+            public Enum Convert(string value)
             {
                 return (Enum)Enum.Parse(enumType, value);
             }
@@ -121,7 +121,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">列挙型の型</typeparam>
         [Serializable]
-        private sealed class EnumValueConverter<T> : ValueConverter<string, T>
+        private sealed class EnumValueConverter<T> : IValueConverter<string, T>
             where T : struct, Enum
         {
             private readonly bool ignoreCase;
@@ -136,7 +136,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override T Convert(string value)
+            public T Convert(string value)
             {
                 return Enum.Parse<T>(value, ignoreCase);
             }
@@ -146,7 +146,7 @@ namespace CuiLib.Options
         /// <see cref="FileInfo"/>を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         [Serializable]
-        private sealed class FileInfoValueConverter : ValueConverter<string, FileInfo>
+        private sealed class FileInfoValueConverter : IValueConverter<string, FileInfo>
         {
             /// <summary>
             /// <see cref="FileInfoValueConverter"/>の新しいインスタンスを初期化します。
@@ -156,7 +156,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override FileInfo Convert(string value)
+            public FileInfo Convert(string value)
             {
                 return new FileInfo(value);
             }
@@ -172,7 +172,7 @@ namespace CuiLib.Options
         /// <see cref="DirectoryInfo"/>を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         [Serializable]
-        private sealed class DirectoryInfoValueConverter : ValueConverter<string, DirectoryInfo>
+        private sealed class DirectoryInfoValueConverter : IValueConverter<string, DirectoryInfo>
         {
             /// <summary>
             /// <see cref="DirectoryInfoValueConverter"/>の新しいインスタンスを初期化します。
@@ -182,7 +182,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override DirectoryInfo Convert(string value)
+            public DirectoryInfo Convert(string value)
             {
                 return new DirectoryInfo(value);
             }
@@ -198,7 +198,7 @@ namespace CuiLib.Options
         /// <see cref="TextWriter"/>を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         [Serializable]
-        private sealed class FileOrConsoleWriterValueConverter : ValueConverter<string, TextWriter>
+        private sealed class FileOrConsoleWriterValueConverter : IValueConverter<string, TextWriter>
         {
             private readonly bool append;
             private readonly Encoding encoding;
@@ -218,7 +218,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override TextWriter Convert(string value)
+            public TextWriter Convert(string value)
             {
                 if (value is null) return Console.Out;
                 return new StreamWriter(value, append, encoding);
@@ -229,7 +229,7 @@ namespace CuiLib.Options
         /// <see cref="TextReader"/>を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         [Serializable]
-        private sealed class FileOrConsoleReaderValueConverter : ValueConverter<string, TextReader>
+        private sealed class FileOrConsoleReaderValueConverter : IValueConverter<string, TextReader>
         {
             private readonly Encoding encoding;
 
@@ -246,7 +246,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override TextReader Convert(string value)
+            public TextReader Convert(string value)
             {
                 if (value is null) return Console.In;
                 return new StreamReader(value, encoding);
@@ -257,7 +257,7 @@ namespace CuiLib.Options
         /// <see cref="StreamWriter"/>を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         [Serializable]
-        private sealed class StreamWriterValueConverter : ValueConverter<string, StreamWriter>
+        private sealed class StreamWriterValueConverter : IValueConverter<string, StreamWriter>
         {
             private readonly bool append;
             private readonly Encoding encoding;
@@ -277,7 +277,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override StreamWriter Convert(string value)
+            public StreamWriter Convert(string value)
             {
                 return new StreamWriter(value, append, encoding);
             }
@@ -287,7 +287,7 @@ namespace CuiLib.Options
         /// <see cref="StreamReader"/>を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         [Serializable]
-        private sealed class StreamReaderValueConverter : ValueConverter<string, StreamReader>
+        private sealed class StreamReaderValueConverter : IValueConverter<string, StreamReader>
         {
             private readonly Encoding encoding;
 
@@ -304,7 +304,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override StreamReader Convert(string value)
+            public StreamReader Convert(string value)
             {
                 return new StreamReader(value, encoding);
             }
@@ -314,7 +314,7 @@ namespace CuiLib.Options
         /// 配列を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         [Serializable]
-        private sealed class ArrayValueConverter : ValueConverter<string, Array>
+        private sealed class ArrayValueConverter : IValueConverter<string, Array>
         {
             private readonly IValueConverter<string, object?> elementConverter;
             private readonly Type elementType;
@@ -341,7 +341,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override Array Convert(string value)
+            public Array Convert(string value)
             {
                 if (value.Length == 0) return Array.CreateInstance(elementType, 0);
 
@@ -357,7 +357,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">配列の要素の型</typeparam>
         [Serializable]
-        private sealed class ArrayValueConverter<T> : ValueConverter<string, T[]>
+        private sealed class ArrayValueConverter<T> : IValueConverter<string, T[]>
         {
             private readonly IValueConverter<string, T> elementConverter;
             private readonly string separator;
@@ -380,7 +380,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override T[] Convert(string value)
+            public T[] Convert(string value)
             {
                 if (value.Length == 0) return Array.Empty<T>();
                 string[] elements = value.Split(separator, splitOptions);

@@ -13,7 +13,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         [Serializable]
-        private sealed class AlwaysSuccessValueChecker<T> : ValueChecker<T>
+        private sealed class AlwaysSuccessValueChecker<T> : IValueChecker<T>
         {
             /// <summary>
             /// <see cref="AlwaysSuccessValueChecker{T}"/>の新しいインスタンスを初期化します。
@@ -23,7 +23,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override ValueCheckState CheckValue(T value) => ValueCheckState.Success;
+            public ValueCheckState CheckValue(T value) => ValueCheckState.Success;
 
             /// <inheritdoc/>
             public override bool Equals(object? obj) => obj is AlwaysSuccessValueChecker<T>;
@@ -37,7 +37,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         [Serializable]
-        private sealed class DelegateValueChecker<T> : ValueChecker<T>
+        private sealed class DelegateValueChecker<T> : IValueChecker<T>
         {
             private readonly Func<T, ValueCheckState> func;
 
@@ -54,7 +54,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override ValueCheckState CheckValue(T value)
+            public ValueCheckState CheckValue(T value)
             {
                 try
                 {
@@ -73,7 +73,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         [Serializable]
-        private sealed class LargerValueChecker<T> : ValueChecker<T>
+        private sealed class LargerValueChecker<T> : IValueChecker<T>
             where T : IComparable<T>
         {
             private readonly IComparer<T> comparer;
@@ -91,7 +91,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override ValueCheckState CheckValue(T value)
+            public ValueCheckState CheckValue(T value)
             {
                 if (comparer.Compare(value, comparison) > 0) return ValueCheckState.Success;
                 return ValueCheckState.AsError($"値が{comparison}以下です");
@@ -103,7 +103,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         [Serializable]
-        private sealed class LargerOrEqualValueChecker<T> : ValueChecker<T>
+        private sealed class LargerOrEqualValueChecker<T> : IValueChecker<T>
             where T : IComparable<T>
         {
             private readonly IComparer<T> comparer;
@@ -121,7 +121,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override ValueCheckState CheckValue(T value)
+            public ValueCheckState CheckValue(T value)
             {
                 if (comparer.Compare(value, comparison) >= 0) return ValueCheckState.Success;
                 return ValueCheckState.AsError($"値が{comparison}未満です");
@@ -133,7 +133,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         [Serializable]
-        private sealed class LowerValueChecker<T> : ValueChecker<T>
+        private sealed class LowerValueChecker<T> : IValueChecker<T>
             where T : IComparable<T>
         {
             private readonly IComparer<T> comparer;
@@ -151,7 +151,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override ValueCheckState CheckValue(T value)
+            public ValueCheckState CheckValue(T value)
             {
                 if (comparer.Compare(value, comparison) < 0) return ValueCheckState.Success;
                 return ValueCheckState.AsError($"値が{comparison}より大きいです");
@@ -163,7 +163,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         [Serializable]
-        private sealed class LowerOrEqualValueChecker<T> : ValueChecker<T>
+        private sealed class LowerOrEqualValueChecker<T> : IValueChecker<T>
             where T : IComparable<T>
         {
             private readonly IComparer<T> comparer;
@@ -181,7 +181,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override ValueCheckState CheckValue(T value)
+            public ValueCheckState CheckValue(T value)
             {
                 if (comparer.Compare(value, comparison) <= 0) return ValueCheckState.Success;
                 return ValueCheckState.AsError($"値が{comparison}より大きいです");
@@ -193,7 +193,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T"></typeparam>
         [Serializable]
-        private sealed class DefinedEnumValueChecker<T> : ValueChecker<T>
+        private sealed class DefinedEnumValueChecker<T> : IValueChecker<T>
             where T : struct, Enum
         {
             /// <summary>
@@ -204,7 +204,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override ValueCheckState CheckValue(T value)
+            public ValueCheckState CheckValue(T value)
             {
                 if (Enum.IsDefined(value)) return ValueCheckState.Success;
                 return ValueCheckState.AsError($"定義されていない値です。[{string.Join(", ", Enum.GetNames<T>())}]の中から選択してください");
@@ -223,7 +223,7 @@ namespace CuiLib.Options
         /// <typeparam name="TCollection">コレクションの型</typeparam>
         /// <typeparam name="TElement">要素の型</typeparam>
         [Serializable]
-        private sealed class ContainsValueChecker<TCollection, TElement> : ValueChecker<TElement>
+        private sealed class ContainsValueChecker<TCollection, TElement> : IValueChecker<TElement>
             where TCollection : IEnumerable<TElement>
         {
             private readonly TCollection source;
@@ -246,7 +246,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override ValueCheckState CheckValue(TElement value)
+            public ValueCheckState CheckValue(TElement value)
             {
                 if (source.Contains(value, comparer)) return ValueCheckState.Success;
                 return ValueCheckState.AsError($"値が含まれていません。[{string.Join(", ", source)}]の何れかを選択してください");
@@ -257,7 +257,7 @@ namespace CuiLib.Options
         /// 文字列が空でないかを検証します。
         /// </summary>
         [Serializable]
-        private sealed class NotEmptyValueChecker : ValueChecker<string?>
+        private sealed class NotEmptyValueChecker : IValueChecker<string?>
         {
             /// <summary>
             /// <see cref="NotEmptyValueChecker"/>の新しいインスタンスを初期化します。
@@ -267,7 +267,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override ValueCheckState CheckValue(string? value)
+            public ValueCheckState CheckValue(string? value)
             {
                 if (string.IsNullOrEmpty(value)) return ValueCheckState.AsError("空文字です");
                 return ValueCheckState.Success;
@@ -284,7 +284,7 @@ namespace CuiLib.Options
         /// 文字列が指定の値で始まるかどうかを検証します。
         /// </summary>
         [Serializable]
-        private sealed class StartWithValueChecker : ValueChecker<string>
+        private sealed class StartWithValueChecker : IValueChecker<string>
         {
             private readonly string comparison;
             private readonly StringComparison stringComparison;
@@ -321,7 +321,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override ValueCheckState CheckValue(string value)
+            public ValueCheckState CheckValue(string value)
             {
                 if (value is null || !value.StartsWith(comparison, stringComparison)) return ValueCheckState.AsError($"値は'{comparison}'で始まる必要があります");
                 return ValueCheckState.Success;
@@ -332,7 +332,7 @@ namespace CuiLib.Options
         /// 文字列が指定の値で終わるかどうかを検証します。
         /// </summary>
         [Serializable]
-        private sealed class EndWithValueChecker : ValueChecker<string>
+        private sealed class EndWithValueChecker : IValueChecker<string>
         {
             private readonly string comparison;
             private readonly StringComparison stringComparison;
@@ -369,7 +369,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override ValueCheckState CheckValue(string value)
+            public ValueCheckState CheckValue(string value)
             {
                 if (value is null || !value.EndsWith(comparison, stringComparison)) return ValueCheckState.AsError($"値は'{comparison}'で終わる必要があります");
                 return ValueCheckState.Success;
@@ -381,7 +381,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         [Serializable]
-        private sealed class EqualsValueChecker<T> : ValueChecker<T>
+        private sealed class EqualsValueChecker<T> : IValueChecker<T>
         {
             private readonly IEqualityComparer<T> comparer;
             private readonly T comparison;
@@ -398,7 +398,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override ValueCheckState CheckValue(T value)
+            public ValueCheckState CheckValue(T value)
             {
                 if (comparer.Equals(value, comparison)) return ValueCheckState.Success;
                 return ValueCheckState.AsError($"値は'{comparison}'と等しい必要があります");
@@ -410,7 +410,7 @@ namespace CuiLib.Options
         /// </summary>
         /// <typeparam name="T">検証する値の型</typeparam>
         [Serializable]
-        private sealed class NotEqualsValueChecker<T> : ValueChecker<T>
+        private sealed class NotEqualsValueChecker<T> : IValueChecker<T>
         {
             private readonly IEqualityComparer<T> comparer;
             private readonly T comparison;
@@ -427,7 +427,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override ValueCheckState CheckValue(T value)
+            public ValueCheckState CheckValue(T value)
             {
                 if (!comparer.Equals(value, comparison)) return ValueCheckState.Success;
                 return ValueCheckState.AsError($"値は'{comparison}'と異なる必要があります");
@@ -438,7 +438,7 @@ namespace CuiLib.Options
         /// ファイルパスが存在するかどうかを検証します。
         /// </summary>
         [Serializable]
-        private sealed class FileExistsValueChecker : ValueChecker<string>
+        private sealed class FileExistsValueChecker : IValueChecker<string>
         {
             /// <summary>
             /// <see cref="FileExistsValueChecker"/>の新しいインスタンスを初期化します。
@@ -448,7 +448,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override ValueCheckState CheckValue(string value)
+            public ValueCheckState CheckValue(string value)
             {
                 if (File.Exists(value)) return ValueCheckState.Success;
                 return ValueCheckState.AsError($"ファイル'{value}'が存在しません");
@@ -471,7 +471,7 @@ namespace CuiLib.Options
         /// ディレクトリが存在するかどうかを検証します。
         /// </summary>
         [Serializable]
-        private sealed class DirectoryExistsValueChecker : ValueChecker<string>
+        private sealed class DirectoryExistsValueChecker : IValueChecker<string>
         {
             /// <summary>
             /// <see cref="DirectoryExistsValueChecker"/>の新しいインスタンスを初期化します。
@@ -481,7 +481,7 @@ namespace CuiLib.Options
             }
 
             /// <inheritdoc/>
-            public override ValueCheckState CheckValue(string value)
+            public ValueCheckState CheckValue(string value)
             {
                 if (Directory.Exists(value)) return ValueCheckState.Success;
                 return ValueCheckState.AsError($"ディレクトリ'{value}'が存在しません");
@@ -504,7 +504,7 @@ namespace CuiLib.Options
         /// 正規表現にマッチするかどうかを検証します。
         /// </summary>
         [Serializable]
-        private sealed class RegexMatchValueChecker : ValueChecker<string>
+        private sealed class RegexMatchValueChecker : IValueChecker<string>
         {
             private readonly Regex regex;
 
@@ -520,7 +520,7 @@ namespace CuiLib.Options
                 this.regex = regex;
             }
 
-            public override ValueCheckState CheckValue(string value)
+            public ValueCheckState CheckValue(string value)
             {
                 if (regex.IsMatch(value)) return ValueCheckState.Success;
                 return ValueCheckState.AsError($"正規表現'{regex}'にマッチしません");

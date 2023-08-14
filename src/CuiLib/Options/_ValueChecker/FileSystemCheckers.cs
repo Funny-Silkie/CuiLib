@@ -8,7 +8,7 @@ namespace CuiLib.Options
     /// </summary>
     [Obsolete($"{nameof(ValueChecker.VerifySourceFile)}を代わりに使用してください")]
     [Serializable]
-    public class SourceFileChecker : ValueChecker<FileInfo>
+    public class SourceFileChecker : IValueChecker<FileInfo>
     {
         /// <summary>
         /// <see cref="SourceFileChecker"/>の新しいインスタンスを初期化します。
@@ -18,7 +18,7 @@ namespace CuiLib.Options
         }
 
         /// <inheritdoc/>
-        public override ValueCheckState CheckValue(FileInfo value)
+        public ValueCheckState CheckValue(FileInfo value)
         {
             ArgumentNullException.ThrowIfNull(value);
 
@@ -34,7 +34,7 @@ namespace CuiLib.Options
     /// </summary>
     [Obsolete($"{nameof(ValueChecker.VerifyDestinationFile)}を代わりに使用してください")]
     [Serializable]
-    public class DestinationFileChecker : ValueChecker<FileInfo>
+    public class DestinationFileChecker : IValueChecker<FileInfo>
     {
         /// <summary>
         /// 存在しないディレクトリを許容するかどうかを表す値を取得または設定します。
@@ -56,7 +56,7 @@ namespace CuiLib.Options
         }
 
         /// <inheritdoc/>
-        public override ValueCheckState CheckValue(FileInfo value)
+        public ValueCheckState CheckValue(FileInfo value)
         {
             ArgumentNullException.ThrowIfNull(value);
 
@@ -72,7 +72,7 @@ namespace CuiLib.Options
     /// </summary>
     [Obsolete($"{nameof(ValueChecker.VerifySourceDirectory)}を代わりに使用してください")]
     [Serializable]
-    public class SourceDirectoryChecker : ValueChecker<DirectoryInfo>
+    public class SourceDirectoryChecker : IValueChecker<DirectoryInfo>
     {
         /// <summary>
         /// <see cref="SourceDirectoryChecker"/>の新しいインスタンスを初期化します。
@@ -82,7 +82,7 @@ namespace CuiLib.Options
         }
 
         /// <inheritdoc/>
-        public override ValueCheckState CheckValue(DirectoryInfo value)
+        public ValueCheckState CheckValue(DirectoryInfo value)
         {
             ArgumentNullException.ThrowIfNull(value);
 
