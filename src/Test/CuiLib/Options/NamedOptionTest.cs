@@ -110,6 +110,12 @@ namespace Test.CuiLib.Options
         }
 
         [Test]
+        public void MatchName_WithString_AsEmpty()
+        {
+            Assert.Throws<ArgumentException>(() => option.MatchName(string.Empty));
+        }
+
+        [Test]
         public void MatchName_WithString_OnNullFullName()
         {
             var option = new NamedOptionImpl('n');

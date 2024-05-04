@@ -115,12 +115,13 @@ namespace Test.CuiLib.Options
         [Test]
         public void ApplyValue()
         {
-            option.ApplyValue("test", "value");
+            option.ApplyValue("test", "value1");
+            option.ApplyValue("test", "value2");
 
             Assert.Multiple(() =>
             {
                 Assert.That(option.ValueAvailable, Is.True);
-                Assert.That(option.RawValues, Is.EquivalentTo(new[] { "value" }));
+                Assert.That(option.RawValues, Is.EqualTo(new[] { "value1", "value2" }));
             });
         }
 

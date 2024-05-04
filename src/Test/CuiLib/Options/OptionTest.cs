@@ -19,6 +19,12 @@ namespace Test.CuiLib.Options
         #region Properties
 
         [Test]
+        public void Description_Get_OnDefault()
+        {
+            Assert.That(option.Description, Is.Null);
+        }
+
+        [Test]
         public void IsValued_Get_OnDefaultEnumValue()
         {
             Assert.That(option.IsValued, Is.False);

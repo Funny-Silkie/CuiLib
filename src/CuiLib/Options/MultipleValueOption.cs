@@ -82,7 +82,7 @@ namespace CuiLib.Options
         private T[]? _valueCache;
 
         /// <inheritdoc/>
-        internal override string? DefaultValueString => $"[{string.Join(", ", DefaultValue)}]";
+        internal override string? DefaultValueString => $"[{string.Join(", ", DefaultValue ?? Array.Empty<T>())}]";
 
         /// <summary>
         /// <see cref="MultipleValueOption{T}"/>の新しいインスタンスを初期化します。
