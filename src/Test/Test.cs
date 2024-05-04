@@ -56,11 +56,14 @@ namespace Test
 
             main.Invoke(args);
 
-            Assert.That(Enumerable.SequenceEqual(param.Values!, new[] { "A", "B", "C" }), Is.True);
-            Assert.That(opFlag1.Value, Is.True);
-            Assert.That(opFlag2.Value, Is.False);
-            Assert.That(opValue1.Value, Is.EqualTo(1));
-            Assert.That(opValue2.Value, Is.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(Enumerable.SequenceEqual(param.Values!, new[] { "A", "B", "C" }), Is.True);
+                Assert.That(opFlag1.Value, Is.True);
+                Assert.That(opFlag2.Value, Is.False);
+                Assert.That(opValue1.Value, Is.EqualTo(1));
+                Assert.That(opValue2.Value, Is.Null);
+            });
         }
 
         [Test]
@@ -87,11 +90,14 @@ namespace Test
 
             parent.Invoke(args);
 
-            Assert.That(Enumerable.SequenceEqual(param.Values!, new[] { "A", "B", "C" }), Is.True);
-            Assert.That(opFlag1.Value, Is.True);
-            Assert.That(opFlag2.Value, Is.False);
-            Assert.That(opValue1.Value, Is.EqualTo(1));
-            Assert.That(opValue2.Value, Is.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(Enumerable.SequenceEqual(param.Values!, new[] { "A", "B", "C" }), Is.True);
+                Assert.That(opFlag1.Value, Is.True);
+                Assert.That(opFlag2.Value, Is.False);
+                Assert.That(opValue1.Value, Is.EqualTo(1));
+                Assert.That(opValue2.Value, Is.Null);
+            });
         }
 
         [Test]
@@ -113,6 +119,7 @@ namespace Test
             main.Options.Add(opValue2);
 
             main.Invoke(args);
+
             Assert.Multiple(() =>
             {
                 Assert.That(((Parameter<string>)main.Parameters[0]).Values![0], Is.EqualTo("A"));
@@ -144,10 +151,13 @@ namespace Test
 
             main.Invoke(args);
 
-            Assert.That(opFlag1.Value, Is.True);
-            Assert.That(opFlag2.Value, Is.False);
-            Assert.That(Enumerable.SequenceEqual(opValue1.Value, new[] { 1, 2 }), Is.True);
-            Assert.That(opValue2.Value, Is.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(opFlag1.Value, Is.True);
+                Assert.That(opFlag2.Value, Is.False);
+                Assert.That(Enumerable.SequenceEqual(opValue1.Value, new[] { 1, 2 }), Is.True);
+                Assert.That(opValue2.Value, Is.Null);
+            });
         }
 
         [Test]
@@ -169,10 +179,13 @@ namespace Test
 
             main.Invoke(args);
 
-            Assert.That(opFlag1.Value, Is.True);
-            Assert.That(opFlag2.Value, Is.False);
-            Assert.That(opValue1.Value, Is.EqualTo(1));
-            Assert.That(opValue2.Value, Is.EqualTo("hoge"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(opFlag1.Value, Is.True);
+                Assert.That(opFlag2.Value, Is.False);
+                Assert.That(opValue1.Value, Is.EqualTo(1));
+                Assert.That(opValue2.Value, Is.EqualTo("hoge"));
+            });
         }
 
         [Test]
@@ -203,12 +216,15 @@ namespace Test
 
             main.Invoke(args);
 
-            Assert.That(group.ValueAvailable, Is.True);
-            Assert.That(option1.ValueAvailable, Is.True);
-            Assert.That(option1.Value, Is.EqualTo(1));
-            Assert.That(option2.ValueAvailable, Is.False);
-            Assert.That(option3.ValueAvailable, Is.True);
-            Assert.That(option3.Value, Is.EqualTo(5));
+            Assert.Multiple(() =>
+            {
+                Assert.That(group.ValueAvailable, Is.True);
+                Assert.That(option1.ValueAvailable, Is.True);
+                Assert.That(option1.Value, Is.EqualTo(1));
+                Assert.That(option2.ValueAvailable, Is.False);
+                Assert.That(option3.ValueAvailable, Is.True);
+                Assert.That(option3.Value, Is.EqualTo(5));
+            });
         }
 
         [Test]
@@ -239,13 +255,16 @@ namespace Test
 
             main.Invoke(args);
 
-            Assert.That(group.ValueAvailable, Is.True);
-            Assert.That(option1.ValueAvailable, Is.True);
-            Assert.That(option1.Value, Is.EqualTo(1));
-            Assert.That(option2.ValueAvailable, Is.True);
-            Assert.That(option2.Value, Is.EqualTo("10"));
-            Assert.That(option3.ValueAvailable, Is.True);
-            Assert.That(option3.Value, Is.EqualTo(5));
+            Assert.Multiple(() =>
+            {
+                Assert.That(group.ValueAvailable, Is.True);
+                Assert.That(option1.ValueAvailable, Is.True);
+                Assert.That(option1.Value, Is.EqualTo(1));
+                Assert.That(option2.ValueAvailable, Is.True);
+                Assert.That(option2.Value, Is.EqualTo("10"));
+                Assert.That(option3.ValueAvailable, Is.True);
+                Assert.That(option3.Value, Is.EqualTo(5));
+            });
         }
 
         [Test]
@@ -276,11 +295,14 @@ namespace Test
 
             main.Invoke(args);
 
-            Assert.That(group.ValueAvailable, Is.True);
-            Assert.That(option1.ValueAvailable, Is.False);
-            Assert.That(option2.ValueAvailable, Is.False);
-            Assert.That(option3.ValueAvailable, Is.True);
-            Assert.That(option3.Value, Is.EqualTo(5));
+            Assert.Multiple(() =>
+            {
+                Assert.That(group.ValueAvailable, Is.True);
+                Assert.That(option1.ValueAvailable, Is.False);
+                Assert.That(option2.ValueAvailable, Is.False);
+                Assert.That(option3.ValueAvailable, Is.True);
+                Assert.That(option3.Value, Is.EqualTo(5));
+            });
         }
 
         [Test]
@@ -308,13 +330,16 @@ namespace Test
 
             main.Invoke(args);
 
-            Assert.That(group.ValueAvailable, Is.True);
-            Assert.That(option1.ValueAvailable, Is.False);
-            Assert.That(option1.Value, Is.False);
-            Assert.That(option2.ValueAvailable, Is.False);
-            Assert.That(option2.Value, Is.False);
-            Assert.That(option3.ValueAvailable, Is.True);
-            Assert.That(option3.Value, Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(group.ValueAvailable, Is.True);
+                Assert.That(option1.ValueAvailable, Is.False);
+                Assert.That(option1.Value, Is.False);
+                Assert.That(option2.ValueAvailable, Is.False);
+                Assert.That(option2.Value, Is.False);
+                Assert.That(option3.ValueAvailable, Is.True);
+                Assert.That(option3.Value, Is.True);
+            });
         }
 
         [Test]

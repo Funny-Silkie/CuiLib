@@ -47,7 +47,9 @@ namespace CuiLib.Options
         internal override void ApplyValue(string name, string rawValue)
         {
             Children.TryGetValue(name, out Option? option);
-            option!.ApplyValue(name, rawValue);
+            if (option is null) throw new ArgumentAnalysisException("存在しないオプションが指定されました");
+
+            option.ApplyValue(name, rawValue);
         }
 
         /// <inheritdoc/>
@@ -69,7 +71,12 @@ namespace CuiLib.Options
         public override sealed bool MatchName(char name) => Children.TryGetValue(name.ToString(), out _);
 
         /// <inheritdoc/>
-        public override sealed bool MatchName(string name) => Children.Contains(name);
+        public override sealed bool MatchName(string name)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(name);
+
+            return Children.Contains(name);
+        }
 
         /// <inheritdoc/>
         public IEnumerator<Option> GetEnumerator() => Children.GetEnumerator();
