@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 
 namespace CuiLib
@@ -40,6 +41,11 @@ namespace CuiLib
         /// <param name="context">シリアル化ストリームの情報</param>
         /// <exception cref="ArgumentNullException"><paramref name="info"/>がnull</exception>
         /// <exception cref="SerializationException">デシリアライズ中に例外が発生した</exception>
+#if NET8_0_OR_GREATER
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete($"Binary serialization is depracated")]
+#endif
+
         protected ArgumentAnalysisException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
