@@ -15,8 +15,10 @@ namespace Test.CuiLib.Options
             option = new FlagOption('f', "flag");
         }
 
+        #region Ctors
+
         [Test]
-        public void CtorWithShortName()
+        public void Ctor_WithShortName()
         {
             var option = new FlagOption('f');
 
@@ -28,7 +30,7 @@ namespace Test.CuiLib.Options
         }
 
         [Test]
-        public void CtorWithFullName()
+        public void Ctor_WithValidFullName()
         {
             var option = new FlagOption("flag");
 
@@ -40,7 +42,16 @@ namespace Test.CuiLib.Options
         }
 
         [Test]
-        public void CtorWithShortNameAndFullName()
+        public void Ctor_WithNullFullName()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var option = new FlagOption(fullName: null!);
+            });
+        }
+
+        [Test]
+        public void Ctor_WithShortNameAndNullFullName()
         {
             var option = new FlagOption('f', "flag");
 
@@ -49,6 +60,37 @@ namespace Test.CuiLib.Options
                 Assert.That(option.ShortName, Is.EqualTo("f"));
                 Assert.That(option.FullName, Is.EqualTo("flag"));
             });
+        }
+
+        [Test]
+        public void Ctor_WithShortNameAndValidFullName()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var option = new FlagOption('f', null!);
+            });
+        }
+
+        #endregion Ctors
+
+        #region Properties
+
+        [Test]
+        public void IsValued_Get()
+        {
+            Assert.That(option.IsValued, Is.False);
+        }
+
+        [Test]
+        public void CanMultiValue_Get()
+        {
+            Assert.That(option.CanMultiValue, Is.False);
+        }
+
+        [Test]
+        public void IsGroup_Get()
+        {
+            Assert.That(option.IsGroup, Is.False);
         }
 
         [Test]
@@ -109,5 +151,7 @@ namespace Test.CuiLib.Options
 
             Assert.That(option.Value, Is.True);
         }
+
+        #endregion Properties
     }
 }
