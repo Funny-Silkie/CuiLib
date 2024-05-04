@@ -128,8 +128,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Checker_Get_OnDefault()
         {
-            Type expectedType = Assembly.LoadFrom("CuiLib").GetType("CuiLib.Options.ValueChecker+AlwaysSuccessValueChecker`1")!.MakeGenericType(typeof(int));
-            Assert.That(option.Checker, Is.InstanceOf(expectedType));
+            Assert.That(option.Checker, Is.EqualTo(ValueChecker.AlwaysSuccess<int>()));
         }
 
         [Test]
