@@ -17,7 +17,7 @@ namespace CuiLib.Options
         /// <summary>
         /// 値が有効かどうかを表す値を取得します。
         /// </summary>
-        [MemberNotNullWhen(false, "Error")]
+        [MemberNotNullWhen(false, nameof(Error))]
         public bool IsValid { get; }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace CuiLib.Options
         /// <returns>無効な結果を表すインスタンス</returns>
         public static ValueCheckState AsError(string? error)
         {
-            return new ValueCheckState(false, error);
+            return new ValueCheckState(false, error ?? string.Empty);
         }
 
         /// <inheritdoc/>

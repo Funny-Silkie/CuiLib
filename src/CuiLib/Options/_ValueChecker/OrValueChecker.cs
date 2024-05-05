@@ -36,7 +36,14 @@ namespace CuiLib.Options
 
             if (source.Length == 2)
             {
-                Initialize(source[0], source[1]);
+                try
+                {
+                    Initialize(source[0], source[1]);
+                }
+                catch (ArgumentNullException)
+                {
+                    throw new ArgumentException("要素がnullです", nameof(source));
+                }
                 return;
             }
 
