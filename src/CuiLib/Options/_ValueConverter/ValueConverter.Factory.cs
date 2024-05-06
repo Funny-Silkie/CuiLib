@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -145,13 +146,7 @@ namespace CuiLib.Options
         /// <exception cref="NotSupportedException"><typeparamref name="T"/>が無効</exception>
         public static IValueConverter<string, T> GetDefault<T>()
         {
-            Type type = typeof(T);
-            return Cast(GetDefault(type));
-
-            static IValueConverter<string, T> Cast<TIn>(IValueConverter<string, TIn> converter)
-            {
-                return Unsafe.As<IValueConverter<string, TIn>, IValueConverter<string, T>>(ref converter);
-            }
+            return Unsafe.As<IValueConverter<string, T>>(GetDefault(typeof(T)));
         }
 
         /// <summary>
@@ -165,8 +160,13 @@ namespace CuiLib.Options
             if (type == typeof(string)) return Cast(new ThroughValueConverter<string>());
             if (type.IsSZArray)
             {
-                Type elementType = type.GetGenericArguments()[0];
-                return Cast(SplitToArray(elementType, ",", GetDefault(elementType)));
+                Type elementType = type.GetElementType()!;
+                Type converterType = typeof(ArrayValueConverter<>).MakeGenericType(elementType);
+
+                var ctorArgTypes = new[] { typeof(string), typeof(IValueConverter<,>).MakeGenericType(typeof(string), elementType), typeof(StringSplitOptions) };
+                ConstructorInfo ctor = converterType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, ctorArgTypes) ?? throw new InvalidOperationException();
+
+                return Cast(ctor.Invoke(new object?[] { ",", GetDefault(elementType), StringSplitOptions.None }));
             }
 
             if (type == typeof(FileInfo)) return Cast(new FileInfoValueConverter());
@@ -191,14 +191,20 @@ namespace CuiLib.Options
             if (type == typeof(byte)) return Cast(new ParsableValueConverter<byte>());
             if (type == typeof(short)) return Cast(new ParsableValueConverter<short>());
             if (type == typeof(ushort)) return Cast(new ParsableValueConverter<ushort>());
-            if (type.IsEnum) return Cast(new EnumValueConverter(type));
+            if (type.IsEnum)
+            {
+                Type converterType = typeof(EnumValueConverter<>).MakeGenericType(new[] { type });
+                ConstructorInfo ctor = converterType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, new[] { typeof(bool) }) ?? throw new InvalidOperationException();
+                return Cast(ctor.Invoke(parameters: new object?[] { false }));
+            }
+
             if (type == typeof(DateTimeOffset)) return Cast(new ParsableValueConverter<DateTimeOffset>());
 
             throw new NotSupportedException();
 
-            static IValueConverter<string, object?> Cast<TIn>(IValueConverter<string, TIn> converter)
+            static IValueConverter<string, object?> Cast(object converter)
             {
-                return Unsafe.As<IValueConverter<string, TIn>, IValueConverter<string, object?>>(ref converter);
+                return Unsafe.As<IValueConverter<string, object?>>(converter);
             }
         }
 
@@ -206,12 +212,22 @@ namespace CuiLib.Options
         /// 値の種類を表す文字列を取得します。
         /// </summary>
         /// <typeparam name="T">値の型</typeparam>
-        /// <returns><typeparamref name="T"/>に対応する文字列。存在しない場合はnull</returns>
-        public static string? GetValueTypeString<T>()
+        /// <returns><typeparamref name="T"/>に対応する文字列</returns>
+        public static string GetValueTypeString<T>()
         {
-            var type = typeof(T);
+            return GetValueTypeString(typeof(T));
+        }
+
+        /// <summary>
+        /// 値の種類を表す文字列を取得します。
+        /// </summary>
+        /// <param name="type">値の型</param>
+        /// <returns><paramref name="type"/>に対応する文字列</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static string GetValueTypeString(Type type)
+        {
             if (type == typeof(string)) return "string";
-            if (type.IsSZArray) return $"{type.GetGenericArguments()[0]}[]";
+            if (type.IsSZArray) return $"{GetValueTypeString(type.GetElementType()!)}[]";
             if (type == typeof(FileInfo)) return "file";
             if (type == typeof(DirectoryInfo)) return "directory";
             if (type == typeof(int)) return "int";
@@ -220,7 +236,7 @@ namespace CuiLib.Options
             if (type == typeof(sbyte)) return "int";
             if (type == typeof(double)) return "float";
             if (type == typeof(long)) return "long";
-            if (type == typeof(ulong)) return "long";
+            if (type == typeof(ulong)) return "ulong";
             if (type == typeof(DateTime)) return "date time";
             if (type == typeof(short)) return "int";
             if (type == typeof(byte)) return "int";

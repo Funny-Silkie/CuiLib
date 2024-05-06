@@ -93,32 +93,6 @@ namespace CuiLib.Options
         /// <summary>
         /// 列挙型の変換を行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
-        [Serializable]
-        private sealed class EnumValueConverter : IValueConverter<string, Enum>
-        {
-            private readonly Type enumType;
-
-            /// <summary>
-            /// <see cref="EnumValueConverter"/>の新しいインスタンスを初期化します。
-            /// </summary>
-            /// <param name="enumType">列挙型の型</param>
-            /// <exception cref="ArgumentNullException"><paramref name="enumType"/>がnull</exception>
-            internal EnumValueConverter(Type enumType)
-            {
-                ArgumentNullException.ThrowIfNull(enumType);
-                this.enumType = enumType;
-            }
-
-            /// <inheritdoc/>
-            public Enum Convert(string value)
-            {
-                return (Enum)Enum.Parse(enumType, value);
-            }
-        }
-
-        /// <summary>
-        /// 列挙型の変換を行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
-        /// </summary>
         /// <typeparam name="T">列挙型の型</typeparam>
         [Serializable]
         private sealed class EnumValueConverter<T> : IValueConverter<string, T>
@@ -343,6 +317,8 @@ namespace CuiLib.Options
             /// <inheritdoc/>
             public Array Convert(string value)
             {
+                ArgumentNullException.ThrowIfNull(value);
+
                 if (value.Length == 0) return Array.CreateInstance(elementType, 0);
 
                 string[] elements = value.Split(separator, splitOptions);
@@ -382,7 +358,10 @@ namespace CuiLib.Options
             /// <inheritdoc/>
             public T[] Convert(string value)
             {
+                ArgumentNullException.ThrowIfNull(value);
+
                 if (value.Length == 0) return Array.Empty<T>();
+
                 string[] elements = value.Split(separator, splitOptions);
                 return Array.ConvertAll(elements, elementConverter.Convert);
             }
