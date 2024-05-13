@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace CuiLib.Log
             {
                 if (_consoleStdoutLogEnabled == value) return;
                 _consoleStdoutLogEnabled = value;
-                if (value) writers.Add(new WriterEntry(Console.Out));
+                if (value) writers.Add(new WriterEntry(Console.Out) { IsConsoleWriter = true });
                 else RemoveLog(Console.Out);
             }
         }
@@ -48,7 +49,7 @@ namespace CuiLib.Log
             {
                 if (_consoleErrorLogEnabled == value) return;
                 _consoleErrorLogEnabled = value;
-                if (value) writers.Add(new WriterEntry(Console.Error));
+                if (value) writers.Add(new WriterEntry(Console.Error) { IsConsoleWriter = true });
                 else RemoveLog(Console.Error);
             }
         }
@@ -80,7 +81,19 @@ namespace CuiLib.Log
             AddLogFile(logFile);
         }
 
-        #region Collection Operation
+        /// <summary>
+        /// 出力先の<see cref="TextWriter"/>を全て取得します。
+        /// </summary>
+        /// <param name="includeStdoutAndError">標準出力・エラー出力も含めるかどうか</param>
+        /// <returns>出力先の<see cref="TextWriter"/>一覧</returns>
+        internal IEnumerable<TextWriter> GetAllTargets(bool includeStdoutAndError = true)
+        {
+            IEnumerable<WriterEntry> target = includeStdoutAndError ? writers : writers.Where(x => !x.IsConsoleWriter);
+
+            foreach (TextWriter current in target.Select(x => x.Writer)) yield return current;
+        }
+
+        #region Collection Operations
 
         /// <summary>
         /// 指定したパスのログのインデックスを取得します。
@@ -145,6 +158,8 @@ namespace CuiLib.Log
         /// <exception cref="System.Security.SecurityException">アクセス権限がない</exception>
         public void AddLogFile(FileInfo file, bool append = false, Encoding? encoding = null)
         {
+            ArgumentNullException.ThrowIfNull(file);
+
             FileStream stream = file.Open(append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read);
             var writer = new StreamWriter(stream, encoding ?? IOHelper.UTF8N, leaveOpen: false);
             writers.Add(new WriterEntry(writer)
@@ -217,9 +232,9 @@ namespace CuiLib.Log
             return true;
         }
 
-        #endregion Collection Operation
+        #endregion Collection Operations
 
-        #region Write Operation
+        #region Write Operations
 
         /// <inheritdoc/>
         public override void Write(char value)
@@ -258,13 +273,13 @@ namespace CuiLib.Log
         }
 
         /// <inheritdoc/>
-        public override void Write(ulong value)
+        public override void Write(long value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
 
         /// <inheritdoc/>
-        public override void Write(long value)
+        public override void Write(ulong value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
@@ -521,7 +536,7 @@ namespace CuiLib.Log
             foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(value);
         }
 
-        #endregion Write Operation
+        #endregion Write Operations
 
         #region IDisposable
 
@@ -554,6 +569,7 @@ namespace CuiLib.Log
             public bool MustDisposed;
             public string? Path;
             public readonly TextWriter Writer;
+            public bool IsConsoleWriter;
 
             internal WriterEntry(TextWriter writer)
             {
