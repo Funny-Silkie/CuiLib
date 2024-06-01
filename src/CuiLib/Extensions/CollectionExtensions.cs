@@ -16,7 +16,7 @@ namespace CuiLib.Extensions
         /// <param name="index">インデックス</param>
         /// <returns><paramref name="index"/>が<paramref name="list"/>の範囲内の場合，そのインデックスの要素。それ以外で<typeparamref name="T"/>の既定値</returns>
         /// <exception cref="ArgumentNullException"><paramref name="list"/>がnull</exception>
-        public static T GetOrDefault<T>(this IList<T> list, int index)
+        public static T? GetOrDefault<T>(this IList<T> list, int index)
         {
             return GetOrDefault(list, index, default!);
         }

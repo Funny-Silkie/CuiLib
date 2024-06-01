@@ -14,7 +14,7 @@ namespace CuiLib.Extensions
         /// <param name="span">使用する<see cref="ReadOnlySpan{T}"/>のインスタンス</param>
         /// <param name="index">インデックス</param>
         /// <returns><paramref name="index"/>に対応する値。存在しない場合は既定値</returns>
-        public static T GetOrDefault<T>(this ReadOnlySpan<T> span, int index)
+        public static T? GetOrDefault<T>(this ReadOnlySpan<T> span, int index)
         {
             return GetOrDefault(span, index, default!);
         }
