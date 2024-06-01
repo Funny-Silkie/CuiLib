@@ -35,7 +35,7 @@ namespace CuiLib.Extensions
         /// <exception cref="ArgumentNullException"><paramref name="writer"/>または<paramref name="values"/>がnull</exception>
         /// <exception cref="ObjectDisposedException"><paramref name="writer"/>が既に破棄されている</exception>
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
-        public static void WriteJoin<T>(this TextWriter writer, string separator, IEnumerable<T> values)
+        public static void WriteJoin<T>(this TextWriter writer, string? separator, IEnumerable<T> values)
         {
             WriteJoinPrivate(writer, separator.AsSpan(), values);
         }

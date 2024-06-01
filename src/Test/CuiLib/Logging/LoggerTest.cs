@@ -13,13 +13,13 @@ namespace Test.CuiLib.Log
     [TestFixture]
     public class LoggerTest
     {
-        private DummyTextWriter innerWriter;
+        private MethodReceivedNotifiyingTextWriter innerWriter;
         private Logger Logger;
 
         [SetUp]
         public void SetUp()
         {
-            innerWriter = new DummyTextWriter();
+            innerWriter = new MethodReceivedNotifiyingTextWriter();
             Logger = new Logger();
             Logger.AddLog(innerWriter);
         }
@@ -149,7 +149,7 @@ namespace Test.CuiLib.Log
             Assert.Multiple(() =>
             {
                 Assert.That(Logger.GetAllTargets(false).Count(), Is.EqualTo(1));
-                Assert.That(Logger.GetAllTargets(false).First(), Is.InstanceOf<DummyTextWriter>());
+                Assert.That(Logger.GetAllTargets(false).First(), Is.InstanceOf<MethodReceivedNotifiyingTextWriter>());
             });
         }
 
@@ -162,7 +162,7 @@ namespace Test.CuiLib.Log
             Assert.Multiple(() =>
             {
                 Assert.That(Logger.GetAllTargets(true).Count(), Is.EqualTo(3));
-                Assert.That(Logger.GetAllTargets(true).First(x => x != Console.Out && x != Console.Error), Is.InstanceOf<DummyTextWriter>());
+                Assert.That(Logger.GetAllTargets(true).First(x => x != Console.Out && x != Console.Error), Is.InstanceOf<MethodReceivedNotifiyingTextWriter>());
                 Assert.That(Logger.GetAllTargets(true).Any(x => x == Console.Out), Is.True);
                 Assert.That(Logger.GetAllTargets(true).Any(x => x == Console.Error), Is.True);
             });
@@ -543,7 +543,7 @@ namespace Test.CuiLib.Log
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(Logger.RemoveLog(new DummyTextWriter()), Is.False);
+                    Assert.That(Logger.RemoveLog(new MethodReceivedNotifiyingTextWriter()), Is.False);
                     Assert.That(Logger.RemoveLog(writer), Is.True);
 
                     Assert.That(Logger.GetAllTargets().Count(), Is.EqualTo(1));

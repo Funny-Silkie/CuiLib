@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Test.Helpers
 {
-    internal sealed class DummyTextWriter : TextWriter
+    internal sealed class MethodReceivedNotifiyingTextWriter : TextWriter
     {
         private readonly StringBuilder builder;
 
-        public DummyTextWriter()
+        public MethodReceivedNotifiyingTextWriter()
         {
             builder = new StringBuilder();
         }
