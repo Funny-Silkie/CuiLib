@@ -53,8 +53,8 @@ namespace CuiLib.Commands
 
             Name = name;
             Children = new CommandCollection(this);
-            Options = new OptionCollection();
-            Parameters = new ParameterCollection();
+            Options = [];
+            Parameters = [];
         }
 
         /// <summary>
@@ -214,13 +214,13 @@ namespace CuiLib.Commands
             if (Children.Count > 0 && 0 <= lastIndex && lastIndex <= args.Length - 1 && Children.TryGetCommand(args[lastIndex], out Command? next))
             {
                 lastIndex++;
-                ReadOnlySpan<string> values = lastIndex >= 0 && lastIndex < args.Length ? args[lastIndex..] : ReadOnlySpan<string>.Empty;
+                ReadOnlySpan<string> values = lastIndex >= 0 && lastIndex < args.Length ? args[lastIndex..] : [];
                 next.Invoke(values);
                 return;
             }
             else
             {
-                ReadOnlySpan<string> values = lastIndex >= 0 && lastIndex < args.Length ? args[lastIndex..] : ReadOnlySpan<string>.Empty;
+                ReadOnlySpan<string> values = lastIndex >= 0 && lastIndex < args.Length ? args[lastIndex..] : [];
                 Parameters.SetValues(values);
                 OnExecution();
                 OnExecutionAsync().Wait();
@@ -394,7 +394,7 @@ namespace CuiLib.Commands
                             //if (option.Required) headerValues.Add("required");
                             //if (option.CanMultiValue) headerValues.Add("multi valued");
                             //if (headerValues.Count > 0) desc += "\n* " + string.Join(", ", headerValues);
-                            string[] descriptions = desc?.Split('\n') ?? Array.Empty<string>();
+                            string[] descriptions = desc?.Split('\n') ?? [];
                             if (descriptions.Length > 0)
                             {
                                 writer.WriteLine(descriptions[0]);
@@ -426,7 +426,7 @@ namespace CuiLib.Commands
                     writer.Write(child.Name);
                     writer.Write("  ");
 
-                    string[] descriptions = child.Description?.Split('\n') ?? Array.Empty<string>();
+                    string[] descriptions = child.Description?.Split('\n') ?? [];
                     if (descriptions.Length > 0)
                     {
                         writer.WriteLine(descriptions[0]);
@@ -452,7 +452,7 @@ namespace CuiLib.Commands
                     writer.Write(parameter.Name);
                     writer.Write("  ");
 
-                    string[] descriptions = parameter.Description?.Split('\n') ?? Array.Empty<string>();
+                    string[] descriptions = parameter.Description?.Split('\n') ?? [];
                     if (descriptions.Length > 0)
                     {
                         writer.WriteLine(descriptions[0]);

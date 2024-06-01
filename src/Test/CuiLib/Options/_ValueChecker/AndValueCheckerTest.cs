@@ -49,8 +49,8 @@ namespace Test.CuiLib.Options._ValueChecker
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentException>(() => new AndValueChecker<int>(new[] { null!, ValueChecker.AlwaysSuccess<int>() }));
-                Assert.Throws<ArgumentException>(() => new AndValueChecker<int>(new[] { ValueChecker.AlwaysSuccess<int>(), null! }));
+                Assert.Throws<ArgumentException>(() => new AndValueChecker<int>([null!, ValueChecker.AlwaysSuccess<int>()]));
+                Assert.Throws<ArgumentException>(() => new AndValueChecker<int>([ValueChecker.AlwaysSuccess<int>(), null!]));
                 Assert.Throws<ArgumentException>(() => new AndValueChecker<int>(null!, ValueChecker.AlwaysSuccess<int>(), ValueChecker.AlwaysSuccess<int>()));
             });
         }
@@ -64,7 +64,7 @@ namespace Test.CuiLib.Options._ValueChecker
         [Test]
         public void Ctor_WithMultipleCheckers_AsPositive_WithTwoCheckers()
         {
-            Assert.DoesNotThrow(() => new AndValueChecker<int>(new[] { ValueChecker.AlwaysSuccess<int>(), ValueChecker.AlwaysSuccess<int>() }));
+            Assert.DoesNotThrow(() => new AndValueChecker<int>([ValueChecker.AlwaysSuccess<int>(), ValueChecker.AlwaysSuccess<int>()]));
         }
 
         [Test]

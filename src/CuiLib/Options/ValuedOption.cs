@@ -82,7 +82,7 @@ namespace CuiLib.Options
         /// <inheritdoc/>
         internal override void ApplyValue(string name, string rawValue)
         {
-            _rawValues ??= new List<string>();
+            _rawValues ??= [];
             _rawValues.Add(rawValue);
             _valueAvailable = true;
             _ = ValueAvailable;

@@ -360,7 +360,7 @@ namespace CuiLib.Options
             {
                 ArgumentNullException.ThrowIfNull(value);
 
-                if (value.Length == 0) return Array.Empty<T>();
+                if (value.Length == 0) return [];
 
                 string[] elements = value.Split(separator, splitOptions);
                 return Array.ConvertAll(elements, elementConverter.Convert);

@@ -166,7 +166,7 @@ namespace CuiLib.Options
                 var ctorArgTypes = new[] { typeof(string), typeof(IValueConverter<,>).MakeGenericType(typeof(string), elementType), typeof(StringSplitOptions) };
                 ConstructorInfo ctor = converterType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, ctorArgTypes) ?? throw new InvalidOperationException();
 
-                return Cast(ctor.Invoke(new object?[] { ",", GetDefault(elementType), StringSplitOptions.None }));
+                return Cast(ctor.Invoke([",", GetDefault(elementType), StringSplitOptions.None]));
             }
 
             if (type == typeof(FileInfo)) return Cast(new FileInfoValueConverter());
@@ -193,9 +193,9 @@ namespace CuiLib.Options
             if (type == typeof(ushort)) return Cast(new ParsableValueConverter<ushort>());
             if (type.IsEnum)
             {
-                Type converterType = typeof(EnumValueConverter<>).MakeGenericType(new[] { type });
-                ConstructorInfo ctor = converterType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, new[] { typeof(bool) }) ?? throw new InvalidOperationException();
-                return Cast(ctor.Invoke(parameters: new object?[] { false }));
+                Type converterType = typeof(EnumValueConverter<>).MakeGenericType([type]);
+                ConstructorInfo ctor = converterType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, [typeof(bool)]) ?? throw new InvalidOperationException();
+                return Cast(ctor.Invoke(parameters: [false]));
             }
 
             if (type == typeof(DateTimeOffset)) return Cast(new ParsableValueConverter<DateTimeOffset>());

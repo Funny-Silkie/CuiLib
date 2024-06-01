@@ -83,7 +83,7 @@ namespace CuiLib.Options
                 checkers[0] = first;
                 Array.Copy(c2.checkers, 0, checkers, 1, c2.checkers.Length);
             }
-            else checkers = new[] { first, second };
+            else checkers = [first, second];
         }
 
         /// <summary>
@@ -98,9 +98,7 @@ namespace CuiLib.Options
             int length = 0;
             for (int i = 0; i < source.Length; i++)
             {
-                IValueChecker<T> current = source[i];
-                if (current == null) throw new ArgumentException("要素がnullです", nameof(source));
-
+                IValueChecker<T> current = source[i] ?? throw new ArgumentException("要素がnullです", nameof(source));
                 length += current is OrValueChecker<T> c ? c.checkers.Length : 1;
             }
 

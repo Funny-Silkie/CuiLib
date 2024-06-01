@@ -81,7 +81,7 @@ namespace CuiLib.Options
         public OptionCollection()
         {
             keys = new Dictionary<string, OptionKey>(StringComparer.Ordinal);
-            options = new Dictionary<OptionKey, Option>();
+            options = [];
         }
 
         /// <summary>

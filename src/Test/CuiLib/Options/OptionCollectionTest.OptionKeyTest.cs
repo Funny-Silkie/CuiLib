@@ -16,7 +16,7 @@ namespace Test.CuiLib.Options
             [SetUp]
             public void SetUp()
             {
-                keys = new OptionCollection.OptionKey(new[] { "s", "full" });
+                keys = new OptionCollection.OptionKey(["s", "full"]);
             }
 
             #region Ctors
@@ -24,13 +24,13 @@ namespace Test.CuiLib.Options
             [Test]
             public void Ctor_WithEmpty()
             {
-                Assert.Throws<ArgumentException>(() => new OptionCollection.OptionKey(Array.Empty<string>()));
+                Assert.Throws<ArgumentException>(() => new OptionCollection.OptionKey([]));
             }
 
             [Test]
             public void Ctor_AsPositive()
             {
-                Assert.DoesNotThrow(() => new OptionCollection.OptionKey(new[] { "s", "full" }));
+                Assert.DoesNotThrow(() => new OptionCollection.OptionKey(["s", "full"]));
             }
 
             #endregion Ctors
@@ -55,10 +55,10 @@ namespace Test.CuiLib.Options
             {
                 Assert.Multiple(() =>
                 {
-                    Assert.That(keys.HasSameNames(new[] { "s", "full" }), Is.True);
-                    Assert.That(keys.HasSameNames(new[] { "s" }), Is.False);
-                    Assert.That(keys.HasSameNames(new[] { "full" }), Is.False);
-                    Assert.That(keys.HasSameNames(new[] { "s", "full", "hoge" }), Is.False);
+                    Assert.That(keys.HasSameNames(["s", "full"]), Is.True);
+                    Assert.That(keys.HasSameNames(["s"]), Is.False);
+                    Assert.That(keys.HasSameNames(["full"]), Is.False);
+                    Assert.That(keys.HasSameNames(["s", "full", "hoge"]), Is.False);
                 });
             }
 
@@ -70,8 +70,8 @@ namespace Test.CuiLib.Options
                 Assert.Multiple(() =>
                 {
                     Assert.That(keys.Equals(obj: keys), Is.True);
-                    Assert.That(keys.Equals(obj: new OptionCollection.OptionKey(new[] { "s", "full" })), Is.True);
-                    Assert.That(keys.Equals(obj: new OptionCollection.OptionKey(new[] { "other" })), Is.False);
+                    Assert.That(keys.Equals(obj: new OptionCollection.OptionKey(["s", "full"])), Is.True);
+                    Assert.That(keys.Equals(obj: new OptionCollection.OptionKey(["other"])), Is.False);
                     Assert.That(keys.Equals(obj: 1), Is.False);
                     Assert.That(keys.Equals(obj: "other"), Is.False);
                     Assert.That(keys.Equals(obj: new[] { "s", "full" }), Is.False);
@@ -85,8 +85,8 @@ namespace Test.CuiLib.Options
                 Assert.Multiple(() =>
                 {
                     Assert.That(keys.Equals(other: keys), Is.True);
-                    Assert.That(keys.Equals(other: new OptionCollection.OptionKey(new[] { "s", "full" })), Is.True);
-                    Assert.That(keys.Equals(other: new OptionCollection.OptionKey(new[] { "other" })), Is.False);
+                    Assert.That(keys.Equals(other: new OptionCollection.OptionKey(["s", "full"])), Is.True);
+                    Assert.That(keys.Equals(other: new OptionCollection.OptionKey(["other"])), Is.False);
                     Assert.That(keys.Equals(other: null), Is.False);
                 });
             }
@@ -102,7 +102,7 @@ namespace Test.CuiLib.Options
                     Assert.That(keys.GetHashCode(), Is.EqualTo(keys.GetHashCode()));
 #pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
 
-                    Assert.That(keys.GetHashCode(), Is.EqualTo(new OptionCollection.OptionKey(new[] { "s", "full" }).GetHashCode()));
+                    Assert.That(keys.GetHashCode(), Is.EqualTo(new OptionCollection.OptionKey(["s", "full"]).GetHashCode()));
                 });
             }
 

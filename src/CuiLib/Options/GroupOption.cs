@@ -40,7 +40,7 @@ namespace CuiLib.Options
         /// </summary>
         protected GroupOption()
         {
-            Children = new OptionCollection();
+            Children = [];
         }
 
         /// <inheritdoc/>

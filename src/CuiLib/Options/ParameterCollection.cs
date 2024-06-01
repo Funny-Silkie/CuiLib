@@ -32,7 +32,7 @@ namespace CuiLib.Options
         /// </summary>
         public ParameterCollection()
         {
-            items = new SortedList<int, Parameter>();
+            items = [];
         }
 
         /// <summary>

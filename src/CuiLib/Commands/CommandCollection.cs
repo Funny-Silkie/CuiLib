@@ -26,7 +26,7 @@ namespace CuiLib.Commands
         /// </summary>
         public CommandCollection()
         {
-            items = new Dictionary<string, Command>();
+            items = [];
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace CuiLib.Commands
         internal CommandCollection(Command parent)
         {
             this.parent = parent;
-            items = new Dictionary<string, Command>();
+            items = [];
         }
 
         /// <summary>

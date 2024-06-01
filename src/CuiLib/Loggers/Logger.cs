@@ -61,7 +61,7 @@ namespace CuiLib.Log
         /// </summary>
         public Logger()
         {
-            writers = new List<WriterEntry>();
+            writers = [];
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace CuiLib.Log
         /// <exception cref="System.Security.SecurityException">アクセス権限がない</exception>
         public Logger(string logFile)
         {
-            writers = new List<WriterEntry>();
+            writers = [];
             AddLogFile(logFile);
         }
 

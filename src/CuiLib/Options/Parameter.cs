@@ -119,7 +119,7 @@ namespace CuiLib.Options
         /// <param name="rawValue">文字列としての値</param>
         internal virtual void SetValue(string rawValue)
         {
-            _rawValues = new[] { rawValue };
+            _rawValues = [rawValue];
         }
 
         /// <summary>
