@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -46,9 +46,16 @@ namespace CuiLib.Extensions
         /// <exception cref="ArgumentNullException"><paramref name="from"/>がnull</exception>
         public static ReadOnlySpan<char> ReplaceAll(this ReadOnlySpan<char> value, IEnumerable<char> from, char to)
         {
-            if (value.Length == 0) return ReadOnlySpan<char>.Empty;
+            if (value.Length == 0)
+            {
+                ArgumentNullException.ThrowIfNull(from);
+                return [];
+            }
+            if (from is ICollection<int> c && c.Count == 0) return value;
 
             HashSet<char> set = from.ToHashSet();
+            if (set.Count == 0) return value;
+
             var array = new char[value.Length];
             for (int i = 0; i < value.Length; i++) array[i] = set.Contains(value[i]) ? to : value[i];
 
@@ -67,6 +74,7 @@ namespace CuiLib.Extensions
             ArgumentNullException.ThrowIfNull(map);
 
             if (value.Length == 0) return [];
+            if (map.Count == 0) return value;
 
             var array = new char[value.Length];
             for (int i = 0; i < value.Length; i++) array[i] = map.TryGetValue(value[i], out char to) ? to : value[i];
@@ -91,8 +99,12 @@ namespace CuiLib.Extensions
         /// <param name="value">分割する文字列</param>
         /// <param name="separator">分割に利用する部分</param>
         /// <returns>分割後の文字列一覧</returns>
-        public static string[] EscapedSplit(this ReadOnlySpan<char> value, string? separator)
+        /// <exception cref="ArgumentNullException"><paramref name="separator"/>が<see langword="null"/></exception>
+        /// <exception cref="ArgumentException"><<paramref name="separator"/>が空文字</exception>
+        public static string[] EscapedSplit(this ReadOnlySpan<char> value, string separator)
         {
+            ArgumentException.ThrowIfNullOrEmpty(separator);
+
             return EscapedSplitPrivate(value, separator.AsSpan());
         }
 
@@ -102,13 +114,16 @@ namespace CuiLib.Extensions
         /// <param name="value">分割する文字列</param>
         /// <param name="separator">分割に利用する部分</param>
         /// <returns>分割後の文字列一覧</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="separator"/>が<see langword="null"/></exception>
+        /// <exception cref="ArgumentException"><<paramref name="separator"/>が空文字</exception>
         private static string[] EscapedSplitPrivate(ReadOnlySpan<char> value, ReadOnlySpan<char> separator)
         {
-            if (value.Length < separator.Length) return Array.Empty<string>();
+            if (value.Length == 0) return [];
+            if (value.Length < separator.Length) return [value.ToString()];
             if (value.Length == separator.Length)
             {
-                if (value.Equals(separator, StringComparison.Ordinal)) return Array.Empty<string>();
-                return new[] { value.ToString() };
+                if (value.Equals(separator, StringComparison.Ordinal)) return [];
+                return [value.ToString()];
             }
 
             var list = new List<string>();
