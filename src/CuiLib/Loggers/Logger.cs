@@ -136,7 +136,7 @@ namespace CuiLib.Log
         /// <exception cref="System.Security.SecurityException">アクセス権限がない</exception>
         public void AddLogFile(string path, bool append = false, Encoding? encoding = null)
         {
-            var writer = new StreamWriter(path, append, encoding ?? IOHelper.UTF8N);
+            var writer = new StreamWriter(path, append, encoding ?? IOHelpers.UTF8N);
             writers.Add(new WriterEntry(writer)
             {
                 MustDisposed = true,
@@ -161,7 +161,7 @@ namespace CuiLib.Log
             ArgumentNullException.ThrowIfNull(file);
 
             FileStream stream = file.Open(append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read);
-            var writer = new StreamWriter(stream, encoding ?? IOHelper.UTF8N, leaveOpen: false);
+            var writer = new StreamWriter(stream, encoding ?? IOHelpers.UTF8N, leaveOpen: false);
             writers.Add(new WriterEntry(writer)
             {
                 MustDisposed = true,
