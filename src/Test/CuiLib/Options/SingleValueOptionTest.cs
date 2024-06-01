@@ -2,7 +2,6 @@
 using CuiLib.Options;
 using NUnit.Framework;
 using System;
-using System.Reflection;
 
 namespace Test.CuiLib.Options
 {

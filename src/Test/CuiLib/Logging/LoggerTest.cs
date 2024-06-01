@@ -593,7 +593,7 @@ namespace Test.CuiLib.Log
         [Test]
         public void Write_WithCharArray_Range()
         {
-            Logger.Write(new[] { 't', 'e', 's', 't' }, 1, 2);
+            Logger.Write(['t', 'e', 's', 't'], 1, 2);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(char[], int, int): es" }));
         }
@@ -756,7 +756,7 @@ namespace Test.CuiLib.Log
         [Test]
         public void WriteAsync_WithCharArray_Range()
         {
-            Logger.WriteAsync(new[] { 't', 'e', 's', 't' }, 1, 2).Wait();
+            Logger.WriteAsync(['t', 'e', 's', 't'], 1, 2).Wait();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteAsync(char[], int, int): es" }));
         }
@@ -817,7 +817,7 @@ namespace Test.CuiLib.Log
         [Test]
         public void WriteLine_WithCharArray_Range()
         {
-            Logger.WriteLine(new[] { 't', 'e', 's', 't' }, 1, 2);
+            Logger.WriteLine(['t', 'e', 's', 't'], 1, 2);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(char[], int, int): es" }));
         }
@@ -988,7 +988,7 @@ namespace Test.CuiLib.Log
         [Test]
         public void WriteLineAsync_WithCharArray_Range()
         {
-            Logger.WriteLineAsync(new[] { 't', 'e', 's', 't' }, 1, 2).Wait();
+            Logger.WriteLineAsync(['t', 'e', 's', 't'], 1, 2).Wait();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLineAsync(char[], int, int): es" }));
         }

@@ -1,4 +1,4 @@
-﻿[*.cs]
+[*.cs]
 
 # CS8625: null リテラルを null 非許容参照型に変換できません。
 dotnet_diagnostic.CS8625.severity = error
@@ -17,3 +17,12 @@ dotnet_diagnostic.IDE0046.severity = silent
 
 # IDE0061: ローカル関数に式本体を使用します
 dotnet_diagnostic.IDE0061.severity = silent
+
+# CA1861: 引数として定数配列を使用しない
+dotnet_diagnostic.CA1861.severity = silent
+
+# IDE0305: コレクションの初期化を簡略化します
+dotnet_diagnostic.IDE0305.severity = silent
+
+# IDE0090: 'new(...)' を使用する
+dotnet_diagnostic.IDE0090.severity = silent

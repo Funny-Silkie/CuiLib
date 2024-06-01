@@ -14,7 +14,7 @@ namespace Test.CuiLib.Options
         [SetUp]
         public void SetUp()
         {
-            collection = new OptionCollection();
+            collection = [];
         }
 
         #region Properties

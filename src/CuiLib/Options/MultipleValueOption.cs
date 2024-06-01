@@ -52,7 +52,7 @@ namespace CuiLib.Options
                 {
                     if (_valueCache is null)
                     {
-                        if (RawValues.Count == 0) return Array.Empty<T>();
+                        if (RawValues.Count == 0) return [];
                         var result = new T[RawValues.Count];
                         for (int i = 0; i < result.Length; i++)
                         {
@@ -82,7 +82,7 @@ namespace CuiLib.Options
         private T[]? _valueCache;
 
         /// <inheritdoc/>
-        internal override string? DefaultValueString => $"[{string.Join(", ", DefaultValue ?? Array.Empty<T>())}]";
+        internal override string? DefaultValueString => $"[{string.Join(", ", DefaultValue ?? [])}]";
 
         /// <summary>
         /// <see cref="MultipleValueOption{T}"/>の新しいインスタンスを初期化します。
@@ -90,7 +90,7 @@ namespace CuiLib.Options
         /// <param name="shortName">短縮名</param>
         public MultipleValueOption(char shortName) : base(shortName)
         {
-            DefaultValue = Array.Empty<T>();
+            DefaultValue = [];
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace CuiLib.Options
         /// <exception cref="ArgumentException"><paramref name="fullName"/>が空文字</exception>
         public MultipleValueOption(string fullName) : base(fullName)
         {
-            DefaultValue = Array.Empty<T>();
+            DefaultValue = [];
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace CuiLib.Options
         /// <exception cref="ArgumentException"><paramref name="fullName"/>が空文字</exception>
         public MultipleValueOption(char shortName, string fullName) : base(shortName, fullName)
         {
-            DefaultValue = Array.Empty<T>();
+            DefaultValue = [];
         }
 
         /// <inheritdoc/>

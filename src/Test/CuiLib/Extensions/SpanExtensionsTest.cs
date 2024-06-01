@@ -12,7 +12,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void GetOrDefault_WithoutDefaultValue()
         {
-            ReadOnlySpan<object> span = new object[] { 1, "hoge", true };
+            ReadOnlySpan<object> span = [1, "hoge", true];
 
             Assert.That(span.GetOrDefault(-1), Is.EqualTo(null));
             Assert.That(span.GetOrDefault(0), Is.EqualTo(1));
@@ -24,7 +24,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void GetOrDefault_WithDefaultValue()
         {
-            ReadOnlySpan<object> span = new object[] { 1, "hoge", true };
+            ReadOnlySpan<object> span = [1, "hoge", true];
             var defaultValue = new object();
 
             Assert.That(span.GetOrDefault(-1, defaultValue), Is.EqualTo(defaultValue));
@@ -37,7 +37,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void SliceOrDefaultWithStart()
         {
-            ReadOnlySpan<int> span = new int[] { 1, 2, 3, 4, 5 };
+            ReadOnlySpan<int> span = [1, 2, 3, 4, 5];
 
             Assert.That(span.SliceOrDefault(0).ToArray(), Is.EqualTo(new[] { 1, 2, 3, 4, 5 }));
             Assert.That(span.SliceOrDefault(1).ToArray(), Is.EqualTo(new[] { 2, 3, 4, 5 }));
@@ -49,8 +49,8 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void SliceOrDefaultWithStartAndDefaultValue()
         {
-            ReadOnlySpan<int> span = new[] { 1, 2, 3, 4, 5 };
-            ReadOnlySpan<int> defaultValue = new[] { int.MinValue, int.MaxValue };
+            ReadOnlySpan<int> span = [1, 2, 3, 4, 5];
+            ReadOnlySpan<int> defaultValue = [int.MinValue, int.MaxValue];
 
             Assert.That(span.SliceOrDefault(0, defaultValue).ToArray(), Is.EqualTo(new[] { 1, 2, 3, 4, 5 }));
             Assert.That(span.SliceOrDefault(1, defaultValue).ToArray(), Is.EqualTo(new[] { 2, 3, 4, 5 }));
@@ -62,7 +62,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void SliceOrDefaultAsRange()
         {
-            ReadOnlySpan<int> span = new int[] { 1, 2, 3, 4, 5 };
+            ReadOnlySpan<int> span = [1, 2, 3, 4, 5];
 
             Assert.That(span.SliceOrDefault(0, 5).ToArray(), Is.EqualTo(new[] { 1, 2, 3, 4, 5 }));
             Assert.That(span.SliceOrDefault(1, 3).ToArray(), Is.EqualTo(new[] { 2, 3, 4 }));
@@ -78,8 +78,8 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void SliceOrDefaultAsRange_WithDefaultValue()
         {
-            ReadOnlySpan<int> span = new[] { 1, 2, 3, 4, 5 };
-            ReadOnlySpan<int> defaultValue = new[] { int.MinValue, int.MaxValue };
+            ReadOnlySpan<int> span = [1, 2, 3, 4, 5];
+            ReadOnlySpan<int> defaultValue = [int.MinValue, int.MaxValue];
 
             Assert.That(span.SliceOrDefault(0, 5, defaultValue).ToArray(), Is.EqualTo(new[] { 1, 2, 3, 4, 5 }));
             Assert.That(span.SliceOrDefault(1, 3, defaultValue).ToArray(), Is.EqualTo(new[] { 2, 3, 4 }));

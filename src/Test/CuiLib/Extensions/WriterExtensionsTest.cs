@@ -11,7 +11,7 @@ namespace Test.CuiLib.Extensions
     {
         private BufferedTextWriter writer;
 
-        private IEnumerable<T> AsRawEnumerable<T>(IEnumerable<T> source)
+        private static IEnumerable<T> AsRawEnumerable<T>(IEnumerable<T> source)
         {
             foreach (T current in source) yield return current;
         }
@@ -53,7 +53,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void WriteJoinGenericWithChar_AsPositive_WithEmptyList()
         {
-            writer.WriteJoin<object>(',', new List<object>());
+            writer.WriteJoin(',', new List<object>());
 
             Assert.That(writer.GetData(), Is.Empty);
         }
@@ -61,7 +61,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void WriteJoinGenericWithChar_AsPositive_WithList()
         {
-            writer.WriteJoin<object>(',', new List<object> { 1, "hoge", 'c' });
+            writer.WriteJoin(',', new List<object> { 1, "hoge", 'c' });
 
             Assert.That(writer.GetData(), Is.EqualTo("1,hoge,c"));
         }
@@ -69,7 +69,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void WriteJoinGenericWithChar_AsPositive_WithEmptyIEnumerable()
         {
-            writer.WriteJoin<object>(',', AsRawEnumerable(Array.Empty<object>()));
+            writer.WriteJoin(',', AsRawEnumerable(Array.Empty<object>()));
 
             Assert.That(writer.GetData(), Is.Empty);
         }
@@ -77,7 +77,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void WriteJoinGenericWithChar_AsPositive_WithIEnumerable()
         {
-            writer.WriteJoin<object>(',', AsRawEnumerable(new object[] { 1, "hoge", 'c' }));
+            writer.WriteJoin(',', AsRawEnumerable(new object[] { 1, "hoge", 'c' }));
 
             Assert.That(writer.GetData(), Is.EqualTo("1,hoge,c"));
         }
@@ -113,7 +113,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void WriteJoinGenericWithString_AsPositive_WithEmptyList()
         {
-            writer.WriteJoin<object>("<>", new List<object>());
+            writer.WriteJoin("<>", new List<object>());
 
             Assert.That(writer.GetData(), Is.Empty);
         }
@@ -121,7 +121,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void WriteJoinGenericWithString_AsPositive_WithList()
         {
-            writer.WriteJoin<object>("<>", new List<object> { 1, "hoge", 'c' });
+            writer.WriteJoin("<>", new List<object> { 1, "hoge", 'c' });
 
             Assert.That(writer.GetData(), Is.EqualTo("1<>hoge<>c"));
         }
@@ -129,7 +129,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void WriteJoinGenericWithString_AsPositive_WithEmptyIEnumerable()
         {
-            writer.WriteJoin<object>("<>", AsRawEnumerable(Array.Empty<object>()));
+            writer.WriteJoin("<>", AsRawEnumerable(Array.Empty<object>()));
 
             Assert.That(writer.GetData(), Is.Empty);
         }

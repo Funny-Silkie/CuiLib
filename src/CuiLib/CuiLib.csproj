@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+	<LangVersion>12</LangVersion>
     <TargetFrameWorks>net8.0;net7.0</TargetFrameWorks>
     <OutputPath>$(SolutionDir)Build\$(Configuration)</OutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>

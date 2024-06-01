@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -67,7 +67,7 @@ namespace CuiLib.Extensions
         {
             ArgumentNullException.ThrowIfNull(map);
 
-            if (value.Length == 0) return ReadOnlySpan<char>.Empty;
+            if (value.Length == 0) return [];
 
             var array = new char[value.Length];
             for (int i = 0; i < value.Length; i++) array[i] = map.TryGetValue(value[i], out char to) ? to : value[i];

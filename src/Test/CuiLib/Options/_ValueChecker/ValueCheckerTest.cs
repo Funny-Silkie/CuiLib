@@ -349,13 +349,13 @@ namespace Test.CuiLib.Options._ValueChecker
         [Test]
         public void Contains_WithoutIEqualityComparer_WithEmptyCollection()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.Contains<int[], int>(Array.Empty<int>()));
+            Assert.Throws<ArgumentException>(() => ValueChecker.Contains<int[], int>([]));
         }
 
         [Test]
         public void Contains_WithoutIEqualityComparer_AsPositive()
         {
-            IValueChecker<int> checker = ValueChecker.Contains<int[], int>(new[] { 1, 2, 3 });
+            IValueChecker<int> checker = ValueChecker.Contains<int[], int>([1, 2, 3]);
 
             Assert.Multiple(() =>
             {
@@ -377,13 +377,13 @@ namespace Test.CuiLib.Options._ValueChecker
         [Test]
         public void Contains_WithIEqualityComparer_WithEmptyCollection()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.Contains<int[], int>(Array.Empty<int>(), EqualityComparer<int>.Default));
+            Assert.Throws<ArgumentException>(() => ValueChecker.Contains<int[], int>([], EqualityComparer<int>.Default));
         }
 
         [Test]
         public void Contains_WithIEqualityComparerAsNull_AsPositive()
         {
-            IValueChecker<int> checker = ValueChecker.Contains<int[], int>(new[] { 1, 2, 3 }, null);
+            IValueChecker<int> checker = ValueChecker.Contains<int[], int>([1, 2, 3], null);
 
             Assert.Multiple(() =>
             {
@@ -1033,7 +1033,9 @@ namespace Test.CuiLib.Options._ValueChecker
         [Test]
         public void IsRegexMatch_WithRegex_AsPositive()
         {
+#pragma warning disable SYSLIB1045 // 'GeneratedRegexAttribute' に変換します。
             IValueChecker<string> checker = ValueChecker.IsRegexMatch(new Regex(@"\d+"));
+#pragma warning restore SYSLIB1045 // 'GeneratedRegexAttribute' に変換します。
 
             Assert.Multiple(() =>
             {

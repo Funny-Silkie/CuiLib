@@ -30,7 +30,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Ctor_WithEmpty()
         {
-            Assert.Throws<ArgumentException>(() => new OrGroupOption(Array.Empty<Option>()));
+            Assert.Throws<ArgumentException>(() => new OrGroupOption([]));
         }
 
         #endregion Ctors

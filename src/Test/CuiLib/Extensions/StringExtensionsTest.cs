@@ -64,7 +64,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void ReplaceAllWithIEnumerableAndChar_AsPositiveWithEmptyValue()
         {
-            Assert.That(ReadOnlySpan<char>.Empty.ReplaceAll(new[] { 'a', 'b', 'c' }, 'R').ToString(), Is.Empty);
+            Assert.That(ReadOnlySpan<char>.Empty.ReplaceAll(['a', 'b', 'c'], 'R').ToString(), Is.Empty);
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace Test.CuiLib.Extensions
         {
             Assert.Multiple(() =>
             {
-                Assert.That("ABC".AsSpan().ReplaceAll(Array.Empty<char>(), 'R').ToString(), Is.EqualTo("ABC"));
+                Assert.That("ABC".AsSpan().ReplaceAll([], 'R').ToString(), Is.EqualTo("ABC"));
                 Assert.That("ABC".AsSpan().ReplaceAll(Enumerable.Empty<char>(), 'R').ToString(), Is.EqualTo("ABC"));
             });
         }
@@ -80,7 +80,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void ReplaceAllWithIEnumerableAndChar_AsPositiveWithNotEmpty()
         {
-            Assert.That("abcdABCD".AsSpan().ReplaceAll(new[] { 'a', 'b', 'c' }, 'R').ToString(), Is.EqualTo("RRRdABCD"));
+            Assert.That("abcdABCD".AsSpan().ReplaceAll(['a', 'b', 'c'], 'R').ToString(), Is.EqualTo("RRRdABCD"));
         }
 
         [Test]

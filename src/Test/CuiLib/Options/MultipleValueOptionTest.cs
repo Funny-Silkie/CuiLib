@@ -2,7 +2,6 @@
 using CuiLib.Options;
 using NUnit.Framework;
 using System;
-using System.Reflection;
 
 namespace Test.CuiLib.Options
 {
@@ -140,7 +139,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Value_Get_OnDefaultAndNotRequired()
         {
-            option.DefaultValue = new[] { 100 };
+            option.DefaultValue = [100];
 
             Assert.That(option.Value, Is.EqualTo(new[] { 100 }));
         }
@@ -148,7 +147,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Value_Get_OnDefaultAndRequired()
         {
-            option.DefaultValue = new[] { 100 };
+            option.DefaultValue = [100];
             option.Required = true;
 
             Assert.Throws<ArgumentAnalysisException>(() => _ = option.Value);
@@ -199,7 +198,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void DefaultValueString_AsSpecifiedDefaultValue()
         {
-            option.DefaultValue = new[] { 1, 2, 3 };
+            option.DefaultValue = [1, 2, 3];
 
             Assert.That(option.DefaultValueString, Is.EqualTo("[1, 2, 3]"));
         }
