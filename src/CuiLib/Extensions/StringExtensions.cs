@@ -100,7 +100,7 @@ namespace CuiLib.Extensions
         /// <param name="separator">分割に利用する部分</param>
         /// <returns>分割後の文字列一覧</returns>
         /// <exception cref="ArgumentNullException"><paramref name="separator"/>が<see langword="null"/></exception>
-        /// <exception cref="ArgumentException"><<paramref name="separator"/>が空文字</exception>
+        /// <exception cref="ArgumentException"><paramref name="separator"/>が空文字</exception>
         public static string[] EscapedSplit(this ReadOnlySpan<char> value, string separator)
         {
             ArgumentException.ThrowIfNullOrEmpty(separator);
@@ -115,7 +115,7 @@ namespace CuiLib.Extensions
         /// <param name="separator">分割に利用する部分</param>
         /// <returns>分割後の文字列一覧</returns>
         /// <exception cref="ArgumentNullException"><paramref name="separator"/>が<see langword="null"/></exception>
-        /// <exception cref="ArgumentException"><<paramref name="separator"/>が空文字</exception>
+        /// <exception cref="ArgumentException"><paramref name="separator"/>が空文字</exception>
         private static string[] EscapedSplitPrivate(ReadOnlySpan<char> value, ReadOnlySpan<char> separator)
         {
             if (value.Length == 0) return [];
