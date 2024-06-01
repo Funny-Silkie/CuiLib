@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace CuiLib.Extensions
 {
@@ -57,7 +57,10 @@ namespace CuiLib.Extensions
         /// <returns><paramref name="index"/>と<paramref name="count"/>に対応する範囲。存在しない場合は<paramref name="defaultValue"/></returns>
         public static ReadOnlySpan<T> SliceOrDefault<T>(this ReadOnlySpan<T> span, int index, int count, ReadOnlySpan<T> defaultValue)
         {
-            if (index < 0 || count < 0 || index + count > span.Length) return defaultValue;
+            if (count == 0) return [];
+            if (index < 0) index = 0;
+            if (index + count > span.Length) count = span.Length - index;
+            if (count <= 0) return defaultValue;
             return span.Slice(index, count);
         }
 
@@ -83,7 +86,8 @@ namespace CuiLib.Extensions
         /// <returns><paramref name="start"/>以降の範囲。存在しない場合は<paramref name="defaultRange"/></returns>
         public static ReadOnlySpan<T> SliceOrDefault<T>(this ReadOnlySpan<T> span, int start, ReadOnlySpan<T> defaultRange)
         {
-            if ((uint)start >= (uint)span.Length) return defaultRange;
+            if (start < 0) start = 0;
+            if (start >= span.Length) return defaultRange;
             return span[start..];
         }
     }
