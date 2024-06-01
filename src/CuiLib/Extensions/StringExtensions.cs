@@ -18,7 +18,7 @@ namespace CuiLib.Extensions
         /// <param name="comparisonType">比較方法</param>
         /// <returns>比較結果</returns>
         /// <exception cref="ArgumentException"><paramref name="comparisonType"/>が無効な値</exception>
-        public static int CompareTo(char value, char other, StringComparison comparisonType)
+        public static int CompareTo(this char value, char other, StringComparison comparisonType)
         {
             return string.Compare(value.ToString(), other.ToString(), comparisonType);
         }
@@ -31,9 +31,8 @@ namespace CuiLib.Extensions
         /// <param name="comparisonType">比較方法</param>
         /// <returns><paramref name="value"/>と<paramref name="other"/>が等しい場合はtrue，それ以外でfalse</returns>
         /// <exception cref="ArgumentException"><paramref name="comparisonType"/>が無効な値</exception>
-        public static bool Equals(char value, char other, StringComparison comparisonType)
+        public static bool Equals(this char value, char other, StringComparison comparisonType)
         {
-            string.Compare("A", "B", comparisonType);
             return string.Equals(value.ToString(), other.ToString(), comparisonType);
         }
 
