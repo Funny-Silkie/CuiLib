@@ -57,16 +57,16 @@ namespace CuiLib.Options
                     }
                     catch (Exception e)
                     {
-                        ThrowHelper.ThrowAsOptionParseFailed(e);
+                        ThrowHelpers.ThrowAsOptionParseFailed(e);
                         return default;
                     }
 
                     ValueCheckState state = Checker.CheckValue(result);
-                    ThrowHelper.ThrowIfInvalidState(state);
+                    ThrowHelpers.ThrowIfInvalidState(state);
 
                     return result;
                 }
-                if (Required) ThrowHelper.ThrowAsEmptyOption(this);
+                if (Required) ThrowHelpers.ThrowAsEmptyOption(this);
 
                 return DefaultValue;
             }

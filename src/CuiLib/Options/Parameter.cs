@@ -49,7 +49,7 @@ namespace CuiLib.Options
                 }
                 catch (IndexOutOfRangeException)
                 {
-                    ThrowHelper.ThrowAsEmptyCollection();
+                    ThrowHelpers.ThrowAsEmptyCollection();
                     return default;
                 }
             }
@@ -73,8 +73,8 @@ namespace CuiLib.Options
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
         protected Parameter(string name, int index, bool isArray)
         {
-            ThrowHelper.ThrowIfNullOrEmpty(name);
-            ThrowHelper.ThrowIfNegative(index);
+            ThrowHelpers.ThrowIfNullOrEmpty(name);
+            ThrowHelpers.ThrowIfNegative(index);
 
             Name = name;
             Index = index;
@@ -169,7 +169,7 @@ namespace CuiLib.Options
                 }
                 catch (IndexOutOfRangeException)
                 {
-                    ThrowHelper.ThrowAsEmptyCollection();
+                    ThrowHelpers.ThrowAsEmptyCollection();
                     return default;
                 }
             }
@@ -193,11 +193,11 @@ namespace CuiLib.Options
                     }
                     catch (Exception e)
                     {
-                        ThrowHelper.ThrowAsOptionParseFailed(e);
+                        ThrowHelpers.ThrowAsOptionParseFailed(e);
                         return default;
                     }
                     ValueCheckState state = Checker.CheckValue(result);
-                    ThrowHelper.ThrowIfInvalidState(state);
+                    ThrowHelpers.ThrowIfInvalidState(state);
                     return result;
                 });
                 return _values;

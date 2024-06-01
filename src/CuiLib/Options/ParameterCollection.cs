@@ -45,7 +45,7 @@ namespace CuiLib.Options
         {
             get
             {
-                ThrowHelper.ThrowIfNegative(index);
+                ThrowHelpers.ThrowIfNegative(index);
 
                 if (index < arrayStart) return items[arrayStart];
                 try
@@ -86,7 +86,7 @@ namespace CuiLib.Options
         /// <exception cref="InvalidOperationException"><see cref="AllowAutomaticallyCreate"/>が<see langword="false"/>の時に未定義インデックスのパラメータが存在</exception>
         private Parameter SetOrCreate(int index, string value)
         {
-            if (index < 0) ThrowHelper.ThrowIfNegative(index);
+            if (index < 0) ThrowHelpers.ThrowIfNegative(index);
 
             if (!items.TryGetValue(index, out Parameter? result))
             {
@@ -196,7 +196,7 @@ namespace CuiLib.Options
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
         public bool ContainsAt(int index)
         {
-            ThrowHelper.ThrowIfNegative(index);
+            ThrowHelpers.ThrowIfNegative(index);
 
             return items.ContainsKey(index);
         }
@@ -241,7 +241,7 @@ namespace CuiLib.Options
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
         public bool RemoveAt(int index)
         {
-            ThrowHelper.ThrowIfNegative(index);
+            ThrowHelpers.ThrowIfNegative(index);
 
             if (!items.Remove(index, out Parameter? removed)) return false;
             if (removed.IsArray) arrayStart = -1;

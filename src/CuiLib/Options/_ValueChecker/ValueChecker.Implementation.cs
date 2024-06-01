@@ -62,7 +62,7 @@ namespace CuiLib.Options
                 }
                 catch (Exception e) when (e is not ArgumentAnalysisException)
                 {
-                    ThrowHelper.ThrowAsOptionParseFailed(e);
+                    ThrowHelpers.ThrowAsOptionParseFailed(e);
                     return default;
                 }
             }
@@ -297,7 +297,7 @@ namespace CuiLib.Options
             /// <exception cref="ArgumentOutOfRangeException"><paramref name="stringComparison"/>が非定義の値</exception>
             internal StartWithValueChecker(char comparison, StringComparison stringComparison = StringComparison.CurrentCulture)
             {
-                ThrowHelper.ThrowIfNotDefined(stringComparison);
+                ThrowHelpers.ThrowIfNotDefined(stringComparison);
 
                 this.comparison = comparison.ToString();
                 this.stringComparison = stringComparison;
@@ -313,8 +313,8 @@ namespace CuiLib.Options
             /// <exception cref="ArgumentOutOfRangeException"><paramref name="stringComparison"/>が非定義の値</exception>
             internal StartWithValueChecker(string comparison, StringComparison stringComparison = StringComparison.CurrentCulture)
             {
-                ThrowHelper.ThrowIfNullOrEmpty(comparison);
-                ThrowHelper.ThrowIfNotDefined(stringComparison);
+                ThrowHelpers.ThrowIfNullOrEmpty(comparison);
+                ThrowHelpers.ThrowIfNotDefined(stringComparison);
 
                 this.comparison = comparison;
                 this.stringComparison = stringComparison;
@@ -345,7 +345,7 @@ namespace CuiLib.Options
             /// <exception cref="ArgumentOutOfRangeException"><paramref name="stringComparison"/>が非定義の値</exception>
             internal EndWithValueChecker(char comparison, StringComparison stringComparison = StringComparison.CurrentCulture)
             {
-                ThrowHelper.ThrowIfNotDefined(stringComparison);
+                ThrowHelpers.ThrowIfNotDefined(stringComparison);
 
                 this.comparison = comparison.ToString();
                 this.stringComparison = stringComparison;
@@ -361,8 +361,8 @@ namespace CuiLib.Options
             /// <exception cref="ArgumentOutOfRangeException"><paramref name="stringComparison"/>が非定義の値</exception>
             internal EndWithValueChecker(string comparison, StringComparison stringComparison = StringComparison.CurrentCulture)
             {
-                ThrowHelper.ThrowIfNullOrEmpty(comparison);
-                ThrowHelper.ThrowIfNotDefined(stringComparison);
+                ThrowHelpers.ThrowIfNullOrEmpty(comparison);
+                ThrowHelpers.ThrowIfNotDefined(stringComparison);
 
                 this.comparison = comparison;
                 this.stringComparison = stringComparison;

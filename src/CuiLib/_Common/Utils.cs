@@ -5,14 +5,14 @@ namespace CuiLib
     /// <summary>
     /// 共通処理を実装します。
     /// </summary>
-    internal static class Util
+    internal static class Utils
     {
         /// <summary>
         /// 特殊文字を置換します。
         /// </summary>
         /// <param name="value">置換する文字列</param>
         /// <returns>置換後の文字列</returns>
-        internal static string ReplaceSpecialCharacters(this string value)
+        internal static string ReplaceSpecialCharacters(this string? value)
         {
             if (string.IsNullOrEmpty(value)) return string.Empty;
 

@@ -36,7 +36,7 @@ namespace CuiLib.Options
         /// <exception cref="ArgumentException"><paramref name="fullName"/>が空文字</exception>
         protected NamedOption(string fullName)
         {
-            ThrowHelper.ThrowIfNullOrEmpty(fullName);
+            ThrowHelpers.ThrowIfNullOrEmpty(fullName);
 
             FullName = fullName;
         }
@@ -50,7 +50,7 @@ namespace CuiLib.Options
         /// <exception cref="ArgumentException"><paramref name="fullName"/>が空文字</exception>
         protected NamedOption(char shortName, string fullName)
         {
-            ThrowHelper.ThrowIfNullOrEmpty(fullName);
+            ThrowHelpers.ThrowIfNullOrEmpty(fullName);
 
             FullName = fullName;
             ShortName = shortName.ToString();
@@ -65,7 +65,7 @@ namespace CuiLib.Options
         /// <inheritdoc/>
         public override bool MatchName(string name)
         {
-            ThrowHelper.ThrowIfNullOrEmpty(name);
+            ThrowHelpers.ThrowIfNullOrEmpty(name);
 
             return (ShortName != null && ShortName == name) || (FullName != null && FullName == name);
         }

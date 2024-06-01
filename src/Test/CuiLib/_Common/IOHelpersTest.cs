@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using Test.Helpers;
 
-namespace Test.CuiLib._Common
+namespace Test.CuiLib
 {
     [TestFixture]
     public class IOHelpersTest
