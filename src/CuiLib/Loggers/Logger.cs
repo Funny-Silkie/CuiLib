@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -235,6 +235,28 @@ namespace CuiLib.Log
         #endregion Collection Operations
 
         #region Write Operations
+
+        /// <inheritdoc/>
+        public override void Flush()
+        {
+            foreach (WriterEntry entry in writers) entry.Writer.Flush();
+        }
+
+        /// <inheritdoc/>
+        public override async Task FlushAsync()
+        {
+            foreach (WriterEntry entry in writers) await entry.Writer.FlushAsync();
+        }
+
+#if NET8_0_OR_GREATER
+
+        /// <inheritdoc/>
+        public override async Task FlushAsync(CancellationToken cancellationToken)
+        {
+            foreach (WriterEntry entry in writers) await entry.Writer.FlushAsync(cancellationToken);
+        }
+
+#endif
 
         /// <inheritdoc/>
         public override void Write(char value)

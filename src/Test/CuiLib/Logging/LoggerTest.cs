@@ -1,4 +1,4 @@
-using CuiLib;
+﻿using CuiLib;
 using CuiLib.Log;
 using NUnit.Framework;
 using System;
@@ -472,9 +472,12 @@ namespace Test.CuiLib.Log
             {
                 Logger.AddLogFile(added);
 
-                Assert.That(Logger.HasLogFile(added.Name), Is.True);
-                Assert.That(Logger.HasLogFile(added.FullName), Is.True);
-                Assert.That(Logger.HasLogFile("missing.txt"), Is.False);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(Logger.HasLogFile(added.Name), Is.True);
+                    Assert.That(Logger.HasLogFile(added.FullName), Is.True);
+                    Assert.That(Logger.HasLogFile("missing.txt"), Is.False);
+                });
             }
             finally
             {
@@ -563,6 +566,34 @@ namespace Test.CuiLib.Log
         #endregion Collection Operations
 
         #region Write Operations
+
+        [Test]
+        public void Flush()
+        {
+            Logger.Flush();
+
+            Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Flush()" }));
+        }
+
+        [Test]
+        public void FlushAsync_WithoutArgs()
+        {
+            Logger.FlushAsync().Wait();
+
+            Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "FlushAsync()" }));
+        }
+
+#if NET8_0_OR_GREATER
+
+        [Test]
+        public void FlushAsync_WithCancellationToken()
+        {
+            Logger.FlushAsync(CancellationToken.None).Wait();
+
+            Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "FlushAsync(CancellationToken)" }));
+        }
+
+#endif
 
         [Test]
         public void Write_WithChar()
