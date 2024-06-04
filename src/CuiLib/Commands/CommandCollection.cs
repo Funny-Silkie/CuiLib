@@ -107,7 +107,11 @@ namespace CuiLib.Commands
         /// <exception cref="ArgumentNullException"><paramref name="commandName"/>がnull</exception>
         public bool Remove(string commandName)
         {
-            return items.Remove(commandName);
+            if (!items.TryGetValue(commandName, out Command? removed)) return false;
+
+            removed.Parent = null;
+            items.Remove(commandName);
+            return true;
         }
 
         /// <summary>
