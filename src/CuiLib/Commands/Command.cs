@@ -411,6 +411,8 @@ namespace CuiLib.Commands
                                 WriteOption(writer, child, maxNameLength);
                     }
                 }
+
+                writer.WriteLine();
             }
 
             // Subcommands
