@@ -26,3 +26,6 @@ dotnet_diagnostic.IDE0305.severity = silent
 
 # IDE0090: 'new(...)' を使用する
 dotnet_diagnostic.IDE0090.severity = silent
+
+# IDE0290: プライマリ コンストラクターの使用
+dotnet_diagnostic.IDE0290.severity = silent

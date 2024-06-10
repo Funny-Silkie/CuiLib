@@ -225,7 +225,7 @@ namespace Test.CuiLib.Log
                     Assert.That(added.Exists, Is.True);
                     Assert.That(Logger.GetAllTargets().Count(), Is.EqualTo(2));
                     Assert.That(Logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(Logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelper.UTF8N));
+                    Assert.That(Logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelpers.UTF8N));
                 });
 
                 Logger.Write("content");
@@ -291,7 +291,7 @@ namespace Test.CuiLib.Log
                 {
                     Assert.That(Logger.GetAllTargets().Count(), Is.EqualTo(2));
                     Assert.That(Logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(Logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelper.UTF8N));
+                    Assert.That(Logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelpers.UTF8N));
                 });
 
                 Logger.Write('t');
@@ -336,7 +336,7 @@ namespace Test.CuiLib.Log
                     Assert.That(added.Exists, Is.True);
                     Assert.That(Logger.GetAllTargets().Count(), Is.EqualTo(2));
                     Assert.That(Logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(Logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelper.UTF8N));
+                    Assert.That(Logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelpers.UTF8N));
                 });
 
                 Logger.Write("content");
@@ -402,7 +402,7 @@ namespace Test.CuiLib.Log
                 {
                     Assert.That(Logger.GetAllTargets().Count(), Is.EqualTo(2));
                     Assert.That(Logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(Logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelper.UTF8N));
+                    Assert.That(Logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelpers.UTF8N));
                 });
 
                 Logger.Write('t');

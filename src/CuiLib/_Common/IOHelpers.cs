@@ -10,7 +10,7 @@ namespace CuiLib
     /// <summary>
     /// I/O処理のヘルパークラスです。
     /// </summary>
-    public static class IOHelper
+    public static class IOHelpers
     {
         /// <summary>
         /// UTF-8Nのエンコーディングを取得します。
@@ -90,8 +90,13 @@ namespace CuiLib
         {
             ArgumentNullException.ThrowIfNull(file);
 
-            using StreamReader reader = file.OpenText();
-            while (!reader.EndOfStream) yield return reader.ReadLine()!;
+            return Inner(file);
+
+            static IEnumerable<string> Inner(FileInfo file)
+            {
+                using StreamReader reader = file.OpenText();
+                while (!reader.EndOfStream) yield return reader.ReadLine()!;
+            }
         }
 
         /// <summary>
@@ -106,12 +111,17 @@ namespace CuiLib
         /// <exception cref="UnauthorizedAccessException">ファイルへのアクセスが拒否された</exception>
         /// <exception cref="InvalidOperationException">readerが読み取り処理に使用中</exception>
         /// <exception cref="ArgumentOutOfRangeException">文字列長が<see cref="int.MaxValue"/>を超える</exception>
-        public static async IAsyncEnumerable<string> OpenIterateLinesAsync(this FileInfo file)
+        public static IAsyncEnumerable<string> OpenIterateLinesAsync(this FileInfo file)
         {
             ArgumentNullException.ThrowIfNull(file);
 
-            using StreamReader reader = file.OpenText();
-            while (!reader.EndOfStream) yield return (await reader.ReadLineAsync())!;
+            return Inner(file);
+
+            static async IAsyncEnumerable<string> Inner(FileInfo file)
+            {
+                using StreamReader reader = file.OpenText();
+                while (!reader.EndOfStream) yield return (await reader.ReadLineAsync())!;
+            }
         }
 
         /// <summary>
@@ -161,7 +171,12 @@ namespace CuiLib
         {
             ArgumentNullException.ThrowIfNull(reader);
 
-            while (!reader.EndOfStream) yield return reader.ReadLine()!;
+            return Inner(reader);
+
+            static IEnumerable<string> Inner(StreamReader reader)
+            {
+                while (!reader.EndOfStream) yield return reader.ReadLine()!;
+            }
         }
 
         /// <summary>
@@ -172,11 +187,16 @@ namespace CuiLib
         /// <exception cref="ArgumentNullException"><paramref name="reader"/>がnull</exception>
         /// <exception cref="ObjectDisposedException"><paramref name="reader"/>が既に破棄されている</exception>
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
-        public static async IAsyncEnumerable<string> IterateLinesAsync(this StreamReader reader)
+        public static IAsyncEnumerable<string> IterateLinesAsync(this StreamReader reader)
         {
             ArgumentNullException.ThrowIfNull(reader);
 
-            while (!reader.EndOfStream) yield return (await reader.ReadLineAsync())!;
+            return Inner(reader);
+
+            async static IAsyncEnumerable<string> Inner(StreamReader reader)
+            {
+                while (!reader.EndOfStream) yield return (await reader.ReadLineAsync())!;
+            }
         }
     }
 }
