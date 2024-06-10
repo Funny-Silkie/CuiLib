@@ -1,5 +1,33 @@
 # リリースログ
 
+## v2.2.0
+
+### 破壊的変更
+- 
+
+### 変更
+- 例外処理修正
+- 一部メソッドのnull許容・非許容の修正
+- `Logger`
+  - `Flush`, `FlushAsync` 実装
+- Options
+  - `ValueConverter.GetDefault<T>()`：Enumや配列を指定した際に変換できない不具合を修正
+  - `ValueTypeName`：型名に配列を指定した際のエラーを修正
+- Parameters
+  - 配列パラメータが存在する場合の `ParameterCollection` の挙動を修正
+  - `ParameterCollection` の `ContainsAt(int)` の挙動を `TryGetValue(int, out Parameter?)` のものと同一化
+  - `ParameterCollection.Remove(Parameter)` の致命的な挙動を修正
+- Extensions
+  - `SpanExtensions.SliceOrDefault` の挙動を変更
+  - `CollectionExtensions.GetOrDefault<T>(IList<T>, int)`, `SpanExtensions.GetOrDefault<T>(ReadOnlySpan<T>, int)` の戻り値をnull許容に
+  - `ExcapedSplit(string)` を `null` ・空文字非許容に，そして長い文字列を `separator` とした際の挙動を修正
+- `ThrowHelper` 公開の停止
+- `CommandCollection.Remove(string)` で親コマンドが解除されない不具合を修正
+- 改名
+  - `Util` を `Utils` に変更
+  - `IOHelper` を `IOHelpers` に変更
+- ヘルプメッセージのフォーマット変更
+
 ## v1.1.0
 
 ### 破壊的変更
