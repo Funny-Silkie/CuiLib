@@ -216,7 +216,7 @@ namespace CuiLib.Options
             get => _checker;
             set
             {
-                ArgumentNullException.ThrowIfNull(_checker);
+                ArgumentNullException.ThrowIfNull(value);
 
                 _checker = value;
             }
