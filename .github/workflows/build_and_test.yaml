@@ -14,11 +14,11 @@ jobs:
       - name: checkout project
         uses: actions/checkout@v4
       - name: installing .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
-            '7.0.x'
-            '8.0.x'
+            7.0.x
+            8.0.x
       - name: Build on Debug
         run: dotnet build -c Debug src/CuiLib.sln
       - name: Build on Release
