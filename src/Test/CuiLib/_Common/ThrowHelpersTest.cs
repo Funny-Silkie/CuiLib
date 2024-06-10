@@ -2,6 +2,7 @@
 using CuiLib.Options;
 using NUnit.Framework;
 using System;
+using System.IO;
 
 namespace Test.CuiLib
 {
@@ -53,7 +54,10 @@ namespace Test.CuiLib
         [Test]
         public void ThrowIfHasInvalidFileNameChar()
         {
-            Assert.Throws<ArgumentException>(() => ThrowHelpers.ThrowIfHasInvalidFileNameChar("hoge/fuga"));
+            Assert.Multiple(() =>
+            {
+                foreach (char current in Path.GetInvalidFileNameChars()) Assert.Throws<ArgumentException>(() => ThrowHelpers.ThrowIfHasInvalidFileNameChar("hoge/fuga"));
+            });
         }
 
         [Test]
@@ -65,7 +69,10 @@ namespace Test.CuiLib
         [Test]
         public void ThrowIfHasInvalidPathChar()
         {
-            Assert.Throws<ArgumentException>(() => ThrowHelpers.ThrowIfHasInvalidPathChar("hoge\nfuga"));
+            Assert.Multiple(() =>
+            {
+                foreach (char current in Path.GetInvalidPathChars()) Assert.Throws<ArgumentException>(() => ThrowHelpers.ThrowIfHasInvalidPathChar($"hoge{current}fuga"));
+            });
         }
 
         [Test]

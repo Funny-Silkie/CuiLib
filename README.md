@@ -1,5 +1,10 @@
 # CuiLib
 
+![GitHub branch check runs](https://img.shields.io/github/check-runs/Funny-Silkie/CuiLib/master)
+![GitHub License](https://img.shields.io/github/license/Funny-Silkie/CuiLib)
+![GitHub Release](https://img.shields.io/github/v/release/Funny-Silkie/CuiLib)
+![NuGet Downloads](https://img.shields.io/nuget/dt/CuiLib)
+
 .NETのCUIアプリケーション制作用ライブラリです。
 コマンドライン引数を解析してオプションやパラメータなどの情報を取得します。
 
