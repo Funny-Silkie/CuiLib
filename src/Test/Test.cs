@@ -15,7 +15,7 @@ namespace Test
             string[] args = new[] { "A", "B", "C" };
 
             var main = new MainCommand();
-            Parameter<string> param = main.Parameters.CreateAndAppendArray<string>("Param");
+            Parameter<string> param = main.Parameters.CreateAndAddAsArray<string>("Param");
             main.Invoke(args);
 
             Assert.That(Enumerable.SequenceEqual(args, param.Values!), Is.True);
@@ -29,7 +29,7 @@ namespace Test
             var parent = new Command("parent");
             var main = new MainCommand();
             parent.Children.Add(main);
-            Parameter<string> param = main.Parameters.CreateAndAppendArray<string>("Param");
+            Parameter<string> param = main.Parameters.CreateAndAddAsArray<string>("Param");
             parent.Invoke(args);
 
             Assert.That(Enumerable.SequenceEqual(args[1..], param.Values!), Is.True);
@@ -52,7 +52,7 @@ namespace Test
             main.Options.Add(opValue1);
             main.Options.Add(opValue2);
 
-            Parameter<string> param = main.Parameters.CreateAndAppendArray<string>("Param");
+            Parameter<string> param = main.Parameters.CreateAndAddAsArray<string>("Param");
 
             main.Invoke(args);
 
@@ -84,7 +84,7 @@ namespace Test
             main.Options.Add(opValue1);
             main.Options.Add(opValue2);
 
-            Parameter<string> param = main.Parameters.CreateAndAppendArray<string>("Param");
+            Parameter<string> param = main.Parameters.CreateAndAddAsArray<string>("Param");
 
             parent.Children.Add(main);
 
@@ -379,7 +379,7 @@ namespace Test
 
             parent.Children.Add(main);
 
-            Parameter<string> param = main.Parameters.CreateAndAppendArray<string>("Param");
+            Parameter<string> param = main.Parameters.CreateAndAddAsArray<string>("Param");
             param.Description = "Parameters\nThis is array";
 
             using var logger1 = new Logger("Log_parent.txt");

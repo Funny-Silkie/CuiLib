@@ -244,7 +244,7 @@ namespace Test.CuiLib.Commands
             var option2 = new FlagOption('v');
             command.Options.Add(option2);
             Parameter<int> param1 = command.Parameters.CreateAndAdd<int>("num");
-            Parameter<string> param2 = command.Parameters.CreateAndAppendArray<string>("texts");
+            Parameter<string> param2 = command.Parameters.CreateAndAddAsArray<string>("texts");
 
             command.Invoke(["-f", "13", "value1", "-v", "value2"]);
 
@@ -266,7 +266,7 @@ namespace Test.CuiLib.Commands
         public void Invoke_OnHasNoChild_WithParameter()
         {
             Parameter<int> param1 = command.Parameters.CreateAndAdd<int>("num");
-            Parameter<string> param2 = command.Parameters.CreateAndAppendArray<string>("texts");
+            Parameter<string> param2 = command.Parameters.CreateAndAddAsArray<string>("texts");
 
             command.Invoke(["13", "value1", "-v", "value2"]);
 
@@ -387,7 +387,7 @@ namespace Test.CuiLib.Commands
             var option2 = new FlagOption('v');
             command.Options.Add(option2);
             Parameter<int> param1 = command.Parameters.CreateAndAdd<int>("num");
-            Parameter<string> param2 = command.Parameters.CreateAndAppendArray<string>("texts");
+            Parameter<string> param2 = command.Parameters.CreateAndAddAsArray<string>("texts");
 
             command.InvokeAsync(["-f", "13", "value1", "-v", "value2"]).GetAwaiter().GetResult();
 
@@ -409,7 +409,7 @@ namespace Test.CuiLib.Commands
         public void InvokeAsync_OnHasNoChild_WithParameter()
         {
             Parameter<int> param1 = command.Parameters.CreateAndAdd<int>("num");
-            Parameter<string> param2 = command.Parameters.CreateAndAppendArray<string>("texts");
+            Parameter<string> param2 = command.Parameters.CreateAndAddAsArray<string>("texts");
 
             command.InvokeAsync(["13", "value1", "-v", "value2"]).GetAwaiter().GetResult();
 
@@ -449,7 +449,7 @@ namespace Test.CuiLib.Commands
                 param.Description = "number parameter";
             }
             {
-                Parameter<string> param = command.Parameters.CreateAndAppendArray<string>("texts");
+                Parameter<string> param = command.Parameters.CreateAndAddAsArray<string>("texts");
                 param.Description = "variable length parameter";
             }
 

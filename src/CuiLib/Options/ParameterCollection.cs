@@ -28,6 +28,11 @@ namespace CuiLib.Options
         public int Count => items.Count;
 
         /// <summary>
+        /// 配列を表すパラメータを格納しているかどうかを表す値を取得します。
+        /// </summary>
+        public bool HasArray => arrayStart >= 0;
+
+        /// <summary>
         /// <see cref="ParameterCollection"/>の新しいインスタンスを初期化します。
         /// </summary>
         public ParameterCollection()
@@ -47,7 +52,7 @@ namespace CuiLib.Options
             {
                 ThrowHelpers.ThrowIfNegative(index);
 
-                if (index < arrayStart) return items[arrayStart];
+                if (arrayStart >= 0 && index > arrayStart) return items[arrayStart];
                 try
                 {
                     return items[index];
@@ -74,66 +79,6 @@ namespace CuiLib.Options
                 for (int i = 0; i < arrayStart; ++i) SetOrCreate(i, values[i]);
                 items[arrayStart].SetValue(values[arrayStart..]);
             }
-        }
-
-        /// <summary>
-        /// 指定したインデックスの値を設定し，存在しない場合は新たにパラメータを生成して設定します。
-        /// </summary>
-        /// <param name="index">インデックス</param>
-        /// <param name="value">設定する値</param>
-        /// <returns>値を設定したパラメータ</returns>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
-        /// <exception cref="InvalidOperationException"><see cref="AllowAutomaticallyCreate"/>が<see langword="false"/>の時に未定義インデックスのパラメータが存在</exception>
-        private Parameter SetOrCreate(int index, string value)
-        {
-            if (index < 0) ThrowHelpers.ThrowIfNegative(index);
-
-            if (!items.TryGetValue(index, out Parameter? result))
-            {
-                if (!AllowAutomaticallyCreate) throw new InvalidOperationException($"{index}番目のパラメータは存在しません");
-                result = Parameter.Create<string>($"Param {index}", index);
-                items[index] = result;
-            }
-            result.SetValue(value);
-            return result;
-        }
-
-        #region Collection Opreation
-
-        /// <summary>
-        /// 空きインデックスを取得します。
-        /// </summary>
-        /// <returns>空きインデックス。存在しない場合は-1</returns>
-        private int GetNextIndex()
-        {
-            int result = 0;
-            foreach ((int index, _) in items)
-            {
-                if (index != result) return result;
-                result++;
-            }
-            if (arrayStart != -1) return -1;
-            return result;
-        }
-
-        /// <summary>
-        /// 要素を追加します。
-        /// </summary>
-        /// <param name="parameter">追加するパラメータ</param>
-        /// <exception cref="ArgumentNullException"><paramref name="parameter"/>がnull</exception>
-        /// <exception cref="InvalidOperationException"><paramref name="parameter"/>が配列を表す且つ既に配列が含まれている</exception>
-        /// <exception cref="ArgumentException"><paramref name="parameter"/>のインデックスが配列の領域を指すまたはインデックスが衝突している</exception>
-        public void Add(Parameter parameter)
-        {
-            ArgumentNullException.ThrowIfNull(parameter);
-
-            if (arrayStart >= 0)
-            {
-                if (parameter.IsArray) throw new InvalidOperationException("既に配列が含まれています");
-                if (parameter.Index < arrayStart) throw new ArgumentException("配列に指定されているインデックスです", nameof(parameter));
-            }
-            if (parameter.IsArray) arrayStart = parameter.Index;
-            items.Add(parameter.Index, parameter);
         }
 
         /// <summary>
@@ -164,7 +109,7 @@ namespace CuiLib.Options
         /// <exception cref="ArgumentNullException"><paramref name="name"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         /// <exception cref="ArgumentAnalysisException">配列が既に含まれている</exception>
-        public Parameter<T> CreateAndAppendArray<T>(string name)
+        public Parameter<T> CreateAndAddAsArray<T>(string name)
         {
             if (arrayStart != -1) throw new ArgumentAnalysisException("既に配列が含まれています");
 
@@ -173,6 +118,66 @@ namespace CuiLib.Options
             items.Add(index, result);
             arrayStart = index;
             return result;
+        }
+
+        /// <summary>
+        /// 指定したインデックスの値を設定し，存在しない場合は新たにパラメータを生成して設定します。
+        /// </summary>
+        /// <param name="index">インデックス</param>
+        /// <param name="value">設定する値</param>
+        /// <returns>値を設定したパラメータ</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
+        /// <exception cref="InvalidOperationException"><see cref="AllowAutomaticallyCreate"/>が<see langword="false"/>の時に未定義インデックスのパラメータが存在</exception>
+        private Parameter SetOrCreate(int index, string value)
+        {
+            if (index < 0) ThrowHelpers.ThrowIfNegative(index);
+
+            if (!items.TryGetValue(index, out Parameter? result))
+            {
+                if (!AllowAutomaticallyCreate) throw new InvalidOperationException($"{index}番目のパラメータは存在しません");
+                result = Parameter.Create<string>($"Param {index}", index);
+                items[index] = result;
+            }
+            result.SetValue(value);
+            return result;
+        }
+
+        /// <summary>
+        /// 空きインデックスを取得します。
+        /// </summary>
+        /// <returns>空きインデックス。存在しない場合は-1</returns>
+        private int GetNextIndex()
+        {
+            int result = 0;
+            foreach ((int index, _) in items)
+            {
+                if (index != result) return result;
+                result++;
+            }
+            if (arrayStart != -1) return -1;
+            return result;
+        }
+
+        #region Collection Opreations
+
+        /// <summary>
+        /// 要素を追加します。
+        /// </summary>
+        /// <param name="parameter">追加するパラメータ</param>
+        /// <exception cref="ArgumentNullException"><paramref name="parameter"/>がnull</exception>
+        /// <exception cref="InvalidOperationException"><paramref name="parameter"/>が配列を表す且つ既に配列が含まれている</exception>
+        /// <exception cref="ArgumentException"><paramref name="parameter"/>のインデックスが配列の領域を指すまたはインデックスが衝突している</exception>
+        public void Add(Parameter parameter)
+        {
+            ArgumentNullException.ThrowIfNull(parameter);
+
+            if (arrayStart >= 0)
+            {
+                if (parameter.IsArray) throw new InvalidOperationException("既に配列が含まれています");
+                if (parameter.Index >= arrayStart) throw new ArgumentException("配列に指定されているインデックスです", nameof(parameter));
+            }
+            if (parameter.IsArray) arrayStart = parameter.Index;
+            items.Add(parameter.Index, parameter);
         }
 
         /// <summary>
@@ -193,12 +198,9 @@ namespace CuiLib.Options
         /// </summary>
         /// <param name="index">検索する要素のインデックス</param>
         /// <returns><paramref name="index"/>に対応する要素が格納されていたらtrue，それ以外でfalse</returns>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
         public bool ContainsAt(int index)
         {
-            ThrowHelpers.ThrowIfNegative(index);
-
-            return items.ContainsKey(index);
+            return items.ContainsKey(index) || (HasArray && index >= arrayStart);
         }
 
         /// <summary>
@@ -228,7 +230,7 @@ namespace CuiLib.Options
         {
             ArgumentNullException.ThrowIfNull(parameter);
 
-            if (!Contains(parameter) && items.Remove(parameter.Index)) return false;
+            if (!Contains(parameter) || !items.Remove(parameter.Index)) return false;
             if (parameter.IsArray) arrayStart = -1;
             return true;
         }
@@ -261,7 +263,7 @@ namespace CuiLib.Options
                 parameter = null;
                 return false;
             }
-            if (index < arrayStart)
+            if (HasArray && index >= arrayStart)
             {
                 parameter = items[arrayStart];
                 return true;
@@ -281,16 +283,16 @@ namespace CuiLib.Options
 
         object ICollection.SyncRoot => this;
 
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)items.Values).CopyTo(array, index);
+
         #endregion ICollection
 
         #region ICollection<T>
 
         bool ICollection<Parameter>.IsReadOnly => false;
 
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)items.Values).CopyTo(array, index);
-
         #endregion ICollection<T>
 
-        #endregion Collection Opreation
+        #endregion Collection Opreations
     }
 }
