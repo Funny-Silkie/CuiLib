@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<LangVersion>12</LangVersion>
+    <LangVersion>12</LangVersion>
     <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
     <OutputPath>$(SolutionDir)Build\Test\$(Configuration)</OutputPath>
     <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>
+    <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,7 +20,7 @@
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
-	
+
   <ItemGroup>
     <ProjectReference Include="..\CuiLib\CuiLib.csproj" />
   </ItemGroup>

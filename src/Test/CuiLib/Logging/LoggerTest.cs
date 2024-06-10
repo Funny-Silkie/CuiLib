@@ -672,7 +672,7 @@ namespace Test.CuiLib.Log
             Logger.Write(float.NegativeInfinity);
             Logger.Write(float.NaN);
 
-            Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(float): 100", "Write(float): -100", "Write(float): ∞", "Write(float): -∞", "Write(float): NaN" }));
+            Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(float): 100", "Write(float): -100", "Write(float): Infinity", "Write(float): -Infinity", "Write(float): NaN" }));
         }
 
         [Test]
@@ -684,7 +684,7 @@ namespace Test.CuiLib.Log
             Logger.Write(double.NegativeInfinity);
             Logger.Write(double.NaN);
 
-            Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(double): 100", "Write(double): -100", "Write(double): ∞", "Write(double): -∞", "Write(double): NaN" }));
+            Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(double): 100", "Write(double): -100", "Write(double): Infinity", "Write(double): -Infinity", "Write(double): NaN" }));
         }
 
         [Test]
@@ -896,7 +896,7 @@ namespace Test.CuiLib.Log
             Logger.WriteLine(float.NegativeInfinity);
             Logger.WriteLine(float.NaN);
 
-            Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(float): 100", "WriteLine(float): -100", "WriteLine(float): ∞", "WriteLine(float): -∞", "WriteLine(float): NaN" }));
+            Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(float): 100", "WriteLine(float): -100", "WriteLine(float): Infinity", "WriteLine(float): -Infinity", "WriteLine(float): NaN" }));
         }
 
         [Test]
@@ -908,7 +908,7 @@ namespace Test.CuiLib.Log
             Logger.WriteLine(double.NegativeInfinity);
             Logger.WriteLine(double.NaN);
 
-            Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(double): 100", "WriteLine(double): -100", "WriteLine(double): ∞", "WriteLine(double): -∞", "WriteLine(double): NaN" }));
+            Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(double): 100", "WriteLine(double): -100", "WriteLine(double): Infinity", "WriteLine(double): -Infinity", "WriteLine(double): NaN" }));
         }
 
         [Test]
