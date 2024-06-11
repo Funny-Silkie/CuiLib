@@ -46,7 +46,7 @@ namespace CuiLib.Options
         {
             base.ApplyValue(name, rawValue);
 
-            if (Children.Count(x => x.ValueAvailable) != 1)
+            if (Children.Count(x => x.ValueAvailable) > 1)
             {
                 IEnumerable<string> optionNames = Children.Select(x =>
                 {
