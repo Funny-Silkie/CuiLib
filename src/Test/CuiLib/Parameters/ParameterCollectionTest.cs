@@ -1,11 +1,10 @@
-﻿using CuiLib;
-using CuiLib.Options;
+﻿using CuiLib.Parameters;
 using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Test.CuiLib.Options
+namespace Test.CuiLib.Parameters
 {
     public class ParameterCollectionTest
     {

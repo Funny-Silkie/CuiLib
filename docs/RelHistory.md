@@ -5,8 +5,9 @@
 ### 破壊的変更
 - 名前空間の変更
   - `Log` → `Logging`
-  - `IValueChecker` 関連： `Checkers`
-  - `IValueConverter` 関連： `Converters`
+  - `IValueChecker` 関連： `Options` → `Checkers`
+  - `IValueConverter` 関連： `Options` → `Converters`
+  - `Parameter` 関連： `Options` → `Parameters`
 
 ### 変更
 - 例外処理修正

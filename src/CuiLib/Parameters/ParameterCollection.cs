@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace CuiLib.Options
+namespace CuiLib.Parameters
 {
     /// <summary>
     /// パラメータのコレクションのクラスです。
@@ -200,7 +200,7 @@ namespace CuiLib.Options
         /// <returns><paramref name="index"/>に対応する要素が格納されていたらtrue，それ以外でfalse</returns>
         public bool ContainsAt(int index)
         {
-            return items.ContainsKey(index) || (HasArray && index >= arrayStart);
+            return items.ContainsKey(index) || HasArray && index >= arrayStart;
         }
 
         /// <summary>
