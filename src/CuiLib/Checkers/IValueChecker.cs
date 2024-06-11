@@ -1,6 +1,7 @@
 ﻿using System;
+using CuiLib.Options;
 
-namespace CuiLib.Options
+namespace CuiLib.Checkers
 {
     /// <summary>
     /// 値の検証を提供する基底クラスです。

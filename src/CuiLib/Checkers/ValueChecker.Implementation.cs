@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace CuiLib.Options
+namespace CuiLib.Checkers
 {
     public static partial class ValueChecker
     {

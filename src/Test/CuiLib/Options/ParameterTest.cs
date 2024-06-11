@@ -1,4 +1,5 @@
 ﻿using CuiLib;
+using CuiLib.Checkers;
 using CuiLib.Options;
 using NUnit.Framework;
 using System;

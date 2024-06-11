@@ -1,7 +1,7 @@
-﻿using CuiLib.Options;
+﻿using CuiLib.Checkers;
 using NUnit.Framework;
 
-namespace Test.CuiLib.Options._ValueChecker
+namespace Test.CuiLib.Checkers
 {
     [TestFixture]
     public class ValueCheckStateTest

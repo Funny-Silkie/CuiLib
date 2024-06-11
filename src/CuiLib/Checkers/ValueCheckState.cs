@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace CuiLib.Options
+namespace CuiLib.Checkers
 {
     /// <summary>
     /// 値のチェック結果を表します。

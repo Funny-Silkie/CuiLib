@@ -1,4 +1,5 @@
-﻿using CuiLib.Options;
+﻿using CuiLib.Checkers;
+using CuiLib.Options;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Test.Helpers;
 
-namespace Test.CuiLib.Options._ValueChecker
+namespace Test.CuiLib.Checkers
 {
     [TestFixture]
     public class ValueCheckerTest

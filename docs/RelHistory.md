@@ -3,7 +3,9 @@
 ## v2.2.0
 
 ### 破壊的変更
-- 
+- 名前空間の変更
+  - `Log` → `Logging`
+  - `IValueChecker` 関連： `Checkers`
 
 ### 変更
 - 例外処理修正
