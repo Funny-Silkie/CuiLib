@@ -6,6 +6,7 @@
 - 名前空間の変更
   - `Log` → `Logging`
   - `IValueChecker` 関連： `Checkers`
+  - `IValueConverter` 関連： `Converters`
 
 ### 変更
 - 例外処理修正

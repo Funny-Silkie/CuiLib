@@ -1,6 +1,6 @@
 using System;
 
-namespace CuiLib.Options
+namespace CuiLib.Converters
 {
     /// <summary>
     /// 結合された<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
