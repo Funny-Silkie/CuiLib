@@ -91,13 +91,75 @@ namespace Test.CuiLib.Options
         [Test]
         public void ApplyValue_ToChild1()
         {
-            Assert.DoesNotThrow(() => option.ApplyValue("num", "100"));
+            option.ApplyValue("num", "100");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(child1.ValueAvailable, Is.False);
+                Assert.That(child2.ValueAvailable, Is.True);
+                Assert.That(child2.Value, Is.EqualTo(100));
+            });
         }
 
         [Test]
         public void ApplyValue_ToChild2()
         {
-            Assert.DoesNotThrow(() => option.ApplyValue("text", "oops!"));
+            option.ApplyValue("text", "value");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(child1.ValueAvailable, Is.True);
+                Assert.That(child1.Value, Is.EqualTo("value"));
+                Assert.That(child2.ValueAvailable, Is.False);
+            });
+        }
+
+        [Test]
+        public void ApplyValue_InMultpileTimes_ToOrNested()
+        {
+            var nestedChild1 = new SingleValueOption<int>("nc1");
+            var nestedChild2 = new SingleValueOption<int>("nc2");
+            var nestedChild3 = new SingleValueOption<int>("nc3");
+            var nested = new OrGroupOption(nestedChild1, nestedChild2);
+            var option = new XorGroupOption(child1, child2, nested);
+            option.ApplyValue("nc1", "100");
+            option.ApplyValue("nc2", "200");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(option.ValueAvailable, Is.True);
+                Assert.That(child1.ValueAvailable, Is.False);
+                Assert.That(child2.ValueAvailable, Is.False);
+                Assert.That(nested.ValueAvailable, Is.True);
+                Assert.That(nestedChild1.ValueAvailable, Is.True);
+                Assert.That(nestedChild1.Value, Is.EqualTo(100));
+                Assert.That(nestedChild2.ValueAvailable, Is.True);
+                Assert.That(nestedChild2.Value, Is.EqualTo(200));
+                Assert.That(nestedChild3.ValueAvailable, Is.False);
+            });
+        }
+
+        [Test]
+        public void ApplyValue_InMultpileTimes_ToAndNested()
+        {
+            var nestedChild1 = new SingleValueOption<int>("nc1");
+            var nestedChild2 = new SingleValueOption<int>("nc2");
+            var nested = new AndGroupOption(nestedChild1, nestedChild2);
+            var option = new XorGroupOption(child1, child2, nested);
+            option.ApplyValue("nc1", "100");
+            option.ApplyValue("nc2", "200");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(option.ValueAvailable, Is.True);
+                Assert.That(child1.ValueAvailable, Is.False);
+                Assert.That(child2.ValueAvailable, Is.False);
+                Assert.That(nested.ValueAvailable, Is.True);
+                Assert.That(nestedChild1.ValueAvailable, Is.True);
+                Assert.That(nestedChild1.Value, Is.EqualTo(100));
+                Assert.That(nestedChild2.ValueAvailable, Is.True);
+                Assert.That(nestedChild2.Value, Is.EqualTo(200));
+            });
         }
 
         [Test]
