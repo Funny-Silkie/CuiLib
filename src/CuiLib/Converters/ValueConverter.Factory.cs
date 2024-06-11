@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace CuiLib.Options
+namespace CuiLib.Converters
 {
     /// <summary>
     /// 値の変換を扱います。

@@ -1,9 +1,11 @@
 ﻿using CuiLib;
-using CuiLib.Options;
+using CuiLib.Checkers;
+using CuiLib.Converters;
+using CuiLib.Parameters;
 using NUnit.Framework;
 using System;
 
-namespace Test.CuiLib.Options
+namespace Test.CuiLib.Parameters
 {
     public class NoGenericParameterTest
     {

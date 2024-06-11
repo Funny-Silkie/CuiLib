@@ -1,5 +1,5 @@
 ﻿using CuiLib;
-using CuiLib.Log;
+using CuiLib.Logging;
 using NUnit.Framework;
 using System;
 using System.IO;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using Test.Helpers;
 
-namespace Test.CuiLib.Log
+namespace Test.CuiLib.Logging
 {
     [TestFixture]
     public class LoggerTest

@@ -1,35 +1,36 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
-namespace CuiLib.Options
+namespace CuiLib.Checkers
 {
     /// <summary>
-    /// 複数の評価をAND結合で実行します。
+    /// 複数の評価をOR結合で実行します。
     /// </summary>
     /// <typeparam name="T">検証する値の型</typeparam>
     [Serializable]
-    internal class AndValueChecker<T> : IValueChecker<T>
+    internal class OrValueChecker<T> : IValueChecker<T>
     {
         private IValueChecker<T>[] checkers;
 
         /// <summary>
-        /// <see cref="AndValueChecker{T}"/>の新しいインスタンスを初期化します。
+        /// <see cref="OrValueChecker{T}"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="first">最初の評価</param>
         /// <param name="second">2番目の評価</param>
         /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="second"/>がnull</exception>
-        internal AndValueChecker(IValueChecker<T> first, IValueChecker<T> second)
+        internal OrValueChecker(IValueChecker<T> first, IValueChecker<T> second)
         {
             Initialize(first, second);
         }
 
         /// <summary>
-        /// <see cref="AndValueChecker{T}"/>の新しいインスタンスを初期化します。
+        /// <see cref="OrValueChecker{T}"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="source">評価する関数のリスト</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
-        internal AndValueChecker(params IValueChecker<T>[] source)
+        internal OrValueChecker(params IValueChecker<T>[] source)
         {
             ArgumentNullException.ThrowIfNull(source);
 
@@ -61,9 +62,9 @@ namespace CuiLib.Options
             ArgumentNullException.ThrowIfNull(first);
             ArgumentNullException.ThrowIfNull(second);
 
-            if (first is AndValueChecker<T> c1)
+            if (first is OrValueChecker<T> c1)
             {
-                if (second is AndValueChecker<T> c2)
+                if (second is OrValueChecker<T> c2)
                 {
                     checkers = new IValueChecker<T>[c1.checkers.Length + c2.checkers.Length];
                     Array.Copy(c1.checkers, 0, checkers, 0, c1.checkers.Length);
@@ -76,7 +77,7 @@ namespace CuiLib.Options
                     checkers[^1] = second;
                 }
             }
-            else if (second is AndValueChecker<T> c2)
+            else if (second is OrValueChecker<T> c2)
             {
                 checkers = new IValueChecker<T>[c2.checkers.Length + 1];
                 checkers[0] = first;
@@ -98,7 +99,7 @@ namespace CuiLib.Options
             for (int i = 0; i < source.Length; i++)
             {
                 IValueChecker<T> current = source[i] ?? throw new ArgumentException("要素がnullです", nameof(source));
-                length += current is AndValueChecker<T> c ? c.checkers.Length : 1;
+                length += current is OrValueChecker<T> c ? c.checkers.Length : 1;
             }
 
             checkers = new IValueChecker<T>[length];
@@ -107,7 +108,7 @@ namespace CuiLib.Options
             for (int i = 0; i < source.Length; i++)
             {
                 IValueChecker<T> current = source[i];
-                if (current is AndValueChecker<T> c)
+                if (current is OrValueChecker<T> c)
                 {
                     int currentLength = c.checkers.Length;
                     Array.Copy(c.checkers, 0, checkers, index, currentLength);
@@ -122,12 +123,17 @@ namespace CuiLib.Options
         {
             if (checkers.Length == 0) return ValueCheckState.Success;
 
+            var builder = new StringBuilder();
+            builder.AppendLine("以下の問題の何れかを解決して下さい");
+
             for (int i = 0; i < checkers.Length; i++)
             {
                 ValueCheckState result = checkers[i].CheckValue(value);
-                if (!result.IsValid) return result;
+                if (result.IsValid) return result;
+                builder.Append("- ");
+                builder.AppendLine(result.Error);
             }
-            return ValueCheckState.Success;
+            return ValueCheckState.AsError(builder.ToString());
         }
     }
 }

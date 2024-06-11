@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
+using CuiLib.Options;
 
-namespace CuiLib.Options
+namespace CuiLib.Checkers
 {
     /// <summary>
     /// 読み込むファイルを検証します。

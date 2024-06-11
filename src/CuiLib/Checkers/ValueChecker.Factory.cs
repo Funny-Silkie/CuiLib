@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace CuiLib.Options
+namespace CuiLib.Checkers
 {
     /// <summary>
     /// <see cref="IValueChecker{T}"/>を提供するクラスです。

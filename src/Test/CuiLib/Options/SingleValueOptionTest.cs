@@ -1,4 +1,6 @@
 ﻿using CuiLib;
+using CuiLib.Checkers;
+using CuiLib.Converters;
 using CuiLib.Options;
 using NUnit.Framework;
 using System;

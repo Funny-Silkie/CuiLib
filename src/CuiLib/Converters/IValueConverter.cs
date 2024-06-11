@@ -1,4 +1,4 @@
-﻿namespace CuiLib.Options
+﻿namespace CuiLib.Converters
 {
     /// <summary>
     /// 値の変換を行う基底クラスです。

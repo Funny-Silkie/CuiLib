@@ -1,11 +1,12 @@
-﻿using CuiLib.Options;
+﻿using CuiLib.Converters;
+using CuiLib.Options;
 using NUnit.Framework;
 using System;
 using System.IO;
 using System.Text;
 using Test.Helpers;
 
-namespace Test.CuiLib.Options._ValueConverter
+namespace Test.CuiLib.Converters
 {
     [TestFixture]
     public class ValueConverterTest
@@ -15,7 +16,7 @@ namespace Test.CuiLib.Options._ValueConverter
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentNullException>(() => ValueConverter.Combine<string, int, long>(ValueConverter.GetDefault<int>(), null!));
+                Assert.Throws<ArgumentNullException>(() => ValueConverter.GetDefault<int>().Combine<string, int, long>(null!));
                 Assert.Throws<ArgumentNullException>(() => ValueConverter.Combine<object, string, int>(null!, ValueConverter.GetDefault<int>()));
             });
         }
