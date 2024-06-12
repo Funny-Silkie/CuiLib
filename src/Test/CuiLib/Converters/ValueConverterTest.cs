@@ -1,4 +1,5 @@
-﻿using CuiLib.Converters;
+﻿using CuiLib;
+using CuiLib.Converters;
 using CuiLib.Options;
 using NUnit.Framework;
 using System;
@@ -514,6 +515,157 @@ namespace Test.CuiLib.Converters
         }
 
 #pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
+
+        [Test]
+        public void StringToStreamWriter_WithNoAppendAndNullEncoding()
+        {
+            IValueConverter<string, StreamWriter> converter = ValueConverter.StringToStreamWriter(null, false);
+            FileInfo target = FileUtilHelpers.GetNoExistingFile();
+            using (StreamWriter writer = target.CreateText()) writer.Write("hoge");
+
+            try
+            {
+                Assert.Multiple(() =>
+                {
+                    Assert.Multiple(() =>
+                    {
+                        using StreamWriter writer = converter.Convert(target.Name);
+                        Assert.That(writer.Encoding, Is.EqualTo(IOHelpers.UTF8N));
+                        target.Refresh();
+#pragma warning disable NUnit2046 // Use CollectionConstraint for better assertion messages in case of failure
+                        Assert.That(target.Length, Is.Zero);
+#pragma warning restore NUnit2046 // Use CollectionConstraint for better assertion messages in case of failure
+                    });
+
+                    Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
+                });
+            }
+            finally
+            {
+                target.Delete();
+            }
+        }
+
+        [Test]
+        public void StringToStreamWriter_WithAppendAndNullEncoding()
+        {
+            IValueConverter<string, StreamWriter> converter = ValueConverter.StringToStreamWriter(null, true);
+            FileInfo target = FileUtilHelpers.GetNoExistingFile();
+            using (StreamWriter writer = target.CreateText()) writer.Write("hoge");
+
+            try
+            {
+                Assert.Multiple(() =>
+                {
+                    Assert.Multiple(() =>
+                    {
+                        using StreamWriter writer = converter.Convert(target.Name);
+                        Assert.That(writer.Encoding, Is.EqualTo(IOHelpers.UTF8N));
+                        target.Refresh();
+#pragma warning disable NUnit2046 // Use CollectionConstraint for better assertion messages in case of failure
+                        Assert.That(target.Length, Is.GreaterThan(0));
+#pragma warning restore NUnit2046 // Use CollectionConstraint for better assertion messages in case of failure
+                    });
+
+                    Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
+                });
+            }
+            finally
+            {
+                target.Delete();
+            }
+        }
+
+        [Test]
+        public void StringToStreamWriter_WithAppendAndSpecifiedEncoding()
+        {
+            Encoding encoding = Encoding.UTF32;
+            IValueConverter<string, StreamWriter> converter = ValueConverter.StringToStreamWriter(encoding, true);
+            FileInfo target = FileUtilHelpers.GetNoExistingFile();
+            using (StreamWriter writer = target.CreateText()) writer.Write("hoge");
+
+            try
+            {
+                Assert.Multiple(() =>
+                {
+                    Assert.Multiple(() =>
+                    {
+                        using StreamWriter writer = converter.Convert(target.Name);
+                        Assert.That(writer.Encoding, Is.EqualTo(encoding));
+                        target.Refresh();
+#pragma warning disable NUnit2046 // Use CollectionConstraint for better assertion messages in case of failure
+                        Assert.That(target.Length, Is.GreaterThan(0));
+#pragma warning restore NUnit2046 // Use CollectionConstraint for better assertion messages in case of failure
+                    });
+
+                    Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
+                });
+            }
+            finally
+            {
+                target.Delete();
+            }
+        }
+
+        [Test]
+        public void StringToStreamReader_WithNullEncoding()
+        {
+            IValueConverter<string, StreamReader> converter = ValueConverter.StringToStreamReader(null);
+            FileInfo target = FileUtilHelpers.GetNoExistingFile();
+
+            try
+            {
+                target.Create().Dispose();
+
+                Assert.Multiple(() =>
+                {
+                    using (StreamReader reader = converter.Convert(target.FullName))
+                    {
+                        Assert.That(reader.CurrentEncoding, Is.EqualTo(IOHelpers.UTF8N));
+                    }
+
+                    Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
+                    Assert.Throws<FileNotFoundException>(() => converter.Convert(FileUtilHelpers.GetNoExistingFile().Name));
+                });
+            }
+            finally
+            {
+                target.Delete();
+            }
+        }
+
+        [Test]
+        public void StringToStreamReader_WithSpecifiedEncoding()
+        {
+            Encoding encoding = Encoding.UTF32;
+            IValueConverter<string, StreamReader> converter = ValueConverter.StringToStreamReader(encoding);
+            FileInfo target = FileUtilHelpers.GetNoExistingFile();
+
+            try
+            {
+                target.Create().Dispose();
+
+                Assert.Multiple(() =>
+                {
+                    using (StreamReader reader = converter.Convert(target.FullName))
+                    {
+                        Assert.That(reader.CurrentEncoding, Is.EqualTo(encoding));
+                    }
+
+                    Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
+                    Assert.Throws<FileNotFoundException>(() => converter.Convert(FileUtilHelpers.GetNoExistingFile().Name));
+                });
+            }
+            finally
+            {
+                target.Delete();
+            }
+        }
 
         [Test]
         public void ToConsoleOrFileWriter_WithNullEncoding()

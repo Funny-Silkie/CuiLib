@@ -277,6 +277,27 @@ namespace CuiLib.Converters
         }
 
         /// <summary>
+        /// 文字列から<see cref="StreamWriter"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <param name="encoding">エンコーディング</param>
+        /// <param name="append">上書きせずに末尾に追加するかどうか</param>
+        /// <returns>文字列から<see cref="StreamWriter"/>に変換するインスタンス</returns>
+        public static IValueConverter<string, StreamWriter> StringToStreamWriter(Encoding? encoding = null, bool append = false)
+        {
+            return new StreamWriterValueConverter(encoding ?? IOHelpers.UTF8N, append);
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="StreamReader"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <param name="encoding">エンコーディング</param>
+        /// <returns>文字列から<see cref="StreamReader"/>に変換するインスタンス</returns>
+        public static IValueConverter<string, StreamReader> StringToStreamReader(Encoding? encoding = null)
+        {
+            return new StreamReaderValueConverter(encoding ?? IOHelpers.UTF8N);
+        }
+
+        /// <summary>
         /// ファイルまたはコンソールウィンドウへ文字を出力する<see cref="TextWriter"/>を生成するインスタンスを生成します。
         /// </summary>
         /// <param name="encoding">エンコーディング</param>
