@@ -27,6 +27,23 @@ namespace CuiLib.Converters
         }
 
         /// <summary>
+        /// <see cref="IValueConverter{TIn, TOut}"/>を結合します。
+        /// </summary>
+        /// <typeparam name="TIn">変換前の型</typeparam>
+        /// <typeparam name="TMid">変換途上の型</typeparam>
+        /// <typeparam name="TOut">変換後の型</typeparam>
+        /// <param name="first">最初に変換を行う<see cref="IValueConverter{TIn, TOut}"/></param>
+        /// <param name="secondConverter">次に変換を行う<see cref="IValueConverter{TIn, TOut}"/>を表す変換関数</param>
+        /// <returns><typeparamref name="TIn"/>から<typeparamref name="TOut"/>へ変換を行う<see cref="IValueConverter{TIn, TOut}"/>のインスタンス</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="secondConverter"/>がnull</exception>
+        public static IValueConverter<TIn, TOut> Combine<TIn, TMid, TOut>(this IValueConverter<TIn, TMid> first, Converter<TMid, TOut> secondConverter)
+        {
+            ArgumentNullException.ThrowIfNull(first);
+
+            return new CombinedValueConverter<TIn, TMid, TOut>(first, FromDelegate(secondConverter));
+        }
+
+        /// <summary>
         /// デリゲートから<see cref="IValueConverter{TIn, TOut}"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="converter">使用するデリゲート</param>

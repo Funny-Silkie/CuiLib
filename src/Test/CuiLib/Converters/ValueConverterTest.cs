@@ -12,19 +12,45 @@ namespace Test.CuiLib.Converters
     public class ValueConverterTest
     {
         [Test]
-        public void Combine_WithNull()
+        public void Combine_WithNullIValueConverter()
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentNullException>(() => ValueConverter.GetDefault<int>().Combine<string, int, long>(null!));
+                Assert.Throws<ArgumentNullException>(() => ValueConverter.GetDefault<int>().Combine<string, int, long>(second: null!));
                 Assert.Throws<ArgumentNullException>(() => ValueConverter.Combine<object, string, int>(null!, ValueConverter.GetDefault<int>()));
             });
         }
 
         [Test]
-        public void Combine_AsPositive()
+        public void Combine_WithIValueConverter_AsPositive()
         {
             IValueConverter<string, int> converter = ValueConverter.GetDefault<int>().Combine(ValueConverter.FromDelegate<int, int>(x => checked(x * 2)));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("1"), Is.EqualTo(2));
+                Assert.That(converter.Convert("0"), Is.EqualTo(0));
+                Assert.That(converter.Convert("-100"), Is.EqualTo(-200));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<OverflowException>(() => converter.Convert(int.MaxValue.ToString()));
+            });
+        }
+
+        [Test]
+        public void Combine_WithNullConverter()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.Throws<ArgumentNullException>(() => ValueConverter.GetDefault<int>().Combine<string, int, long>(secondConverter: null!));
+                Assert.Throws<ArgumentNullException>(() => ValueConverter.Combine<object, string, int>(null!, int.Parse));
+            });
+        }
+
+        [Test]
+        public void Combine_WithConverter_AsPositive()
+        {
+            IValueConverter<string, int> converter = ValueConverter.GetDefault<int>().Combine(x => checked(x * 2));
 
             Assert.Multiple(() =>
             {
