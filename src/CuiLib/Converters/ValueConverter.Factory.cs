@@ -49,6 +49,176 @@ namespace CuiLib.Converters
         }
 
         /// <summary>
+        /// 文字列から<see cref="sbyte"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="sbyte"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, sbyte> StringToSByte()
+        {
+            return new ParsableValueConverter<sbyte>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="byte"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="byte"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, byte> StringToByte()
+        {
+            return new ParsableValueConverter<byte>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="short"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="short"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, short> StringToInt16()
+        {
+            return new ParsableValueConverter<short>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="ushort"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="ushort"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, ushort> StringToUInt16()
+        {
+            return new ParsableValueConverter<ushort>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="int"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="int"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, int> StringToInt32()
+        {
+            return new ParsableValueConverter<int>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="uint"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="uint"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, uint> StringToUInt32()
+        {
+            return new ParsableValueConverter<uint>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="long"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="long"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, long> StringToInt64()
+        {
+            return new ParsableValueConverter<long>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="ulong"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="ulong"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, ulong> StringToUInt64()
+        {
+            return new ParsableValueConverter<ulong>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="float"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="float"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, float> StringToSingle()
+        {
+            return new ParsableValueConverter<float>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="double"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="double"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, double> StringToDouble()
+        {
+            return new ParsableValueConverter<double>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="decimal"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="decimal"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, decimal> StringToDecimal()
+        {
+            return new ParsableValueConverter<decimal>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="char"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="char"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, char> StringToChar()
+        {
+            return new ParsableValueConverter<char>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="DateTime"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="DateTime"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, DateTime> StringToDateTime()
+        {
+            return new ParsableValueConverter<DateTime>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="DateOnly"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="DateOnly"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, DateOnly> StringToDateOnly()
+        {
+            return new ParsableValueConverter<DateOnly>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="TimeOnly"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="TimeOnly"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, TimeOnly> StringToTimeOnly()
+        {
+            return new ParsableValueConverter<TimeOnly>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="TimeSpan"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="TimeSpan"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, TimeSpan> StringToTimeSpan()
+        {
+            return new ParsableValueConverter<TimeSpan>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="DateTimeOffset"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="DateTimeOffset"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, DateTimeOffset> StringToDateTimeOffset()
+        {
+            return new ParsableValueConverter<DateTimeOffset>();
+        }
+
+        /// <summary>
         /// 文字列から列挙型に変換するインスタンスを生成します。
         /// </summary>
         /// <typeparam name="TEnum">列挙型</typeparam>
@@ -175,22 +345,22 @@ namespace CuiLib.Converters
             if (type == typeof(StreamReader)) return Cast(new StreamReaderValueConverter(new UTF8Encoding(false)));
             if (type == typeof(TextWriter)) return Cast(new FileOrConsoleWriterValueConverter(new UTF8Encoding(false), false));
             if (type == typeof(StreamWriter)) return Cast(new StreamWriterValueConverter(new UTF8Encoding(false), false));
-            if (type == typeof(int)) return Cast(new ParsableValueConverter<int>());
-            if (type == typeof(double)) return Cast(new ParsableValueConverter<double>());
-            if (type == typeof(DateTime)) return Cast(new ParsableValueConverter<DateTime>());
-            if (type == typeof(long)) return Cast(new ParsableValueConverter<long>());
-            if (type == typeof(ulong)) return Cast(new ParsableValueConverter<ulong>());
-            if (type == typeof(TimeSpan)) return Cast(new ParsableValueConverter<TimeSpan>());
-            if (type == typeof(DateOnly)) return Cast(new ParsableValueConverter<DateOnly>());
-            if (type == typeof(TimeOnly)) return Cast(new ParsableValueConverter<TimeOnly>());
-            if (type == typeof(char)) return Cast(new ParsableValueConverter<char>());
-            if (type == typeof(float)) return Cast(new ParsableValueConverter<float>());
-            if (type == typeof(decimal)) return Cast(new ParsableValueConverter<decimal>());
-            if (type == typeof(uint)) return Cast(new ParsableValueConverter<uint>());
-            if (type == typeof(sbyte)) return Cast(new ParsableValueConverter<sbyte>());
-            if (type == typeof(byte)) return Cast(new ParsableValueConverter<byte>());
-            if (type == typeof(short)) return Cast(new ParsableValueConverter<short>());
-            if (type == typeof(ushort)) return Cast(new ParsableValueConverter<ushort>());
+            if (type == typeof(int)) return Cast(StringToInt32());
+            if (type == typeof(double)) return Cast(StringToDouble());
+            if (type == typeof(DateTime)) return Cast(StringToDateTime());
+            if (type == typeof(long)) return Cast(StringToInt64());
+            if (type == typeof(ulong)) return Cast(StringToUInt64());
+            if (type == typeof(TimeSpan)) return Cast(StringToTimeSpan());
+            if (type == typeof(DateOnly)) return Cast(StringToDateOnly());
+            if (type == typeof(TimeOnly)) return Cast(StringToTimeOnly());
+            if (type == typeof(char)) return Cast(StringToChar());
+            if (type == typeof(float)) return Cast(StringToSingle());
+            if (type == typeof(decimal)) return Cast(StringToDecimal());
+            if (type == typeof(uint)) return Cast(StringToUInt32());
+            if (type == typeof(sbyte)) return Cast(StringToSByte());
+            if (type == typeof(byte)) return Cast(StringToByte());
+            if (type == typeof(short)) return Cast(StringToInt16());
+            if (type == typeof(ushort)) return Cast(StringToUInt16());
             if (type.IsEnum)
             {
                 Type converterType = typeof(EnumValueConverter<>).MakeGenericType([type]);
@@ -198,7 +368,7 @@ namespace CuiLib.Converters
                 return Cast(ctor.Invoke(parameters: [false]));
             }
 
-            if (type == typeof(DateTimeOffset)) return Cast(new ParsableValueConverter<DateTimeOffset>());
+            if (type == typeof(DateTimeOffset)) return Cast(StringToDateTimeOffset());
 
             throw new NotSupportedException();
 

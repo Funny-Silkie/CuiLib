@@ -79,6 +79,303 @@ namespace Test.CuiLib.Converters
             Assert.That(ValueConverter.StringToIParsable<int>().GetHashCode(), Is.EqualTo(ValueConverter.StringToIParsable<int>().GetHashCode()));
         }
 
+        [Test]
+        public void StringToSByte()
+        {
+            IValueConverter<string, sbyte> converter = ValueConverter.StringToSByte();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("0"), Is.EqualTo(0));
+                Assert.That(converter.Convert("1"), Is.EqualTo(1));
+                Assert.That(converter.Convert("-1"), Is.EqualTo(-1));
+                Assert.That(converter.Convert(sbyte.MaxValue.ToString()), Is.EqualTo(sbyte.MaxValue));
+                Assert.That(converter.Convert(sbyte.MinValue.ToString()), Is.EqualTo(sbyte.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToInt16()
+        {
+            IValueConverter<string, short> converter = ValueConverter.StringToInt16();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("0"), Is.EqualTo(0));
+                Assert.That(converter.Convert("1"), Is.EqualTo(1));
+                Assert.That(converter.Convert("-1"), Is.EqualTo(-1));
+                Assert.That(converter.Convert(short.MaxValue.ToString()), Is.EqualTo(short.MaxValue));
+                Assert.That(converter.Convert(short.MinValue.ToString()), Is.EqualTo(short.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToInt32()
+        {
+            IValueConverter<string, int> converter = ValueConverter.StringToInt32();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("0"), Is.EqualTo(0));
+                Assert.That(converter.Convert("1"), Is.EqualTo(1));
+                Assert.That(converter.Convert("-1"), Is.EqualTo(-1));
+                Assert.That(converter.Convert(int.MaxValue.ToString()), Is.EqualTo(int.MaxValue));
+                Assert.That(converter.Convert(int.MinValue.ToString()), Is.EqualTo(int.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToInt64()
+        {
+            IValueConverter<string, long> converter = ValueConverter.StringToInt64();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("0"), Is.EqualTo(0));
+                Assert.That(converter.Convert("1"), Is.EqualTo(1));
+                Assert.That(converter.Convert("-1"), Is.EqualTo(-1));
+                Assert.That(converter.Convert(long.MaxValue.ToString()), Is.EqualTo(long.MaxValue));
+                Assert.That(converter.Convert(long.MinValue.ToString()), Is.EqualTo(long.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToByte()
+        {
+            IValueConverter<string, byte> converter = ValueConverter.StringToByte();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("0"), Is.EqualTo(0));
+                Assert.That(converter.Convert("1"), Is.EqualTo(1));
+                Assert.That(converter.Convert(byte.MaxValue.ToString()), Is.EqualTo(byte.MaxValue));
+                Assert.That(converter.Convert(byte.MinValue.ToString()), Is.EqualTo(byte.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToUInt16()
+        {
+            IValueConverter<string, ushort> converter = ValueConverter.StringToUInt16();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("0"), Is.EqualTo(0));
+                Assert.That(converter.Convert("1"), Is.EqualTo(1));
+                Assert.That(converter.Convert(ushort.MaxValue.ToString()), Is.EqualTo(ushort.MaxValue));
+                Assert.That(converter.Convert(ushort.MinValue.ToString()), Is.EqualTo(ushort.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToUInt32()
+        {
+            IValueConverter<string, uint> converter = ValueConverter.StringToUInt32();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("0"), Is.EqualTo(0));
+                Assert.That(converter.Convert("1"), Is.EqualTo(1));
+                Assert.That(converter.Convert(uint.MaxValue.ToString()), Is.EqualTo(uint.MaxValue));
+                Assert.That(converter.Convert(uint.MinValue.ToString()), Is.EqualTo(uint.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToUInt64()
+        {
+            IValueConverter<string, ulong> converter = ValueConverter.StringToUInt64();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("0"), Is.EqualTo(0));
+                Assert.That(converter.Convert("1"), Is.EqualTo(1));
+                Assert.That(converter.Convert(ulong.MaxValue.ToString()), Is.EqualTo(ulong.MaxValue));
+                Assert.That(converter.Convert(ulong.MinValue.ToString()), Is.EqualTo(ulong.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToSingle()
+        {
+            IValueConverter<string, float> converter = ValueConverter.StringToSingle();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("0"), Is.EqualTo(0));
+                Assert.That(converter.Convert("1"), Is.EqualTo(1));
+                Assert.That(converter.Convert("-1"), Is.EqualTo(-1));
+                Assert.That(converter.Convert("NaN"), Is.EqualTo(float.NaN));
+                Assert.That(converter.Convert(float.PositiveInfinity.ToString()), Is.EqualTo(float.PositiveInfinity));
+                Assert.That(converter.Convert(float.NegativeInfinity.ToString()), Is.EqualTo(float.NegativeInfinity));
+                Assert.That(converter.Convert(float.MaxValue.ToString()), Is.EqualTo(float.MaxValue));
+                Assert.That(converter.Convert(float.MinValue.ToString()), Is.EqualTo(float.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToDouble()
+        {
+            IValueConverter<string, double> converter = ValueConverter.StringToDouble();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("0"), Is.EqualTo(0));
+                Assert.That(converter.Convert("1"), Is.EqualTo(1));
+                Assert.That(converter.Convert("-1"), Is.EqualTo(-1));
+                Assert.That(converter.Convert("NaN"), Is.EqualTo(double.NaN));
+                Assert.That(converter.Convert(double.PositiveInfinity.ToString()), Is.EqualTo(double.PositiveInfinity));
+                Assert.That(converter.Convert(double.NegativeInfinity.ToString()), Is.EqualTo(double.NegativeInfinity));
+                Assert.That(converter.Convert(double.MaxValue.ToString()), Is.EqualTo(double.MaxValue));
+                Assert.That(converter.Convert(double.MinValue.ToString()), Is.EqualTo(double.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToDeimal()
+        {
+            IValueConverter<string, decimal> converter = ValueConverter.StringToDecimal();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("0"), Is.EqualTo(0));
+                Assert.That(converter.Convert("1"), Is.EqualTo(1));
+                Assert.That(converter.Convert("-1"), Is.EqualTo(-1));
+                Assert.That(converter.Convert(decimal.MaxValue.ToString()), Is.EqualTo(decimal.MaxValue));
+                Assert.That(converter.Convert(decimal.MinValue.ToString()), Is.EqualTo(decimal.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToChar()
+        {
+            IValueConverter<string, char> converter = ValueConverter.StringToChar();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("T"), Is.EqualTo('T'));
+                Assert.That(converter.Convert("T"), Is.Not.EqualTo('t'));
+                Assert.That(converter.Convert(char.MaxValue.ToString()), Is.EqualTo(char.MaxValue));
+                Assert.That(converter.Convert(char.MinValue.ToString()), Is.EqualTo(char.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToDateTime()
+        {
+            IValueConverter<string, DateTime> converter = ValueConverter.StringToDateTime();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("2024-05-06"), Is.EqualTo(new DateTime(2024, 5, 6)));
+                Assert.That(converter.Convert("9999-12-31 23:59:59.9999999"), Is.EqualTo(DateTime.MaxValue));
+                Assert.That(converter.Convert("0001-01-01 00:00:00"), Is.EqualTo(DateTime.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToDateOnly()
+        {
+            IValueConverter<string, DateOnly> converter = ValueConverter.StringToDateOnly();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("2024-05-06"), Is.EqualTo(new DateOnly(2024, 5, 6)));
+                Assert.That(converter.Convert("9999-12-31"), Is.EqualTo(DateOnly.MaxValue));
+                Assert.That(converter.Convert("0001-01-01"), Is.EqualTo(DateOnly.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToTimeOnly()
+        {
+            IValueConverter<string, TimeOnly> converter = ValueConverter.StringToTimeOnly();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("11:42:31"), Is.EqualTo(new TimeOnly(11, 42, 31)));
+                Assert.That(converter.Convert("23:59:59.9999999"), Is.EqualTo(TimeOnly.MaxValue));
+                Assert.That(converter.Convert("00:00:00"), Is.EqualTo(TimeOnly.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToTimeSpan()
+        {
+            IValueConverter<string, TimeSpan> converter = ValueConverter.StringToTimeSpan();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("3.14:15:52.65"), Is.EqualTo(new TimeSpan(3, 14, 15, 52, 650)));
+                Assert.That(converter.Convert("10675199.02:48:05.4775807"), Is.EqualTo(TimeSpan.MaxValue));
+                Assert.That(converter.Convert("-10675199.02:48:05.4775808"), Is.EqualTo(TimeSpan.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToDateTimeOffset()
+        {
+            IValueConverter<string, DateTimeOffset> converter = ValueConverter.StringToDateTimeOffset();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("2024-05-06 12:34:56"), Is.EqualTo(new DateTimeOffset(new DateTime(2024, 05, 06, 12, 34, 56))));
+                Assert.That(converter.Convert("9999-12-31 23:59:59.9999999+00:00"), Is.EqualTo(DateTimeOffset.MaxValue));
+                Assert.That(converter.Convert("0001-01-01 00:00:00+00:00"), Is.EqualTo(DateTimeOffset.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
 #pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
 
         [Test]

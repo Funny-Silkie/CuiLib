@@ -1,6 +1,6 @@
 # リリースログ
 
-## v2.2.0
+## v2.0.0
 
 ### 破壊的変更
 - 名前空間の変更
@@ -8,14 +8,20 @@
   - `IValueChecker` 関連： `Options` → `Checkers`
   - `IValueConverter` 関連： `Options` → `Converters`
   - `Parameter` 関連： `Options` → `Parameters`
+- Obsoleteな実装の削除
+- 改名
+  - `Util` を `Utils` に変更
+  - `IOHelper` を `IOHelpers` に変更
 
 ### 変更
 - 例外処理修正
 - 一部メソッドのnull許容・非許容の修正
 - `Logger`
   - `Flush`, `FlushAsync` 実装
-- Options
+- Converters
   - `ValueConverter.GetDefault<T>()`：Enumや配列を指定した際に変換できない不具合を修正
+  - プリミティブ型への変換を行うConverterのメソッドを個別実装
+- Options
   - `ValueTypeName`：型名に配列を指定した際のエラーを修正
   - `XorGroupOption` に `AndGroupOption` や `MultipleValueOption<T>` を格納した際に値が複数設定できない不具合を修正
 - Parameters
@@ -28,9 +34,6 @@
   - `ExcapedSplit(string)` を `null` ・空文字非許容に，そして長い文字列を `separator` とした際の挙動を修正
 - `ThrowHelper` 公開の停止
 - `CommandCollection.Remove(string)` で親コマンドが解除されない不具合を修正
-- 改名
-  - `Util` を `Utils` に変更
-  - `IOHelper` を `IOHelpers` に変更
 - ヘルプメッセージのフォーマット変更
 
 ## v1.1.0
