@@ -179,6 +179,24 @@ namespace Test.CuiLib.Converters
         }
 
         [Test]
+        public void StringToInt128()
+        {
+            IValueConverter<string, Int128> converter = ValueConverter.StringToInt128();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("0"), Is.EqualTo((Int128)0));
+                Assert.That(converter.Convert("1"), Is.EqualTo((Int128)1));
+                Assert.That(converter.Convert("-1"), Is.EqualTo((Int128)(-1)));
+                Assert.That(converter.Convert(Int128.MaxValue.ToString()), Is.EqualTo(Int128.MaxValue));
+                Assert.That(converter.Convert(Int128.MinValue.ToString()), Is.EqualTo(Int128.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
         public void StringToByte()
         {
             IValueConverter<string, byte> converter = ValueConverter.StringToByte();
@@ -240,6 +258,23 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("1"), Is.EqualTo(1));
                 Assert.That(converter.Convert(ulong.MaxValue.ToString()), Is.EqualTo(ulong.MaxValue));
                 Assert.That(converter.Convert(ulong.MinValue.ToString()), Is.EqualTo(ulong.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void StringToUInt128()
+        {
+            IValueConverter<string, UInt128> converter = ValueConverter.StringToUInt128();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("0"), Is.EqualTo((UInt128)0));
+                Assert.That(converter.Convert("1"), Is.EqualTo((UInt128)1));
+                Assert.That(converter.Convert(UInt128.MaxValue.ToString()), Is.EqualTo(UInt128.MaxValue));
+                Assert.That(converter.Convert(UInt128.MinValue.ToString()), Is.EqualTo(UInt128.MinValue));
 
                 Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
@@ -1112,6 +1147,24 @@ namespace Test.CuiLib.Converters
         }
 
         [Test]
+        public void GetDefault_AsInt128()
+        {
+            IValueConverter<string, Int128> converter = ValueConverter.GetDefault<Int128>();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("0"), Is.EqualTo((Int128)0));
+                Assert.That(converter.Convert("1"), Is.EqualTo((Int128)1));
+                Assert.That(converter.Convert("-1"), Is.EqualTo((Int128)(-1)));
+                Assert.That(converter.Convert(Int128.MaxValue.ToString()), Is.EqualTo(Int128.MaxValue));
+                Assert.That(converter.Convert(Int128.MinValue.ToString()), Is.EqualTo(Int128.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
         public void GetDefault_AsByte()
         {
             IValueConverter<string, byte> converter = ValueConverter.GetDefault<byte>();
@@ -1173,6 +1226,23 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("1"), Is.EqualTo(1));
                 Assert.That(converter.Convert(ulong.MaxValue.ToString()), Is.EqualTo(ulong.MaxValue));
                 Assert.That(converter.Convert(ulong.MinValue.ToString()), Is.EqualTo(ulong.MinValue));
+
+                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+            });
+        }
+
+        [Test]
+        public void GetDefault_AsUInt128()
+        {
+            IValueConverter<string, UInt128> converter = ValueConverter.GetDefault<UInt128>();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("0"), Is.EqualTo((UInt128)0));
+                Assert.That(converter.Convert("1"), Is.EqualTo((UInt128)1));
+                Assert.That(converter.Convert(UInt128.MaxValue.ToString()), Is.EqualTo(UInt128.MaxValue));
+                Assert.That(converter.Convert(UInt128.MinValue.ToString()), Is.EqualTo(UInt128.MinValue));
 
                 Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));

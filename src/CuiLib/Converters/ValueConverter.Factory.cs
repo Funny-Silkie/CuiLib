@@ -146,6 +146,26 @@ namespace CuiLib.Converters
         }
 
         /// <summary>
+        /// 文字列から<see cref="long"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="long"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, Int128> StringToInt128()
+        {
+            return new ParsableValueConverter<Int128>();
+        }
+
+        /// <summary>
+        /// 文字列から<see cref="UInt128"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="UInt128"/>に変換するインスタンス</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IValueConverter<string, UInt128> StringToUInt128()
+        {
+            return new ParsableValueConverter<UInt128>();
+        }
+
+        /// <summary>
         /// 文字列から<see cref="float"/>に変換するインスタンスを生成します。
         /// </summary>
         /// <returns>文字列から<see cref="float"/>に変換するインスタンス</returns>
@@ -407,6 +427,8 @@ namespace CuiLib.Converters
             }
 
             if (type == typeof(DateTimeOffset)) return Cast(StringToDateTimeOffset());
+            if (type == typeof(Int128)) return Cast(StringToInt128());
+            if (type == typeof(UInt128)) return Cast(StringToUInt128());
 
             throw new NotSupportedException();
 

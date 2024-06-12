@@ -23,7 +23,8 @@
   - 新規実装
     - `string` からプリミティブ型への変換を行うConverter
     - `Combine<TIn, TMid, TOut>(this IValueConverter<TIn, TMid>, Converter<TMid, TOut>)` のオーバーロード
-    - `string` から `StreamWriter`, `StreamReader` へ変換するインスタンスを生成するメソッド
+    - `string` から `StreamWriter`, `StreamReader` への変換
+    - `string` から `In128`, `UInt128` への変換
 - Options
   - `ValueTypeName`：型名に配列を指定した際のエラーを修正
   - `XorGroupOption` に `AndGroupOption` や `MultipleValueOption<T>` を格納した際に値が複数設定できない不具合を修正
