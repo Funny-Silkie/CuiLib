@@ -340,9 +340,7 @@ namespace CuiLib.Checkers
         /// </summary>
         public static IValueChecker<FileInfo> VerifySourceFile()
         {
-#pragma warning disable CS0618 // 型またはメンバーが旧型式です
             return new SourceFileChecker();
-#pragma warning restore CS0618 // 型またはメンバーが旧型式です
         }
 
         /// <summary>
@@ -352,13 +350,11 @@ namespace CuiLib.Checkers
         /// <param name="allowOverwrite">ファイルの上書きを許容するかどうか</param>
         public static IValueChecker<FileInfo> VerifyDestinationFile(bool allowMissedDir, bool allowOverwrite)
         {
-#pragma warning disable CS0618 // 型またはメンバーが旧型式です
             return new DestinationFileChecker()
             {
                 AllowMissedDirectory = allowMissedDir,
                 AllowOverwrite = allowOverwrite,
             };
-#pragma warning restore CS0618 // 型またはメンバーが旧型式です
         }
 
         /// <summary>
@@ -366,9 +362,7 @@ namespace CuiLib.Checkers
         /// </summary>
         public static IValueChecker<DirectoryInfo> VerifySourceDirectory()
         {
-#pragma warning disable CS0618 // 型またはメンバーが旧型式です
             return new SourceDirectoryChecker();
-#pragma warning restore CS0618 // 型またはメンバーが旧型式です
         }
 
         /// <summary>
