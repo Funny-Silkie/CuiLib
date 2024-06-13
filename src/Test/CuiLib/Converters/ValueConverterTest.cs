@@ -878,6 +878,7 @@ namespace Test.CuiLib.Converters
                     });
 
                     Assert.That(converter.Convert(null!), Is.EqualTo(Console.Out));
+                    Assert.That(converter.Convert("-"), Is.EqualTo(Console.Out));
 
                     Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
                 });
@@ -910,6 +911,7 @@ namespace Test.CuiLib.Converters
                     });
 
                     Assert.That(converter.Convert(null!), Is.EqualTo(Console.Out));
+                    Assert.That(converter.Convert("-"), Is.EqualTo(Console.Out));
 
                     Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
                 });
@@ -938,6 +940,7 @@ namespace Test.CuiLib.Converters
                         Assert.That(((StreamReader)reader).CurrentEncoding, Is.InstanceOf<UTF8Encoding>());
                     }
                     Assert.That(converter.Convert(null!), Is.EqualTo(Console.In));
+                    Assert.That(converter.Convert("-"), Is.EqualTo(Console.In));
 
                     Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
                     Assert.Throws<FileNotFoundException>(() => converter.Convert(FileUtilHelpers.GetNoExistingFile().Name));
@@ -968,6 +971,7 @@ namespace Test.CuiLib.Converters
                         Assert.That(((StreamReader)reader).CurrentEncoding, Is.EqualTo(encoding));
                     }
                     Assert.That(converter.Convert(null!), Is.EqualTo(Console.In));
+                    Assert.That(converter.Convert("-"), Is.EqualTo(Console.In));
 
                     Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
                     Assert.Throws<FileNotFoundException>(() => converter.Convert(FileUtilHelpers.GetNoExistingFile().Name));

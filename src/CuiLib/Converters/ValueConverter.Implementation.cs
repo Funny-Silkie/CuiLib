@@ -335,7 +335,7 @@ namespace CuiLib.Converters
             /// <inheritdoc/>
             public TextWriter Convert(string value)
             {
-                if (value is null) return Console.Out;
+                if (value is null or "-") return Console.Out;
                 return new StreamWriter(value, append, encoding);
             }
         }
@@ -363,7 +363,7 @@ namespace CuiLib.Converters
             /// <inheritdoc/>
             public TextReader Convert(string value)
             {
-                if (value is null) return Console.In;
+                if (value is null or "-") return Console.In;
                 return new StreamReader(value, encoding);
             }
         }
