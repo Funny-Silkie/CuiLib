@@ -324,7 +324,7 @@ namespace Test.CuiLib.Converters
         }
 
         [Test]
-        public void StringToDeimal()
+        public void StringToDecimal()
         {
             IValueConverter<string, decimal> converter = ValueConverter.StringToDecimal();
 
@@ -359,7 +359,7 @@ namespace Test.CuiLib.Converters
         }
 
         [Test]
-        public void StringToDateTime()
+        public void StringToDateTime_WithoutArgs()
         {
             IValueConverter<string, DateTime> converter = ValueConverter.StringToDateTime();
 
@@ -375,7 +375,40 @@ namespace Test.CuiLib.Converters
         }
 
         [Test]
-        public void StringToDateOnly()
+        public void StringToDateTime_WithNullFormat()
+        {
+            Assert.Throws<ArgumentNullException>(() => ValueConverter.StringToDateTime(null!));
+        }
+
+        [Test]
+        public void StringToDateTime_WithEmptyFormat()
+        {
+            Assert.Throws<ArgumentException>(() => ValueConverter.StringToDateTime(string.Empty));
+        }
+
+        [Test]
+        public void StringToDateTime_WithFormat_AsPositive()
+        {
+            IValueConverter<string, DateTime> converter = ValueConverter.StringToDateTime("yyyy/MM/dd HH:mm:ss");
+            DateTime value = converter.Convert("2000/01/01 12:34:56");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(value.Year, Is.EqualTo(2000));
+                Assert.That(value.Month, Is.EqualTo(1));
+                Assert.That(value.Day, Is.EqualTo(1));
+                Assert.That(value.Hour, Is.EqualTo(12));
+                Assert.That(value.Minute, Is.EqualTo(34));
+                Assert.That(value.Second, Is.EqualTo(56));
+                Assert.That(value.Millisecond, Is.EqualTo(0));
+                Assert.That(value.Microsecond, Is.EqualTo(0));
+            });
+
+            Assert.Throws<FormatException>(() => converter.Convert("!!!"));
+        }
+
+        [Test]
+        public void StringToDateOnly_WithoutArgs()
         {
             IValueConverter<string, DateOnly> converter = ValueConverter.StringToDateOnly();
 
@@ -391,7 +424,35 @@ namespace Test.CuiLib.Converters
         }
 
         [Test]
-        public void StringToTimeOnly()
+        public void StringToDateOnly_WithNullFormat()
+        {
+            Assert.Throws<ArgumentNullException>(() => ValueConverter.StringToDateOnly(null!));
+        }
+
+        [Test]
+        public void StringToDateOnly_WithEmptyFormat()
+        {
+            Assert.Throws<ArgumentException>(() => ValueConverter.StringToDateOnly(string.Empty));
+        }
+
+        [Test]
+        public void StringToDateOnly_WithFormat_AsPositive()
+        {
+            IValueConverter<string, DateOnly> converter = ValueConverter.StringToDateOnly("yyyy/MM/dd");
+            DateOnly value = converter.Convert("2000/01/01");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(value.Year, Is.EqualTo(2000));
+                Assert.That(value.Month, Is.EqualTo(1));
+                Assert.That(value.Day, Is.EqualTo(1));
+            });
+
+            Assert.Throws<FormatException>(() => converter.Convert("!!!"));
+        }
+
+        [Test]
+        public void StringToTimeOnly_WithoutArgs()
         {
             IValueConverter<string, TimeOnly> converter = ValueConverter.StringToTimeOnly();
 
@@ -407,7 +468,37 @@ namespace Test.CuiLib.Converters
         }
 
         [Test]
-        public void StringToTimeSpan()
+        public void StringToTimeOnly_WithNullFormat()
+        {
+            Assert.Throws<ArgumentNullException>(() => ValueConverter.StringToTimeOnly(null!));
+        }
+
+        [Test]
+        public void StringToTimeOnly_WithEmptyFormat()
+        {
+            Assert.Throws<ArgumentException>(() => ValueConverter.StringToTimeOnly(string.Empty));
+        }
+
+        [Test]
+        public void StringToTimeOnly_WithFormat_AsPositive()
+        {
+            IValueConverter<string, TimeOnly> converter = ValueConverter.StringToTimeOnly("HH:mm:ss");
+            TimeOnly value = converter.Convert("12:34:56");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(value.Hour, Is.EqualTo(12));
+                Assert.That(value.Minute, Is.EqualTo(34));
+                Assert.That(value.Second, Is.EqualTo(56));
+                Assert.That(value.Millisecond, Is.EqualTo(0));
+                Assert.That(value.Microsecond, Is.EqualTo(0));
+            });
+
+            Assert.Throws<FormatException>(() => converter.Convert("!!!"));
+        }
+
+        [Test]
+        public void StringToTimeSpan_WithoutArgs()
         {
             IValueConverter<string, TimeSpan> converter = ValueConverter.StringToTimeSpan();
 
@@ -423,7 +514,38 @@ namespace Test.CuiLib.Converters
         }
 
         [Test]
-        public void StringToDateTimeOffset()
+        public void StringToTimeSpan_WithNullFormat()
+        {
+            Assert.Throws<ArgumentNullException>(() => ValueConverter.StringToTimeSpan(null!));
+        }
+
+        [Test]
+        public void StringToTimeSpan_WithEmptyFormat()
+        {
+            Assert.Throws<ArgumentException>(() => ValueConverter.StringToTimeSpan(string.Empty));
+        }
+
+        [Test]
+        public void StringToTimeSpan_WithFormat_AsPositive()
+        {
+            IValueConverter<string, TimeSpan> converter = ValueConverter.StringToTimeSpan(@"d\.hh\:mm\:ss");
+            TimeSpan value = converter.Convert("1.12:34:56");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(value.Days, Is.EqualTo(1));
+                Assert.That(value.Hours, Is.EqualTo(12));
+                Assert.That(value.Minutes, Is.EqualTo(34));
+                Assert.That(value.Seconds, Is.EqualTo(56));
+                Assert.That(value.Milliseconds, Is.EqualTo(0));
+                Assert.That(value.Microseconds, Is.EqualTo(0));
+            });
+
+            Assert.Throws<FormatException>(() => converter.Convert("!!!"));
+        }
+
+        [Test]
+        public void StringToDateTimeOffset_WithoutArgs()
         {
             IValueConverter<string, DateTimeOffset> converter = ValueConverter.StringToDateTimeOffset();
 
@@ -436,6 +558,39 @@ namespace Test.CuiLib.Converters
                 Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
             });
+        }
+
+        [Test]
+        public void StringToDateTimeOffset_WithNullFormat()
+        {
+            Assert.Throws<ArgumentNullException>(() => ValueConverter.StringToDateTimeOffset(null!));
+        }
+
+        [Test]
+        public void StringToDateTimeOffset_WithEmptyFormat()
+        {
+            Assert.Throws<ArgumentException>(() => ValueConverter.StringToDateTimeOffset(string.Empty));
+        }
+
+        [Test]
+        public void StringToDateTimeOffset_WithFormat_AsPositive()
+        {
+            IValueConverter<string, DateTimeOffset> converter = ValueConverter.StringToDateTimeOffset("yyyy/MM/dd HH:mm:ss");
+            DateTimeOffset value = converter.Convert("2000/01/01 12:34:56");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(value.Year, Is.EqualTo(2000));
+                Assert.That(value.Month, Is.EqualTo(1));
+                Assert.That(value.Day, Is.EqualTo(1));
+                Assert.That(value.Hour, Is.EqualTo(12));
+                Assert.That(value.Minute, Is.EqualTo(34));
+                Assert.That(value.Second, Is.EqualTo(56));
+                Assert.That(value.Millisecond, Is.EqualTo(0));
+                Assert.That(value.Microsecond, Is.EqualTo(0));
+            });
+
+            Assert.Throws<FormatException>(() => converter.Convert("!!!"));
         }
 
 #pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument

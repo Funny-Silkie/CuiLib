@@ -25,6 +25,7 @@
     - `Combine<TIn, TMid, TOut>(this IValueConverter<TIn, TMid>, Converter<TMid, TOut>)` のオーバーロード
     - `string` から `StreamWriter`, `StreamReader` への変換
     - `string` から `In128`, `UInt128` への変換
+    - `string` から `DateTime`, `DateOnly`, `TimeOnly`, `DateTimeOffset`, `TimeSpan` 変換時にフォーマットを指定できるように
 - Options
   - `ValueTypeName`：型名に配列を指定した際のエラーを修正
   - `XorGroupOption` に `AndGroupOption` や `MultipleValueOption<T>` を格納した際に値が複数設定できない不具合を修正

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 
@@ -113,6 +114,146 @@ namespace CuiLib.Converters
             public T Convert(string value)
             {
                 return Enum.Parse<T>(value, ignoreCase);
+            }
+        }
+
+        /// <summary>
+        /// フォーマット付きで<see cref="DateTime"/>への変換を行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
+        /// </summary>
+        [Serializable]
+        internal sealed class DateTimeExactConverter : IValueConverter<string, DateTime>
+        {
+            private readonly string format;
+
+            /// <summary>
+            /// <see cref="DateTimeExactConverter"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="format">フォーマット</param>
+            /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
+            /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
+            public DateTimeExactConverter([StringSyntax(StringSyntaxAttribute.DateTimeFormat)] string format)
+            {
+                ArgumentException.ThrowIfNullOrEmpty(format);
+
+                this.format = format;
+            }
+
+            /// <inheritdoc/>
+            public DateTime Convert(string value)
+            {
+                return DateTime.ParseExact(value, format, null);
+            }
+        }
+
+        /// <summary>
+        /// フォーマット付きで<see cref="DateOnly"/>への変換を行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
+        /// </summary>
+        [Serializable]
+        internal sealed class DateOnlyExactConverter : IValueConverter<string, DateOnly>
+        {
+            private readonly string format;
+
+            /// <summary>
+            /// <see cref="DateOnlyExactConverter"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="format">フォーマット</param>
+            /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
+            /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
+            public DateOnlyExactConverter([StringSyntax(StringSyntaxAttribute.DateOnlyFormat)] string format)
+            {
+                ArgumentException.ThrowIfNullOrEmpty(format);
+
+                this.format = format;
+            }
+
+            /// <inheritdoc/>
+            public DateOnly Convert(string value)
+            {
+                return DateOnly.ParseExact(value, format, null);
+            }
+        }
+
+        /// <summary>
+        /// フォーマット付きで<see cref="TimeOnly"/>への変換を行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
+        /// </summary>
+        [Serializable]
+        internal sealed class TimeOnlyExactConverter : IValueConverter<string, TimeOnly>
+        {
+            private readonly string format;
+
+            /// <summary>
+            /// <see cref="TimeOnlyExactConverter"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="format">フォーマット</param>
+            /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
+            /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
+            public TimeOnlyExactConverter([StringSyntax(StringSyntaxAttribute.TimeOnlyFormat)] string format)
+            {
+                ArgumentException.ThrowIfNullOrEmpty(format);
+
+                this.format = format;
+            }
+
+            /// <inheritdoc/>
+            public TimeOnly Convert(string value)
+            {
+                return TimeOnly.ParseExact(value, format, null);
+            }
+        }
+
+        /// <summary>
+        /// フォーマット付きで<see cref="TimeSpan"/>への変換を行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
+        /// </summary>
+        [Serializable]
+        internal sealed class TimeSpanExactConverter : IValueConverter<string, TimeSpan>
+        {
+            private readonly string format;
+
+            /// <summary>
+            /// <see cref="TimeSpanExactConverter"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="format">フォーマット</param>
+            /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
+            /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
+            public TimeSpanExactConverter([StringSyntax(StringSyntaxAttribute.TimeSpanFormat)] string format)
+            {
+                ArgumentException.ThrowIfNullOrEmpty(format);
+
+                this.format = format;
+            }
+
+            /// <inheritdoc/>
+            public TimeSpan Convert(string value)
+            {
+                return TimeSpan.ParseExact(value, format, null);
+            }
+        }
+
+        /// <summary>
+        /// フォーマット付きで<see cref="DateTimeOffset"/>への変換を行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
+        /// </summary>
+        [Serializable]
+        internal sealed class DateTimeOffsetExactConverter : IValueConverter<string, DateTimeOffset>
+        {
+            private readonly string format;
+
+            /// <summary>
+            /// <see cref="DateTimeOffsetExactConverter"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            /// <param name="format">フォーマット</param>
+            /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
+            /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
+            public DateTimeOffsetExactConverter([StringSyntax(StringSyntaxAttribute.DateTimeFormat)] string format)
+            {
+                ArgumentException.ThrowIfNullOrEmpty(format);
+
+                this.format = format;
+            }
+
+            /// <inheritdoc/>
+            public DateTimeOffset Convert(string value)
+            {
+                return DateTimeOffset.ParseExact(value, format, null);
             }
         }
 
