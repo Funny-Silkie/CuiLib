@@ -55,6 +55,8 @@ namespace CuiLib.Converters
             return new DelegateValueConverter<TIn, TOut>(converter);
         }
 
+#if NET7_0_OR_GREATER
+
         /// <summary>
         /// 文字列から<see cref="IParsable{TSelf}"/>に変換するインスタンスを生成します。
         /// </summary>
@@ -66,6 +68,8 @@ namespace CuiLib.Converters
             return new ParsableValueConverter<TParsable>();
         }
 
+#endif
+
         /// <summary>
         /// 文字列から<see cref="sbyte"/>に変換するインスタンスを生成します。
         /// </summary>
@@ -73,7 +77,11 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, sbyte> StringToSByte()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<sbyte>();
+#else
+            return FromDelegate<string, sbyte>(sbyte.Parse);
+#endif
         }
 
         /// <summary>
@@ -83,7 +91,11 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, byte> StringToByte()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<byte>();
+#else
+            return FromDelegate<string, byte>(byte.Parse);
+#endif
         }
 
         /// <summary>
@@ -93,7 +105,11 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, short> StringToInt16()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<short>();
+#else
+            return FromDelegate<string, short>(short.Parse);
+#endif
         }
 
         /// <summary>
@@ -103,7 +119,11 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, ushort> StringToUInt16()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<ushort>();
+#else
+            return FromDelegate<string, ushort>(ushort.Parse);
+#endif
         }
 
         /// <summary>
@@ -113,7 +133,11 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, int> StringToInt32()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<int>();
+#else
+            return FromDelegate<string, int>(int.Parse);
+#endif
         }
 
         /// <summary>
@@ -123,7 +147,11 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, uint> StringToUInt32()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<uint>();
+#else
+            return FromDelegate<string, uint>(uint.Parse);
+#endif
         }
 
         /// <summary>
@@ -133,7 +161,11 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, long> StringToInt64()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<long>();
+#else
+            return FromDelegate<string, long>(long.Parse);
+#endif
         }
 
         /// <summary>
@@ -143,8 +175,14 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, ulong> StringToUInt64()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<ulong>();
+#else
+            return FromDelegate<string, ulong>(ulong.Parse);
+#endif
         }
+
+#if NET7_0_OR_GREATER
 
         /// <summary>
         /// 文字列から<see cref="long"/>に変換するインスタンスを生成します。
@@ -166,6 +204,8 @@ namespace CuiLib.Converters
             return new ParsableValueConverter<UInt128>();
         }
 
+#endif
+
         /// <summary>
         /// 文字列から<see cref="float"/>に変換するインスタンスを生成します。
         /// </summary>
@@ -173,7 +213,11 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, float> StringToSingle()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<float>();
+#else
+            return FromDelegate<string, float>(float.Parse);
+#endif
         }
 
         /// <summary>
@@ -183,7 +227,11 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, double> StringToDouble()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<double>();
+#else
+            return FromDelegate<string, double>(double.Parse);
+#endif
         }
 
         /// <summary>
@@ -193,7 +241,11 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, decimal> StringToDecimal()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<decimal>();
+#else
+            return FromDelegate<string, decimal>(decimal.Parse);
+#endif
         }
 
         /// <summary>
@@ -203,7 +255,11 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, char> StringToChar()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<char>();
+#else
+            return FromDelegate<string, char>(char.Parse);
+#endif
         }
 
         /// <summary>
@@ -213,7 +269,11 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, DateTime> StringToDateTime()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<DateTime>();
+#else
+            return FromDelegate<string, DateTime>(DateTime.Parse);
+#endif
         }
 
         /// <summary>
@@ -222,7 +282,11 @@ namespace CuiLib.Converters
         /// <returns>文字列から<see cref="DateTime"/>に変換するインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
         /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-        public static IValueConverter<string, DateTime> StringToDateTime([StringSyntax(StringSyntaxAttribute.DateTimeFormat)] string format)
+        public static IValueConverter<string, DateTime> StringToDateTime(
+#if NET7_0_OR_GREATER
+                                                                         [StringSyntax(StringSyntaxAttribute.DateTimeFormat)]
+#endif
+                                                                         string format)
         {
             return new DateTimeExactConverter(format);
         }
@@ -234,7 +298,11 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, DateOnly> StringToDateOnly()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<DateOnly>();
+#else
+            return FromDelegate<string, DateOnly>(DateOnly.Parse);
+#endif
         }
 
         /// <summary>
@@ -243,7 +311,11 @@ namespace CuiLib.Converters
         /// <returns>文字列から<see cref="DateOnly"/>に変換するインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
         /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-        public static IValueConverter<string, DateOnly> StringToDateOnly([StringSyntax(StringSyntaxAttribute.DateOnlyFormat)] string format)
+        public static IValueConverter<string, DateOnly> StringToDateOnly(
+#if NET7_0_OR_GREATER
+                                                                         [StringSyntax(StringSyntaxAttribute.DateOnlyFormat)]
+#endif
+                                                                         string format)
         {
             return new DateOnlyExactConverter(format);
         }
@@ -255,7 +327,11 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, TimeOnly> StringToTimeOnly()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<TimeOnly>();
+#else
+            return FromDelegate<string, TimeOnly>(TimeOnly.Parse);
+#endif
         }
 
         /// <summary>
@@ -264,7 +340,11 @@ namespace CuiLib.Converters
         /// <returns>文字列から<see cref="TimeOnly"/>に変換するインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
         /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-        public static IValueConverter<string, TimeOnly> StringToTimeOnly([StringSyntax(StringSyntaxAttribute.TimeOnlyFormat)] string format)
+        public static IValueConverter<string, TimeOnly> StringToTimeOnly(
+#if NET7_0_OR_GREATER
+                                                                         [StringSyntax(StringSyntaxAttribute.TimeOnlyFormat)]
+#endif
+                                                                         string format)
         {
             return new TimeOnlyExactConverter(format);
         }
@@ -276,7 +356,11 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, TimeSpan> StringToTimeSpan()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<TimeSpan>();
+#else
+            return FromDelegate<string, TimeSpan>(TimeSpan.Parse);
+#endif
         }
 
         /// <summary>
@@ -285,7 +369,11 @@ namespace CuiLib.Converters
         /// <returns>文字列から<see cref="TimeSpan"/>に変換するインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
         /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-        public static IValueConverter<string, TimeSpan> StringToTimeSpan([StringSyntax(StringSyntaxAttribute.TimeSpanFormat)] string format)
+        public static IValueConverter<string, TimeSpan> StringToTimeSpan(
+#if NET7_0_OR_GREATER
+                                                                         [StringSyntax(StringSyntaxAttribute.TimeSpanFormat)]
+#endif
+                                                                         string format)
         {
             return new TimeSpanExactConverter(format);
         }
@@ -297,7 +385,11 @@ namespace CuiLib.Converters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IValueConverter<string, DateTimeOffset> StringToDateTimeOffset()
         {
+#if NET7_0_OR_GREATER
             return new ParsableValueConverter<DateTimeOffset>();
+#else
+            return FromDelegate<string, DateTimeOffset>(DateTimeOffset.Parse);
+#endif
         }
 
         /// <summary>
@@ -306,7 +398,11 @@ namespace CuiLib.Converters
         /// <returns>文字列から<see cref="DateTimeOffset"/>に変換するインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
         /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-        public static IValueConverter<string, DateTimeOffset> StringToDateTimeOffset([StringSyntax(StringSyntaxAttribute.DateTimeFormat)] string format)
+        public static IValueConverter<string, DateTimeOffset> StringToDateTimeOffset(
+#if NET7_0_OR_GREATER
+                                                                                     [StringSyntax(StringSyntaxAttribute.DateTimeFormat)]
+#endif
+                                                                                     string format)
         {
             return new DateTimeOffsetExactConverter(format);
         }
@@ -483,8 +579,10 @@ namespace CuiLib.Converters
             }
 
             if (type == typeof(DateTimeOffset)) return Cast(StringToDateTimeOffset());
+#if NET7_0_OR_GREATER
             if (type == typeof(Int128)) return Cast(StringToInt128());
             if (type == typeof(UInt128)) return Cast(StringToUInt128());
+#endif
 
             throw new NotSupportedException();
 

@@ -82,16 +82,32 @@ namespace Test.Helpers
         public override void Write(string? value) => builder.Append(value);
 
         /// <inheritdoc/>
-        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0) => builder.AppendFormat(format, arg0);
+        public override void Write(
+#if NEN_7_0_OR_GREATER
+                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                   string format, object? arg0) => builder.AppendFormat(format, arg0);
 
         /// <inheritdoc/>
-        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0, object? arg1) => builder.AppendFormat(format, arg0, arg1);
+        public override void Write(
+#if NEN_7_0_OR_GREATER
+                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                   string format, object? arg0, object? arg1) => builder.AppendFormat(format, arg0, arg1);
 
         /// <inheritdoc/>
-        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0, object? arg1, object? arg2) => builder.AppendFormat(format, arg0, arg1, arg2);
+        public override void Write(
+#if NEN_7_0_OR_GREATER
+                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                   string format, object? arg0, object? arg1, object? arg2) => builder.AppendFormat(format, arg0, arg1, arg2);
 
         /// <inheritdoc/>
-        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, params object?[] args) => builder.AppendFormat(format, args);
+        public override void Write(
+#if NEN_7_0_OR_GREATER
+                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                   string format, params object?[] args) => builder.AppendFormat(format, args);
 
         /// <inheritdoc/>
         public override async Task WriteAsync(char value)
@@ -177,16 +193,32 @@ namespace Test.Helpers
         public override void WriteLine(string? value) => builder.Append(value).AppendLine();
 
         /// <inheritdoc/>
-        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0) => builder.AppendFormat(format, arg0).AppendLine();
+        public override void WriteLine(
+#if NEN_7_0_OR_GREATER
+                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                       string format, object? arg0) => builder.AppendFormat(format, arg0).AppendLine();
 
         /// <inheritdoc/>
-        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0, object? arg1) => builder.AppendFormat(format, arg0, arg1).AppendLine();
+        public override void WriteLine(
+#if NEN_7_0_OR_GREATER
+                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                       string format, object? arg0, object? arg1) => builder.AppendFormat(format, arg0, arg1).AppendLine();
 
         /// <inheritdoc/>
-        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0, object? arg1, object? arg2) => builder.AppendFormat(format, arg0, arg1, arg2).AppendLine();
+        public override void WriteLine(
+#if NEN_7_0_OR_GREATER
+                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                       string format, object? arg0, object? arg1, object? arg2) => builder.AppendFormat(format, arg0, arg1, arg2).AppendLine();
 
         /// <inheritdoc/>
-        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, params object?[] args) => builder.AppendFormat(format, args).AppendLine();
+        public override void WriteLine(
+#if NEN_7_0_OR_GREATER
+                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                       string format, params object?[] args) => builder.AppendFormat(format, args).AppendLine();
 
         /// <inheritdoc/>
         public override async Task WriteLineAsync()

@@ -103,7 +103,7 @@ namespace CuiLib.Extensions
         /// <exception cref="ArgumentException"><paramref name="separator"/>が空文字</exception>
         public static string[] EscapedSplit(this ReadOnlySpan<char> value, string separator)
         {
-            ArgumentException.ThrowIfNullOrEmpty(separator);
+            ThrowHelpers.ThrowIfNullOrEmpty(separator);
 
             return EscapedSplitPrivate(value, separator.AsSpan());
         }

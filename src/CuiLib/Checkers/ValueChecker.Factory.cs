@@ -371,7 +371,11 @@ namespace CuiLib.Checkers
         /// <param name="pattern">正規表現</param>
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/>が<see langword="null"/></exception>
         /// <exception cref="ArgumentException">正規表現解析エラー</exception>
-        public static IValueChecker<string> IsRegexMatch([StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
+        public static IValueChecker<string> IsRegexMatch(
+#if NET7_0_OR_GREATER
+                                                         [StringSyntax(StringSyntaxAttribute.Regex)]
+#endif
+                                                         string pattern)
         {
             var regex = new Regex(pattern);
             return IsRegexMatch(regex);
@@ -385,7 +389,12 @@ namespace CuiLib.Checkers
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/>が<see langword="null"/></exception>
         /// <exception cref="ArgumentException">正規表現解析エラー</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="options"/>が無効な範囲</exception>
-        public static IValueChecker<string> IsRegexMatch([StringSyntax(StringSyntaxAttribute.Regex)] string pattern, RegexOptions options)
+        public static IValueChecker<string> IsRegexMatch(
+#if NET7_0_OR_GREATER
+                                                         [StringSyntax(StringSyntaxAttribute.Regex)]
+#endif
+                                                         string pattern,
+                                                         RegexOptions options)
         {
             var regex = new Regex(pattern, options);
             return IsRegexMatch(regex);
@@ -400,7 +409,13 @@ namespace CuiLib.Checkers
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/>が<see langword="null"/></exception>
         /// <exception cref="ArgumentException">正規表現解析エラー</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="options"/>または<paramref name="matchTimeout"/>が無効な範囲</exception>
-        public static IValueChecker<string> IsRegexMatch([StringSyntax(StringSyntaxAttribute.Regex)] string pattern, RegexOptions options, TimeSpan matchTimeout)
+        public static IValueChecker<string> IsRegexMatch(
+#if NET7_0_OR_GREATER
+                                                         [StringSyntax(StringSyntaxAttribute.Regex)]
+#endif
+                                                         string pattern,
+                                                         RegexOptions options,
+                                                         TimeSpan matchTimeout)
         {
             var regex = new Regex(pattern, options, matchTimeout);
             return IsRegexMatch(regex);

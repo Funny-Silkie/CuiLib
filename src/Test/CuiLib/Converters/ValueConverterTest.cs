@@ -78,6 +78,8 @@ namespace Test.CuiLib.Converters
             Assert.That(converter.Convert("123"), Is.EqualTo(123));
         }
 
+#if NET7_0_OR_GREATER
+
         [Test]
         public void StringToIParsable_Convert()
         {
@@ -105,6 +107,10 @@ namespace Test.CuiLib.Converters
         {
             Assert.That(ValueConverter.StringToIParsable<int>().GetHashCode(), Is.EqualTo(ValueConverter.StringToIParsable<int>().GetHashCode()));
         }
+
+#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
+
+#endif
 
         [Test]
         public void StringToSByte()
@@ -178,6 +184,8 @@ namespace Test.CuiLib.Converters
             });
         }
 
+#if NET7_0_OR_GREATER
+
         [Test]
         public void StringToInt128()
         {
@@ -195,6 +203,8 @@ namespace Test.CuiLib.Converters
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
             });
         }
+
+#endif
 
         [Test]
         public void StringToByte()
@@ -264,6 +274,8 @@ namespace Test.CuiLib.Converters
             });
         }
 
+#if NET7_0_OR_GREATER
+
         [Test]
         public void StringToUInt128()
         {
@@ -280,6 +292,8 @@ namespace Test.CuiLib.Converters
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
             });
         }
+
+#endif
 
         [Test]
         public void StringToSingle()
@@ -401,7 +415,9 @@ namespace Test.CuiLib.Converters
                 Assert.That(value.Minute, Is.EqualTo(34));
                 Assert.That(value.Second, Is.EqualTo(56));
                 Assert.That(value.Millisecond, Is.EqualTo(0));
+#if NET7_0_OR_GREATER
                 Assert.That(value.Microsecond, Is.EqualTo(0));
+#endif
             });
 
             Assert.Throws<FormatException>(() => converter.Convert("!!!"));
@@ -491,7 +507,9 @@ namespace Test.CuiLib.Converters
                 Assert.That(value.Minute, Is.EqualTo(34));
                 Assert.That(value.Second, Is.EqualTo(56));
                 Assert.That(value.Millisecond, Is.EqualTo(0));
+#if NET7_0_OR_GREATER
                 Assert.That(value.Microsecond, Is.EqualTo(0));
+#endif
             });
 
             Assert.Throws<FormatException>(() => converter.Convert("!!!"));
@@ -538,7 +556,9 @@ namespace Test.CuiLib.Converters
                 Assert.That(value.Minutes, Is.EqualTo(34));
                 Assert.That(value.Seconds, Is.EqualTo(56));
                 Assert.That(value.Milliseconds, Is.EqualTo(0));
+#if NET7_0_OR_GREATER
                 Assert.That(value.Microseconds, Is.EqualTo(0));
+#endif
             });
 
             Assert.Throws<FormatException>(() => converter.Convert("!!!"));
@@ -587,13 +607,13 @@ namespace Test.CuiLib.Converters
                 Assert.That(value.Minute, Is.EqualTo(34));
                 Assert.That(value.Second, Is.EqualTo(56));
                 Assert.That(value.Millisecond, Is.EqualTo(0));
+#if NET7_0_OR_GREATER
                 Assert.That(value.Microsecond, Is.EqualTo(0));
+#endif
             });
 
             Assert.Throws<FormatException>(() => converter.Convert("!!!"));
         }
-
-#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
 
         [Test]
         public void StringToEnum_WithoutArgs()
@@ -1305,6 +1325,8 @@ namespace Test.CuiLib.Converters
             });
         }
 
+#if NET7_0_OR_GREATER
+
         [Test]
         public void GetDefault_AsInt128()
         {
@@ -1322,6 +1344,8 @@ namespace Test.CuiLib.Converters
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
             });
         }
+
+#endif
 
         [Test]
         public void GetDefault_AsByte()
@@ -1391,6 +1415,8 @@ namespace Test.CuiLib.Converters
             });
         }
 
+#if NET7_0_OR_GREATER
+
         [Test]
         public void GetDefault_AsUInt128()
         {
@@ -1407,6 +1433,8 @@ namespace Test.CuiLib.Converters
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
             });
         }
+
+#endif
 
         [Test]
         public void GetDefault_AsSingle()

@@ -73,7 +73,7 @@ namespace CuiLib.Options
         /// <inheritdoc/>
         public override sealed bool MatchName(string name)
         {
-            ArgumentException.ThrowIfNullOrEmpty(name);
+            ThrowHelpers.ThrowIfNullOrEmpty(name);
 
             return Children.Contains(name);
         }
