@@ -48,7 +48,7 @@ namespace CuiLib.Checkers
             /// <exception cref="ArgumentNullException"><paramref name="func"/>がnull</exception>
             internal DelegateValueChecker(Func<T, ValueCheckState> func)
             {
-                ArgumentNullException.ThrowIfNull(func);
+                ThrowHelpers.ThrowIfNull(func);
 
                 this.func = func;
             }
@@ -204,11 +204,24 @@ namespace CuiLib.Checkers
             }
 
             /// <inheritdoc/>
+
+#if NET6_0_OR_GREATER
+
             public ValueCheckState CheckValue(T value)
             {
                 if (Enum.IsDefined(value)) return ValueCheckState.Success;
                 return ValueCheckState.AsError($"定義されていない値です。[{string.Join(", ", Enum.GetNames<T>())}]の中から選択してください");
             }
+
+#else
+
+            public ValueCheckState CheckValue(T value)
+            {
+                if (Enum.IsDefined(typeof(T), value)) return ValueCheckState.Success;
+                return ValueCheckState.AsError($"定義されていない値です。[{string.Join(", ", Enum.GetNames(typeof(T)))}]の中から選択してください");
+            }
+
+#endif
 
             /// <inheritdoc/>
             public override bool Equals(object? obj) => obj is DefinedEnumValueChecker<T>;
@@ -238,7 +251,7 @@ namespace CuiLib.Checkers
             /// <exception cref="ArgumentException"><paramref name="source"/>が空</exception>
             internal ContainsValueChecker(TCollection source, IEqualityComparer<TElement>? comparer)
             {
-                ArgumentNullException.ThrowIfNull(source);
+                ThrowHelpers.ThrowIfNull(source);
                 if (!source.Any()) throw new ArgumentException("空のコレクションです", nameof(source));
 
                 this.source = source;
@@ -516,7 +529,7 @@ namespace CuiLib.Checkers
             /// <inheritdoc/>
             public ValueCheckState CheckValue(FileInfo value)
             {
-                ArgumentNullException.ThrowIfNull(value);
+                ThrowHelpers.ThrowIfNull(value);
 
                 DirectoryInfo? directory = value.Directory;
                 if (directory is not null && !directory.Exists) return ValueCheckState.AsError($"ファイル'{value.Name}'のディレクトリが存在しません");
@@ -553,7 +566,7 @@ namespace CuiLib.Checkers
             /// <inheritdoc/>
             public ValueCheckState CheckValue(FileInfo value)
             {
-                ArgumentNullException.ThrowIfNull(value);
+                ThrowHelpers.ThrowIfNull(value);
 
                 DirectoryInfo? directory = value.Directory;
                 if (!AllowMissedDirectory && directory is not null && !directory.Exists) return ValueCheckState.AsError($"ファイル'{value.Name}'のディレクトリが存在しません");
@@ -578,7 +591,7 @@ namespace CuiLib.Checkers
             /// <inheritdoc/>
             public ValueCheckState CheckValue(DirectoryInfo value)
             {
-                ArgumentNullException.ThrowIfNull(value);
+                ThrowHelpers.ThrowIfNull(value);
 
                 if (!value.Exists) return ValueCheckState.AsError($"ディレクトリ'{value.Name}'が存在しません");
                 return ValueCheckState.Success;
@@ -600,7 +613,7 @@ namespace CuiLib.Checkers
             /// <exception cref="ArgumentNullException"><paramref name="regex"/>が<see langword="null"/></exception>
             internal RegexMatchValueChecker(Regex regex)
             {
-                ArgumentNullException.ThrowIfNull(regex);
+                ThrowHelpers.ThrowIfNull(regex);
 
                 this.regex = regex;
             }

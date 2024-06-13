@@ -37,7 +37,7 @@ namespace CuiLib.Checkers
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
         public static IValueChecker<T> And<T>(params IValueChecker<T>[] source)
         {
-            return IValueChecker<T>.And(source);
+            return new AndValueChecker<T>(source);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace CuiLib.Checkers
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
         public static IValueChecker<T> Or<T>(params IValueChecker<T>[] source)
         {
-            return IValueChecker<T>.Or(source);
+            return new OrValueChecker<T>(source);
         }
 
         /// <summary>

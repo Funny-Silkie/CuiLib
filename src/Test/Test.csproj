@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <LangVersion>12</LangVersion>
-    <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net7.0;net6.0;netcoreapp3.1</TargetFrameworks>
     <OutputPath>$(SolutionDir)Build\Test\$(Configuration)</OutputPath>
     <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>

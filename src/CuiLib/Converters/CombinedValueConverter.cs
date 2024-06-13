@@ -22,8 +22,8 @@ namespace CuiLib.Converters
         /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="second"/>がnull</exception>
         internal CombinedValueConverter(IValueConverter<TIn, TMid> first, IValueConverter<TMid, TOut> second)
         {
-            ArgumentNullException.ThrowIfNull(first);
-            ArgumentNullException.ThrowIfNull(second);
+            ThrowHelpers.ThrowIfNull(first);
+            ThrowHelpers.ThrowIfNull(second);
 
             this.first = first;
             this.second = second;

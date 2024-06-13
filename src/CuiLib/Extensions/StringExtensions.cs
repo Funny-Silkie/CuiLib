@@ -48,7 +48,7 @@ namespace CuiLib.Extensions
         {
             if (value.Length == 0)
             {
-                ArgumentNullException.ThrowIfNull(from);
+                ThrowHelpers.ThrowIfNull(from);
                 return [];
             }
             if (from is ICollection<int> c && c.Count == 0) return value;
@@ -71,7 +71,7 @@ namespace CuiLib.Extensions
         /// <exception cref="ArgumentNullException"><paramref name="map"/>がnull</exception>
         public static ReadOnlySpan<char> ReplaceAll(this ReadOnlySpan<char> value, IDictionary<char, char> map)
         {
-            ArgumentNullException.ThrowIfNull(map);
+            ThrowHelpers.ThrowIfNull(map);
 
             if (value.Length == 0) return [];
             if (map.Count == 0) return value;

@@ -48,7 +48,7 @@ namespace CuiLib
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
         public static string OpenReadAllText(this FileInfo file)
         {
-            ArgumentNullException.ThrowIfNull(file);
+            ThrowHelpers.ThrowIfNull(file);
 
             using StreamReader reader = file.OpenText();
             return reader.ReadToEnd();
@@ -68,7 +68,7 @@ namespace CuiLib
         /// <exception cref="ArgumentOutOfRangeException">文字列長が<see cref="int.MaxValue"/>を超える</exception>
         public static async Task<string> OpenReadAllTextAsync(this FileInfo file)
         {
-            ArgumentNullException.ThrowIfNull(file);
+            ThrowHelpers.ThrowIfNull(file);
 
             using StreamReader reader = file.OpenText();
             return await reader.ReadToEndAsync();
@@ -88,7 +88,7 @@ namespace CuiLib
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
         public static IEnumerable<string> OpenIterateLines(this FileInfo file)
         {
-            ArgumentNullException.ThrowIfNull(file);
+            ThrowHelpers.ThrowIfNull(file);
 
             return Inner(file);
 
@@ -113,7 +113,7 @@ namespace CuiLib
         /// <exception cref="ArgumentOutOfRangeException">文字列長が<see cref="int.MaxValue"/>を超える</exception>
         public static IAsyncEnumerable<string> OpenIterateLinesAsync(this FileInfo file)
         {
-            ArgumentNullException.ThrowIfNull(file);
+            ThrowHelpers.ThrowIfNull(file);
 
             return Inner(file);
 
@@ -169,7 +169,7 @@ namespace CuiLib
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
         public static IEnumerable<string> IterateLines(this StreamReader reader)
         {
-            ArgumentNullException.ThrowIfNull(reader);
+            ThrowHelpers.ThrowIfNull(reader);
 
             return Inner(reader);
 
@@ -189,7 +189,7 @@ namespace CuiLib
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
         public static IAsyncEnumerable<string> IterateLinesAsync(this StreamReader reader)
         {
-            ArgumentNullException.ThrowIfNull(reader);
+            ThrowHelpers.ThrowIfNull(reader);
 
             return Inner(reader);
 

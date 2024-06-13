@@ -423,6 +423,8 @@ namespace Test.CuiLib.Converters
             Assert.Throws<FormatException>(() => converter.Convert("!!!"));
         }
 
+#if NET6_0_OR_GREATER
+
         [Test]
         public void StringToDateOnly_WithoutArgs()
         {
@@ -514,6 +516,8 @@ namespace Test.CuiLib.Converters
 
             Assert.Throws<FormatException>(() => converter.Convert("!!!"));
         }
+
+#endif
 
         [Test]
         public void StringToTimeSpan_WithoutArgs()
@@ -1529,6 +1533,8 @@ namespace Test.CuiLib.Converters
             });
         }
 
+#if NET6_0_OR_GREATER
+
         [Test]
         public void GetDefault_AsDateOnly()
         {
@@ -1560,6 +1566,8 @@ namespace Test.CuiLib.Converters
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
             });
         }
+
+#endif
 
         [Test]
         public void GetDefault_AsTimeSpan()
@@ -1649,8 +1657,10 @@ namespace Test.CuiLib.Converters
                 Assert.That(ValueConverter.GetValueTypeString<bool>(), Is.EqualTo("bool"));
                 Assert.That(ValueConverter.GetValueTypeString<DateTime>(), Is.EqualTo("date time"));
                 Assert.That(ValueConverter.GetValueTypeString<TimeSpan>(), Is.EqualTo("date time"));
+#if NET6_0_OR_GREATER
                 Assert.That(ValueConverter.GetValueTypeString<DateOnly>(), Is.EqualTo("date"));
                 Assert.That(ValueConverter.GetValueTypeString<TimeOnly>(), Is.EqualTo("time"));
+#endif
 
                 Assert.That(ValueConverter.GetValueTypeString<OptionType>(), Is.EqualTo("string"));
                 Assert.That(ValueConverter.GetValueTypeString<object>(), Is.EqualTo("string"));

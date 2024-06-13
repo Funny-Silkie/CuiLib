@@ -24,7 +24,7 @@ namespace CuiLib.Converters
             /// <exception cref="ArgumentNullException"><paramref name="converter"/>がnull</exception>
             internal DelegateValueConverter(Converter<TIn, TOut> converter)
             {
-                ArgumentNullException.ThrowIfNull(converter);
+                ThrowHelpers.ThrowIfNull(converter);
 
                 this.converter = converter;
             }
@@ -153,6 +153,8 @@ namespace CuiLib.Converters
             }
         }
 
+#if NET6_0_OR_GREATER
+
         /// <summary>
         /// フォーマット付きで<see cref="DateOnly"/>への変換を行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
@@ -216,6 +218,8 @@ namespace CuiLib.Converters
                 return TimeOnly.ParseExact(value, format, null);
             }
         }
+
+#endif
 
         /// <summary>
         /// フォーマット付きで<see cref="TimeSpan"/>への変換を行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
@@ -350,7 +354,7 @@ namespace CuiLib.Converters
             /// <exception cref="ArgumentNullException"><paramref name="encoding"/>がnull</exception>
             internal FileOrConsoleWriterValueConverter(Encoding encoding, bool append)
             {
-                ArgumentNullException.ThrowIfNull(encoding);
+                ThrowHelpers.ThrowIfNull(encoding);
 
                 this.encoding = encoding;
                 this.append = append;
@@ -379,7 +383,7 @@ namespace CuiLib.Converters
             /// <exception cref="ArgumentNullException"><paramref name="encoding"/>がnull</exception>
             internal FileOrConsoleReaderValueConverter(Encoding encoding)
             {
-                ArgumentNullException.ThrowIfNull(encoding);
+                ThrowHelpers.ThrowIfNull(encoding);
 
                 this.encoding = encoding;
             }
@@ -409,7 +413,7 @@ namespace CuiLib.Converters
             /// <exception cref="ArgumentNullException"><paramref name="encoding"/>がnull</exception>
             internal StreamWriterValueConverter(Encoding encoding, bool append)
             {
-                ArgumentNullException.ThrowIfNull(encoding);
+                ThrowHelpers.ThrowIfNull(encoding);
 
                 this.encoding = encoding;
                 this.append = append;
@@ -437,7 +441,7 @@ namespace CuiLib.Converters
             /// <exception cref="ArgumentNullException"><paramref name="encoding"/>がnull</exception>
             internal StreamReaderValueConverter(Encoding encoding)
             {
-                ArgumentNullException.ThrowIfNull(encoding);
+                ThrowHelpers.ThrowIfNull(encoding);
 
                 this.encoding = encoding;
             }
@@ -469,8 +473,8 @@ namespace CuiLib.Converters
             /// <param name="splitOptions">文字列分割時のオプション</param>
             internal ArrayValueConverter(string separator, Type elementType, IValueConverter<string, object?> converter, StringSplitOptions splitOptions)
             {
-                ArgumentNullException.ThrowIfNull(elementType);
-                ArgumentNullException.ThrowIfNull(converter);
+                ThrowHelpers.ThrowIfNull(elementType);
+                ThrowHelpers.ThrowIfNull(converter);
                 ThrowHelpers.ThrowIfNullOrEmpty(separator);
 
                 this.separator = separator;
@@ -482,7 +486,7 @@ namespace CuiLib.Converters
             /// <inheritdoc/>
             public Array Convert(string value)
             {
-                ArgumentNullException.ThrowIfNull(value);
+                ThrowHelpers.ThrowIfNull(value);
 
                 if (value.Length == 0) return Array.CreateInstance(elementType, 0);
 
@@ -512,7 +516,7 @@ namespace CuiLib.Converters
             /// <param name="splitOptions">文字列分割時のオプション</param>
             internal ArrayValueConverter(string separator, IValueConverter<string, T> converter, StringSplitOptions splitOptions)
             {
-                ArgumentNullException.ThrowIfNull(converter);
+                ThrowHelpers.ThrowIfNull(converter);
                 ThrowHelpers.ThrowIfNullOrEmpty(separator);
 
                 this.separator = separator;
@@ -523,7 +527,7 @@ namespace CuiLib.Converters
             /// <inheritdoc/>
             public T[] Convert(string value)
             {
-                ArgumentNullException.ThrowIfNull(value);
+                ThrowHelpers.ThrowIfNull(value);
 
                 if (value.Length == 0) return [];
 

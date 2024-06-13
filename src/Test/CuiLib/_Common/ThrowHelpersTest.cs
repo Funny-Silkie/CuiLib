@@ -35,6 +35,20 @@ namespace Test.CuiLib
         }
 
         [Test]
+        public void ThrowIfNull_WithNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => ThrowHelpers.ThrowIfNull<object>(null));
+        }
+        
+        [Test]
+        public void ThrowIfNull_AsPositive()
+        {
+            Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNull<object>(string.Empty));
+            Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNull<object>(0));
+            Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNull<object>(false));
+        }
+
+        [Test]
         public void ThrowIfNullOrEmpty_WithNull()
         {
             Assert.Throws<ArgumentNullException>(() => ThrowHelpers.ThrowIfNullOrEmpty(null));

@@ -119,7 +119,7 @@ namespace Test.CuiLib.Options
             public void GetEnumerator_AsNonGeneric()
             {
                 var list = new List<string>();
-                foreach (string current in (IEnumerable)keys) list.Add(current);
+                foreach (object? current in (IEnumerable)keys) list.Add((string)current!);
 
                 Assert.That(list, Is.EquivalentTo(new[] { "s", "full" }));
             }

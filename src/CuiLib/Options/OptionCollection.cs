@@ -92,7 +92,7 @@ namespace CuiLib.Options
         /// <exception cref="ArgumentException">既にオプションが追加されている-または-オプション名が衝突している</exception>
         public void Add(Option option)
         {
-            ArgumentNullException.ThrowIfNull(option);
+            ThrowHelpers.ThrowIfNull(option);
             if (option.GetAllNames(false).Any(keys.ContainsKey)) throw new ArgumentException("オプション名が重複しています");
 
             var key = new OptionKey(option.GetAllNames(false));

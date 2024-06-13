@@ -32,7 +32,7 @@ namespace CuiLib.Checkers
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
         internal OrValueChecker(params IValueChecker<T>[] source)
         {
-            ArgumentNullException.ThrowIfNull(source);
+            ThrowHelpers.ThrowIfNull(source);
 
             if (source.Length == 2)
             {
@@ -59,8 +59,8 @@ namespace CuiLib.Checkers
         [MemberNotNull(nameof(checkers))]
         private void Initialize(IValueChecker<T> first, IValueChecker<T> second)
         {
-            ArgumentNullException.ThrowIfNull(first);
-            ArgumentNullException.ThrowIfNull(second);
+            ThrowHelpers.ThrowIfNull(first);
+            ThrowHelpers.ThrowIfNull(second);
 
             if (first is OrValueChecker<T> c1)
             {

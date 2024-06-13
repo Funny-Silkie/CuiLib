@@ -39,7 +39,7 @@ namespace CuiLib.Converters
         /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="secondConverter"/>がnull</exception>
         public static IValueConverter<TIn, TOut> Combine<TIn, TMid, TOut>(this IValueConverter<TIn, TMid> first, Converter<TMid, TOut> secondConverter)
         {
-            ArgumentNullException.ThrowIfNull(first);
+            ThrowHelpers.ThrowIfNull(first);
 
             return new CombinedValueConverter<TIn, TMid, TOut>(first, FromDelegate(secondConverter));
         }
@@ -291,6 +291,8 @@ namespace CuiLib.Converters
             return new DateTimeExactConverter(format);
         }
 
+#if NET6_0_OR_GREATER
+
         /// <summary>
         /// 文字列から<see cref="DateOnly"/>に変換するインスタンスを生成します。
         /// </summary>
@@ -348,6 +350,8 @@ namespace CuiLib.Converters
         {
             return new TimeOnlyExactConverter(format);
         }
+
+#endif
 
         /// <summary>
         /// 文字列から<see cref="TimeSpan"/>に変換するインスタンスを生成します。
@@ -544,7 +548,7 @@ namespace CuiLib.Converters
                 Type converterType = typeof(ArrayValueConverter<>).MakeGenericType(elementType);
 
                 var ctorArgTypes = new[] { typeof(string), typeof(IValueConverter<,>).MakeGenericType(typeof(string), elementType), typeof(StringSplitOptions) };
-                ConstructorInfo ctor = converterType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, ctorArgTypes) ?? throw new InvalidOperationException();
+                ConstructorInfo ctor = converterType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, binder: null, ctorArgTypes, modifiers: null) ?? throw new InvalidOperationException();
 
                 return Cast(ctor.Invoke([",", GetDefault(elementType), StringSplitOptions.None]));
             }
@@ -561,8 +565,10 @@ namespace CuiLib.Converters
             if (type == typeof(long)) return Cast(StringToInt64());
             if (type == typeof(ulong)) return Cast(StringToUInt64());
             if (type == typeof(TimeSpan)) return Cast(StringToTimeSpan());
+#if NET6_0_OR_GREATER
             if (type == typeof(DateOnly)) return Cast(StringToDateOnly());
             if (type == typeof(TimeOnly)) return Cast(StringToTimeOnly());
+#endif
             if (type == typeof(char)) return Cast(StringToChar());
             if (type == typeof(float)) return Cast(StringToSingle());
             if (type == typeof(decimal)) return Cast(StringToDecimal());
@@ -574,7 +580,7 @@ namespace CuiLib.Converters
             if (type.IsEnum)
             {
                 Type converterType = typeof(EnumValueConverter<>).MakeGenericType([type]);
-                ConstructorInfo ctor = converterType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, [typeof(bool)]) ?? throw new InvalidOperationException();
+                ConstructorInfo ctor = converterType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, binder: null, [typeof(bool)], modifiers: null) ?? throw new InvalidOperationException();
                 return Cast(ctor.Invoke(parameters: [false]));
             }
 
@@ -631,8 +637,10 @@ namespace CuiLib.Converters
             if (type == typeof(char)) return "char";
             if (type == typeof(bool)) return "bool";
             if (type == typeof(TimeSpan)) return "date time";
+#if NET6_0_OR_GREATER
             if (type == typeof(DateOnly)) return "date";
             if (type == typeof(TimeOnly)) return "time";
+#endif
             if (type.IsEnum) return "string";
             return "string";
         }

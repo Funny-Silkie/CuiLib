@@ -132,7 +132,7 @@ namespace Test.CuiLib.Options
             collection.Add(option2);
 
             var list = new List<Option>();
-            foreach (Option current in (IEnumerable)collection) list.Add(current);
+            foreach (object? current in (IEnumerable)collection) list.Add((Option)current!);
 
             Assert.That(list, Is.EquivalentTo(new[] { option1, option2 }));
         }

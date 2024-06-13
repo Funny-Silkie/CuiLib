@@ -1,5 +1,4 @@
 ﻿using System;
-using CuiLib.Options;
 
 namespace CuiLib.Checkers
 {
@@ -16,6 +15,8 @@ namespace CuiLib.Checkers
         /// <returns>検証結果</returns>
         ValueCheckState CheckValue(T value);
 
+#if NET6_0_OR_GREATER
+
         /// <summary>
         /// 二つの<see cref="IValueChecker{T}"/>をAND結合します。
         /// </summary>
@@ -24,8 +25,8 @@ namespace CuiLib.Checkers
         /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="second"/>がnull</exception>
         static IValueChecker<T> And(IValueChecker<T> first, IValueChecker<T> second)
         {
-            ArgumentNullException.ThrowIfNull(first);
-            ArgumentNullException.ThrowIfNull(second);
+            ThrowHelpers.ThrowIfNull(first);
+            ThrowHelpers.ThrowIfNull(second);
 
             if (first == second) return first;
 
@@ -51,8 +52,8 @@ namespace CuiLib.Checkers
         /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="second"/>がnull</exception>
         static IValueChecker<T> Or(IValueChecker<T> first, IValueChecker<T> second)
         {
-            ArgumentNullException.ThrowIfNull(first);
-            ArgumentNullException.ThrowIfNull(second);
+            ThrowHelpers.ThrowIfNull(first);
+            ThrowHelpers.ThrowIfNull(second);
 
             if (first == second) return first;
 
@@ -83,5 +84,7 @@ namespace CuiLib.Checkers
         }
 
 #pragma warning restore CS1591 // 公開されている型またはメンバーの XML コメントがありません
+
+#endif
     }
 }

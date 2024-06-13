@@ -47,7 +47,7 @@ namespace CuiLib.Commands
         /// <exception cref="ArgumentException">同じ名前のコマンドが存在する</exception>
         public void Add(Command command)
         {
-            ArgumentNullException.ThrowIfNull(command);
+            ThrowHelpers.ThrowIfNull(command);
 
             items.Add(command.Name, command);
             command.Parent = parent;
@@ -72,7 +72,7 @@ namespace CuiLib.Commands
         /// <exception cref="ArgumentNullException"><paramref name="commandName"/>がnull</exception>
         public bool Contains(string commandName)
         {
-            ArgumentNullException.ThrowIfNull(commandName);
+            ThrowHelpers.ThrowIfNull(commandName);
 
             return items.ContainsKey(commandName);
         }
@@ -85,7 +85,7 @@ namespace CuiLib.Commands
         /// <exception cref="ArgumentNullException"><paramref name="command"/>がnull</exception>
         public bool Contains(Command command)
         {
-            ArgumentNullException.ThrowIfNull(command);
+            ThrowHelpers.ThrowIfNull(command);
 
             return items.TryGetValue(command.Name, out Command? actual) && command == actual;
         }

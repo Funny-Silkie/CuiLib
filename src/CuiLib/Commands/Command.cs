@@ -50,7 +50,7 @@ namespace CuiLib.Commands
         /// <exception cref="ArgumentNullException"><paramref name="name"/>がnull</exception>
         public Command(string name)
         {
-            ArgumentNullException.ThrowIfNull(name);
+            ThrowHelpers.ThrowIfNull(name);
 
             Name = name;
             Children = new CommandCollection(this);
@@ -68,8 +68,8 @@ namespace CuiLib.Commands
         /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
         public static void InvokeFromCollection(string[] args, CommandCollection commands)
         {
-            ArgumentNullException.ThrowIfNull(args);
-            ArgumentNullException.ThrowIfNull(commands);
+            ThrowHelpers.ThrowIfNull(args);
+            ThrowHelpers.ThrowIfNull(commands);
 
             if (args.Length == 0) return;
 
@@ -87,8 +87,8 @@ namespace CuiLib.Commands
         /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
         public static async Task InvokeFromCollectionAsync(string[] args, CommandCollection commands)
         {
-            ArgumentNullException.ThrowIfNull(args);
-            ArgumentNullException.ThrowIfNull(commands);
+            ThrowHelpers.ThrowIfNull(args);
+            ThrowHelpers.ThrowIfNull(commands);
 
             if (args.Length == 0) return;
 
@@ -183,7 +183,7 @@ namespace CuiLib.Commands
         /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
         public void Invoke(string[] args)
         {
-            ArgumentNullException.ThrowIfNull(args);
+            ThrowHelpers.ThrowIfNull(args);
 
             Invoke(args.AsSpan());
         }
@@ -197,7 +197,7 @@ namespace CuiLib.Commands
         /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
         public async Task InvokeAsync(string[] args)
         {
-            ArgumentNullException.ThrowIfNull(args);
+            ThrowHelpers.ThrowIfNull(args);
 
             await InvokeAsync(new ReadOnlyMemory<string>(args));
         }
@@ -278,7 +278,7 @@ namespace CuiLib.Commands
         /// <exception cref="ArgumentNullException"><paramref name="writer"/>がnull</exception>
         public virtual void WriteHelp(TextWriter writer)
         {
-            ArgumentNullException.ThrowIfNull(writer);
+            ThrowHelpers.ThrowIfNull(writer);
 
             // Title
             if (!string.IsNullOrEmpty(Name))

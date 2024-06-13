@@ -796,6 +796,7 @@ namespace Test.CuiLib.Checkers
             try
             {
                 existing.Create().Dispose();
+                existing.Refresh();
 
                 Assert.Multiple(() =>
                 {
@@ -871,6 +872,7 @@ namespace Test.CuiLib.Checkers
             try
             {
                 existing.Create().Dispose();
+                existing.Refresh();
 
                 Assert.Multiple(() =>
                 {
@@ -896,6 +898,7 @@ namespace Test.CuiLib.Checkers
             try
             {
                 existing.Create();
+                existing.Refresh();
 
                 Assert.Multiple(() =>
                 {
