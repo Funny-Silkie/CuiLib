@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Test.CuiLib.Commands
 {
     [TestFixture]
-    public class CommandCollectionTest
+    public class CommandCollectionTest : TestBase
     {
         private CommandCollection hasNoParent;
         private CommandCollection hasParent;

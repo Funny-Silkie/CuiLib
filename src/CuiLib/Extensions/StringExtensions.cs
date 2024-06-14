@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CuiLib.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -48,7 +49,7 @@ namespace CuiLib.Extensions
         {
             if (value.Length == 0)
             {
-                ArgumentNullException.ThrowIfNull(from);
+                ThrowHelpers.ThrowIfNull(from);
                 return [];
             }
             if (from is ICollection<int> c && c.Count == 0) return value;
@@ -71,7 +72,7 @@ namespace CuiLib.Extensions
         /// <exception cref="ArgumentNullException"><paramref name="map"/>がnull</exception>
         public static ReadOnlySpan<char> ReplaceAll(this ReadOnlySpan<char> value, IDictionary<char, char> map)
         {
-            ArgumentNullException.ThrowIfNull(map);
+            ThrowHelpers.ThrowIfNull(map);
 
             if (value.Length == 0) return [];
             if (map.Count == 0) return value;
@@ -90,7 +91,16 @@ namespace CuiLib.Extensions
         /// <returns>分割後の文字列一覧</returns>
         public static string[] EscapedSplit(this ReadOnlySpan<char> value, char separator)
         {
-            return EscapedSplitPrivate(value, MemoryMarshal.CreateSpan(ref separator, 1));
+            ReadOnlySpan<char> separatorSpan;
+#if NETSTANDARD2_1_OR_GREATER || NET
+            separatorSpan = MemoryMarshal.CreateSpan(ref separator, 1);
+#else
+            unsafe
+            {
+                separatorSpan = new ReadOnlySpan<char>(&separator, 1);
+            }
+#endif
+            return EscapedSplitPrivate(value, separatorSpan);
         }
 
         /// <summary>
@@ -103,7 +113,7 @@ namespace CuiLib.Extensions
         /// <exception cref="ArgumentException"><paramref name="separator"/>が空文字</exception>
         public static string[] EscapedSplit(this ReadOnlySpan<char> value, string separator)
         {
-            ArgumentException.ThrowIfNullOrEmpty(separator);
+            ThrowHelpers.ThrowIfNullOrEmpty(separator);
 
             return EscapedSplitPrivate(value, separator.AsSpan());
         }
@@ -139,7 +149,7 @@ namespace CuiLib.Extensions
                     // エスケープ判定
                     if (current is '"' or '\'')
                     {
-                        int nextEscapeIndex = value.SliceOrDefault(index + 1).IndexOf(current.ToString(), StringComparison.Ordinal);
+                        int nextEscapeIndex = value.SliceOrDefault(index + 1).IndexOf(current.ToString().AsSpan(), StringComparison.Ordinal);
                         if (nextEscapeIndex != -1) nextEscapeIndex += index + 1;
                         // エスケープ文字で囲まれているかどうか
                         // 右側にエスケープ文字があるなら nextEscapeIndex + 1 以降に separator があるはず

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CuiLib.Internal;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -22,7 +23,16 @@ namespace CuiLib.Extensions
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
         public static void WriteJoin<T>(this TextWriter writer, char separator, IEnumerable<T> values)
         {
-            WriteJoinPrivate(writer, MemoryMarshal.CreateReadOnlySpan(ref separator, 1), values);
+            ReadOnlySpan<char> separatorSpan;
+#if NETSTANDARD2_1_OR_GREATER || NET
+            separatorSpan = MemoryMarshal.CreateReadOnlySpan(ref separator, 1);
+#else
+            unsafe
+            {
+                separatorSpan = new ReadOnlySpan<char>(&separator, 1);
+            }
+#endif
+            WriteJoinPrivate(writer, separatorSpan, values);
         }
 
         /// <summary>
@@ -52,19 +62,21 @@ namespace CuiLib.Extensions
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
         private static void WriteJoinPrivate<T>(TextWriter writer, ReadOnlySpan<char> separator, IEnumerable<T> values)
         {
-            ArgumentNullException.ThrowIfNull(writer);
-            ArgumentNullException.ThrowIfNull(values);
+            ThrowHelpers.ThrowIfNull(writer);
+            ThrowHelpers.ThrowIfNull(values);
 
             if (values is string?[] _array)
             {
                 WriteJoinPrivate(writer, separator, _array.AsSpan());
                 return;
             }
+#if NET6_0_OR_GREATER
             if (values is List<string?> _list)
             {
                 WriteJoinPrivate(writer, separator, CollectionsMarshal.AsSpan(_list));
                 return;
             }
+#endif
 
             using IEnumerator<T> enumerator = values.GetEnumerator();
             if (!enumerator.MoveNext()) return;
@@ -88,9 +100,18 @@ namespace CuiLib.Extensions
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
         public static void WriteJoin(this TextWriter writer, char separator, params string?[] values)
         {
-            ArgumentNullException.ThrowIfNull(values);
+            ThrowHelpers.ThrowIfNull(values);
 
-            WriteJoinPrivate(writer, MemoryMarshal.CreateReadOnlySpan(ref separator, 1), values.AsSpan());
+            ReadOnlySpan<char> separatorSpan;
+#if NETSTANDARD2_1_OR_GREATER || NET
+            separatorSpan = MemoryMarshal.CreateReadOnlySpan(ref separator, 1);
+#else
+            unsafe
+            {
+                separatorSpan = new ReadOnlySpan<char>(&separator, 1);
+            }
+#endif
+            WriteJoinPrivate(writer, separatorSpan, values.AsSpan());
         }
 
         /// <summary>
@@ -104,7 +125,7 @@ namespace CuiLib.Extensions
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
         public static void WriteJoin(this TextWriter writer, string? separator, params string?[] values)
         {
-            ArgumentNullException.ThrowIfNull(values);
+            ThrowHelpers.ThrowIfNull(values);
 
             WriteJoinPrivate(writer, separator.AsSpan(), values.AsSpan());
         }
@@ -120,7 +141,7 @@ namespace CuiLib.Extensions
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
         private static void WriteJoinPrivate(TextWriter writer, ReadOnlySpan<char> separator, ReadOnlySpan<string?> values)
         {
-            ArgumentNullException.ThrowIfNull(writer);
+            ThrowHelpers.ThrowIfNull(writer);
 
             if (values.Length == 0) return;
 
@@ -143,9 +164,18 @@ namespace CuiLib.Extensions
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
         public static void WriteJoin(this TextWriter writer, char separator, params object?[] values)
         {
-            ArgumentNullException.ThrowIfNull(values);
+            ThrowHelpers.ThrowIfNull(values);
 
-            WriteJoinPrivate(writer, MemoryMarshal.CreateReadOnlySpan(ref separator, 1), values.AsSpan());
+            ReadOnlySpan<char> separatorSpan;
+#if NETSTANDARD2_1_OR_GREATER || NET
+            separatorSpan = MemoryMarshal.CreateReadOnlySpan(ref separator, 1);
+#else
+            unsafe
+            {
+                separatorSpan = new ReadOnlySpan<char>(&separator, 1);
+            }
+#endif
+            WriteJoinPrivate(writer, separatorSpan, values.AsSpan());
         }
 
         /// <summary>
@@ -159,7 +189,7 @@ namespace CuiLib.Extensions
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
         public static void WriteJoin(this TextWriter writer, string? separator, params object?[] values)
         {
-            ArgumentNullException.ThrowIfNull(values);
+            ThrowHelpers.ThrowIfNull(values);
 
             WriteJoinPrivate(writer, separator.AsSpan(), values.AsSpan());
         }
@@ -175,7 +205,7 @@ namespace CuiLib.Extensions
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
         private static void WriteJoinPrivate(TextWriter writer, ReadOnlySpan<char> separator, ReadOnlySpan<object?> values)
         {
-            ArgumentNullException.ThrowIfNull(writer);
+            ThrowHelpers.ThrowIfNull(writer);
 
             if (values.Length == 0) return;
 

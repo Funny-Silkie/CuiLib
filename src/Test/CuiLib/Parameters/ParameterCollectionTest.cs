@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Test.CuiLib.Parameters
 {
-    public class ParameterCollectionTest
+    public class ParameterCollectionTest : TestBase
     {
         private ParameterCollection collection;
 

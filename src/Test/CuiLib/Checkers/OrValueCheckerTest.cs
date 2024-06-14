@@ -5,7 +5,7 @@ using System;
 namespace Test.CuiLib.Checkers
 {
     [TestFixture]
-    public class OrValueCheckerTest
+    public class OrValueCheckerTest : TestBase
     {
         #region Ctors
 

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Test.CuiLib.Options
 {
     [TestFixture]
-    public class GroupOptionTest
+    public class GroupOptionTest : TestBase
     {
         private GroupOptionImpl option;
         private FlagOption child1;
@@ -252,7 +252,7 @@ namespace Test.CuiLib.Options
         public void GetEnumerator_AsNonGeneric()
         {
             var list = new List<Option>();
-            foreach (Option current in (IEnumerable)option) list.Add(current);
+            foreach (object? current in (IEnumerable)option) list.Add((Option)current!);
 
             Assert.That(list, Is.EqualTo(new Option[] { child1, child2 }));
         }

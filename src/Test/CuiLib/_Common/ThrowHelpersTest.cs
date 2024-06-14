@@ -8,7 +8,7 @@ using System.IO;
 namespace Test.CuiLib
 {
     [TestFixture]
-    public class ThrowHelpersTest
+    public class ThrowHelpersTest : TestBase
     {
         private enum TestEnum
         {
@@ -32,6 +32,20 @@ namespace Test.CuiLib
         public void ThrowAsEmptyCollection()
         {
             Assert.Throws<InvalidOperationException>(ThrowHelpers.ThrowAsEmptyCollection);
+        }
+
+        [Test]
+        public void ThrowIfNull_WithNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => ThrowHelpers.ThrowIfNull<object>(null));
+        }
+        
+        [Test]
+        public void ThrowIfNull_AsPositive()
+        {
+            Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNull<object>(string.Empty));
+            Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNull<object>(0));
+            Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNull<object>(false));
         }
 
         [Test]

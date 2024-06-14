@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace Test.CuiLib.Checkers
 {
     [TestFixture]
-    public class ValueCheckStateTest
+    public class ValueCheckStateTest : TestBase
     {
         #region Static Properties
 

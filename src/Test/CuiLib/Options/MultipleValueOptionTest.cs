@@ -8,7 +8,7 @@ using System;
 namespace Test.CuiLib.Options
 {
     [TestFixture]
-    public class MultipleValueOptionTest
+    public class MultipleValueOptionTest : TestBase
     {
         private MultipleValueOption<int> option;
 
@@ -114,7 +114,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Converter_Get_OnDefault()
         {
-            Assert.That(option.Converter, Is.EqualTo(ValueConverter.GetDefault<int>()));
+            Assert.That(option.Converter.GetType(), Is.EqualTo(ValueConverter.GetDefault<int>().GetType()));
         }
 
         [Test]

@@ -5,7 +5,7 @@ using System;
 namespace Test.CuiLib.Converters
 {
     [TestFixture]
-    public class CombinedValueConverterTest
+    public class CombinedValueConverterTest : TestBase
     {
         private CombinedValueConverter<string, int, int> converter;
         private IValueConverter<string, int> first;

@@ -158,10 +158,14 @@ namespace CuiLib.Logging
         /// <exception cref="System.Security.SecurityException">アクセス権限がない</exception>
         public void AddLogFile(FileInfo file, bool append = false, Encoding? encoding = null)
         {
-            ArgumentNullException.ThrowIfNull(file);
+            ThrowHelpers.ThrowIfNull(file);
 
             FileStream stream = file.Open(append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read);
+#if NET6_0_OR_GREATER
             var writer = new StreamWriter(stream, encoding ?? IOHelpers.UTF8N, leaveOpen: false);
+#else
+            var writer = new StreamWriter(stream, encoding ?? IOHelpers.UTF8N, 1024, false);
+#endif
             writers.Add(new WriterEntry(writer)
             {
                 MustDisposed = true,
@@ -176,7 +180,7 @@ namespace CuiLib.Logging
         /// <exception cref="ArgumentNullException"><paramref name="writer"/>がnull</exception>
         public void AddLog(TextWriter writer)
         {
-            ArgumentNullException.ThrowIfNull(writer);
+            ThrowHelpers.ThrowIfNull(writer);
 
             writers.Add(new WriterEntry(writer));
         }
@@ -191,7 +195,7 @@ namespace CuiLib.Logging
         /// <returns>ログファイルの存在が確認できたらtrue，それ以外でfalse</returns>
         public bool HasLogFile(string path)
         {
-            ArgumentNullException.ThrowIfNull(path);
+            ThrowHelpers.ThrowIfNull(path);
 
             return GetLogIndex(Path.GetFullPath(path)) >= 0;
         }
@@ -222,7 +226,7 @@ namespace CuiLib.Logging
         /// <exception cref="ArgumentNullException"><paramref name="writer"/>が<see langword="null"/></exception>
         public bool RemoveLog(TextWriter writer)
         {
-            ArgumentNullException.ThrowIfNull(writer);
+            ThrowHelpers.ThrowIfNull(writer);
 
             int index = GetLogIndex(writer);
             if (index < 0) return false;
@@ -264,11 +268,15 @@ namespace CuiLib.Logging
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
 
+#if NETSTANDARD2_1_OR_GREATER || NET
+
         /// <inheritdoc/>
         public override void Write(ReadOnlySpan<char> buffer)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(buffer);
         }
+
+#endif
 
         /// <inheritdoc/>
         public override void Write(char[]? buffer)
@@ -336,11 +344,15 @@ namespace CuiLib.Logging
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
 
+#if NET6_0_OR_GREATER
+
         /// <inheritdoc/>
         public override void Write(StringBuilder? value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
+
+#endif
 
         /// <inheritdoc/>
         public override void Write(string? value)
@@ -378,11 +390,15 @@ namespace CuiLib.Logging
             foreach (WriterEntry entry in writers) await entry.Writer.WriteAsync(value);
         }
 
+#if NETSTANDARD2_1_OR_GREATER || NET
+
         /// <inheritdoc/>
         public override async Task WriteAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteAsync(buffer, cancellationToken);
         }
+
+#endif
 
         /// <inheritdoc/>
         public override async Task WriteAsync(char[] buffer, int index, int count)
@@ -390,11 +406,15 @@ namespace CuiLib.Logging
             foreach (WriterEntry entry in writers) await entry.Writer.WriteAsync(buffer, index, count);
         }
 
+#if NET6_0_OR_GREATER
+
         /// <inheritdoc/>
         public override async Task WriteAsync(StringBuilder? value, CancellationToken cancellationToken = default)
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteAsync(value, cancellationToken);
         }
+
+#endif
 
         /// <inheritdoc/>
         public override async Task WriteAsync(string? value)
@@ -414,11 +434,15 @@ namespace CuiLib.Logging
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(value);
         }
 
+#if NETSTANDARD2_1_OR_GREATER || NET
+
         /// <inheritdoc/>
         public override void WriteLine(ReadOnlySpan<char> buffer)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(buffer);
         }
+
+#endif
 
         /// <inheritdoc/>
         public override void WriteLine(char[]? buffer)
@@ -486,11 +510,15 @@ namespace CuiLib.Logging
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(value);
         }
 
+#if NET6_0_OR_GREATER
+
         /// <inheritdoc/>
         public override void WriteLine(StringBuilder? value)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(value);
         }
+
+#endif
 
         /// <inheritdoc/>
         public override void WriteLine(string? value)
@@ -534,11 +562,15 @@ namespace CuiLib.Logging
             foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(value);
         }
 
+#if NETSTANDARD2_1_OR_GREATER || NET
+
         /// <inheritdoc/>
         public override async Task WriteLineAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(buffer, cancellationToken);
         }
+
+#endif
 
         /// <inheritdoc/>
         public override async Task WriteLineAsync(char[] buffer, int index, int count)
@@ -546,11 +578,15 @@ namespace CuiLib.Logging
             foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(buffer, index, count);
         }
 
+#if NET6_0_OR_GREATER
+
         /// <inheritdoc/>
         public override async Task WriteLineAsync(StringBuilder? value, CancellationToken cancellationToken = default)
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(value, cancellationToken);
         }
+
+#endif
 
         /// <inheritdoc/>
         public override async Task WriteLineAsync(string? value)

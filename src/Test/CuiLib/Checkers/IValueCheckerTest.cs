@@ -5,9 +5,11 @@ using System;
 namespace Test.CuiLib.Checkers
 {
     [TestFixture]
-    public class IValueCheckerTest
+    public class IValueCheckerTest : TestBase
     {
         #region Methods
+
+#if NET6_0_OR_GREATER
 
         [Test]
         public void And_WithNull()
@@ -71,9 +73,13 @@ namespace Test.CuiLib.Checkers
             });
         }
 
+#endif
+
         #endregion Methods
 
         #region Operators
+
+#if NET6_0_OR_GREATER
 
         [Test]
         public void Op_And_WithNull()
@@ -129,6 +135,8 @@ namespace Test.CuiLib.Checkers
                 Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.True);
             });
         }
+
+#endif
 
         #endregion Operators
     }

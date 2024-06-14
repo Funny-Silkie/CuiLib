@@ -24,7 +24,7 @@ namespace CuiLib.Options
         /// <exception cref="ArgumentException"><paramref name="children"/>が空または名前に重複が生じている</exception>
         public XorGroupOption(IEnumerable<Option> children)
         {
-            ArgumentNullException.ThrowIfNull(children);
+            ThrowHelpers.ThrowIfNull(children);
 
             foreach (Option current in children) Children.Add(current);
             if (Children.Count == 0) throw new ArgumentException("子要素が空です", nameof(children));

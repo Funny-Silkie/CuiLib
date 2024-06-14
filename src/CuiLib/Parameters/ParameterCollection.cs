@@ -169,7 +169,7 @@ namespace CuiLib.Parameters
         /// <exception cref="ArgumentException"><paramref name="parameter"/>のインデックスが配列の領域を指すまたはインデックスが衝突している</exception>
         public void Add(Parameter parameter)
         {
-            ArgumentNullException.ThrowIfNull(parameter);
+            ThrowHelpers.ThrowIfNull(parameter);
 
             if (arrayStart >= 0)
             {
@@ -188,7 +188,7 @@ namespace CuiLib.Parameters
         /// <exception cref="ArgumentNullException"><paramref name="parameter"/>がnull</exception>
         public bool Contains(Parameter parameter)
         {
-            ArgumentNullException.ThrowIfNull(parameter);
+            ThrowHelpers.ThrowIfNull(parameter);
 
             return TryGetValue(parameter.Index, out Parameter? actual) && parameter == actual;
         }
@@ -228,7 +228,7 @@ namespace CuiLib.Parameters
         /// <exception cref="ArgumentNullException"><paramref name="parameter"/>がnull</exception>
         public bool Remove(Parameter parameter)
         {
-            ArgumentNullException.ThrowIfNull(parameter);
+            ThrowHelpers.ThrowIfNull(parameter);
 
             if (!Contains(parameter) || !items.Remove(parameter.Index)) return false;
             if (parameter.IsArray) arrayStart = -1;

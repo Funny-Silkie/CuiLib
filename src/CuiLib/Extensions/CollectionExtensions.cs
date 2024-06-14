@@ -32,7 +32,7 @@ namespace CuiLib.Extensions
         /// <exception cref="ArgumentNullException"><paramref name="list"/>がnull</exception>
         public static T GetOrDefault<T>(this IList<T> list, int index, T defaultValue)
         {
-            ArgumentNullException.ThrowIfNull(list);
+            ThrowHelpers.ThrowIfNull(list);
 
             if ((uint)index >= (uint)list.Count) return defaultValue;
 

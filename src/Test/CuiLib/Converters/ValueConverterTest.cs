@@ -10,7 +10,7 @@ using Test.Helpers;
 namespace Test.CuiLib.Converters
 {
     [TestFixture]
-    public class ValueConverterTest
+    public class ValueConverterTest : TestBase
     {
         [Test]
         public void Combine_WithNullIValueConverter()
@@ -78,6 +78,8 @@ namespace Test.CuiLib.Converters
             Assert.That(converter.Convert("123"), Is.EqualTo(123));
         }
 
+#if NET7_0_OR_GREATER
+
         [Test]
         public void StringToIParsable_Convert()
         {
@@ -105,6 +107,10 @@ namespace Test.CuiLib.Converters
         {
             Assert.That(ValueConverter.StringToIParsable<int>().GetHashCode(), Is.EqualTo(ValueConverter.StringToIParsable<int>().GetHashCode()));
         }
+
+#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
+
+#endif
 
         [Test]
         public void StringToSByte()
@@ -178,6 +184,8 @@ namespace Test.CuiLib.Converters
             });
         }
 
+#if NET7_0_OR_GREATER
+
         [Test]
         public void StringToInt128()
         {
@@ -195,6 +203,8 @@ namespace Test.CuiLib.Converters
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
             });
         }
+
+#endif
 
         [Test]
         public void StringToByte()
@@ -264,6 +274,8 @@ namespace Test.CuiLib.Converters
             });
         }
 
+#if NET7_0_OR_GREATER
+
         [Test]
         public void StringToUInt128()
         {
@@ -281,6 +293,8 @@ namespace Test.CuiLib.Converters
             });
         }
 
+#endif
+
         [Test]
         public void StringToSingle()
         {
@@ -294,8 +308,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("NaN"), Is.EqualTo(float.NaN));
                 Assert.That(converter.Convert(float.PositiveInfinity.ToString()), Is.EqualTo(float.PositiveInfinity));
                 Assert.That(converter.Convert(float.NegativeInfinity.ToString()), Is.EqualTo(float.NegativeInfinity));
-                Assert.That(converter.Convert(float.MaxValue.ToString()), Is.EqualTo(float.MaxValue));
-                Assert.That(converter.Convert(float.MinValue.ToString()), Is.EqualTo(float.MinValue));
+                Assert.That(converter.Convert("1.234E+30"), Is.EqualTo(1.234E+30f));
+                Assert.That(converter.Convert("-1.234E+30"), Is.EqualTo(-1.234E+30f));
 
                 Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
@@ -315,8 +329,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("NaN"), Is.EqualTo(double.NaN));
                 Assert.That(converter.Convert(double.PositiveInfinity.ToString()), Is.EqualTo(double.PositiveInfinity));
                 Assert.That(converter.Convert(double.NegativeInfinity.ToString()), Is.EqualTo(double.NegativeInfinity));
-                Assert.That(converter.Convert(double.MaxValue.ToString()), Is.EqualTo(double.MaxValue));
-                Assert.That(converter.Convert(double.MinValue.ToString()), Is.EqualTo(double.MinValue));
+                Assert.That(converter.Convert("1.23456789E+300"), Is.EqualTo(1.23456789E+300));
+                Assert.That(converter.Convert("-1.23456789E+300"), Is.EqualTo(-1.23456789E+300));
 
                 Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
@@ -401,11 +415,15 @@ namespace Test.CuiLib.Converters
                 Assert.That(value.Minute, Is.EqualTo(34));
                 Assert.That(value.Second, Is.EqualTo(56));
                 Assert.That(value.Millisecond, Is.EqualTo(0));
+#if NET7_0_OR_GREATER
                 Assert.That(value.Microsecond, Is.EqualTo(0));
+#endif
             });
 
             Assert.Throws<FormatException>(() => converter.Convert("!!!"));
         }
+
+#if NET6_0_OR_GREATER
 
         [Test]
         public void StringToDateOnly_WithoutArgs()
@@ -491,11 +509,15 @@ namespace Test.CuiLib.Converters
                 Assert.That(value.Minute, Is.EqualTo(34));
                 Assert.That(value.Second, Is.EqualTo(56));
                 Assert.That(value.Millisecond, Is.EqualTo(0));
+#if NET7_0_OR_GREATER
                 Assert.That(value.Microsecond, Is.EqualTo(0));
+#endif
             });
 
             Assert.Throws<FormatException>(() => converter.Convert("!!!"));
         }
+
+#endif
 
         [Test]
         public void StringToTimeSpan_WithoutArgs()
@@ -538,7 +560,9 @@ namespace Test.CuiLib.Converters
                 Assert.That(value.Minutes, Is.EqualTo(34));
                 Assert.That(value.Seconds, Is.EqualTo(56));
                 Assert.That(value.Milliseconds, Is.EqualTo(0));
+#if NET7_0_OR_GREATER
                 Assert.That(value.Microseconds, Is.EqualTo(0));
+#endif
             });
 
             Assert.Throws<FormatException>(() => converter.Convert("!!!"));
@@ -587,13 +611,13 @@ namespace Test.CuiLib.Converters
                 Assert.That(value.Minute, Is.EqualTo(34));
                 Assert.That(value.Second, Is.EqualTo(56));
                 Assert.That(value.Millisecond, Is.EqualTo(0));
+#if NET7_0_OR_GREATER
                 Assert.That(value.Microsecond, Is.EqualTo(0));
+#endif
             });
 
             Assert.Throws<FormatException>(() => converter.Convert("!!!"));
         }
-
-#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
 
         [Test]
         public void StringToEnum_WithoutArgs()
@@ -1305,6 +1329,8 @@ namespace Test.CuiLib.Converters
             });
         }
 
+#if NET7_0_OR_GREATER
+
         [Test]
         public void GetDefault_AsInt128()
         {
@@ -1322,6 +1348,8 @@ namespace Test.CuiLib.Converters
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
             });
         }
+
+#endif
 
         [Test]
         public void GetDefault_AsByte()
@@ -1391,6 +1419,8 @@ namespace Test.CuiLib.Converters
             });
         }
 
+#if NET7_0_OR_GREATER
+
         [Test]
         public void GetDefault_AsUInt128()
         {
@@ -1408,6 +1438,8 @@ namespace Test.CuiLib.Converters
             });
         }
 
+#endif
+
         [Test]
         public void GetDefault_AsSingle()
         {
@@ -1421,8 +1453,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("NaN"), Is.EqualTo(float.NaN));
                 Assert.That(converter.Convert(float.PositiveInfinity.ToString()), Is.EqualTo(float.PositiveInfinity));
                 Assert.That(converter.Convert(float.NegativeInfinity.ToString()), Is.EqualTo(float.NegativeInfinity));
-                Assert.That(converter.Convert(float.MaxValue.ToString()), Is.EqualTo(float.MaxValue));
-                Assert.That(converter.Convert(float.MinValue.ToString()), Is.EqualTo(float.MinValue));
+                Assert.That(converter.Convert("1.234E+30"), Is.EqualTo(1.234E+30f));
+                Assert.That(converter.Convert("-1.234E+30"), Is.EqualTo(-1.234E+30f));
 
                 Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
@@ -1442,8 +1474,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("NaN"), Is.EqualTo(double.NaN));
                 Assert.That(converter.Convert(double.PositiveInfinity.ToString()), Is.EqualTo(double.PositiveInfinity));
                 Assert.That(converter.Convert(double.NegativeInfinity.ToString()), Is.EqualTo(double.NegativeInfinity));
-                Assert.That(converter.Convert(double.MaxValue.ToString()), Is.EqualTo(double.MaxValue));
-                Assert.That(converter.Convert(double.MinValue.ToString()), Is.EqualTo(double.MinValue));
+                Assert.That(converter.Convert("1.23456789E+300"), Is.EqualTo(1.23456789E+300));
+                Assert.That(converter.Convert("-1.23456789E+300"), Is.EqualTo(-1.23456789E+300));
 
                 Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
@@ -1501,6 +1533,8 @@ namespace Test.CuiLib.Converters
             });
         }
 
+#if NET6_0_OR_GREATER
+
         [Test]
         public void GetDefault_AsDateOnly()
         {
@@ -1532,6 +1566,8 @@ namespace Test.CuiLib.Converters
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
             });
         }
+
+#endif
 
         [Test]
         public void GetDefault_AsTimeSpan()
@@ -1621,8 +1657,10 @@ namespace Test.CuiLib.Converters
                 Assert.That(ValueConverter.GetValueTypeString<bool>(), Is.EqualTo("bool"));
                 Assert.That(ValueConverter.GetValueTypeString<DateTime>(), Is.EqualTo("date time"));
                 Assert.That(ValueConverter.GetValueTypeString<TimeSpan>(), Is.EqualTo("date time"));
+#if NET6_0_OR_GREATER
                 Assert.That(ValueConverter.GetValueTypeString<DateOnly>(), Is.EqualTo("date"));
                 Assert.That(ValueConverter.GetValueTypeString<TimeOnly>(), Is.EqualTo("time"));
+#endif
 
                 Assert.That(ValueConverter.GetValueTypeString<OptionType>(), Is.EqualTo("string"));
                 Assert.That(ValueConverter.GetValueTypeString<object>(), Is.EqualTo("string"));

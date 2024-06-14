@@ -218,7 +218,7 @@ namespace CuiLib.Parameters
             get => _checker;
             set
             {
-                ArgumentNullException.ThrowIfNull(value);
+                ThrowHelpers.ThrowIfNull(value);
 
                 _checker = value;
             }

@@ -7,7 +7,7 @@ using Test.Helpers;
 namespace Test.CuiLib.Extensions
 {
     [TestFixture]
-    public class WriterExtensionsTest
+    public class WriterExtensionsTest : TestBase
     {
         private BufferedTextWriter writer;
 
@@ -20,6 +20,12 @@ namespace Test.CuiLib.Extensions
         public void SetUp()
         {
             writer = new BufferedTextWriter();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            writer.Dispose();
         }
 
         [Test]

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CuiLib.Internal;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
@@ -22,7 +23,15 @@ namespace Test.Helpers
         public string[] GetData()
         {
             string[] result = builder.ToString().Split(Environment.NewLine);
-            if (result.Length > 0 && result[^1].Length == 0) return result[..^1];
+            if (result.Length > 0 && result[^1].Length == 0)
+            {
+#if NETCOREAPP3_1_OR_GREATER
+                return result[..^1];
+#else
+                return result.AsSpan()[..^1].ToArray();
+#endif
+            }
+
             return result;
         }
 
@@ -50,8 +59,12 @@ namespace Test.Helpers
         /// <inheritdoc/>
         public override void Write(char value) => builder.Append("Write(char): ").Append(value).AppendLine();
 
+#if NETCOREAPP3_1_OR_GREATER
+
         /// <inheritdoc/>
         public override void Write(ReadOnlySpan<char> buffer) => builder.Append("Write(ReadOnlySpan<char>): ").Append(buffer).AppendLine();
+
+#endif
 
         /// <inheritdoc/>
         public override void Write(char[]? buffer) => builder.Append("Write(char[]?): ").Append(buffer).AppendLine();
@@ -86,23 +99,43 @@ namespace Test.Helpers
         /// <inheritdoc/>
         public override void Write(object? value) => builder.Append("Write(object?): ").Append(value).AppendLine();
 
+#if NET6_0_OR_GREATER
+
         /// <inheritdoc/>
         public override void Write(StringBuilder? value) => builder.Append("Write(StringBuilder?): ").Append(value).AppendLine();
+
+#endif
 
         /// <inheritdoc/>
         public override void Write(string? value) => builder.Append("Write(string?): ").Append(value).AppendLine();
 
         /// <inheritdoc/>
-        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0) => builder.Append("Write(string, object?): ").AppendFormat(format, arg0).AppendLine();
+        public override void Write(
+#if NEN_7_0_OR_GREATER
+                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                   string format, object? arg0) => builder.Append("Write(string, object?): ").AppendFormat(format, arg0).AppendLine();
 
         /// <inheritdoc/>
-        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0, object? arg1) => builder.Append("Write(string, object?, object?): ").AppendFormat(format, arg0, arg1).AppendLine();
+        public override void Write(
+#if NEN_7_0_OR_GREATER
+                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                   string format, object? arg0, object? arg1) => builder.Append("Write(string, object?, object?): ").AppendFormat(format, arg0, arg1).AppendLine();
 
         /// <inheritdoc/>
-        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0, object? arg1, object? arg2) => builder.Append("Write(string, object?, object?, object?): ").AppendFormat(format, arg0, arg1, arg2).AppendLine();
+        public override void Write(
+#if NEN_7_0_OR_GREATER
+                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                   string format, object? arg0, object? arg1, object? arg2) => builder.Append("Write(string, object?, object?, object?): ").AppendFormat(format, arg0, arg1, arg2).AppendLine();
 
         /// <inheritdoc/>
-        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, params object?[] args) => builder.Append("Write(string, object?[]): ").AppendFormat(format, args).AppendLine();
+        public override void Write(
+#if NEN_7_0_OR_GREATER
+                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                   string format, params object?[] args) => builder.Append("Write(string, object?[]): ").AppendFormat(format, args).AppendLine();
 
         /// <inheritdoc/>
         public override async Task WriteAsync(char value)
@@ -111,12 +144,16 @@ namespace Test.Helpers
             await Task.CompletedTask;
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+
         /// <inheritdoc/>
         public override async Task WriteAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
         {
             builder.Append("WriteAsync(ReadOnlyMemory<char>, CancellationToken): ").Append(buffer).AppendLine();
             await Task.CompletedTask;
         }
+
+#endif
 
         /// <inheritdoc/>
         public override async Task WriteAsync(char[] buffer, int index, int count)
@@ -125,12 +162,16 @@ namespace Test.Helpers
             await Task.CompletedTask;
         }
 
+#if NET6_0_OR_GREATER
+
         /// <inheritdoc/>
         public override async Task WriteAsync(StringBuilder? value, CancellationToken cancellationToken = default)
         {
             builder.Append("WriteAsync(StringBuilder?, CancellationToken): ").Append(value).AppendLine();
             await Task.CompletedTask;
         }
+
+#endif
 
         /// <inheritdoc/>
         public override async Task WriteAsync(string? value)
@@ -145,8 +186,12 @@ namespace Test.Helpers
         /// <inheritdoc/>
         public override void WriteLine(char value) => builder.Append("WriteLine(char): ").Append(value).AppendLine();
 
+#if NETCOREAPP3_1_OR_GREATER
+
         /// <inheritdoc/>
         public override void WriteLine(ReadOnlySpan<char> buffer) => builder.Append("WriteLine(ReadOnlySpan<char>): ").Append(buffer).AppendLine();
+
+#endif
 
         /// <inheritdoc/>
         public override void WriteLine(char[]? buffer) => builder.Append("WriteLine(char[]?): ").Append(buffer).AppendLine();
@@ -181,23 +226,43 @@ namespace Test.Helpers
         /// <inheritdoc/>
         public override void WriteLine(object? value) => builder.Append("WriteLine(object?): ").Append(value).AppendLine();
 
+#if NET6_0_OR_GREATER
+
         /// <inheritdoc/>
         public override void WriteLine(StringBuilder? value) => builder.Append("WriteLine(StringBuilder?): ").Append(value).AppendLine();
+
+#endif
 
         /// <inheritdoc/>
         public override void WriteLine(string? value) => builder.Append("WriteLine(string?): ").Append(value).AppendLine();
 
         /// <inheritdoc/>
-        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0) => builder.Append("WriteLine(string, object?): ").AppendFormat(format, arg0).AppendLine();
+        public override void WriteLine(
+#if NEN_7_0_OR_GREATER
+                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                       string format, object? arg0) => builder.Append("WriteLine(string, object?): ").AppendFormat(format, arg0).AppendLine();
 
         /// <inheritdoc/>
-        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0, object? arg1) => builder.Append("WriteLine(string, object?, object?): ").AppendFormat(format, arg0, arg1).AppendLine();
+        public override void WriteLine(
+#if NEN_7_0_OR_GREATER
+                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                       string format, object? arg0, object? arg1) => builder.Append("WriteLine(string, object?, object?): ").AppendFormat(format, arg0, arg1).AppendLine();
 
         /// <inheritdoc/>
-        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0, object? arg1, object? arg2) => builder.Append("WriteLine(string, object?, object?, object?): ").AppendFormat(format, arg0, arg1, arg2).AppendLine();
+        public override void WriteLine(
+#if NEN_7_0_OR_GREATER
+                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                       string format, object? arg0, object? arg1, object? arg2) => builder.Append("WriteLine(string, object?, object?, object?): ").AppendFormat(format, arg0, arg1, arg2).AppendLine();
 
         /// <inheritdoc/>
-        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, params object?[] args) => builder.Append("WriteLine(string, object?[]): ").AppendFormat(format, args).AppendLine();
+        public override void WriteLine(
+#if NEN_7_0_OR_GREATER
+                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                       string format, params object?[] args) => builder.Append("WriteLine(string, object?[]): ").AppendFormat(format, args).AppendLine();
 
         /// <inheritdoc/>
         public override async Task WriteLineAsync()
@@ -213,12 +278,16 @@ namespace Test.Helpers
             await Task.CompletedTask;
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+
         /// <inheritdoc/>
         public override async Task WriteLineAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
         {
             builder.Append("WriteLineAsync(ReadOnlyMemory<char>, CancellationToken): ").Append(buffer).AppendLine();
             await Task.CompletedTask;
         }
+
+#endif
 
         /// <inheritdoc/>
         public override async Task WriteLineAsync(char[] buffer, int index, int count)
@@ -227,12 +296,16 @@ namespace Test.Helpers
             await Task.CompletedTask;
         }
 
+#if NET6_0_OR_GREATER
+
         /// <inheritdoc/>
         public override async Task WriteLineAsync(StringBuilder? value, CancellationToken cancellationToken = default)
         {
             builder.Append("WriteLineAsync(StringBuilder?, CancellationToken): ").Append(value).AppendLine();
             await Task.CompletedTask;
         }
+
+#endif
 
         /// <inheritdoc/>
         public override async Task WriteLineAsync(string? value)

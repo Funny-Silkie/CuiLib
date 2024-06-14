@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 namespace Test.CuiLib.Options
 {
     [TestFixture]
-    public class ValuedOptionTest
+    public class ValuedOptionTest : TestBase
     {
         private ValuedOptionImpl option;
 

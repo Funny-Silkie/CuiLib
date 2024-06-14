@@ -9,7 +9,7 @@ using Test.Helpers;
 namespace Test.CuiLib
 {
     [TestFixture]
-    public class IOHelpersTest
+    public class IOHelpersTest : TestBase
     {
         #region Properties
 

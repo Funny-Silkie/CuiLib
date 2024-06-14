@@ -1,3 +1,4 @@
+using CuiLib.Internal;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -24,7 +25,7 @@ namespace CuiLib.Converters
             /// <exception cref="ArgumentNullException"><paramref name="converter"/>がnull</exception>
             internal DelegateValueConverter(Converter<TIn, TOut> converter)
             {
-                ArgumentNullException.ThrowIfNull(converter);
+                ThrowHelpers.ThrowIfNull(converter);
 
                 this.converter = converter;
             }
@@ -63,6 +64,8 @@ namespace CuiLib.Converters
             public override int GetHashCode() => GetType().GetHashCode();
         }
 
+#if NET7_0_OR_GREATER
+
         /// <summary>
         /// <see cref="IParsable{TSelf}"/>を変換する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
@@ -91,6 +94,8 @@ namespace CuiLib.Converters
             public override int GetHashCode() => GetType().GetHashCode();
         }
 
+#endif
+
         /// <summary>
         /// 列挙型の変換を行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
@@ -113,7 +118,11 @@ namespace CuiLib.Converters
             /// <inheritdoc/>
             public T Convert(string value)
             {
+#if NETSTANDARD2_1_OR_GREATER || NET
                 return Enum.Parse<T>(value, ignoreCase);
+#else
+                return (T)Enum.Parse(typeof(T), value, ignoreCase);
+#endif
             }
         }
 
@@ -131,9 +140,13 @@ namespace CuiLib.Converters
             /// <param name="format">フォーマット</param>
             /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
             /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-            public DateTimeExactConverter([StringSyntax(StringSyntaxAttribute.DateTimeFormat)] string format)
+            public DateTimeExactConverter(
+#if NET7_0_OR_GREATER
+                                          [StringSyntax(StringSyntaxAttribute.DateTimeFormat)]
+#endif
+                                          string format)
             {
-                ArgumentException.ThrowIfNullOrEmpty(format);
+                ThrowHelpers.ThrowIfNullOrEmpty(format);
 
                 this.format = format;
             }
@@ -144,6 +157,8 @@ namespace CuiLib.Converters
                 return DateTime.ParseExact(value, format, null);
             }
         }
+
+#if NET6_0_OR_GREATER
 
         /// <summary>
         /// フォーマット付きで<see cref="DateOnly"/>への変換を行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
@@ -159,9 +174,13 @@ namespace CuiLib.Converters
             /// <param name="format">フォーマット</param>
             /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
             /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-            public DateOnlyExactConverter([StringSyntax(StringSyntaxAttribute.DateOnlyFormat)] string format)
+            public DateOnlyExactConverter(
+#if NET7_0_OR_GREATER
+                                          [StringSyntax(StringSyntaxAttribute.DateOnlyFormat)]
+#endif
+                                          string format)
             {
-                ArgumentException.ThrowIfNullOrEmpty(format);
+                ThrowHelpers.ThrowIfNullOrEmpty(format);
 
                 this.format = format;
             }
@@ -187,9 +206,13 @@ namespace CuiLib.Converters
             /// <param name="format">フォーマット</param>
             /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
             /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-            public TimeOnlyExactConverter([StringSyntax(StringSyntaxAttribute.TimeOnlyFormat)] string format)
+            public TimeOnlyExactConverter(
+#if NET7_0_OR_GREATER
+                                          [StringSyntax(StringSyntaxAttribute.TimeOnlyFormat)]
+#endif
+                                          string format)
             {
-                ArgumentException.ThrowIfNullOrEmpty(format);
+                ThrowHelpers.ThrowIfNullOrEmpty(format);
 
                 this.format = format;
             }
@@ -200,6 +223,8 @@ namespace CuiLib.Converters
                 return TimeOnly.ParseExact(value, format, null);
             }
         }
+
+#endif
 
         /// <summary>
         /// フォーマット付きで<see cref="TimeSpan"/>への変換を行う<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
@@ -215,9 +240,13 @@ namespace CuiLib.Converters
             /// <param name="format">フォーマット</param>
             /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
             /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-            public TimeSpanExactConverter([StringSyntax(StringSyntaxAttribute.TimeSpanFormat)] string format)
+            public TimeSpanExactConverter(
+#if NET7_0_OR_GREATER
+                                          [StringSyntax(StringSyntaxAttribute.TimeSpanFormat)]
+#endif
+                                          string format)
             {
-                ArgumentException.ThrowIfNullOrEmpty(format);
+                ThrowHelpers.ThrowIfNullOrEmpty(format);
 
                 this.format = format;
             }
@@ -243,9 +272,13 @@ namespace CuiLib.Converters
             /// <param name="format">フォーマット</param>
             /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
             /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-            public DateTimeOffsetExactConverter([StringSyntax(StringSyntaxAttribute.DateTimeFormat)] string format)
+            public DateTimeOffsetExactConverter(
+#if NET7_0_OR_GREATER
+                                                [StringSyntax(StringSyntaxAttribute.DateTimeFormat)]
+#endif
+                                                string format)
             {
-                ArgumentException.ThrowIfNullOrEmpty(format);
+                ThrowHelpers.ThrowIfNullOrEmpty(format);
 
                 this.format = format;
             }
@@ -326,7 +359,7 @@ namespace CuiLib.Converters
             /// <exception cref="ArgumentNullException"><paramref name="encoding"/>がnull</exception>
             internal FileOrConsoleWriterValueConverter(Encoding encoding, bool append)
             {
-                ArgumentNullException.ThrowIfNull(encoding);
+                ThrowHelpers.ThrowIfNull(encoding);
 
                 this.encoding = encoding;
                 this.append = append;
@@ -355,7 +388,7 @@ namespace CuiLib.Converters
             /// <exception cref="ArgumentNullException"><paramref name="encoding"/>がnull</exception>
             internal FileOrConsoleReaderValueConverter(Encoding encoding)
             {
-                ArgumentNullException.ThrowIfNull(encoding);
+                ThrowHelpers.ThrowIfNull(encoding);
 
                 this.encoding = encoding;
             }
@@ -385,7 +418,7 @@ namespace CuiLib.Converters
             /// <exception cref="ArgumentNullException"><paramref name="encoding"/>がnull</exception>
             internal StreamWriterValueConverter(Encoding encoding, bool append)
             {
-                ArgumentNullException.ThrowIfNull(encoding);
+                ThrowHelpers.ThrowIfNull(encoding);
 
                 this.encoding = encoding;
                 this.append = append;
@@ -413,7 +446,7 @@ namespace CuiLib.Converters
             /// <exception cref="ArgumentNullException"><paramref name="encoding"/>がnull</exception>
             internal StreamReaderValueConverter(Encoding encoding)
             {
-                ArgumentNullException.ThrowIfNull(encoding);
+                ThrowHelpers.ThrowIfNull(encoding);
 
                 this.encoding = encoding;
             }
@@ -445,9 +478,9 @@ namespace CuiLib.Converters
             /// <param name="splitOptions">文字列分割時のオプション</param>
             internal ArrayValueConverter(string separator, Type elementType, IValueConverter<string, object?> converter, StringSplitOptions splitOptions)
             {
-                ArgumentNullException.ThrowIfNull(elementType);
-                ArgumentNullException.ThrowIfNull(converter);
-                ArgumentException.ThrowIfNullOrEmpty(separator);
+                ThrowHelpers.ThrowIfNull(elementType);
+                ThrowHelpers.ThrowIfNull(converter);
+                ThrowHelpers.ThrowIfNullOrEmpty(separator);
 
                 this.separator = separator;
                 this.elementType = elementType;
@@ -458,7 +491,7 @@ namespace CuiLib.Converters
             /// <inheritdoc/>
             public Array Convert(string value)
             {
-                ArgumentNullException.ThrowIfNull(value);
+                ThrowHelpers.ThrowIfNull(value);
 
                 if (value.Length == 0) return Array.CreateInstance(elementType, 0);
 
@@ -488,8 +521,8 @@ namespace CuiLib.Converters
             /// <param name="splitOptions">文字列分割時のオプション</param>
             internal ArrayValueConverter(string separator, IValueConverter<string, T> converter, StringSplitOptions splitOptions)
             {
-                ArgumentNullException.ThrowIfNull(converter);
-                ArgumentException.ThrowIfNullOrEmpty(separator);
+                ThrowHelpers.ThrowIfNull(converter);
+                ThrowHelpers.ThrowIfNullOrEmpty(separator);
 
                 this.separator = separator;
                 elementConverter = converter;
@@ -499,7 +532,7 @@ namespace CuiLib.Converters
             /// <inheritdoc/>
             public T[] Convert(string value)
             {
-                ArgumentNullException.ThrowIfNull(value);
+                ThrowHelpers.ThrowIfNull(value);
 
                 if (value.Length == 0) return [];
 

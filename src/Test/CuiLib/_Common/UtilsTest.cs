@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace Test.CuiLib
 {
     [TestFixture]
-    public class UtilsTest
+    public class UtilsTest : TestBase
     {
         [Test]
         public void ReplaceSpecialCharacters_WithNullOrEmpty()
