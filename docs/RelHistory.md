@@ -14,7 +14,7 @@
   - `IOHelper` を `IOHelpers` に変更
 
 ### 変更
-- .NET 6.0，.NET Standard 2.1へのサポート拡大
+- .NET 6.0，.NET Standard 2.1 (.NET Core 3.1) , .NET Standard 2.0 (.NET Framework 4.8.1) へのサポート拡大
 - 例外処理修正
 - 一部メソッドのnull許容・非許容の修正
 - `Logger`
