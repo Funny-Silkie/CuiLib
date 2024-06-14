@@ -11,7 +11,7 @@ using Test.Helpers;
 namespace Test.CuiLib.Logging
 {
     [TestFixture]
-    public class LoggerTest
+    public class LoggerTest : TestBase
     {
         private MethodReceivedNotifiyingTextWriter innerWriter;
         private Logger Logger;
@@ -281,7 +281,11 @@ namespace Test.CuiLib.Logging
             {
                 using (FileStream stream = added.Create())
                 {
+#if NETCOREAPP3_1_OR_GREATER
                     stream.Write(new byte[] { 1, 2, 3 });
+#else
+                    stream.Write([1, 2, 3], 0, 3);
+#endif
                 }
 
                 Logger.AddLogFile(added.Name, append: true);
@@ -392,7 +396,11 @@ namespace Test.CuiLib.Logging
             {
                 using (FileStream stream = added.Create())
                 {
+#if NETCOREAPP3_1_OR_GREATER
                     stream.Write(new byte[] { 1, 2, 3 });
+#else
+                    stream.Write([1, 2, 3], 0, 3);
+#endif
                 }
 
                 Logger.AddLogFile(added, append: true);
@@ -603,6 +611,8 @@ namespace Test.CuiLib.Logging
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(char): t" }));
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+
         [Test]
         public void Write_WithReadOnlySpan_Char()
         {
@@ -610,6 +620,8 @@ namespace Test.CuiLib.Logging
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(ReadOnlySpan<char>): test" }));
         }
+
+#endif
 
         [Test]
         public void Write_WithCharArray_Whole()
@@ -780,6 +792,8 @@ namespace Test.CuiLib.Logging
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteAsync(char): t" }));
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+
         [Test]
         public void WriteAsync_WithReadOnlyMemory_Char()
         {
@@ -787,6 +801,8 @@ namespace Test.CuiLib.Logging
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteAsync(ReadOnlyMemory<char>, CancellationToken): test" }));
         }
+
+#endif
 
         [Test]
         public void WriteAsync_WithCharArray_Range()
@@ -835,6 +851,8 @@ namespace Test.CuiLib.Logging
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(char): t" }));
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+
         [Test]
         public void WriteLine_WithReadOnlySpan_Char()
         {
@@ -842,6 +860,8 @@ namespace Test.CuiLib.Logging
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(ReadOnlySpan<char>): test" }));
         }
+
+#endif
 
         [Test]
         public void WriteLine_WithCharArray_Whole()
@@ -1020,6 +1040,8 @@ namespace Test.CuiLib.Logging
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLineAsync(char): t" }));
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+
         [Test]
         public void WriteLineAsync_WithReadOnlyMemory_Char()
         {
@@ -1027,6 +1049,8 @@ namespace Test.CuiLib.Logging
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLineAsync(ReadOnlyMemory<char>, CancellationToken): test" }));
         }
+
+#endif
 
         [Test]
         public void WriteLineAsync_WithCharArray_Range()

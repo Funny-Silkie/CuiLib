@@ -268,11 +268,15 @@ namespace CuiLib.Logging
             foreach (WriterEntry entry in writers) entry.Writer.Write(value);
         }
 
+#if NETSTANDARD2_1_OR_GREATER || NET
+
         /// <inheritdoc/>
         public override void Write(ReadOnlySpan<char> buffer)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(buffer);
         }
+
+#endif
 
         /// <inheritdoc/>
         public override void Write(char[]? buffer)
@@ -386,11 +390,15 @@ namespace CuiLib.Logging
             foreach (WriterEntry entry in writers) await entry.Writer.WriteAsync(value);
         }
 
+#if NETSTANDARD2_1_OR_GREATER || NET
+
         /// <inheritdoc/>
         public override async Task WriteAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteAsync(buffer, cancellationToken);
         }
+
+#endif
 
         /// <inheritdoc/>
         public override async Task WriteAsync(char[] buffer, int index, int count)
@@ -426,11 +434,15 @@ namespace CuiLib.Logging
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(value);
         }
 
+#if NETSTANDARD2_1_OR_GREATER || NET
+
         /// <inheritdoc/>
         public override void WriteLine(ReadOnlySpan<char> buffer)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(buffer);
         }
+
+#endif
 
         /// <inheritdoc/>
         public override void WriteLine(char[]? buffer)
@@ -550,11 +562,15 @@ namespace CuiLib.Logging
             foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(value);
         }
 
+#if NETSTANDARD2_1_OR_GREATER || NET
+
         /// <inheritdoc/>
         public override async Task WriteLineAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
         {
             foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(buffer, cancellationToken);
         }
+
+#endif
 
         /// <inheritdoc/>
         public override async Task WriteLineAsync(char[] buffer, int index, int count)

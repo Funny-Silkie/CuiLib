@@ -10,7 +10,7 @@ using Test.Helpers;
 namespace Test.CuiLib.Checkers
 {
     [TestFixture]
-    public class ValueCheckerTest
+    public class ValueCheckerTest : TestBase
     {
         [Test]
         public void AlwaysSuccess_Check()

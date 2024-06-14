@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CuiLib.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -90,7 +91,16 @@ namespace CuiLib.Extensions
         /// <returns>分割後の文字列一覧</returns>
         public static string[] EscapedSplit(this ReadOnlySpan<char> value, char separator)
         {
-            return EscapedSplitPrivate(value, MemoryMarshal.CreateSpan(ref separator, 1));
+            ReadOnlySpan<char> separatorSpan;
+#if NETSTANDARD2_1_OR_GREATER || NET
+            separatorSpan = MemoryMarshal.CreateSpan(ref separator, 1);
+#else
+            unsafe
+            {
+                separatorSpan = new ReadOnlySpan<char>(&separator, 1);
+            }
+#endif
+            return EscapedSplitPrivate(value, separatorSpan);
         }
 
         /// <summary>
@@ -139,7 +149,7 @@ namespace CuiLib.Extensions
                     // エスケープ判定
                     if (current is '"' or '\'')
                     {
-                        int nextEscapeIndex = value.SliceOrDefault(index + 1).IndexOf(current.ToString(), StringComparison.Ordinal);
+                        int nextEscapeIndex = value.SliceOrDefault(index + 1).IndexOf(current.ToString().AsSpan(), StringComparison.Ordinal);
                         if (nextEscapeIndex != -1) nextEscapeIndex += index + 1;
                         // エスケープ文字で囲まれているかどうか
                         // 右側にエスケープ文字があるなら nextEscapeIndex + 1 以降に separator があるはず

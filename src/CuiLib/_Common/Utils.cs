@@ -17,7 +17,7 @@ namespace CuiLib
             if (string.IsNullOrEmpty(value)) return string.Empty;
 
             var builder = new StringBuilder();
-            foreach (char current in value)
+            foreach (char current in value!)
             {
                 switch (current)
                 {

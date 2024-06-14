@@ -6,10 +6,10 @@ using System.Collections.Generic;
 
 namespace Test.CuiLib.Options
 {
-    public partial class OptionCollectionTest
+    public partial class OptionCollectionTest : TestBase
     {
         [TestFixture]
-        public class OptionKeyTest
+        public class OptionKeyTest : TestBase
         {
             private OptionCollection.OptionKey keys;
 

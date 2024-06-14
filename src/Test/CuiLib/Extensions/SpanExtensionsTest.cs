@@ -5,7 +5,7 @@ using System;
 namespace Test.CuiLib.Extensions
 {
     [TestFixture]
-    public class SpanExtensionsTest
+    public class SpanExtensionsTest : TestBase
     {
 #pragma warning disable NUnit2045 // Use Assert.Multiple
 

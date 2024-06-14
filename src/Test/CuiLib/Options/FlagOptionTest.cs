@@ -5,7 +5,7 @@ using System;
 namespace Test.CuiLib.Options
 {
     [TestFixture]
-    public class FlagOptionTest
+    public class FlagOptionTest : TestBase
     {
         private FlagOption option;
 

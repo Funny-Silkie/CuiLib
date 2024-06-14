@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Test.CuiLib.Options
 {
     [TestFixture]
-    public partial class OptionCollectionTest
+    public partial class OptionCollectionTest : TestBase
     {
         private OptionCollection collection;
 

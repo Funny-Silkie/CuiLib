@@ -5,7 +5,7 @@ using System;
 namespace Test.CuiLib.Options
 {
     [TestFixture]
-    public class ValueSpeficiedOptionTest
+    public class ValueSpeficiedOptionTest : TestBase
     {
         private ValueSpeficiedOptionImpl option;
 

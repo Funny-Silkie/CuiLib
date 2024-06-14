@@ -5,7 +5,7 @@ using System;
 namespace Test.CuiLib.Options
 {
     [TestFixture]
-    public class AndGroupOptionTest
+    public class AndGroupOptionTest : TestBase
     {
         private AndGroupOption option;
         private SingleValueOption<string> child1;

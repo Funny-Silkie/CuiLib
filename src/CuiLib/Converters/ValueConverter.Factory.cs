@@ -542,7 +542,11 @@ namespace CuiLib.Converters
         private static IValueConverter<string, object?> GetDefault(Type type)
         {
             if (type == typeof(string)) return Cast(new ThroughValueConverter<string>());
+#if NETSTANDARD2_1_OR_GREATER || NET
             if (type.IsSZArray)
+#else
+            if (type.IsArray && type.GetArrayRank() == 1)
+#endif
             {
                 Type elementType = type.GetElementType()!;
                 Type converterType = typeof(ArrayValueConverter<>).MakeGenericType(elementType);
@@ -617,7 +621,14 @@ namespace CuiLib.Converters
         private static string GetValueTypeString(Type type)
         {
             if (type == typeof(string)) return "string";
-            if (type.IsSZArray) return $"{GetValueTypeString(type.GetElementType()!)}[]";
+#if NETSTANDARD2_1_OR_GREATER || NET
+            if (type.IsSZArray)
+#else
+            if (type.IsArray && type.GetArrayRank() == 1)
+#endif
+            {
+                return $"{GetValueTypeString(type.GetElementType()!)}[]";
+            }
             if (type == typeof(FileInfo)) return "file";
             if (type == typeof(DirectoryInfo)) return "directory";
             if (type == typeof(int)) return "int";

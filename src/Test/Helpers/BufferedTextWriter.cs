@@ -39,8 +39,12 @@ namespace Test.Helpers
         /// <inheritdoc/>
         public override void Write(char value) => builder.Append(value);
 
+#if NETCOREAPP3_1_OR_GREATER
+
         /// <inheritdoc/>
         public override void Write(ReadOnlySpan<char> buffer) => builder.Append(buffer);
+
+#endif
 
         /// <inheritdoc/>
         public override void Write(char[]? buffer) => builder.Append(buffer);
@@ -75,8 +79,12 @@ namespace Test.Helpers
         /// <inheritdoc/>
         public override void Write(object? value) => builder.Append(value);
 
+#if NET6_0_OR_GREATER
+
         /// <inheritdoc/>
         public override void Write(StringBuilder? value) => builder.Append(value);
+
+#endif
 
         /// <inheritdoc/>
         public override void Write(string? value) => builder.Append(value);
@@ -116,12 +124,16 @@ namespace Test.Helpers
             await Task.CompletedTask;
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+
         /// <inheritdoc/>
         public override async Task WriteAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
         {
             builder.Append(buffer);
             await Task.CompletedTask;
         }
+
+#endif
 
         /// <inheritdoc/>
         public override async Task WriteAsync(char[] buffer, int index, int count)
@@ -130,12 +142,16 @@ namespace Test.Helpers
             await Task.CompletedTask;
         }
 
+#if NET6_0_OR_GREATER
+
         /// <inheritdoc/>
         public override async Task WriteAsync(StringBuilder? value, CancellationToken cancellationToken = default)
         {
             builder.Append(value);
             await Task.CompletedTask;
         }
+
+#endif
 
         /// <inheritdoc/>
         public override async Task WriteAsync(string? value)
@@ -150,8 +166,12 @@ namespace Test.Helpers
         /// <inheritdoc/>
         public override void WriteLine(char value) => builder.Append(value).AppendLine();
 
+#if NETCOREAPP3_1_OR_GREATER
+
         /// <inheritdoc/>
         public override void WriteLine(ReadOnlySpan<char> buffer) => builder.Append(buffer).AppendLine();
+
+#endif
 
         /// <inheritdoc/>
         public override void WriteLine(char[]? buffer) => builder.Append(buffer).AppendLine();
@@ -186,8 +206,12 @@ namespace Test.Helpers
         /// <inheritdoc/>
         public override void WriteLine(object? value) => builder.Append(value).AppendLine();
 
+#if NET6_0_OR_GREATER
+
         /// <inheritdoc/>
         public override void WriteLine(StringBuilder? value) => builder.Append(value).AppendLine();
+
+#endif
 
         /// <inheritdoc/>
         public override void WriteLine(string? value) => builder.Append(value).AppendLine();
@@ -234,12 +258,16 @@ namespace Test.Helpers
             await Task.CompletedTask;
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+
         /// <inheritdoc/>
         public override async Task WriteLineAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
         {
             builder.Append(buffer).AppendLine();
             await Task.CompletedTask;
         }
+
+#endif
 
         /// <inheritdoc/>
         public override async Task WriteLineAsync(char[] buffer, int index, int count)
@@ -248,12 +276,16 @@ namespace Test.Helpers
             await Task.CompletedTask;
         }
 
+#if NET6_0_OR_GREATER
+
         /// <inheritdoc/>
         public override async Task WriteLineAsync(StringBuilder? value, CancellationToken cancellationToken = default)
         {
             builder.Append(value).AppendLine();
             await Task.CompletedTask;
         }
+
+#endif
 
         /// <inheritdoc/>
         public override async Task WriteLineAsync(string? value)

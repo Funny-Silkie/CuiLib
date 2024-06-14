@@ -5,7 +5,7 @@ using System;
 namespace Test.CuiLib.Checkers
 {
     [TestFixture]
-    public class AndValueCheckerTest
+    public class AndValueCheckerTest : TestBase
     {
         #region Ctors
 

@@ -9,7 +9,7 @@ using Test.Helpers;
 namespace Test.CuiLib.Commands
 {
     [TestFixture]
-    public class CommandTest
+    public class CommandTest : TestBase
     {
         private MemorizeCommand command;
 

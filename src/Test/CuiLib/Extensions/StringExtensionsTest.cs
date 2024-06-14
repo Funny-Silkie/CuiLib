@@ -7,7 +7,7 @@ using System.Linq;
 namespace Test.CuiLib.Extensions
 {
     [TestFixture]
-    public class StringExtensionsTest
+    public class StringExtensionsTest : TestBase
     {
         [Test]
         public void CompareTo()

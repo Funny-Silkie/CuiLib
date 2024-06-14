@@ -6,7 +6,7 @@ using System;
 namespace Test.CuiLib.Options
 {
     [TestFixture]
-    public class XorGroupOptionTest
+    public class XorGroupOptionTest : TestBase
     {
         private XorGroupOption option;
         private SingleValueOption<string> child1;

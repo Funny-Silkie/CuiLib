@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CuiLib.Internal;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -22,7 +23,16 @@ namespace CuiLib.Extensions
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
         public static void WriteJoin<T>(this TextWriter writer, char separator, IEnumerable<T> values)
         {
-            WriteJoinPrivate(writer, MemoryMarshal.CreateReadOnlySpan(ref separator, 1), values);
+            ReadOnlySpan<char> separatorSpan;
+#if NETSTANDARD2_1_OR_GREATER || NET
+            separatorSpan = MemoryMarshal.CreateReadOnlySpan(ref separator, 1);
+#else
+            unsafe
+            {
+                separatorSpan = new ReadOnlySpan<char>(&separator, 1);
+            }
+#endif
+            WriteJoinPrivate(writer, separatorSpan, values);
         }
 
         /// <summary>
@@ -92,7 +102,16 @@ namespace CuiLib.Extensions
         {
             ThrowHelpers.ThrowIfNull(values);
 
-            WriteJoinPrivate(writer, MemoryMarshal.CreateReadOnlySpan(ref separator, 1), values.AsSpan());
+            ReadOnlySpan<char> separatorSpan;
+#if NETSTANDARD2_1_OR_GREATER || NET
+            separatorSpan = MemoryMarshal.CreateReadOnlySpan(ref separator, 1);
+#else
+            unsafe
+            {
+                separatorSpan = new ReadOnlySpan<char>(&separator, 1);
+            }
+#endif
+            WriteJoinPrivate(writer, separatorSpan, values.AsSpan());
         }
 
         /// <summary>
@@ -147,7 +166,16 @@ namespace CuiLib.Extensions
         {
             ThrowHelpers.ThrowIfNull(values);
 
-            WriteJoinPrivate(writer, MemoryMarshal.CreateReadOnlySpan(ref separator, 1), values.AsSpan());
+            ReadOnlySpan<char> separatorSpan;
+#if NETSTANDARD2_1_OR_GREATER || NET
+            separatorSpan = MemoryMarshal.CreateReadOnlySpan(ref separator, 1);
+#else
+            unsafe
+            {
+                separatorSpan = new ReadOnlySpan<char>(&separator, 1);
+            }
+#endif
+            WriteJoinPrivate(writer, separatorSpan, values.AsSpan());
         }
 
         /// <summary>

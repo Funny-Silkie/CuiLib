@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Test.CuiLib.Options
 {
     [TestFixture]
-    public class OptionTest
+    public class OptionTest : TestBase
     {
         private OptionImpl option;
 

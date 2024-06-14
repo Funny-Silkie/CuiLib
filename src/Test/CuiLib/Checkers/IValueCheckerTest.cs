@@ -5,7 +5,7 @@ using System;
 namespace Test.CuiLib.Checkers
 {
     [TestFixture]
-    public class IValueCheckerTest
+    public class IValueCheckerTest : TestBase
     {
         #region Methods
 

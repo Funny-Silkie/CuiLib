@@ -7,7 +7,7 @@ using System;
 
 namespace Test.CuiLib.Parameters
 {
-    public class NoGenericParameterTest
+    public class NoGenericParameterTest : TestBase
     {
         private ParameterImpl parameter;
 
@@ -188,7 +188,7 @@ namespace Test.CuiLib.Parameters
         }
     }
 
-    public class GenericParameterTest
+    public class GenericParameterTest : TestBase
     {
         private Parameter<string> parameterString;
         private Parameter<int> parameterInt;

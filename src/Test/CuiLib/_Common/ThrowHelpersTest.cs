@@ -8,7 +8,7 @@ using System.IO;
 namespace Test.CuiLib
 {
     [TestFixture]
-    public class ThrowHelpersTest
+    public class ThrowHelpersTest : TestBase
     {
         private enum TestEnum
         {

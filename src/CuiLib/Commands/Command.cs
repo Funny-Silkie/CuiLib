@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using CuiLib.Internal;
 using CuiLib.Options;
 using CuiLib.Parameters;
 

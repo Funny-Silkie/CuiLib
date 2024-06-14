@@ -1,3 +1,4 @@
+using CuiLib.Internal;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -117,7 +118,11 @@ namespace CuiLib.Converters
             /// <inheritdoc/>
             public T Convert(string value)
             {
+#if NETSTANDARD2_1_OR_GREATER || NET
                 return Enum.Parse<T>(value, ignoreCase);
+#else
+                return (T)Enum.Parse(typeof(T), value, ignoreCase);
+#endif
             }
         }
 

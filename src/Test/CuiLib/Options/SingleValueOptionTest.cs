@@ -8,7 +8,7 @@ using System;
 namespace Test.CuiLib.Options
 {
     [TestFixture]
-    public class SingleValueOptionTest
+    public class SingleValueOptionTest : TestBase
     {
         private SingleValueOption<int> option;
 

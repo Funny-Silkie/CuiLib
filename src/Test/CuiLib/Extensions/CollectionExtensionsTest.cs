@@ -5,7 +5,7 @@ using System;
 namespace Test.CuiLib.Extensions
 {
     [TestFixture]
-    public class CollectionExtensionsTest
+    public class CollectionExtensionsTest : TestBase
     {
         [Test]
         public void GetOrDefault_WithoutDefaultValue_WithNull()

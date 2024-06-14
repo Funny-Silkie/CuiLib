@@ -10,7 +10,7 @@ using Test.Helpers;
 namespace Test.CuiLib.Converters
 {
     [TestFixture]
-    public class ValueConverterTest
+    public class ValueConverterTest : TestBase
     {
         [Test]
         public void Combine_WithNullIValueConverter()
@@ -308,8 +308,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("NaN"), Is.EqualTo(float.NaN));
                 Assert.That(converter.Convert(float.PositiveInfinity.ToString()), Is.EqualTo(float.PositiveInfinity));
                 Assert.That(converter.Convert(float.NegativeInfinity.ToString()), Is.EqualTo(float.NegativeInfinity));
-                Assert.That(converter.Convert(float.MaxValue.ToString()), Is.EqualTo(float.MaxValue));
-                Assert.That(converter.Convert(float.MinValue.ToString()), Is.EqualTo(float.MinValue));
+                Assert.That(converter.Convert("1.234E+30"), Is.EqualTo(1.234E+30f));
+                Assert.That(converter.Convert("-1.234E+30"), Is.EqualTo(-1.234E+30f));
 
                 Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
@@ -329,8 +329,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("NaN"), Is.EqualTo(double.NaN));
                 Assert.That(converter.Convert(double.PositiveInfinity.ToString()), Is.EqualTo(double.PositiveInfinity));
                 Assert.That(converter.Convert(double.NegativeInfinity.ToString()), Is.EqualTo(double.NegativeInfinity));
-                Assert.That(converter.Convert(double.MaxValue.ToString()), Is.EqualTo(double.MaxValue));
-                Assert.That(converter.Convert(double.MinValue.ToString()), Is.EqualTo(double.MinValue));
+                Assert.That(converter.Convert("1.23456789E+300"), Is.EqualTo(1.23456789E+300));
+                Assert.That(converter.Convert("-1.23456789E+300"), Is.EqualTo(-1.23456789E+300));
 
                 Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
@@ -1453,8 +1453,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("NaN"), Is.EqualTo(float.NaN));
                 Assert.That(converter.Convert(float.PositiveInfinity.ToString()), Is.EqualTo(float.PositiveInfinity));
                 Assert.That(converter.Convert(float.NegativeInfinity.ToString()), Is.EqualTo(float.NegativeInfinity));
-                Assert.That(converter.Convert(float.MaxValue.ToString()), Is.EqualTo(float.MaxValue));
-                Assert.That(converter.Convert(float.MinValue.ToString()), Is.EqualTo(float.MinValue));
+                Assert.That(converter.Convert("1.234E+30"), Is.EqualTo(1.234E+30f));
+                Assert.That(converter.Convert("-1.234E+30"), Is.EqualTo(-1.234E+30f));
 
                 Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));
@@ -1474,8 +1474,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("NaN"), Is.EqualTo(double.NaN));
                 Assert.That(converter.Convert(double.PositiveInfinity.ToString()), Is.EqualTo(double.PositiveInfinity));
                 Assert.That(converter.Convert(double.NegativeInfinity.ToString()), Is.EqualTo(double.NegativeInfinity));
-                Assert.That(converter.Convert(double.MaxValue.ToString()), Is.EqualTo(double.MaxValue));
-                Assert.That(converter.Convert(double.MinValue.ToString()), Is.EqualTo(double.MinValue));
+                Assert.That(converter.Convert("1.23456789E+300"), Is.EqualTo(1.23456789E+300));
+                Assert.That(converter.Convert("-1.23456789E+300"), Is.EqualTo(-1.23456789E+300));
 
                 Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
                 Assert.Throws<FormatException>(() => converter.Convert("!!"));

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Test.CuiLib.Options
 {
     [TestFixture]
-    public class GroupOptionTest
+    public class GroupOptionTest : TestBase
     {
         private GroupOptionImpl option;
         private FlagOption child1;
