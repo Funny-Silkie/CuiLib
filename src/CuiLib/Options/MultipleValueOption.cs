@@ -43,7 +43,7 @@ namespace CuiLib.Options
             }
         }
 
-        private IValueChecker<T> _checker = ValueChecker.AlwaysSuccess<T>();
+        private IValueChecker<T> _checker = ValueChecker.AlwaysValid<T>();
 
         /// <inheritdoc/>
         public override T[] Value

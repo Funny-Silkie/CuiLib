@@ -9,6 +9,23 @@
   - `IValueConverter` 関連： `Options` → `Converters`
   - `Parameter` 関連： `Options` → `Parameters`
 - Obsoleteな実装の削除
+- Checkersのファクトリメソッドの名称の変更
+  - AlwaysSuccess -> AlwaysValid
+  - StartWith -> StartsWith
+  - EndWith -> EndsWith
+  - Contains -> ContainedIn
+  - Larger -> GreaterThan
+  - LargerOrEqual -> GreaterThanOrEqualTo
+  - Lower -> LessThan
+  - LowerOrEqual -> LessThanOrEqualTo
+  - Equals -> EqualTo
+  - NotEquals -> NotEqualTo
+  - IsRegexMatch -> Matches
+  - FileExists -> ExistsAsFile
+  - DirectoryExists -> ExistsAsDirectory
+  - VerifySourceFile -> ValidSourceFile
+  - VerifyDestinationFile -> ValidDestinationFile
+  - VerifySourceDirectory -> ValidSourceDirectory
 - 改名
   - `Util` を `Utils` に変更
   - `IOHelper` を `IOHelpers` に変更

@@ -13,9 +13,9 @@ namespace Test.CuiLib.Checkers
     public class ValueCheckerTest : TestBase
     {
         [Test]
-        public void AlwaysSuccess_Check()
+        public void AlwaysValid_Check()
         {
-            IValueChecker<int> checker = ValueChecker.AlwaysSuccess<int>();
+            IValueChecker<int> checker = ValueChecker.AlwaysValid<int>();
 
             Assert.Multiple(() =>
             {
@@ -30,15 +30,15 @@ namespace Test.CuiLib.Checkers
 #pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
 
         [Test]
-        public void AlwaysSuccess_Equals()
+        public void AlwaysValid_Equals()
         {
-            Assert.That(ValueChecker.AlwaysSuccess<int>(), Is.EqualTo(ValueChecker.AlwaysSuccess<int>()));
+            Assert.That(ValueChecker.AlwaysValid<int>(), Is.EqualTo(ValueChecker.AlwaysValid<int>()));
         }
 
         [Test]
-        public void AlwaysSucesss_GetHashCode()
+        public void AlwaysValid_GetHashCode()
         {
-            Assert.That(ValueChecker.AlwaysSuccess<int>().GetHashCode(), Is.EqualTo(ValueChecker.AlwaysSuccess<int>().GetHashCode()));
+            Assert.That(ValueChecker.AlwaysValid<int>().GetHashCode(), Is.EqualTo(ValueChecker.AlwaysValid<int>().GetHashCode()));
         }
 
 #pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
@@ -77,13 +77,13 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void And_WithNullChecker()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.And(ValueChecker.AlwaysSuccess<int>(), ValueChecker.AlwaysSuccess<int>(), null!));
+            Assert.Throws<ArgumentException>(() => ValueChecker.And(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), null!));
         }
 
         [Test]
         public void And_AsPositive()
         {
-            IValueChecker<int> checker = ValueChecker.And(ValueChecker.LargerOrEqual(0), ValueChecker.Lower(10));
+            IValueChecker<int> checker = ValueChecker.And(ValueChecker.GreaterThanOrEqualTo(0), ValueChecker.LessThan(10));
 
             Assert.Multiple(() =>
             {
@@ -108,13 +108,13 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void Or_WithNullChecker()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.Or(ValueChecker.AlwaysSuccess<int>(), ValueChecker.AlwaysSuccess<int>(), null!));
+            Assert.Throws<ArgumentException>(() => ValueChecker.Or(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), null!));
         }
 
         [Test]
         public void Or_AsPositive()
         {
-            IValueChecker<int> checker = ValueChecker.Or(ValueChecker.LowerOrEqual(0), ValueChecker.Larger(10));
+            IValueChecker<int> checker = ValueChecker.Or(ValueChecker.LessThanOrEqualTo(0), ValueChecker.GreaterThan(10));
 
             Assert.Multiple(() =>
             {
@@ -131,9 +131,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void Larger_WithoutIComparer()
+        public void GreaterThan_WithoutIComparer()
         {
-            IValueChecker<int> checker = ValueChecker.Larger(100);
+            IValueChecker<int> checker = ValueChecker.GreaterThan(100);
 
             Assert.Multiple(() =>
             {
@@ -147,9 +147,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void Larger_WithIComparerAsNull()
+        public void GreaterThan_WithIComparerAsNull()
         {
-            IValueChecker<int> checker = ValueChecker.Larger(100, null);
+            IValueChecker<int> checker = ValueChecker.GreaterThan(100, null);
 
             Assert.Multiple(() =>
             {
@@ -163,9 +163,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void Larger_WithIComparerAsSpecified()
+        public void GreaterThan_WithIComparerAsSpecified()
         {
-            IValueChecker<int> checker = ValueChecker.Larger(100, Comparer<int>.Create((x, y) => Comparer<int>.Default.Compare(y, x)));
+            IValueChecker<int> checker = ValueChecker.GreaterThan(100, Comparer<int>.Create((x, y) => Comparer<int>.Default.Compare(y, x)));
 
             Assert.Multiple(() =>
             {
@@ -179,9 +179,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void LargerOrEqual_WithoutIComparer()
+        public void GreaterThanOrEqualTo_WithoutIComparer()
         {
-            IValueChecker<int> checker = ValueChecker.LargerOrEqual(100);
+            IValueChecker<int> checker = ValueChecker.GreaterThanOrEqualTo(100);
 
             Assert.Multiple(() =>
             {
@@ -195,9 +195,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void LargerOrEqual_WithIComparerAsNull()
+        public void GreaterThanOrEqualTo_WithIComparerAsNull()
         {
-            IValueChecker<int> checker = ValueChecker.LargerOrEqual(100, null);
+            IValueChecker<int> checker = ValueChecker.GreaterThanOrEqualTo(100, null);
 
             Assert.Multiple(() =>
             {
@@ -211,9 +211,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void LargerOrEqual_WithIComparerAsSpecified()
+        public void GreaterThanOrEqualTo_WithIComparerAsSpecified()
         {
-            IValueChecker<int> checker = ValueChecker.LargerOrEqual(100, Comparer<int>.Create((x, y) => Comparer<int>.Default.Compare(y, x)));
+            IValueChecker<int> checker = ValueChecker.GreaterThanOrEqualTo(100, Comparer<int>.Create((x, y) => Comparer<int>.Default.Compare(y, x)));
 
             Assert.Multiple(() =>
             {
@@ -227,9 +227,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void Lower_WithoutIComparer()
+        public void LessThan_WithoutIComparer()
         {
-            IValueChecker<int> checker = ValueChecker.Lower(100);
+            IValueChecker<int> checker = ValueChecker.LessThan(100);
 
             Assert.Multiple(() =>
             {
@@ -243,9 +243,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void Lower_WithIComparerAsNull()
+        public void LessThan_WithIComparerAsNull()
         {
-            IValueChecker<int> checker = ValueChecker.Lower(100, null);
+            IValueChecker<int> checker = ValueChecker.LessThan(100, null);
 
             Assert.Multiple(() =>
             {
@@ -259,9 +259,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void Lower_WithIComparerAsSpecified()
+        public void LessThan_WithIComparerAsSpecified()
         {
-            IValueChecker<int> checker = ValueChecker.Lower(100, Comparer<int>.Create((x, y) => Comparer<int>.Default.Compare(y, x)));
+            IValueChecker<int> checker = ValueChecker.LessThan(100, Comparer<int>.Create((x, y) => Comparer<int>.Default.Compare(y, x)));
 
             Assert.Multiple(() =>
             {
@@ -275,9 +275,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void LowerOrEqual_WithoutIComparer()
+        public void LessThanOrEqualTo_WithoutIComparer()
         {
-            IValueChecker<int> checker = ValueChecker.LowerOrEqual(100);
+            IValueChecker<int> checker = ValueChecker.LessThanOrEqualTo(100);
 
             Assert.Multiple(() =>
             {
@@ -291,9 +291,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void LowerOrEqual_WithIComparerAsNull()
+        public void LessThanOrEqualTo_WithIComparerAsNull()
         {
-            IValueChecker<int> checker = ValueChecker.LowerOrEqual(100, null);
+            IValueChecker<int> checker = ValueChecker.LessThanOrEqualTo(100, null);
 
             Assert.Multiple(() =>
             {
@@ -307,9 +307,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void LowerOrEqual_WithIComparerAsSpecified()
+        public void LessThanOrEqualTo_WithIComparerAsSpecified()
         {
-            IValueChecker<int> checker = ValueChecker.LowerOrEqual(100, Comparer<int>.Create((x, y) => Comparer<int>.Default.Compare(y, x)));
+            IValueChecker<int> checker = ValueChecker.LessThanOrEqualTo(100, Comparer<int>.Create((x, y) => Comparer<int>.Default.Compare(y, x)));
 
             Assert.Multiple(() =>
             {
@@ -342,21 +342,21 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void Contains_WithoutIEqualityComparer_WithNullCollection()
+        public void ContainedIn_WithoutIEqualityComparer_WithNullCollection()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.Contains<int[], int>(null!));
+            Assert.Throws<ArgumentNullException>(() => ValueChecker.ContainedIn<int[], int>(null!));
         }
 
         [Test]
-        public void Contains_WithoutIEqualityComparer_WithEmptyCollection()
+        public void ContainedIn_WithoutIEqualityComparer_WithEmptyCollection()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.Contains<int[], int>([]));
+            Assert.Throws<ArgumentException>(() => ValueChecker.ContainedIn<int[], int>([]));
         }
 
         [Test]
-        public void Contains_WithoutIEqualityComparer_AsPositive()
+        public void ContainedIn_WithoutIEqualityComparer_AsPositive()
         {
-            IValueChecker<int> checker = ValueChecker.Contains<int[], int>([1, 2, 3]);
+            IValueChecker<int> checker = ValueChecker.ContainedIn<int[], int>([1, 2, 3]);
 
             Assert.Multiple(() =>
             {
@@ -370,21 +370,21 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void Contains_WithIEqualityComparer_WithNullCollection()
+        public void ContainedIn_WithIEqualityComparer_WithNullCollection()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.Contains<int[], int>(null!, EqualityComparer<int>.Default));
+            Assert.Throws<ArgumentNullException>(() => ValueChecker.ContainedIn<int[], int>(null!, EqualityComparer<int>.Default));
         }
 
         [Test]
-        public void Contains_WithIEqualityComparer_WithEmptyCollection()
+        public void ContainedIn_WithIEqualityComparer_WithEmptyCollection()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.Contains<int[], int>([], EqualityComparer<int>.Default));
+            Assert.Throws<ArgumentException>(() => ValueChecker.ContainedIn<int[], int>([], EqualityComparer<int>.Default));
         }
 
         [Test]
-        public void Contains_WithIEqualityComparerAsNull_AsPositive()
+        public void ContainedIn_WithIEqualityComparerAsNull_AsPositive()
         {
-            IValueChecker<int> checker = ValueChecker.Contains<int[], int>([1, 2, 3], null);
+            IValueChecker<int> checker = ValueChecker.ContainedIn<int[], int>([1, 2, 3], null);
 
             Assert.Multiple(() =>
             {
@@ -398,9 +398,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void Contains_WithIEqualityComparerAsSpecified_AsPositive()
+        public void ContainedIn_WithIEqualityComparerAsSpecified_AsPositive()
         {
-            IValueChecker<int> checker = ValueChecker.Contains(new[] { 1, 2, 3 }, EqualityComparer<int>.Default);
+            IValueChecker<int> checker = ValueChecker.ContainedIn(new[] { 1, 2, 3 }, EqualityComparer<int>.Default);
 
             Assert.Multiple(() =>
             {
@@ -444,9 +444,9 @@ namespace Test.CuiLib.Checkers
 #pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
 
         [Test]
-        public void StartWith_WithCharAndWithoutStringComparison()
+        public void StartsWith_WithCharAndWithoutStringComparison()
         {
-            IValueChecker<string> checker = ValueChecker.StartWith('s');
+            IValueChecker<string> checker = ValueChecker.StartsWith('s');
 
             Assert.Multiple(() =>
             {
@@ -460,9 +460,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void StartWith_WithCharAndWithStringComparison()
+        public void StartsWith_WithCharAndWithStringComparison()
         {
-            IValueChecker<string> checker = ValueChecker.StartWith('s', StringComparison.OrdinalIgnoreCase);
+            IValueChecker<string> checker = ValueChecker.StartsWith('s', StringComparison.OrdinalIgnoreCase);
 
             Assert.Multiple(() =>
             {
@@ -476,21 +476,21 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void StartWith_WithStringAsNullAndWithoutStringComparison()
+        public void StartsWith_WithStringAsNullAndWithoutStringComparison()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.StartWith(null!));
+            Assert.Throws<ArgumentNullException>(() => ValueChecker.StartsWith(null!));
         }
 
         [Test]
-        public void StartWith_WithStringAsEmptyAndWithoutStringComparison()
+        public void StartsWith_WithStringAsEmptyAndWithoutStringComparison()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.StartWith(string.Empty));
+            Assert.Throws<ArgumentException>(() => ValueChecker.StartsWith(string.Empty));
         }
 
         [Test]
-        public void StartWith_WithStringAsPositiveAndWithoutStringComparison()
+        public void StartsWith_WithStringAsPositiveAndWithoutStringComparison()
         {
-            IValueChecker<string> checker = ValueChecker.StartWith("st");
+            IValueChecker<string> checker = ValueChecker.StartsWith("st");
 
             Assert.Multiple(() =>
             {
@@ -504,21 +504,21 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void StartWith_WithStringAsNullAndWithStringComparison()
+        public void StartsWith_WithStringAsNullAndWithStringComparison()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.StartWith(null!, StringComparison.Ordinal));
+            Assert.Throws<ArgumentNullException>(() => ValueChecker.StartsWith(null!, StringComparison.Ordinal));
         }
 
         [Test]
-        public void StartWith_WithStringAsEmptyAndWithStringComparison()
+        public void StartsWith_WithStringAsEmptyAndWithStringComparison()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.StartWith(string.Empty, StringComparison.Ordinal));
+            Assert.Throws<ArgumentException>(() => ValueChecker.StartsWith(string.Empty, StringComparison.Ordinal));
         }
 
         [Test]
-        public void StartWith_WithStringAsPositiveAndWithStringComparison()
+        public void StartsWith_WithStringAsPositiveAndWithStringComparison()
         {
-            IValueChecker<string> checker = ValueChecker.StartWith("st", StringComparison.OrdinalIgnoreCase);
+            IValueChecker<string> checker = ValueChecker.StartsWith("st", StringComparison.OrdinalIgnoreCase);
 
             Assert.Multiple(() =>
             {
@@ -532,9 +532,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void EndWith_WithCharAndWithoutStringComparison()
+        public void EndsWith_WithCharAndWithoutStringComparison()
         {
-            IValueChecker<string> checker = ValueChecker.EndWith('d');
+            IValueChecker<string> checker = ValueChecker.EndsWith('d');
 
             Assert.Multiple(() =>
             {
@@ -548,9 +548,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void EndWith_WithCharAndWithStringComparison()
+        public void EndsWith_WithCharAndWithStringComparison()
         {
-            IValueChecker<string> checker = ValueChecker.EndWith('d', StringComparison.OrdinalIgnoreCase);
+            IValueChecker<string> checker = ValueChecker.EndsWith('d', StringComparison.OrdinalIgnoreCase);
 
             Assert.Multiple(() =>
             {
@@ -564,21 +564,21 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void EndWith_WithStringAsNullAndWithoutStringComparison()
+        public void EndsWith_WithStringAsNullAndWithoutStringComparison()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.EndWith(null!));
+            Assert.Throws<ArgumentNullException>(() => ValueChecker.EndsWith(null!));
         }
 
         [Test]
-        public void EndWith_WithStringAsEmptyAndWithoutStringComparison()
+        public void EndsWith_WithStringAsEmptyAndWithoutStringComparison()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.EndWith(string.Empty));
+            Assert.Throws<ArgumentException>(() => ValueChecker.EndsWith(string.Empty));
         }
 
         [Test]
-        public void EndWith_WithStringAsPositiveAndWithoutStringComparison()
+        public void EndsWith_WithStringAsPositiveAndWithoutStringComparison()
         {
-            IValueChecker<string> checker = ValueChecker.EndWith("nd");
+            IValueChecker<string> checker = ValueChecker.EndsWith("nd");
 
             Assert.Multiple(() =>
             {
@@ -592,21 +592,21 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void EndWith_WithStringAsNullAndWithStringComparison()
+        public void EndsWith_WithStringAsNullAndWithStringComparison()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.EndWith(null!, StringComparison.Ordinal));
+            Assert.Throws<ArgumentNullException>(() => ValueChecker.EndsWith(null!, StringComparison.Ordinal));
         }
 
         [Test]
-        public void EndWith_WithStringAsEmptyAndWithStringComparison()
+        public void EndsWith_WithStringAsEmptyAndWithStringComparison()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.EndWith(string.Empty, StringComparison.Ordinal));
+            Assert.Throws<ArgumentException>(() => ValueChecker.EndsWith(string.Empty, StringComparison.Ordinal));
         }
 
         [Test]
-        public void EndWith_WithStringAsPositiveAndWithStringComparison()
+        public void EndsWith_WithStringAsPositiveAndWithStringComparison()
         {
-            IValueChecker<string> checker = ValueChecker.EndWith("nd", StringComparison.OrdinalIgnoreCase);
+            IValueChecker<string> checker = ValueChecker.EndsWith("nd", StringComparison.OrdinalIgnoreCase);
 
             Assert.Multiple(() =>
             {
@@ -620,9 +620,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void Equals_WithoutIEqualityComparer()
+        public void EqualTo_WithoutIEqualityComparer()
         {
-            IValueChecker<string> checker = ValueChecker.Equals("value");
+            IValueChecker<string> checker = ValueChecker.EqualTo("value");
 
             Assert.Multiple(() =>
             {
@@ -635,9 +635,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void Equals_WithIEqualityComparerAsNull()
+        public void EqualTo_WithIEqualityComparerAsNull()
         {
-            IValueChecker<string> checker = ValueChecker.Equals("value", comparer: null!);
+            IValueChecker<string> checker = ValueChecker.EqualTo("value", comparer: null!);
 
             Assert.Multiple(() =>
             {
@@ -650,9 +650,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void Equals_WithIEqualityComparerAsSpecified()
+        public void EqualTo_WithIEqualityComparerAsSpecified()
         {
-            IValueChecker<string> checker = ValueChecker.Equals("value", StringComparer.OrdinalIgnoreCase);
+            IValueChecker<string> checker = ValueChecker.EqualTo("value", StringComparer.OrdinalIgnoreCase);
 
             Assert.Multiple(() =>
             {
@@ -665,9 +665,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void NotEquals_WithoutIEqualityComparer()
+        public void NotEqualTo_WithoutIEqualityComparer()
         {
-            IValueChecker<string> checker = ValueChecker.NotEquals("value");
+            IValueChecker<string> checker = ValueChecker.NotEqualTo("value");
 
             Assert.Multiple(() =>
             {
@@ -680,9 +680,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void NotEquals_WithIEqualityComparerAsNull()
+        public void NotEqualTo_WithIEqualityComparerAsNull()
         {
-            IValueChecker<string> checker = ValueChecker.NotEquals("value", comparer: null!);
+            IValueChecker<string> checker = ValueChecker.NotEqualTo("value", comparer: null!);
 
             Assert.Multiple(() =>
             {
@@ -695,9 +695,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void NotEquals_WithIEqualityComparerAsSpecified()
+        public void NotEqualTo_WithIEqualityComparerAsSpecified()
         {
-            IValueChecker<string> checker = ValueChecker.NotEquals("value", StringComparer.OrdinalIgnoreCase);
+            IValueChecker<string> checker = ValueChecker.NotEqualTo("value", StringComparer.OrdinalIgnoreCase);
 
             Assert.Multiple(() =>
             {
@@ -710,9 +710,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void FileExists_Check()
+        public void ExistsAsFile_Check()
         {
-            IValueChecker<string> checker = ValueChecker.FileExists();
+            IValueChecker<string> checker = ValueChecker.ExistsAsFile();
 
             FileInfo existing = FileUtilHelpers.GetNoExistingFile();
             try
@@ -735,23 +735,23 @@ namespace Test.CuiLib.Checkers
 #pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
 
         [Test]
-        public void FileExists_Equals()
+        public void ExistsAsFile_Equals()
         {
-            Assert.That(ValueChecker.FileExists(), Is.EqualTo(ValueChecker.FileExists()));
+            Assert.That(ValueChecker.ExistsAsFile(), Is.EqualTo(ValueChecker.ExistsAsFile()));
         }
 
         [Test]
-        public void FileExists_GetHashCode()
+        public void ExistsAsFile_GetHashCode()
         {
-            Assert.That(ValueChecker.FileExists().GetHashCode(), Is.EqualTo(ValueChecker.FileExists().GetHashCode()));
+            Assert.That(ValueChecker.ExistsAsFile().GetHashCode(), Is.EqualTo(ValueChecker.ExistsAsFile().GetHashCode()));
         }
 
 #pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
 
         [Test]
-        public void DirectoryExists_Check()
+        public void ExistsAsDirectory_Check()
         {
-            IValueChecker<string> checker = ValueChecker.DirectoryExists();
+            IValueChecker<string> checker = ValueChecker.ExistsAsDirectory();
 
             DirectoryInfo existing = FileUtilHelpers.GetNoExistingDirectory();
             try
@@ -774,23 +774,23 @@ namespace Test.CuiLib.Checkers
 #pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
 
         [Test]
-        public void DirectoryExists_Equals()
+        public void ExistsAsDirectory_Equals()
         {
-            Assert.That(ValueChecker.DirectoryExists(), Is.EqualTo(ValueChecker.DirectoryExists()));
+            Assert.That(ValueChecker.ExistsAsDirectory(), Is.EqualTo(ValueChecker.ExistsAsDirectory()));
         }
 
         [Test]
-        public void DirectoryExists_GetHashCode()
+        public void ExistsAsDirectory_GetHashCode()
         {
-            Assert.That(ValueChecker.DirectoryExists().GetHashCode(), Is.EqualTo(ValueChecker.DirectoryExists().GetHashCode()));
+            Assert.That(ValueChecker.ExistsAsDirectory().GetHashCode(), Is.EqualTo(ValueChecker.ExistsAsDirectory().GetHashCode()));
         }
 
 #pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
 
         [Test]
-        public void VerifySourceFile()
+        public void ValidSourceFile()
         {
-            IValueChecker<FileInfo> checker = ValueChecker.VerifySourceFile();
+            IValueChecker<FileInfo> checker = ValueChecker.ValidSourceFile();
 
             FileInfo existing = FileUtilHelpers.GetNoExistingFile();
             try
@@ -814,9 +814,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void VerifyDestinationFile_AsAllowAll()
+        public void ValidDestinationFile_AsAllowAll()
         {
-            IValueChecker<FileInfo> checker = ValueChecker.VerifyDestinationFile(true, true);
+            IValueChecker<FileInfo> checker = ValueChecker.ValidDestinationFile(true, true);
 
             FileInfo existing = FileUtilHelpers.GetNoExistingFile();
             try
@@ -839,9 +839,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void VerifyDestinationFile_AsNotAllowMissedDir()
+        public void ValidDestinationFile_AsNotAllowMissedDir()
         {
-            IValueChecker<FileInfo> checker = ValueChecker.VerifyDestinationFile(false, true);
+            IValueChecker<FileInfo> checker = ValueChecker.ValidDestinationFile(false, true);
 
             FileInfo existing = FileUtilHelpers.GetNoExistingFile();
             try
@@ -864,9 +864,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void VerifyDestinationFile_AsNotAllowOverwrite()
+        public void ValidDestinationFile_AsNotAllowOverwrite()
         {
-            IValueChecker<FileInfo> checker = ValueChecker.VerifyDestinationFile(true, false);
+            IValueChecker<FileInfo> checker = ValueChecker.ValidDestinationFile(true, false);
 
             FileInfo existing = FileUtilHelpers.GetNoExistingFile();
             try
@@ -890,9 +890,9 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void VerifySourceDirectory()
+        public void ValidSourceDirectory()
         {
-            IValueChecker<DirectoryInfo> checker = ValueChecker.VerifySourceDirectory();
+            IValueChecker<DirectoryInfo> checker = ValueChecker.ValidSourceDirectory();
 
             DirectoryInfo existing = FileUtilHelpers.GetNoExistingDirectory();
             try
@@ -915,25 +915,25 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void IsRegexMatch_WithoutRegexOptionsAndTimeSpan_AsNullPattern()
+        public void MatchesWithoutRegexOptionsAndTimeSpan_AsNullPattern()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.IsRegexMatch(pattern: null!));
+            Assert.Throws<ArgumentNullException>(() => ValueChecker.Matches(pattern: null!));
         }
 
 #pragma warning disable RE0001 // 無効な RegEx パターン
 
         [Test]
-        public void IsRegexMatch_WithoutRegexOptionsAndTimeSpan_AsInvalidPattern()
+        public void MatchesWithoutRegexOptionsAndTimeSpan_AsInvalidPattern()
         {
-            Assert.Catch<ArgumentException>(() => ValueChecker.IsRegexMatch(@"(\d"));
+            Assert.Catch<ArgumentException>(() => ValueChecker.Matches(@"(\d"));
         }
 
 #pragma warning restore RE0001 // 無効な RegEx パターン
 
         [Test]
-        public void IsRegexMatch_WithoutRegexOptionsAndTimeSpan_AsPositive()
+        public void MatchesWithoutRegexOptionsAndTimeSpan_AsPositive()
         {
-            IValueChecker<string> checker = ValueChecker.IsRegexMatch(@"\d+");
+            IValueChecker<string> checker = ValueChecker.Matches(@"\d+");
 
             Assert.Multiple(() =>
             {
@@ -947,31 +947,31 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void IsRegexMatch_WithRegexOptions_AsNullPattern()
+        public void MatchesWithRegexOptions_AsNullPattern()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.IsRegexMatch(null!, RegexOptions.None));
+            Assert.Throws<ArgumentNullException>(() => ValueChecker.Matches(null!, RegexOptions.None));
         }
 
 #pragma warning disable RE0001 // 無効な RegEx パターン
 
         [Test]
-        public void IsRegexMatch_WithRegexOptions_AsInvalidPattern()
+        public void MatchesWithRegexOptions_AsInvalidPattern()
         {
-            Assert.Catch<ArgumentException>(() => ValueChecker.IsRegexMatch(@"(\d", RegexOptions.Compiled));
+            Assert.Catch<ArgumentException>(() => ValueChecker.Matches(@"(\d", RegexOptions.Compiled));
         }
 
 #pragma warning restore RE0001 // 無効な RegEx パターン
 
         [Test]
-        public void IsRegexMatch_WithRegexOptions_AsInvalidRegexOptions()
+        public void MatchesWithRegexOptions_AsInvalidRegexOptions()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => ValueChecker.IsRegexMatch(@"\d+", (RegexOptions)2048));
+            Assert.Throws<ArgumentOutOfRangeException>(() => ValueChecker.Matches(@"\d+", (RegexOptions)2048));
         }
 
         [Test]
-        public void IsRegexMatch_WithRegexOptions_AsPositive()
+        public void MatchesWithRegexOptions_AsPositive()
         {
-            IValueChecker<string> checker = ValueChecker.IsRegexMatch(@"\d+", RegexOptions.None);
+            IValueChecker<string> checker = ValueChecker.Matches(@"\d+", RegexOptions.None);
 
             Assert.Multiple(() =>
             {
@@ -985,37 +985,37 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void IsRegexMatch_WithRegexOptionsAndTimeSpan_AsNullPattern()
+        public void MatchesWithRegexOptionsAndTimeSpan_AsNullPattern()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.IsRegexMatch(null!, RegexOptions.None, TimeSpan.MaxValue));
+            Assert.Throws<ArgumentNullException>(() => ValueChecker.Matches(null!, RegexOptions.None, TimeSpan.MaxValue));
         }
 
 #pragma warning disable RE0001 // 無効な RegEx パターン
 
         [Test]
-        public void IsRegexMatch_WithRegexOptionsAndTimeSpan_AsInvalidPattern()
+        public void MatchesWithRegexOptionsAndTimeSpan_AsInvalidPattern()
         {
-            Assert.Catch<ArgumentException>(() => ValueChecker.IsRegexMatch(@"(\d", RegexOptions.Compiled, TimeSpan.FromSeconds(10)));
+            Assert.Catch<ArgumentException>(() => ValueChecker.Matches(@"(\d", RegexOptions.Compiled, TimeSpan.FromSeconds(10)));
         }
 
 #pragma warning restore RE0001 // 無効な RegEx パターン
 
         [Test]
-        public void IsRegexMatch_WithRegexOptionsAndTimeSpan_AsInvalidRegexOptions()
+        public void MatchesWithRegexOptionsAndTimeSpan_AsInvalidRegexOptions()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => ValueChecker.IsRegexMatch(@"\d+", (RegexOptions)2048, TimeSpan.FromSeconds(10)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => ValueChecker.Matches(@"\d+", (RegexOptions)2048, TimeSpan.FromSeconds(10)));
         }
 
         [Test]
-        public void IsRegexMatch_WithRegexOptionsAndTimeSpan_AsInvalidTimeSpan()
+        public void MatchesWithRegexOptionsAndTimeSpan_AsInvalidTimeSpan()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => ValueChecker.IsRegexMatch(@"\d+", RegexOptions.None, TimeSpan.FromSeconds(-1)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => ValueChecker.Matches(@"\d+", RegexOptions.None, TimeSpan.FromSeconds(-1)));
         }
 
         [Test]
-        public void IsRegexMatch_WithRegexOptionsAndTimeSpan_AsPositive()
+        public void MatchesWithRegexOptionsAndTimeSpan_AsPositive()
         {
-            IValueChecker<string> checker = ValueChecker.IsRegexMatch(@"\d+", RegexOptions.None, TimeSpan.FromSeconds(10));
+            IValueChecker<string> checker = ValueChecker.Matches(@"\d+", RegexOptions.None, TimeSpan.FromSeconds(10));
 
             Assert.Multiple(() =>
             {
@@ -1029,16 +1029,16 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void IsRegexMatch_WithRegex_AsNull()
+        public void MatchesWithRegex_AsNull()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.IsRegexMatch(regex: null!));
+            Assert.Throws<ArgumentNullException>(() => ValueChecker.Matches(regex: null!));
         }
 
         [Test]
-        public void IsRegexMatch_WithRegex_AsPositive()
+        public void MatchesWithRegex_AsPositive()
         {
 #pragma warning disable SYSLIB1045 // 'GeneratedRegexAttribute' に変換します。
-            IValueChecker<string> checker = ValueChecker.IsRegexMatch(new Regex(@"\d+"));
+            IValueChecker<string> checker = ValueChecker.Matches(new Regex(@"\d+"));
 #pragma warning restore SYSLIB1045 // 'GeneratedRegexAttribute' に変換します。
 
             Assert.Multiple(() =>

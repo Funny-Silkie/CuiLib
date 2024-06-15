@@ -20,13 +20,13 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void And_WithNullChecker()
         {
-            Assert.Throws<ArgumentException>(() => IValueChecker<int>.And(ValueChecker.AlwaysSuccess<int>(), ValueChecker.AlwaysSuccess<int>(), null!));
+            Assert.Throws<ArgumentException>(() => IValueChecker<int>.And(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), null!));
         }
 
         [Test]
         public void And_AsPositive()
         {
-            IValueChecker<int> checker = IValueChecker<int>.And(ValueChecker.LargerOrEqual(0), ValueChecker.Lower(10));
+            IValueChecker<int> checker = IValueChecker<int>.And(ValueChecker.GreaterThanOrEqualTo(0), ValueChecker.LessThan(10));
 
             Assert.Multiple(() =>
             {
@@ -51,13 +51,13 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void Or_WithNullChecker()
         {
-            Assert.Throws<ArgumentException>(() => IValueChecker<int>.Or(ValueChecker.AlwaysSuccess<int>(), ValueChecker.AlwaysSuccess<int>(), null!));
+            Assert.Throws<ArgumentException>(() => IValueChecker<int>.Or(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), null!));
         }
 
         [Test]
         public void Or_AsPositive()
         {
-            IValueChecker<int> checker = IValueChecker<int>.Or(ValueChecker.LowerOrEqual(0), ValueChecker.Larger(10));
+            IValueChecker<int> checker = IValueChecker<int>.Or(ValueChecker.LessThanOrEqualTo(0), ValueChecker.GreaterThan(10));
 
             Assert.Multiple(() =>
             {
@@ -84,14 +84,14 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void Op_And_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => _ = ValueChecker.AlwaysSuccess<int>() & null!);
-            Assert.Throws<ArgumentNullException>(() => _ = null! & ValueChecker.AlwaysSuccess<int>());
+            Assert.Throws<ArgumentNullException>(() => _ = ValueChecker.AlwaysValid<int>() & null!);
+            Assert.Throws<ArgumentNullException>(() => _ = null! & ValueChecker.AlwaysValid<int>());
         }
 
         [Test]
         public void Op_And_AsPositive()
         {
-            IValueChecker<int> checker = ValueChecker.LargerOrEqual(0) & ValueChecker.Lower(10);
+            IValueChecker<int> checker = ValueChecker.GreaterThanOrEqualTo(0) & ValueChecker.LessThan(10);
 
             Assert.Multiple(() =>
             {
@@ -112,15 +112,15 @@ namespace Test.CuiLib.Checkers
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentNullException>(() => _ = ValueChecker.AlwaysSuccess<int>() | null!);
-                Assert.Throws<ArgumentNullException>(() => _ = null! | ValueChecker.AlwaysSuccess<int>());
+                Assert.Throws<ArgumentNullException>(() => _ = ValueChecker.AlwaysValid<int>() | null!);
+                Assert.Throws<ArgumentNullException>(() => _ = null! | ValueChecker.AlwaysValid<int>());
             });
         }
 
         [Test]
         public void Op_Or_AsPositive()
         {
-            IValueChecker<int> checker = ValueChecker.LowerOrEqual(0) | ValueChecker.Larger(10);
+            IValueChecker<int> checker = ValueChecker.LessThanOrEqualTo(0) | ValueChecker.GreaterThan(10);
 
             Assert.Multiple(() =>
             {
