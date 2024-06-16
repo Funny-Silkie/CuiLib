@@ -414,7 +414,84 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void NotEmpty_Check()
+        public void Empty_As_String_Check()
+        {
+            IValueChecker<string?> checker = ValueChecker.Empty();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(checker.CheckValue(null).IsValid, Is.True);
+                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.True);
+                Assert.That(checker.CheckValue("not-empty").IsValid, Is.False);
+                Assert.That(checker.CheckValue("  ").IsValid, Is.False);
+            });
+        }
+
+#pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
+
+        [Test]
+        public void Empty_As_String_Equals()
+        {
+            Assert.That(ValueChecker.Empty(), Is.EqualTo(ValueChecker.Empty()));
+        }
+
+        [Test]
+        public void Empty_As_String_GetHashCode()
+        {
+            Assert.That(ValueChecker.Empty().GetHashCode(), Is.EqualTo(ValueChecker.Empty().GetHashCode()));
+        }
+
+#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
+
+        [Test]
+        public void Empty_As_Collection_Check()
+        {
+            IValueChecker<IEnumerable<char>?> checker = ValueChecker.Empty<char>();
+
+#pragma warning disable IDE0028 // コレクションの初期化を簡略化します
+            Assert.Multiple(() =>
+            {
+                Assert.That(checker.CheckValue(null).IsValid, Is.True);
+                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.True);
+                Assert.That(checker.CheckValue([]).IsValid, Is.True);
+                Assert.That(checker.CheckValue(new List<char>()).IsValid, Is.True);
+                Assert.That(checker.CheckValue(new HashSet<char>()).IsValid, Is.True);
+
+                Assert.That(checker.CheckValue("hoge").IsValid, Is.False);
+                Assert.That(checker.CheckValue(['1', '2', '3']).IsValid, Is.False);
+                Assert.That(checker.CheckValue(new List<char>() { '1', '2', '3' }).IsValid, Is.False);
+                Assert.That(checker.CheckValue(new HashSet<char>() { '1', '2', '3' }).IsValid, Is.False);
+            });
+#pragma warning restore IDE0028 // コレクションの初期化を簡略化します
+        }
+
+#pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
+
+        [Test]
+        public void Empty_As_Collection_Equals()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(ValueChecker.Empty<char>(), Is.EqualTo(ValueChecker.Empty<char>()));
+                Assert.That(ValueChecker.Empty<int>(), Is.EqualTo(ValueChecker.Empty<int>()));
+                Assert.That(ValueChecker.Empty<char>(), Is.Not.EqualTo(ValueChecker.Empty<int>()));
+            });
+        }
+
+        [Test]
+        public void Empty_As_Collection_GetHashCode()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(ValueChecker.Empty<char>().GetHashCode(), Is.EqualTo(ValueChecker.Empty<char>().GetHashCode()));
+                Assert.That(ValueChecker.Empty<int>().GetHashCode(), Is.EqualTo(ValueChecker.Empty<int>().GetHashCode()));
+            });
+        }
+
+#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
+
+        [Test]
+        public void NotEmpty_As_String_Check()
         {
             IValueChecker<string?> checker = ValueChecker.NotEmpty();
 
@@ -430,15 +507,62 @@ namespace Test.CuiLib.Checkers
 #pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
 
         [Test]
-        public void NotEmpty_Equals()
+        public void NotEmpty_As_String_Equals()
         {
             Assert.That(ValueChecker.NotEmpty(), Is.EqualTo(ValueChecker.NotEmpty()));
         }
 
         [Test]
-        public void NotEmpty_GetHashCode()
+        public void NotEmpty_As_String_GetHashCode()
         {
             Assert.That(ValueChecker.NotEmpty().GetHashCode(), Is.EqualTo(ValueChecker.NotEmpty().GetHashCode()));
+        }
+
+#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
+
+        [Test]
+        public void NotEmpty_As_Collection_Check()
+        {
+            IValueChecker<IEnumerable<char>?> checker = ValueChecker.NotEmpty<char>();
+
+#pragma warning disable IDE0028 // コレクションの初期化を簡略化します
+            Assert.Multiple(() =>
+            {
+                Assert.That(checker.CheckValue(null).IsValid, Is.False);
+                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.False);
+                Assert.That(checker.CheckValue([]).IsValid, Is.False);
+                Assert.That(checker.CheckValue(new List<char>()).IsValid, Is.False);
+                Assert.That(checker.CheckValue(new HashSet<char>()).IsValid, Is.False);
+
+                Assert.That(checker.CheckValue("hoge").IsValid, Is.True);
+                Assert.That(checker.CheckValue(['1', '2', '3']).IsValid, Is.True);
+                Assert.That(checker.CheckValue(new List<char>() { '1', '2', '3' }).IsValid, Is.True);
+                Assert.That(checker.CheckValue(new HashSet<char>() { '1', '2', '3' }).IsValid, Is.True);
+            });
+#pragma warning restore IDE0028 // コレクションの初期化を簡略化します
+        }
+
+#pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
+
+        [Test]
+        public void NotEmpty_As_Collection_Equals()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(ValueChecker.NotEmpty<char>(), Is.EqualTo(ValueChecker.NotEmpty<char>()));
+                Assert.That(ValueChecker.NotEmpty<int>(), Is.EqualTo(ValueChecker.NotEmpty<int>()));
+                Assert.That(ValueChecker.NotEmpty<char>(), Is.Not.EqualTo(ValueChecker.NotEmpty<int>()));
+            });
+        }
+
+        [Test]
+        public void NotEmpty_As_Collection_GetHashCode()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(ValueChecker.NotEmpty<char>().GetHashCode(), Is.EqualTo(ValueChecker.NotEmpty<char>().GetHashCode()));
+                Assert.That(ValueChecker.NotEmpty<int>().GetHashCode(), Is.EqualTo(ValueChecker.NotEmpty<int>().GetHashCode()));
+            });
         }
 
 #pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument

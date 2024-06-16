@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -267,6 +268,71 @@ namespace CuiLib.Checkers
         }
 
         /// <summary>
+        /// 文字列が空であるかを検証します。
+        /// </summary>
+        [Serializable]
+        private sealed class EmptyValueChecker : IValueChecker<string?>
+        {
+            /// <summary>
+            /// <see cref="EmptyValueChecker"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            internal EmptyValueChecker()
+            {
+            }
+
+            /// <inheritdoc/>
+            public ValueCheckState CheckValue(string? value)
+            {
+                if (!string.IsNullOrEmpty(value)) return ValueCheckState.AsError("文字が入力されています");
+                return ValueCheckState.Success;
+            }
+
+            /// <inheritdoc/>
+            public override bool Equals(object? obj) => obj is EmptyValueChecker;
+
+            /// <inheritdoc/>
+            public override int GetHashCode() => GetType().Name.GetHashCode();
+        }
+
+        /// <summary>
+        /// コレクションが空であるかを検証します。
+        /// </summary>
+        /// <typeparam name="TElement">値の型</typeparam>
+        [Serializable]
+        private sealed class EmptyValueChecker<TElement> : IValueChecker<IEnumerable<TElement>?>
+        {
+            /// <summary>
+            /// <see cref="EmptyValueChecker{TElement}"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            public EmptyValueChecker()
+            {
+            }
+
+            /// <inheritdoc/>
+            public ValueCheckState CheckValue(IEnumerable<TElement>? value)
+            {
+                bool isEmpty = value is null
+#if NET
+                    || (value.TryGetNonEnumeratedCount(out int count) && count == 0)
+#else
+                    || (value is ICollection<TElement> ic && ic.Count == 0)
+                    || (value is IReadOnlyCollection<TElement> irc && irc.Count == 0)
+                    || (value is ICollection inc && inc.Count == 0)
+#endif
+                    || !value.Any();
+                if (isEmpty) return ValueCheckState.Success;
+
+                return ValueCheckState.AsError("要素が存在します");
+            }
+
+            /// <inheritdoc/>
+            public override bool Equals(object? obj) => obj is EmptyValueChecker<TElement>;
+
+            /// <inheritdoc/>
+            public override int GetHashCode() => GetType().Name.GetHashCode();
+        }
+
+        /// <summary>
         /// 文字列が空でないかを検証します。
         /// </summary>
         [Serializable]
@@ -288,6 +354,44 @@ namespace CuiLib.Checkers
 
             /// <inheritdoc/>
             public override bool Equals(object? obj) => obj is NotEmptyValueChecker;
+
+            /// <inheritdoc/>
+            public override int GetHashCode() => GetType().Name.GetHashCode();
+        }
+
+        /// <summary>
+        /// コレクションが空でないかを検証します。
+        /// </summary>
+        /// <typeparam name="TElement">値の型</typeparam>
+        [Serializable]
+        private sealed class NotEmptyValueChecker<TElement> : IValueChecker<IEnumerable<TElement>?>
+        {
+            /// <summary>
+            /// <see cref="NotEmptyValueChecker{TElement}"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            public NotEmptyValueChecker()
+            {
+            }
+
+            /// <inheritdoc/>
+            public ValueCheckState CheckValue(IEnumerable<TElement>? value)
+            {
+                bool isEmpty = value is null
+#if NET
+                    || (value.TryGetNonEnumeratedCount(out int count) && count == 0)
+#else
+                    || (value is ICollection<TElement> ic && ic.Count == 0)
+                    || (value is IReadOnlyCollection<TElement> irc && irc.Count == 0)
+                    || (value is ICollection inc && inc.Count == 0)
+#endif
+                    || !value.Any();
+                if (!isEmpty) return ValueCheckState.Success;
+
+                return ValueCheckState.AsError("コレクションが空です");
+            }
+
+            /// <inheritdoc/>
+            public override bool Equals(object? obj) => obj is NotEmptyValueChecker<TElement>;
 
             /// <inheritdoc/>
             public override int GetHashCode() => GetType().Name.GetHashCode();

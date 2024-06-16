@@ -36,6 +36,9 @@
 - 一部メソッドのnull許容・非許容の修正
 - `Logger`
   - `Flush`, `FlushAsync` 実装
+- Checkers
+  - 新たなファクトリメソッドの追加
+    - `Empty()`, `Empty<TElement>()`, `NotEmpty()`, `NotEmpty<TElement>()`
 - Converters
   - `ValueConverter.GetDefault<T>()`：Enumや配列を指定した際に変換できない不具合を修正
   - 新規実装

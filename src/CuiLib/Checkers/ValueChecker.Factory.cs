@@ -182,11 +182,35 @@ namespace CuiLib.Checkers
         }
 
         /// <summary>
+        /// 文字列が空であるかを検証します。
+        /// </summary>
+        public static IValueChecker<string?> Empty()
+        {
+            return new EmptyValueChecker();
+        }
+
+        /// <summary>
+        /// 文字列が空であるかを検証します。
+        /// </summary>
+        public static IValueChecker<IEnumerable<TElement>?> Empty<TElement>()
+        {
+            return new EmptyValueChecker<TElement>();
+        }
+
+        /// <summary>
         /// 文字列が空でないかを検証します。
         /// </summary>
         public static IValueChecker<string?> NotEmpty()
         {
             return new NotEmptyValueChecker();
+        }
+
+        /// <summary>
+        /// 文字列が空であるかを検証します。
+        /// </summary>
+        public static IValueChecker<IEnumerable<TElement>?> NotEmpty<TElement>()
+        {
+            return new NotEmptyValueChecker<TElement>();
         }
 
         /// <summary>
