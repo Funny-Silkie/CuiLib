@@ -37,6 +37,7 @@
 - `Logger`
   - `Flush`, `FlushAsync` 実装
   - `FileInfo` を取るコンストラクタの追加
+  - デフォルトの文字コードを指定できるように `DefaultEncoding` プロパティを実装
 - Checkers
   - 新たなファクトリメソッドの追加
     - `Empty()`, `Empty<TElement>()`, `NotEmpty()`, `NotEmpty<TElement>()`

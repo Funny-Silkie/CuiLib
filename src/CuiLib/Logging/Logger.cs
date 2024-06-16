@@ -57,6 +57,23 @@ namespace CuiLib.Logging
         private bool _consoleErrorLogEnabled;
 
         /// <summary>
+        /// デフォルトの文字エンコードを取得または設定します。
+        /// </summary>
+        /// <remarks>初期値はBOM無しUTF-8</remarks>
+        /// <exception cref="ArgumentNullException">設定しようとした値が<see langword="null"/></exception>
+        public Encoding DefaultEncoding
+        {
+            get => _defaultEncoding;
+            set
+            {
+                ThrowHelpers.ThrowIfNull(value, nameof(value));
+                _defaultEncoding = value;
+            }
+        }
+
+        private Encoding _defaultEncoding = IOHelpers.UTF8N;
+
+        /// <summary>
         /// <see cref="Logger"/>の新しいインスタンスを初期化します。
         /// </summary>
         public Logger()
@@ -152,7 +169,7 @@ namespace CuiLib.Logging
         /// <exception cref="System.Security.SecurityException">アクセス権限がない</exception>
         public void AddLogFile(string path, bool append = false, Encoding? encoding = null)
         {
-            var writer = new StreamWriter(path, append, encoding ?? IOHelpers.UTF8N);
+            var writer = new StreamWriter(path, append, encoding ?? DefaultEncoding);
             writers.Add(new WriterEntry(writer)
             {
                 MustDisposed = true,
@@ -178,9 +195,9 @@ namespace CuiLib.Logging
 
             FileStream stream = file.Open(append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read);
 #if NET6_0_OR_GREATER
-            var writer = new StreamWriter(stream, encoding ?? IOHelpers.UTF8N, leaveOpen: false);
+            var writer = new StreamWriter(stream, encoding ?? DefaultEncoding, leaveOpen: false);
 #else
-            var writer = new StreamWriter(stream, encoding ?? IOHelpers.UTF8N, 1024, false);
+            var writer = new StreamWriter(stream, encoding ?? DefaultEncoding, 1024, false);
 #endif
             writers.Add(new WriterEntry(writer)
             {

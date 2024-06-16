@@ -1,4 +1,4 @@
-using CuiLib;
+﻿using CuiLib;
 using CuiLib.Logging;
 using NUnit.Framework;
 using System;
@@ -58,7 +58,7 @@ namespace Test.CuiLib.Logging
                     Assert.DoesNotThrow(() => logger = new Logger(target.Name));
                     Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
                     Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(IOHelpers.UTF8N));
+                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(logger.DefaultEncoding));
                 });
             }
             finally
@@ -81,7 +81,7 @@ namespace Test.CuiLib.Logging
                     Assert.DoesNotThrow(() => logger = new Logger(target));
                     Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
                     Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(IOHelpers.UTF8N));
+                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(logger.DefaultEncoding));
                 });
             }
             finally
@@ -157,6 +157,27 @@ namespace Test.CuiLib.Logging
                 Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
                 Assert.That(logger.GetAllTargets().First(), Is.EqualTo(Console.Error));
             });
+        }
+
+        [Test]
+        public void DefaultEncoding_Get_OnDefault()
+        {
+            Assert.That(logger.DefaultEncoding, Is.EqualTo(IOHelpers.UTF8N));
+        }
+
+        [Test]
+        public void DefaultEncoding_Set_WithNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => logger.DefaultEncoding = null!);
+        }
+
+        [Test]
+        public void DefaultEncoding_Set_AsPositive()
+        {
+            Encoding encoding = Encoding.UTF32;
+            logger.DefaultEncoding = encoding;
+
+            Assert.That(logger.DefaultEncoding, Is.EqualTo(encoding));
         }
 
         #endregion Properties
@@ -248,7 +269,7 @@ namespace Test.CuiLib.Logging
                     Assert.That(added.Exists, Is.True);
                     Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
                     Assert.That(logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelpers.UTF8N));
+                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(logger.DefaultEncoding));
                 });
 
                 logger.Write("content");
@@ -305,7 +326,7 @@ namespace Test.CuiLib.Logging
                 using (FileStream stream = added.Create())
                 {
 #if NETCOREAPP3_1_OR_GREATER
-                    stream.Write(new byte[] { 1, 2, 3 });
+                    stream.Write([1, 2, 3]);
 #else
                     stream.Write([1, 2, 3], 0, 3);
 #endif
@@ -318,7 +339,7 @@ namespace Test.CuiLib.Logging
                 {
                     Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
                     Assert.That(logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelpers.UTF8N));
+                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(logger.DefaultEncoding));
                 });
 
                 logger.Write('t');
@@ -363,7 +384,7 @@ namespace Test.CuiLib.Logging
                     Assert.That(added.Exists, Is.True);
                     Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
                     Assert.That(logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelpers.UTF8N));
+                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(logger.DefaultEncoding));
                 });
 
                 logger.Write("content");
@@ -420,7 +441,7 @@ namespace Test.CuiLib.Logging
                 using (FileStream stream = added.Create())
                 {
 #if NETCOREAPP3_1_OR_GREATER
-                    stream.Write(new byte[] { 1, 2, 3 });
+                    stream.Write([1, 2, 3]);
 #else
                     stream.Write([1, 2, 3], 0, 3);
 #endif
@@ -433,7 +454,7 @@ namespace Test.CuiLib.Logging
                 {
                     Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
                     Assert.That(logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelpers.UTF8N));
+                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(logger.DefaultEncoding));
                 });
 
                 logger.Write('t');
