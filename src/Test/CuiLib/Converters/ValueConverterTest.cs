@@ -895,7 +895,7 @@ namespace Test.CuiLib.Converters
                     {
                         using TextWriter writer = converter.Convert(target.Name);
                         Assert.That(writer, Is.InstanceOf<StreamWriter>());
-                        Assert.That(writer.Encoding, Is.InstanceOf<UTF8Encoding>());
+                        Assert.That(writer.Encoding, Is.EqualTo(IOHelpers.UTF8N));
 
                         target.Refresh();
                         Assert.That(target.Exists, Is.True);
@@ -961,7 +961,7 @@ namespace Test.CuiLib.Converters
                     using (var reader = converter.Convert(target.FullName))
                     {
                         Assert.That(reader, Is.InstanceOf<StreamReader>());
-                        Assert.That(((StreamReader)reader).CurrentEncoding, Is.InstanceOf<UTF8Encoding>());
+                        Assert.That(((StreamReader)reader).CurrentEncoding, Is.EqualTo(IOHelpers.UTF8N));
                     }
                     Assert.That(converter.Convert(null!), Is.EqualTo(Console.In));
                     Assert.That(converter.Convert("-"), Is.EqualTo(Console.In));
@@ -1154,7 +1154,7 @@ namespace Test.CuiLib.Converters
                     using (var reader = converter.Convert(target.FullName))
                     {
                         Assert.That(reader, Is.InstanceOf<StreamReader>());
-                        Assert.That(((StreamReader)reader).CurrentEncoding, Is.InstanceOf<UTF8Encoding>());
+                        Assert.That(((StreamReader)reader).CurrentEncoding, Is.EqualTo(IOHelpers.UTF8N));
                     }
                     Assert.That(converter.Convert(null!), Is.EqualTo(Console.In));
 
@@ -1183,7 +1183,7 @@ namespace Test.CuiLib.Converters
                     using (StreamReader reader = converter.Convert(target.FullName))
                     {
                         Assert.That(reader, Is.InstanceOf<StreamReader>());
-                        Assert.That(reader.CurrentEncoding, Is.InstanceOf<UTF8Encoding>());
+                        Assert.That(reader.CurrentEncoding, Is.EqualTo(IOHelpers.UTF8N));
                     }
 
                     Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
@@ -1211,7 +1211,7 @@ namespace Test.CuiLib.Converters
                     {
                         using TextWriter writer = converter.Convert(target.Name);
                         Assert.That(writer, Is.InstanceOf<StreamWriter>());
-                        Assert.That(writer.Encoding, Is.InstanceOf<UTF8Encoding>());
+                        Assert.That(writer.Encoding, Is.EqualTo(IOHelpers.UTF8N));
 
                         target.Refresh();
                         Assert.That(target.Exists, Is.True);
@@ -1242,7 +1242,7 @@ namespace Test.CuiLib.Converters
                     {
                         using StreamWriter writer = converter.Convert(target.Name);
                         Assert.That(writer, Is.InstanceOf<StreamWriter>());
-                        Assert.That(writer.Encoding, Is.InstanceOf<UTF8Encoding>());
+                        Assert.That(writer.Encoding, Is.EqualTo(IOHelpers.UTF8N));
                         target.Refresh();
                         Assert.That(target.Exists, Is.True);
                     });

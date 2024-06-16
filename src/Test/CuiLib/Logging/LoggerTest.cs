@@ -58,7 +58,7 @@ namespace Test.CuiLib.Logging
                     Assert.DoesNotThrow(() => logger = new Logger(target.Name));
                     Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
                     Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(logger.GetAllTargets().First().Encoding, Is.InstanceOf<UTF8Encoding>());
+                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(IOHelpers.UTF8N));
                 });
             }
             finally
