@@ -96,6 +96,12 @@ namespace Test.CuiLib.Logging
         #region Properties
 
         [Test]
+        public void Encoding_Get()
+        {
+            Assert.Throws<NotSupportedException>(() => _ = logger.Encoding);
+        }
+
+        [Test]
         public void ConsoleStdoutLogEnabled_Get_OnDefault()
         {
             Assert.That(new Logger().ConsoleStdoutLogEnabled, Is.False);
