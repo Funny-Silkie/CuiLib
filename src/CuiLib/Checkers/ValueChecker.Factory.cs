@@ -397,9 +397,9 @@ namespace CuiLib.Checkers
         /// <exception cref="ArgumentException">正規表現解析エラー</exception>
         public static IValueChecker<string> Matches(
 #if NET7_0_OR_GREATER
-                                                         [StringSyntax(StringSyntaxAttribute.Regex)]
+                                                    [StringSyntax(StringSyntaxAttribute.Regex)]
 #endif
-                                                         string pattern)
+                                                    string pattern)
         {
             var regex = new Regex(pattern);
             return Matches(regex);
@@ -415,10 +415,10 @@ namespace CuiLib.Checkers
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="options"/>が無効な範囲</exception>
         public static IValueChecker<string> Matches(
 #if NET7_0_OR_GREATER
-                                                         [StringSyntax(StringSyntaxAttribute.Regex)]
+                                                    [StringSyntax(StringSyntaxAttribute.Regex)]
 #endif
-                                                         string pattern,
-                                                         RegexOptions options)
+                                                    string pattern,
+                                                    RegexOptions options)
         {
             var regex = new Regex(pattern, options);
             return Matches(regex);
@@ -435,11 +435,11 @@ namespace CuiLib.Checkers
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="options"/>または<paramref name="matchTimeout"/>が無効な範囲</exception>
         public static IValueChecker<string> Matches(
 #if NET7_0_OR_GREATER
-                                                         [StringSyntax(StringSyntaxAttribute.Regex)]
+                                                    [StringSyntax(StringSyntaxAttribute.Regex)]
 #endif
-                                                         string pattern,
-                                                         RegexOptions options,
-                                                         TimeSpan matchTimeout)
+                                                    string pattern,
+                                                    RegexOptions options,
+                                                    TimeSpan matchTimeout)
         {
             var regex = new Regex(pattern, options, matchTimeout);
             return Matches(regex);
