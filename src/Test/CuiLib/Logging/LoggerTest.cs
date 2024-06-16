@@ -1,4 +1,4 @@
-﻿using CuiLib;
+using CuiLib;
 using CuiLib.Logging;
 using NUnit.Framework;
 using System;
@@ -14,20 +14,20 @@ namespace Test.CuiLib.Logging
     public class LoggerTest : TestBase
     {
         private MethodReceivedNotifiyingTextWriter innerWriter;
-        private Logger Logger;
+        private Logger logger;
 
         [SetUp]
         public void SetUp()
         {
             innerWriter = new MethodReceivedNotifiyingTextWriter();
-            Logger = new Logger();
-            Logger.AddLog(innerWriter);
+            logger = new Logger();
+            logger.AddLog(innerWriter);
         }
 
         [TearDown]
         public void CleanUp()
         {
-            Logger.Dispose();
+            logger.Dispose();
             innerWriter.Dispose();
         }
 
@@ -166,28 +166,28 @@ namespace Test.CuiLib.Logging
         [Test]
         public void GetAllTargets_AsExcludeStdoutAndError()
         {
-            Logger.ConsoleStdoutLogEnabled = true;
-            Logger.ConsoleErrorEnabled = true;
+            logger.ConsoleStdoutLogEnabled = true;
+            logger.ConsoleErrorEnabled = true;
 
             Assert.Multiple(() =>
             {
-                Assert.That(Logger.GetAllTargets(false).Count(), Is.EqualTo(1));
-                Assert.That(Logger.GetAllTargets(false).First(), Is.InstanceOf<MethodReceivedNotifiyingTextWriter>());
+                Assert.That(logger.GetAllTargets(false).Count(), Is.EqualTo(1));
+                Assert.That(logger.GetAllTargets(false).First(), Is.InstanceOf<MethodReceivedNotifiyingTextWriter>());
             });
         }
 
         [Test]
         public void GetAllTargets_AsIncludeStdoutAndError()
         {
-            Logger.ConsoleStdoutLogEnabled = true;
-            Logger.ConsoleErrorEnabled = true;
+            logger.ConsoleStdoutLogEnabled = true;
+            logger.ConsoleErrorEnabled = true;
 
             Assert.Multiple(() =>
             {
-                Assert.That(Logger.GetAllTargets(true).Count(), Is.EqualTo(3));
-                Assert.That(Logger.GetAllTargets(true).First(x => x != Console.Out && x != Console.Error), Is.InstanceOf<MethodReceivedNotifiyingTextWriter>());
-                Assert.That(Logger.GetAllTargets(true).Any(x => x == Console.Out), Is.True);
-                Assert.That(Logger.GetAllTargets(true).Any(x => x == Console.Error), Is.True);
+                Assert.That(logger.GetAllTargets(true).Count(), Is.EqualTo(3));
+                Assert.That(logger.GetAllTargets(true).First(x => x != Console.Out && x != Console.Error), Is.InstanceOf<MethodReceivedNotifiyingTextWriter>());
+                Assert.That(logger.GetAllTargets(true).Any(x => x == Console.Out), Is.True);
+                Assert.That(logger.GetAllTargets(true).Any(x => x == Console.Error), Is.True);
             });
         }
 
@@ -198,10 +198,10 @@ namespace Test.CuiLib.Logging
 
             try
             {
-                Logger.AddLogFile(targetFile);
-                TextWriter writer = Logger.GetAllTargets().Last();
+                logger.AddLogFile(targetFile);
+                TextWriter writer = logger.GetAllTargets().Last();
 
-                Logger.Dispose();
+                logger.Dispose();
 
                 Assert.Throws<ObjectDisposedException>(writer.WriteLine);
             }
@@ -216,13 +216,13 @@ namespace Test.CuiLib.Logging
         [Test]
         public void AddLogFile_WithPath_WithNullPath()
         {
-            Assert.Throws<ArgumentNullException>(() => Logger.AddLogFile(path: null!));
+            Assert.Throws<ArgumentNullException>(() => logger.AddLogFile(path: null!));
         }
 
         [Test]
         public void AddLogFile_WithPath_WithEmptyPath()
         {
-            Assert.Throws<ArgumentException>(() => Logger.AddLogFile(string.Empty));
+            Assert.Throws<ArgumentException>(() => logger.AddLogFile(string.Empty));
         }
 
         [Test]
@@ -230,7 +230,7 @@ namespace Test.CuiLib.Logging
         {
             string path = Path.Combine(FileUtilHelpers.GetNoExistingDirectory().Name, "missing.txt");
 
-            Assert.Throws<DirectoryNotFoundException>(() => Logger.AddLogFile(path));
+            Assert.Throws<DirectoryNotFoundException>(() => logger.AddLogFile(path));
         }
 
         [Test]
@@ -240,26 +240,26 @@ namespace Test.CuiLib.Logging
 
             try
             {
-                Logger.AddLogFile(added.Name);
+                logger.AddLogFile(added.Name);
                 added.Refresh();
 
                 Assert.Multiple(() =>
                 {
                     Assert.That(added.Exists, Is.True);
-                    Assert.That(Logger.GetAllTargets().Count(), Is.EqualTo(2));
-                    Assert.That(Logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(Logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelpers.UTF8N));
+                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
+                    Assert.That(logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelpers.UTF8N));
                 });
 
-                Logger.Write("content");
-                Logger.Flush();
+                logger.Write("content");
+                logger.Flush();
                 added.Refresh();
 
                 Assert.That(added.Length, Is.GreaterThan(0));
             }
             finally
             {
-                Logger.Dispose();
+                logger.Dispose();
                 added.Delete();
             }
         }
@@ -272,26 +272,26 @@ namespace Test.CuiLib.Logging
 
             try
             {
-                Logger.AddLogFile(added.Name, encoding: encoding);
+                logger.AddLogFile(added.Name, encoding: encoding);
                 added.Refresh();
 
                 Assert.Multiple(() =>
                 {
                     Assert.That(added.Exists, Is.True);
-                    Assert.That(Logger.GetAllTargets().Count(), Is.EqualTo(2));
-                    Assert.That(Logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(Logger.GetAllTargets().Last().Encoding, Is.EqualTo(encoding));
+                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
+                    Assert.That(logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(encoding));
                 });
 
-                Logger.Write("content");
-                Logger.Flush();
+                logger.Write("content");
+                logger.Flush();
                 added.Refresh();
 
                 Assert.That(added.Length, Is.GreaterThan(0));
             }
             finally
             {
-                Logger.Dispose();
+                logger.Dispose();
                 added.Delete();
             }
         }
@@ -311,25 +311,25 @@ namespace Test.CuiLib.Logging
 #endif
                 }
 
-                Logger.AddLogFile(added.Name, append: true);
+                logger.AddLogFile(added.Name, append: true);
                 added.Refresh();
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(Logger.GetAllTargets().Count(), Is.EqualTo(2));
-                    Assert.That(Logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(Logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelpers.UTF8N));
+                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
+                    Assert.That(logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelpers.UTF8N));
                 });
 
-                Logger.Write('t');
-                Logger.Flush();
+                logger.Write('t');
+                logger.Flush();
                 added.Refresh();
 
                 Assert.That(added.Length, Is.GreaterThan(3));
             }
             finally
             {
-                Logger.Dispose();
+                logger.Dispose();
                 added.Delete();
             }
         }
@@ -337,7 +337,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void AddLogFile_WithFileInfo_WithNullPath()
         {
-            Assert.Throws<ArgumentNullException>(() => Logger.AddLogFile(file: null!));
+            Assert.Throws<ArgumentNullException>(() => logger.AddLogFile(file: null!));
         }
 
         [Test]
@@ -345,7 +345,7 @@ namespace Test.CuiLib.Logging
         {
             string path = Path.Combine(FileUtilHelpers.GetNoExistingDirectory().Name, "missing.txt");
 
-            Assert.Throws<DirectoryNotFoundException>(() => Logger.AddLogFile(new FileInfo(path)));
+            Assert.Throws<DirectoryNotFoundException>(() => logger.AddLogFile(new FileInfo(path)));
         }
 
         [Test]
@@ -355,26 +355,26 @@ namespace Test.CuiLib.Logging
 
             try
             {
-                Logger.AddLogFile(added);
+                logger.AddLogFile(added);
                 added.Refresh();
 
                 Assert.Multiple(() =>
                 {
                     Assert.That(added.Exists, Is.True);
-                    Assert.That(Logger.GetAllTargets().Count(), Is.EqualTo(2));
-                    Assert.That(Logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(Logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelpers.UTF8N));
+                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
+                    Assert.That(logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelpers.UTF8N));
                 });
 
-                Logger.Write("content");
-                Logger.Flush();
+                logger.Write("content");
+                logger.Flush();
                 added.Refresh();
 
                 Assert.That(added.Length, Is.GreaterThan(0));
             }
             finally
             {
-                Logger.Dispose();
+                logger.Dispose();
                 added.Delete();
             }
         }
@@ -387,26 +387,26 @@ namespace Test.CuiLib.Logging
 
             try
             {
-                Logger.AddLogFile(added, encoding: encoding);
+                logger.AddLogFile(added, encoding: encoding);
                 added.Refresh();
 
                 Assert.Multiple(() =>
                 {
                     Assert.That(added.Exists, Is.True);
-                    Assert.That(Logger.GetAllTargets().Count(), Is.EqualTo(2));
-                    Assert.That(Logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(Logger.GetAllTargets().Last().Encoding, Is.EqualTo(encoding));
+                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
+                    Assert.That(logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(encoding));
                 });
 
-                Logger.Write("content");
-                Logger.Flush();
+                logger.Write("content");
+                logger.Flush();
                 added.Refresh();
 
                 Assert.That(added.Length, Is.GreaterThan(0));
             }
             finally
             {
-                Logger.Dispose();
+                logger.Dispose();
                 added.Delete();
             }
         }
@@ -426,25 +426,25 @@ namespace Test.CuiLib.Logging
 #endif
                 }
 
-                Logger.AddLogFile(added, append: true);
+                logger.AddLogFile(added, append: true);
                 added.Refresh();
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(Logger.GetAllTargets().Count(), Is.EqualTo(2));
-                    Assert.That(Logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(Logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelpers.UTF8N));
+                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
+                    Assert.That(logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(IOHelpers.UTF8N));
                 });
 
-                Logger.Write('t');
-                Logger.Flush();
+                logger.Write('t');
+                logger.Flush();
                 added.Refresh();
 
                 Assert.That(added.Length, Is.GreaterThan(3));
             }
             finally
             {
-                Logger.Dispose();
+                logger.Dispose();
                 added.Delete();
             }
         }
@@ -452,7 +452,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void AddLog_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => Logger.AddLog(null!));
+            Assert.Throws<ArgumentNullException>(() => logger.AddLog(null!));
         }
 
         [Test]
@@ -462,15 +462,15 @@ namespace Test.CuiLib.Logging
             try
             {
                 using StreamWriter writer = added.CreateText();
-                Logger.AddLog(writer);
+                logger.AddLog(writer);
                 Assert.Multiple(() =>
                 {
-                    Assert.That(Logger.GetAllTargets().Count(), Is.EqualTo(2));
-                    Assert.That(Logger.GetAllTargets().Last(), Is.EqualTo(writer));
+                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
+                    Assert.That(logger.GetAllTargets().Last(), Is.EqualTo(writer));
                 });
 
-                Logger.Write("content");
-                Logger.Flush();
+                logger.Write("content");
+                logger.Flush();
 
                 added.Refresh();
 
@@ -485,13 +485,13 @@ namespace Test.CuiLib.Logging
         [Test]
         public void HasLogFile_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => Logger.HasLogFile(null!));
+            Assert.Throws<ArgumentNullException>(() => logger.HasLogFile(null!));
         }
 
         [Test]
         public void HasLogFile_WithEmpty()
         {
-            Assert.Throws<ArgumentException>(() => Logger.HasLogFile(string.Empty));
+            Assert.Throws<ArgumentException>(() => logger.HasLogFile(string.Empty));
         }
 
         [Test]
@@ -501,18 +501,18 @@ namespace Test.CuiLib.Logging
 
             try
             {
-                Logger.AddLogFile(added);
+                logger.AddLogFile(added);
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(Logger.HasLogFile(added.Name), Is.True);
-                    Assert.That(Logger.HasLogFile(added.FullName), Is.True);
-                    Assert.That(Logger.HasLogFile("missing.txt"), Is.False);
+                    Assert.That(logger.HasLogFile(added.Name), Is.True);
+                    Assert.That(logger.HasLogFile(added.FullName), Is.True);
+                    Assert.That(logger.HasLogFile("missing.txt"), Is.False);
                 });
             }
             finally
             {
-                Logger.Dispose();
+                logger.Dispose();
                 added.Delete();
             }
         }
@@ -520,13 +520,13 @@ namespace Test.CuiLib.Logging
         [Test]
         public void RemoveLogFile_WithPath_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => Logger.RemoveLogFile(null!));
+            Assert.Throws<ArgumentNullException>(() => logger.RemoveLogFile(null!));
         }
 
         [Test]
         public void RemoveLogFile_WithPath_WithEmpty()
         {
-            Assert.Throws<ArgumentException>(() => Logger.RemoveLogFile(string.Empty));
+            Assert.Throws<ArgumentException>(() => logger.RemoveLogFile(string.Empty));
         }
 
         [Test]
@@ -536,22 +536,22 @@ namespace Test.CuiLib.Logging
 
             try
             {
-                Logger.AddLogFile(added);
-                TextWriter writer = Logger.GetAllTargets().Last();
+                logger.AddLogFile(added);
+                TextWriter writer = logger.GetAllTargets().Last();
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(Logger.RemoveLogFile("missing.txt"), Is.False);
-                    Assert.That(Logger.RemoveLogFile(added.FullName), Is.True);
+                    Assert.That(logger.RemoveLogFile("missing.txt"), Is.False);
+                    Assert.That(logger.RemoveLogFile(added.FullName), Is.True);
 
-                    Assert.That(Logger.GetAllTargets().Count(), Is.EqualTo(1));
-                    Assert.That(Logger.RemoveLogFile(added.Name), Is.False);
-                    Assert.That(Logger.RemoveLogFile(added.FullName), Is.False);
+                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
+                    Assert.That(logger.RemoveLogFile(added.Name), Is.False);
+                    Assert.That(logger.RemoveLogFile(added.FullName), Is.False);
 
                     Assert.Throws<ObjectDisposedException>(() => writer.Flush());
                 });
 
-                Logger.Dispose();
+                logger.Dispose();
             }
             finally
             {
@@ -562,7 +562,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void RemoveLogFile_WithTextWriter_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => Logger.RemoveLog(null!));
+            Assert.Throws<ArgumentNullException>(() => logger.RemoveLog(null!));
         }
 
         [Test]
@@ -573,20 +573,20 @@ namespace Test.CuiLib.Logging
             try
             {
                 using TextWriter writer = added.CreateText();
-                Logger.AddLog(writer);
+                logger.AddLog(writer);
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(Logger.RemoveLog(new MethodReceivedNotifiyingTextWriter()), Is.False);
-                    Assert.That(Logger.RemoveLog(writer), Is.True);
+                    Assert.That(logger.RemoveLog(new MethodReceivedNotifiyingTextWriter()), Is.False);
+                    Assert.That(logger.RemoveLog(writer), Is.True);
 
-                    Assert.That(Logger.GetAllTargets().Count(), Is.EqualTo(1));
-                    Assert.That(Logger.RemoveLog(writer), Is.False);
+                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
+                    Assert.That(logger.RemoveLog(writer), Is.False);
 
                     Assert.DoesNotThrow(() => writer.Flush());
                 });
 
-                Logger.Dispose();
+                logger.Dispose();
             }
             finally
             {
@@ -601,7 +601,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Flush()
         {
-            Logger.Flush();
+            logger.Flush();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Flush()" }));
         }
@@ -609,7 +609,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void FlushAsync_WithoutArgs()
         {
-            Logger.FlushAsync().Wait();
+            logger.FlushAsync().Wait();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "FlushAsync()" }));
         }
@@ -619,7 +619,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void FlushAsync_WithCancellationToken()
         {
-            Logger.FlushAsync(CancellationToken.None).Wait();
+            logger.FlushAsync(CancellationToken.None).Wait();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "FlushAsync(CancellationToken)" }));
         }
@@ -629,7 +629,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithChar()
         {
-            Logger.Write('t');
+            logger.Write('t');
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(char): t" }));
         }
@@ -639,7 +639,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithReadOnlySpan_Char()
         {
-            Logger.Write("test".AsSpan());
+            logger.Write("test".AsSpan());
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(ReadOnlySpan<char>): test" }));
         }
@@ -649,9 +649,9 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithCharArray_Whole()
         {
-            Logger.Write(new[] { 't', 'e', 's', 't' });
-            Logger.Write(Array.Empty<char>());
-            Logger.Write(null as char[]);
+            logger.Write(new[] { 't', 'e', 's', 't' });
+            logger.Write(Array.Empty<char>());
+            logger.Write(null as char[]);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(char[]?): test", "Write(char[]?): ", "Write(char[]?): " }));
         }
@@ -659,7 +659,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithCharArray_Range()
         {
-            Logger.Write(['t', 'e', 's', 't'], 1, 2);
+            logger.Write(['t', 'e', 's', 't'], 1, 2);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(char[], int, int): es" }));
         }
@@ -667,8 +667,8 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithInt32()
         {
-            Logger.Write(100);
-            Logger.Write(-100);
+            logger.Write(100);
+            logger.Write(-100);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(int): 100", "Write(int): -100" }));
         }
@@ -676,7 +676,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithUInt32()
         {
-            Logger.Write(100u);
+            logger.Write(100u);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(uint): 100" }));
         }
@@ -684,8 +684,8 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithInt64()
         {
-            Logger.Write(100L);
-            Logger.Write(-100L);
+            logger.Write(100L);
+            logger.Write(-100L);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(long): 100", "Write(long): -100" }));
         }
@@ -693,7 +693,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithUInt64()
         {
-            Logger.Write(100UL);
+            logger.Write(100UL);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(ulong): 100" }));
         }
@@ -701,11 +701,11 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithSingle()
         {
-            Logger.Write(100f);
-            Logger.Write(-100f);
-            Logger.Write(float.PositiveInfinity);
-            Logger.Write(float.NegativeInfinity);
-            Logger.Write(float.NaN);
+            logger.Write(100f);
+            logger.Write(-100f);
+            logger.Write(float.PositiveInfinity);
+            logger.Write(float.NegativeInfinity);
+            logger.Write(float.NaN);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(float): 100", "Write(float): -100", "Write(float): Infinity", "Write(float): -Infinity", "Write(float): NaN" }));
         }
@@ -713,11 +713,11 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithDouble()
         {
-            Logger.Write(100d);
-            Logger.Write(-100d);
-            Logger.Write(double.PositiveInfinity);
-            Logger.Write(double.NegativeInfinity);
-            Logger.Write(double.NaN);
+            logger.Write(100d);
+            logger.Write(-100d);
+            logger.Write(double.PositiveInfinity);
+            logger.Write(double.NegativeInfinity);
+            logger.Write(double.NaN);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(double): 100", "Write(double): -100", "Write(double): Infinity", "Write(double): -Infinity", "Write(double): NaN" }));
         }
@@ -725,8 +725,8 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithDecimal()
         {
-            Logger.Write(100m);
-            Logger.Write(-100m);
+            logger.Write(100m);
+            logger.Write(-100m);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(decimal): 100", "Write(decimal): -100" }));
         }
@@ -734,8 +734,8 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithBoolean()
         {
-            Logger.Write(true);
-            Logger.Write(false);
+            logger.Write(true);
+            logger.Write(false);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(bool): True", "Write(bool): False" }));
         }
@@ -743,11 +743,11 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithObject()
         {
-            Logger.Write(null as object);
-            Logger.Write('t' as object);
-            Logger.Write("test" as object);
-            Logger.Write(1 as object);
-            Logger.Write(true as object);
+            logger.Write(null as object);
+            logger.Write('t' as object);
+            logger.Write("test" as object);
+            logger.Write(1 as object);
+            logger.Write(true as object);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(object?): ", "Write(object?): t", "Write(object?): test", "Write(object?): 1", "Write(object?): True" }));
         }
@@ -757,8 +757,8 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithStringBuilder()
         {
-            Logger.Write(new StringBuilder("test", 4));
-            Logger.Write(null as StringBuilder);
+            logger.Write(new StringBuilder("test", 4));
+            logger.Write(null as StringBuilder);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(StringBuilder?): test", "Write(StringBuilder?): " }));
         }
@@ -768,9 +768,9 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithRawString()
         {
-            Logger.Write("test");
-            Logger.Write(null as string);
-            Logger.Write(string.Empty);
+            logger.Write("test");
+            logger.Write(null as string);
+            logger.Write(string.Empty);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(string?): test", "Write(string?): ", "Write(string?): " }));
         }
@@ -778,7 +778,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithFormattedStringAnd1Arg()
         {
-            Logger.Write("val={0}", 1);
+            logger.Write("val={0}", 1);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(string, object?): val=1" }));
         }
@@ -786,7 +786,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithFormattedStringAnd2Args()
         {
-            Logger.Write("val1={0}, val2={1}", 1, true);
+            logger.Write("val1={0}, val2={1}", 1, true);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(string, object?, object?): val1=1, val2=True" }));
         }
@@ -794,7 +794,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithFormattedStringAnd3Args()
         {
-            Logger.Write("val1={0}, val2={1}, val3={2}", 1, true, "hoge");
+            logger.Write("val1={0}, val2={1}, val3={2}", 1, true, "hoge");
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(string, object?, object?, object?): val1=1, val2=True, val3=hoge" }));
         }
@@ -802,7 +802,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Write_WithFormattedStringAndMultiArgs()
         {
-            Logger.Write("val1={0}, val2={1}, val3={2}, val4={3}", 1, true, "hoge", 'v');
+            logger.Write("val1={0}, val2={1}, val3={2}, val4={3}", 1, true, "hoge", 'v');
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(string, object?[]): val1=1, val2=True, val3=hoge, val4=v" }));
         }
@@ -810,7 +810,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteAsync_WithChar()
         {
-            Logger.WriteAsync('t').Wait();
+            logger.WriteAsync('t').Wait();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteAsync(char): t" }));
         }
@@ -820,7 +820,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteAsync_WithReadOnlyMemory_Char()
         {
-            Logger.WriteAsync("test".AsMemory(), CancellationToken.None).Wait();
+            logger.WriteAsync("test".AsMemory(), CancellationToken.None).Wait();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteAsync(ReadOnlyMemory<char>, CancellationToken): test" }));
         }
@@ -830,7 +830,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteAsync_WithCharArray_Range()
         {
-            Logger.WriteAsync(['t', 'e', 's', 't'], 1, 2).Wait();
+            logger.WriteAsync(['t', 'e', 's', 't'], 1, 2).Wait();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteAsync(char[], int, int): es" }));
         }
@@ -840,8 +840,8 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteAsync_WithStringBuilder()
         {
-            Logger.WriteAsync(new StringBuilder("test", 4), CancellationToken.None).Wait();
-            Logger.WriteAsync(null as StringBuilder, CancellationToken.None).Wait();
+            logger.WriteAsync(new StringBuilder("test", 4), CancellationToken.None).Wait();
+            logger.WriteAsync(null as StringBuilder, CancellationToken.None).Wait();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteAsync(StringBuilder?, CancellationToken): test", "WriteAsync(StringBuilder?, CancellationToken): " }));
         }
@@ -851,9 +851,9 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteAsync_WithRawString()
         {
-            Logger.WriteAsync("test").Wait();
-            Logger.WriteAsync(null as string).Wait();
-            Logger.WriteAsync(string.Empty).Wait();
+            logger.WriteAsync("test").Wait();
+            logger.WriteAsync(null as string).Wait();
+            logger.WriteAsync(string.Empty).Wait();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteAsync(string?): test", "WriteAsync(string?): ", "WriteAsync(string?): " }));
         }
@@ -861,7 +861,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithoutArgs()
         {
-            Logger.WriteLine();
+            logger.WriteLine();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine()" }));
         }
@@ -869,7 +869,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithChar()
         {
-            Logger.WriteLine('t');
+            logger.WriteLine('t');
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(char): t" }));
         }
@@ -879,7 +879,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithReadOnlySpan_Char()
         {
-            Logger.WriteLine("test".AsSpan());
+            logger.WriteLine("test".AsSpan());
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(ReadOnlySpan<char>): test" }));
         }
@@ -889,9 +889,9 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithCharArray_Whole()
         {
-            Logger.WriteLine(new[] { 't', 'e', 's', 't' });
-            Logger.WriteLine(Array.Empty<char>());
-            Logger.WriteLine(null as char[]);
+            logger.WriteLine(new[] { 't', 'e', 's', 't' });
+            logger.WriteLine(Array.Empty<char>());
+            logger.WriteLine(null as char[]);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(char[]?): test", "WriteLine(char[]?): ", "WriteLine(char[]?): " }));
         }
@@ -899,7 +899,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithCharArray_Range()
         {
-            Logger.WriteLine(['t', 'e', 's', 't'], 1, 2);
+            logger.WriteLine(['t', 'e', 's', 't'], 1, 2);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(char[], int, int): es" }));
         }
@@ -907,8 +907,8 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithInt32()
         {
-            Logger.WriteLine(100);
-            Logger.WriteLine(-100);
+            logger.WriteLine(100);
+            logger.WriteLine(-100);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(int): 100", "WriteLine(int): -100" }));
         }
@@ -916,7 +916,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithUInt32()
         {
-            Logger.WriteLine(100u);
+            logger.WriteLine(100u);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(uint): 100" }));
         }
@@ -924,8 +924,8 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithInt64()
         {
-            Logger.WriteLine(100L);
-            Logger.WriteLine(-100L);
+            logger.WriteLine(100L);
+            logger.WriteLine(-100L);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(long): 100", "WriteLine(long): -100" }));
         }
@@ -933,7 +933,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithUInt64()
         {
-            Logger.WriteLine(100UL);
+            logger.WriteLine(100UL);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(ulong): 100" }));
         }
@@ -941,11 +941,11 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithSingle()
         {
-            Logger.WriteLine(100f);
-            Logger.WriteLine(-100f);
-            Logger.WriteLine(float.PositiveInfinity);
-            Logger.WriteLine(float.NegativeInfinity);
-            Logger.WriteLine(float.NaN);
+            logger.WriteLine(100f);
+            logger.WriteLine(-100f);
+            logger.WriteLine(float.PositiveInfinity);
+            logger.WriteLine(float.NegativeInfinity);
+            logger.WriteLine(float.NaN);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(float): 100", "WriteLine(float): -100", "WriteLine(float): Infinity", "WriteLine(float): -Infinity", "WriteLine(float): NaN" }));
         }
@@ -953,11 +953,11 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithDouble()
         {
-            Logger.WriteLine(100d);
-            Logger.WriteLine(-100d);
-            Logger.WriteLine(double.PositiveInfinity);
-            Logger.WriteLine(double.NegativeInfinity);
-            Logger.WriteLine(double.NaN);
+            logger.WriteLine(100d);
+            logger.WriteLine(-100d);
+            logger.WriteLine(double.PositiveInfinity);
+            logger.WriteLine(double.NegativeInfinity);
+            logger.WriteLine(double.NaN);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(double): 100", "WriteLine(double): -100", "WriteLine(double): Infinity", "WriteLine(double): -Infinity", "WriteLine(double): NaN" }));
         }
@@ -965,8 +965,8 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithDecimal()
         {
-            Logger.WriteLine(100m);
-            Logger.WriteLine(-100m);
+            logger.WriteLine(100m);
+            logger.WriteLine(-100m);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(decimal): 100", "WriteLine(decimal): -100" }));
         }
@@ -974,8 +974,8 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithBoolean()
         {
-            Logger.WriteLine(true);
-            Logger.WriteLine(false);
+            logger.WriteLine(true);
+            logger.WriteLine(false);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(bool): True", "WriteLine(bool): False" }));
         }
@@ -983,11 +983,11 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithObject()
         {
-            Logger.WriteLine(null as object);
-            Logger.WriteLine('t' as object);
-            Logger.WriteLine("test" as object);
-            Logger.WriteLine(1 as object);
-            Logger.WriteLine(true as object);
+            logger.WriteLine(null as object);
+            logger.WriteLine('t' as object);
+            logger.WriteLine("test" as object);
+            logger.WriteLine(1 as object);
+            logger.WriteLine(true as object);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(object?): ", "WriteLine(object?): t", "WriteLine(object?): test", "WriteLine(object?): 1", "WriteLine(object?): True" }));
         }
@@ -997,8 +997,8 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithStringBuilder()
         {
-            Logger.WriteLine(new StringBuilder("test", 4));
-            Logger.WriteLine(null as StringBuilder);
+            logger.WriteLine(new StringBuilder("test", 4));
+            logger.WriteLine(null as StringBuilder);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(StringBuilder?): test", "WriteLine(StringBuilder?): " }));
         }
@@ -1008,9 +1008,9 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithRawString()
         {
-            Logger.WriteLine("test");
-            Logger.WriteLine(null as string);
-            Logger.WriteLine(string.Empty);
+            logger.WriteLine("test");
+            logger.WriteLine(null as string);
+            logger.WriteLine(string.Empty);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(string?): test", "WriteLine(string?): ", "WriteLine(string?): " }));
         }
@@ -1018,7 +1018,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithFormattedStringAnd1Arg()
         {
-            Logger.WriteLine("val={0}", 1);
+            logger.WriteLine("val={0}", 1);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(string, object?): val=1" }));
         }
@@ -1026,7 +1026,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithFormattedStringAnd2Args()
         {
-            Logger.WriteLine("val1={0}, val2={1}", 1, true);
+            logger.WriteLine("val1={0}, val2={1}", 1, true);
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(string, object?, object?): val1=1, val2=True" }));
         }
@@ -1034,7 +1034,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithFormattedStringAnd3Args()
         {
-            Logger.WriteLine("val1={0}, val2={1}, val3={2}", 1, true, "hoge");
+            logger.WriteLine("val1={0}, val2={1}, val3={2}", 1, true, "hoge");
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(string, object?, object?, object?): val1=1, val2=True, val3=hoge" }));
         }
@@ -1042,7 +1042,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLine_WithFormattedStringAndMultiArgs()
         {
-            Logger.WriteLine("val1={0}, val2={1}, val3={2}, val4={3}", 1, true, "hoge", 'v');
+            logger.WriteLine("val1={0}, val2={1}, val3={2}, val4={3}", 1, true, "hoge", 'v');
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(string, object?[]): val1=1, val2=True, val3=hoge, val4=v" }));
         }
@@ -1050,7 +1050,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLineAsync_WithoutArgs()
         {
-            Logger.WriteLineAsync().Wait();
+            logger.WriteLineAsync().Wait();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLineAsync()" }));
         }
@@ -1058,7 +1058,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLineAsync_WithChar()
         {
-            Logger.WriteLineAsync('t').Wait();
+            logger.WriteLineAsync('t').Wait();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLineAsync(char): t" }));
         }
@@ -1068,7 +1068,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLineAsync_WithReadOnlyMemory_Char()
         {
-            Logger.WriteLineAsync("test".AsMemory(), CancellationToken.None).Wait();
+            logger.WriteLineAsync("test".AsMemory(), CancellationToken.None).Wait();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLineAsync(ReadOnlyMemory<char>, CancellationToken): test" }));
         }
@@ -1078,7 +1078,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLineAsync_WithCharArray_Range()
         {
-            Logger.WriteLineAsync(['t', 'e', 's', 't'], 1, 2).Wait();
+            logger.WriteLineAsync(['t', 'e', 's', 't'], 1, 2).Wait();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLineAsync(char[], int, int): es" }));
         }
@@ -1088,8 +1088,8 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLineAsync_WithStringBuilder()
         {
-            Logger.WriteLineAsync(new StringBuilder("test", 4), CancellationToken.None).Wait();
-            Logger.WriteLineAsync(null as StringBuilder, CancellationToken.None).Wait();
+            logger.WriteLineAsync(new StringBuilder("test", 4), CancellationToken.None).Wait();
+            logger.WriteLineAsync(null as StringBuilder, CancellationToken.None).Wait();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLineAsync(StringBuilder?, CancellationToken): test", "WriteLineAsync(StringBuilder?, CancellationToken): " }));
         }
@@ -1099,9 +1099,9 @@ namespace Test.CuiLib.Logging
         [Test]
         public void WriteLineAsync_WithRawString()
         {
-            Logger.WriteLineAsync("test").Wait();
-            Logger.WriteLineAsync(null as string).Wait();
-            Logger.WriteLineAsync(string.Empty).Wait();
+            logger.WriteLineAsync("test").Wait();
+            logger.WriteLineAsync(null as string).Wait();
+            logger.WriteLineAsync(string.Empty).Wait();
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLineAsync(string?): test", "WriteLineAsync(string?): ", "WriteLineAsync(string?): " }));
         }
