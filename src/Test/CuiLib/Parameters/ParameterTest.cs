@@ -198,7 +198,7 @@ namespace Test.CuiLib.Parameters
         {
             parameterString = Parameter.Create<string>("param", 0);
             parameterInt = Parameter.Create<int>("param", 0);
-            parameterInt.Checker = ValueChecker.LargerOrEqual(0);
+            parameterInt.Checker = ValueChecker.GreaterThanOrEqualTo(0);
         }
 
         #region Ctors
@@ -250,7 +250,7 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void Checker_Get_OnDefault()
         {
-            Assert.That(parameterString.Checker, Is.EqualTo(ValueChecker.AlwaysSuccess<string>()));
+            Assert.That(parameterString.Checker, Is.EqualTo(ValueChecker.AlwaysValid<string>()));
         }
 
         [Test]

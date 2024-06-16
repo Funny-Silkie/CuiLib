@@ -9,6 +9,23 @@
   - `IValueConverter` 関連： `Options` → `Converters`
   - `Parameter` 関連： `Options` → `Parameters`
 - Obsoleteな実装の削除
+- Checkersのファクトリメソッドの名称の変更
+  - AlwaysSuccess -> AlwaysValid
+  - StartWith -> StartsWith
+  - EndWith -> EndsWith
+  - Contains -> ContainedIn
+  - Larger -> GreaterThan
+  - LargerOrEqual -> GreaterThanOrEqualTo
+  - Lower -> LessThan
+  - LowerOrEqual -> LessThanOrEqualTo
+  - Equals -> EqualTo
+  - NotEquals -> NotEqualTo
+  - IsRegexMatch -> Matches
+  - FileExists -> ExistsAsFile
+  - DirectoryExists -> ExistsAsDirectory
+  - VerifySourceFile -> ValidSourceFile
+  - VerifyDestinationFile -> ValidDestinationFile
+  - VerifySourceDirectory -> ValidSourceDirectory
 - 改名
   - `Util` を `Utils` に変更
   - `IOHelper` を `IOHelpers` に変更
@@ -19,6 +36,9 @@
 - 一部メソッドのnull許容・非許容の修正
 - `Logger`
   - `Flush`, `FlushAsync` 実装
+- Checkers
+  - 新たなファクトリメソッドの追加
+    - `Empty()`, `Empty<TElement>()`, `NotEmpty()`, `NotEmpty<TElement>()`
 - Converters
   - `ValueConverter.GetDefault<T>()`：Enumや配列を指定した際に変換できない不具合を修正
   - 新規実装

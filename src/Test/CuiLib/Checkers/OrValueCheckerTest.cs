@@ -14,22 +14,22 @@ namespace Test.CuiLib.Checkers
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentNullException>(() => new OrValueChecker<int>(ValueChecker.AlwaysSuccess<int>(), null!));
-                Assert.Throws<ArgumentNullException>(() => new OrValueChecker<int>(null!, ValueChecker.AlwaysSuccess<int>()));
+                Assert.Throws<ArgumentNullException>(() => new OrValueChecker<int>(ValueChecker.AlwaysValid<int>(), null!));
+                Assert.Throws<ArgumentNullException>(() => new OrValueChecker<int>(null!, ValueChecker.AlwaysValid<int>()));
             });
         }
 
         [Test]
         public void Ctor_WithTwoCheckers_AsPositive()
         {
-            Assert.DoesNotThrow(() => new OrValueChecker<int>(ValueChecker.AlwaysSuccess<int>(), ValueChecker.AlwaysSuccess<int>()));
+            Assert.DoesNotThrow(() => new OrValueChecker<int>(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>()));
         }
 
         [Test]
         public void Ctor_WithTwoCheckers_AsPositive_WithNested()
         {
-            IValueChecker<int> single = ValueChecker.AlwaysSuccess<int>();
-            var nested = new OrValueChecker<int>(ValueChecker.AlwaysSuccess<int>(), ValueChecker.AlwaysSuccess<int>());
+            IValueChecker<int> single = ValueChecker.AlwaysValid<int>();
+            var nested = new OrValueChecker<int>(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>());
 
             Assert.Multiple(() =>
             {
@@ -49,9 +49,9 @@ namespace Test.CuiLib.Checkers
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentException>(() => new OrValueChecker<int>([null!, ValueChecker.AlwaysSuccess<int>()]));
-                Assert.Throws<ArgumentException>(() => new OrValueChecker<int>([ValueChecker.AlwaysSuccess<int>(), null!]));
-                Assert.Throws<ArgumentException>(() => new OrValueChecker<int>(null!, ValueChecker.AlwaysSuccess<int>(), ValueChecker.AlwaysSuccess<int>()));
+                Assert.Throws<ArgumentException>(() => new OrValueChecker<int>([null!, ValueChecker.AlwaysValid<int>()]));
+                Assert.Throws<ArgumentException>(() => new OrValueChecker<int>([ValueChecker.AlwaysValid<int>(), null!]));
+                Assert.Throws<ArgumentException>(() => new OrValueChecker<int>(null!, ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>()));
             });
         }
 
@@ -64,20 +64,20 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void Ctor_WithMultipleCheckers_AsPositive_WithTwoCheckers()
         {
-            Assert.DoesNotThrow(() => new OrValueChecker<int>([ValueChecker.AlwaysSuccess<int>(), ValueChecker.AlwaysSuccess<int>()]));
+            Assert.DoesNotThrow(() => new OrValueChecker<int>([ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>()]));
         }
 
         [Test]
         public void Ctor_WithMultipleCheckers_AsPositive()
         {
-            Assert.DoesNotThrow(() => new OrValueChecker<int>(ValueChecker.AlwaysSuccess<int>(), ValueChecker.AlwaysSuccess<int>(), ValueChecker.AlwaysSuccess<int>()));
+            Assert.DoesNotThrow(() => new OrValueChecker<int>(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>()));
         }
 
         [Test]
         public void Ctor_WithMultipleCheckers_AsPositive_WithNested()
         {
-            IValueChecker<int> single = ValueChecker.AlwaysSuccess<int>();
-            IValueChecker<int> nested = ValueChecker.Or(ValueChecker.AlwaysSuccess<int>(), ValueChecker.AlwaysSuccess<int>());
+            IValueChecker<int> single = ValueChecker.AlwaysValid<int>();
+            IValueChecker<int> nested = ValueChecker.Or(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>());
 
             Assert.DoesNotThrow(() => new OrValueChecker<int>(single, single, nested));
         }
@@ -104,7 +104,7 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void CheckValue_AsNoNested()
         {
-            var checker = new OrValueChecker<int>(ValueChecker.LowerOrEqual(0), ValueChecker.Larger(10));
+            var checker = new OrValueChecker<int>(ValueChecker.LessThanOrEqualTo(0), ValueChecker.GreaterThan(10));
 
             Assert.Multiple(() =>
             {
@@ -124,9 +124,9 @@ namespace Test.CuiLib.Checkers
         public void CheckValue_AsNested()
         {
             IValueChecker<int> child1 = ValueChecker.FromDelegate<int>(x => x % 2 == 0 ? ValueCheckState.Success : ValueCheckState.AsError("ERROR!"));
-            IValueChecker<int> child2 = ValueChecker.Larger(10);
+            IValueChecker<int> child2 = ValueChecker.GreaterThan(10);
             var nested = new OrValueChecker<int>(child1, child2);
-            var checker = new OrValueChecker<int>(ValueChecker.LowerOrEqual(0), nested);
+            var checker = new OrValueChecker<int>(ValueChecker.LessThanOrEqualTo(0), nested);
 
             Assert.Multiple(() =>
             {

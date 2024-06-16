@@ -224,7 +224,7 @@ namespace CuiLib.Parameters
             }
         }
 
-        private IValueChecker<T> _checker = ValueChecker.AlwaysSuccess<T>();
+        private IValueChecker<T> _checker = ValueChecker.AlwaysValid<T>();
 
         /// <summary>
         /// <see cref="Parameter{T}"/>の新しいインスタンスを初期化します。

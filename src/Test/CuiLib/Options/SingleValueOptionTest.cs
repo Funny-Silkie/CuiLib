@@ -126,7 +126,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Checker_Get_OnDefault()
         {
-            Assert.That(option.Checker, Is.EqualTo(ValueChecker.AlwaysSuccess<int>()));
+            Assert.That(option.Checker, Is.EqualTo(ValueChecker.AlwaysValid<int>()));
         }
 
         [Test]
@@ -163,7 +163,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Value_Get_AfterApplyValue_OnCheckError()
         {
-            option.Checker = ValueChecker.Larger(0);
+            option.Checker = ValueChecker.GreaterThan(0);
             option.ApplyValue("single", "-100");
 
             Assert.Throws<ArgumentAnalysisException>(() => _ = option.Value);
