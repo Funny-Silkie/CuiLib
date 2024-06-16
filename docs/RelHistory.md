@@ -36,6 +36,7 @@
 - 一部メソッドのnull許容・非許容の修正
 - `Logger`
   - `Flush`, `FlushAsync` 実装
+  - `FileInfo` を取るコンストラクタの追加
 - Checkers
   - 新たなファクトリメソッドの追加
     - `Empty()`, `Empty<TElement>()`, `NotEmpty()`, `NotEmpty<TElement>()`

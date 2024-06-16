@@ -46,7 +46,7 @@ namespace Test.CuiLib.Logging
         }
 
         [Test]
-        public void Ctor_WithTarget()
+        public void Ctor_WithString()
         {
             Logger logger = default!;
             FileInfo target = FileUtilHelpers.GetNoExistingFile();
@@ -56,6 +56,29 @@ namespace Test.CuiLib.Logging
                 Assert.Multiple(() =>
                 {
                     Assert.DoesNotThrow(() => logger = new Logger(target.Name));
+                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
+                    Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(IOHelpers.UTF8N));
+                });
+            }
+            finally
+            {
+                logger?.Dispose();
+                target.Delete();
+            }
+        }
+
+        [Test]
+        public void Ctor_WithFileInfo()
+        {
+            Logger logger = default!;
+            FileInfo target = FileUtilHelpers.GetNoExistingFile();
+
+            try
+            {
+                Assert.Multiple(() =>
+                {
+                    Assert.DoesNotThrow(() => logger = new Logger(target));
                     Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
                     Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
                     Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(IOHelpers.UTF8N));
