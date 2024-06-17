@@ -94,20 +94,6 @@ namespace Test.CuiLib.Options
             Assert.That(option.DefaultValue, Is.EqualTo(default(string)));
         }
 
-        [Test]
-        public void DefaultValueString_Get_OnDefault()
-        {
-            Assert.That(option.DefaultValueString, Is.Null);
-        }
-
-        [Test]
-        public void DefaultValueString_Get_OnDefaultValueHasValue()
-        {
-            option.DefaultValue = "default";
-
-            Assert.That(option.DefaultValueString, Is.EqualTo("default"));
-        }
-
         #endregion Properties
 
         #region Methods

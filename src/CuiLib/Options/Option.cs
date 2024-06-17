@@ -50,11 +50,6 @@ namespace CuiLib.Options
         public abstract bool Required { get; set; }
 
         /// <summary>
-        /// 既定値の文字列を取得します。
-        /// </summary>
-        internal abstract string? DefaultValueString { get; }
-
-        /// <summary>
         /// <see cref="Option"/>の新しいインスタンスを初期化します。
         /// </summary>
         protected Option()

@@ -183,28 +183,6 @@ namespace Test.CuiLib.Options
             Assert.That(option.Value, Is.EqualTo(new[] { 100, 200 }));
         }
 
-        [Test]
-        public void DefaultValueString_OnDefault()
-        {
-            Assert.That(option.DefaultValueString, Is.EqualTo("[]"));
-        }
-
-        [Test]
-        public void DefaultValueString_AsNullDefaultValue()
-        {
-            option.DefaultValue = null!;
-
-            Assert.That(option.DefaultValueString, Is.EqualTo("[]"));
-        }
-
-        [Test]
-        public void DefaultValueString_AsSpecifiedDefaultValue()
-        {
-            option.DefaultValue = [1, 2, 3];
-
-            Assert.That(option.DefaultValueString, Is.EqualTo("[1, 2, 3]"));
-        }
-
         #endregion Properties
     }
 }

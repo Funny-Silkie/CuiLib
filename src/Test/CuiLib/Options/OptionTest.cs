@@ -84,9 +84,6 @@ namespace Test.CuiLib.Options
 
             private OptionType _optionType;
 
-            /// <inheritdoc/>
-            internal override string? DefaultValueString => throw new NotImplementedException();
-
             public void SetOptionType(OptionType value) => _optionType = value;
 
             /// <inheritdoc/>

@@ -227,9 +227,6 @@ namespace Test.CuiLib.Options
             /// <inheritdoc/>
             internal override OptionType OptionType => throw new NotImplementedException();
 
-            /// <inheritdoc/>
-            internal override string? DefaultValueString => throw new NotImplementedException();
-
             /// <see cref="NamedOption(char)"/>
             public NamedOptionImpl(char shortName) : base(shortName)
             {

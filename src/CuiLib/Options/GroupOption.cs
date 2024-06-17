@@ -19,9 +19,6 @@ namespace CuiLib.Options
         protected OptionCollection Children { get; }
 
         /// <inheritdoc/>
-        internal override string? DefaultValueString => null;
-
-        /// <inheritdoc/>
         internal override OptionType OptionType => OptionType.Group;
 
         /// <inheritdoc/>
