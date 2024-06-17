@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace CuiLib.Logging
     /// </summary>
     public class Logger : TextWriter
     {
-        private readonly List<WriterEntry> writers;
+        internal readonly List<WriterEntry> writers;
 
         /// <summary>
         /// <inheritdoc/>
@@ -57,6 +58,23 @@ namespace CuiLib.Logging
         private bool _consoleErrorLogEnabled;
 
         /// <summary>
+        /// デフォルトの文字エンコードを取得または設定します。
+        /// </summary>
+        /// <remarks>初期値はBOM無しUTF-8</remarks>
+        /// <exception cref="ArgumentNullException">設定しようとした値が<see langword="null"/></exception>
+        public Encoding DefaultEncoding
+        {
+            get => _defaultEncoding;
+            set
+            {
+                ThrowHelpers.ThrowIfNull(value, nameof(value));
+                _defaultEncoding = value;
+            }
+        }
+
+        private Encoding _defaultEncoding = IOHelpers.UTF8N;
+
+        /// <summary>
         /// <see cref="Logger"/>の新しいインスタンスを初期化します。
         /// </summary>
         public Logger()
@@ -68,6 +86,8 @@ namespace CuiLib.Logging
         /// <see cref="Logger"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="logFile">ログファイルのパス</param>
+        /// <param name="append">末尾追加モードにするかどうか</param>
+        /// <param name="encoding">文字コード，<see langword="null"/>で<see cref="IOHelpers.UTF8N"/></param>
         /// <exception cref="ArgumentNullException"><paramref name="logFile"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="logFile"/>が無効</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="logFile"/>のディレクトリが存在しない</exception>
@@ -75,10 +95,28 @@ namespace CuiLib.Logging
         /// <exception cref="PathTooLongException"><paramref name="logFile"/>が長すぎる</exception>
         /// <exception cref="UnauthorizedAccessException">アクセスが拒否された</exception>
         /// <exception cref="System.Security.SecurityException">アクセス権限がない</exception>
-        public Logger(string logFile)
+        public Logger(string logFile, bool append = true, Encoding? encoding = null)
         {
             writers = [];
-            AddLogFile(logFile);
+            AddLogFile(logFile, append, encoding);
+        }
+
+        /// <summary>
+        /// <see cref="Logger"/>の新しいインスタンスを初期化します。
+        /// </summary>
+        /// <param name="logFile">ログファイルの情報</param>
+        /// <param name="append">末尾追加モードにするかどうか</param>
+        /// <param name="encoding">文字コード，<see langword="null"/>で<see cref="IOHelpers.UTF8N"/></param>
+        /// <exception cref="ArgumentNullException"><paramref name="logFile"/>がnull</exception>
+        /// <exception cref="DirectoryNotFoundException"><paramref name="logFile"/>のディレクトリが存在しない</exception>
+        /// <exception cref="IOException"><paramref name="logFile"/>の書式が無効</exception>
+        /// <exception cref="PathTooLongException"><paramref name="logFile"/>のパスが長すぎる</exception>
+        /// <exception cref="UnauthorizedAccessException">アクセスが拒否された</exception>
+        /// <exception cref="System.Security.SecurityException">アクセス権限がない</exception>
+        public Logger(FileInfo logFile, bool append = true, Encoding? encoding = null)
+        {
+            writers = [];
+            AddLogFile(logFile, append, encoding);
         }
 
         /// <summary>
@@ -126,7 +164,7 @@ namespace CuiLib.Logging
         /// </summary>
         /// <param name="path">ログファイルのパス</param>
         /// <param name="append">末尾にテキストを追加するかどうか</param>
-        /// <param name="encoding">エンコーディング。nullでUTF-8N</param>
+        /// <param name="encoding">文字コード。<see langword="null"/>で<see cref="DefaultEncoding"/></param>
         /// <exception cref="ArgumentNullException"><paramref name="path"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="path"/>が無効</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="path"/>のディレクトリが存在しない</exception>
@@ -136,7 +174,7 @@ namespace CuiLib.Logging
         /// <exception cref="System.Security.SecurityException">アクセス権限がない</exception>
         public void AddLogFile(string path, bool append = false, Encoding? encoding = null)
         {
-            var writer = new StreamWriter(path, append, encoding ?? IOHelpers.UTF8N);
+            var writer = new StreamWriter(path, append, encoding ?? DefaultEncoding);
             writers.Add(new WriterEntry(writer)
             {
                 MustDisposed = true,
@@ -149,11 +187,11 @@ namespace CuiLib.Logging
         /// </summary>
         /// <param name="file">ログファイルの情報</param>
         /// <param name="append">末尾にテキストを追加するかどうか</param>
-        /// <param name="encoding">エンコーディング。nullでUTF-8N</param>
+        /// <param name="encoding">文字コード。<see langword="null"/>で<see cref="DefaultEncoding"/></param>
         /// <exception cref="ArgumentNullException"><paramref name="file"/>がnull</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="file"/>のディレクトリが存在しない</exception>
-        /// <exception cref="FileNotFoundException"><paramref name="file"/>が存在しない</exception>
         /// <exception cref="IOException">ファイルが既に開かれている</exception>
+        /// <exception cref="PathTooLongException"><paramref name="file"/>のパスが長すぎる</exception>
         /// <exception cref="UnauthorizedAccessException">アクセスが拒否された</exception>
         /// <exception cref="System.Security.SecurityException">アクセス権限がない</exception>
         public void AddLogFile(FileInfo file, bool append = false, Encoding? encoding = null)
@@ -162,9 +200,9 @@ namespace CuiLib.Logging
 
             FileStream stream = file.Open(append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read);
 #if NET6_0_OR_GREATER
-            var writer = new StreamWriter(stream, encoding ?? IOHelpers.UTF8N, leaveOpen: false);
+            var writer = new StreamWriter(stream, encoding ?? DefaultEncoding, leaveOpen: false);
 #else
-            var writer = new StreamWriter(stream, encoding ?? IOHelpers.UTF8N, 1024, false);
+            var writer = new StreamWriter(stream, encoding ?? DefaultEncoding, 1024, false);
 #endif
             writers.Add(new WriterEntry(writer)
             {
@@ -183,6 +221,22 @@ namespace CuiLib.Logging
             ThrowHelpers.ThrowIfNull(writer);
 
             writers.Add(new WriterEntry(writer));
+        }
+
+        /// <summary>
+        /// ログ出力先を追加します。
+        /// </summary>
+        /// <param name="writer">追加するログ出力先</param>
+        /// <param name="leaveOpen">インスタンス破棄後に<paramref name="writer"/>を破棄せずに残すかどうか</param>
+        /// <exception cref="ArgumentNullException"><paramref name="writer"/>がnull</exception>
+        public void AddLog(TextWriter writer, bool leaveOpen)
+        {
+            ThrowHelpers.ThrowIfNull(writer);
+
+            writers.Add(new WriterEntry(writer)
+            {
+                MustDisposed = !leaveOpen,
+            });
         }
 
         /// <summary>
@@ -255,9 +309,19 @@ namespace CuiLib.Logging
 #if NET8_0_OR_GREATER
 
         /// <inheritdoc/>
-        public override async Task FlushAsync(CancellationToken cancellationToken)
+        public override Task FlushAsync(CancellationToken cancellationToken)
         {
-            foreach (WriterEntry entry in writers) await entry.Writer.FlushAsync(cancellationToken);
+            return cancellationToken.IsCancellationRequested ? Task.FromCanceled(cancellationToken) : FlushAsyncCore(cancellationToken);
+        }
+
+        /// <inheritdoc cref="FlushAsync(CancellationToken)"/>
+        private async Task FlushAsyncCore(CancellationToken cancellationToken)
+        {
+            foreach (WriterEntry entry in writers)
+            {
+                if (cancellationToken.IsCancellationRequested) return;
+                await entry.Writer.FlushAsync(cancellationToken);
+            }
         }
 
 #endif
@@ -361,25 +425,48 @@ namespace CuiLib.Logging
         }
 
         /// <inheritdoc/>
-        public override void Write(string format, object? arg0)
+        public override void Write(
+#if NET7_0_OR_GREATER
+                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                   string format,
+                                   object? arg0)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(format, arg0);
         }
 
         /// <inheritdoc/>
-        public override void Write(string format, object? arg0, object? arg1)
+        public override void Write(
+#if NET7_0_OR_GREATER
+                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                   string format,
+                                   object? arg0,
+                                   object? arg1)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(format, arg0, arg1);
         }
 
         /// <inheritdoc/>
-        public override void Write(string format, object? arg0, object? arg1, object? arg2)
+        public override void Write(
+#if NET7_0_OR_GREATER
+                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                   string format,
+                                   object? arg0,
+                                   object? arg1,
+                                   object? arg2)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(format, arg0, arg1, arg2);
         }
 
         /// <inheritdoc/>
-        public override void Write(string format, params object?[] arg)
+        public override void Write(
+#if NET7_0_OR_GREATER
+                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                   string format,
+                                   params object?[] arg)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(format, arg);
         }
@@ -393,9 +480,19 @@ namespace CuiLib.Logging
 #if NETSTANDARD2_1_OR_GREATER || NET
 
         /// <inheritdoc/>
-        public override async Task WriteAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
+        public override Task WriteAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
         {
-            foreach (WriterEntry entry in writers) await entry.Writer.WriteAsync(buffer, cancellationToken);
+            return cancellationToken.IsCancellationRequested ? Task.FromCanceled(cancellationToken) : WriteAsyncCore(buffer, cancellationToken);
+        }
+
+        /// <inheritdoc cref="WriteAsync(ReadOnlyMemory{char}, CancellationToken)"/>
+        private async Task WriteAsyncCore(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken)
+        {
+            foreach (WriterEntry entry in writers)
+            {
+                if (cancellationToken.IsCancellationRequested) return;
+                await entry.Writer.WriteAsync(buffer, cancellationToken);
+            }
         }
 
 #endif
@@ -409,9 +506,19 @@ namespace CuiLib.Logging
 #if NET6_0_OR_GREATER
 
         /// <inheritdoc/>
-        public override async Task WriteAsync(StringBuilder? value, CancellationToken cancellationToken = default)
+        public override Task WriteAsync(StringBuilder? value, CancellationToken cancellationToken = default)
         {
-            foreach (WriterEntry entry in writers) await entry.Writer.WriteAsync(value, cancellationToken);
+            return cancellationToken.IsCancellationRequested ? Task.FromCanceled(cancellationToken) : WriteAsyncCore(value, cancellationToken);
+        }
+
+        /// <inheritdoc cref="WriteAsync(StringBuilder?, CancellationToken)"/>
+        private async Task WriteAsyncCore(StringBuilder? value, CancellationToken cancellationToken)
+        {
+            foreach (WriterEntry entry in writers)
+            {
+                if (cancellationToken.IsCancellationRequested) return;
+                await entry.Writer.WriteAsync(value, cancellationToken);
+            }
         }
 
 #endif
@@ -527,25 +634,48 @@ namespace CuiLib.Logging
         }
 
         /// <inheritdoc/>
-        public override void WriteLine(string format, object? arg0)
+        public override void WriteLine(
+#if NET7_0_OR_GREATER
+                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                       string format,
+                                       object? arg0)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(format, arg0);
         }
 
         /// <inheritdoc/>
-        public override void WriteLine(string format, object? arg0, object? arg1)
+        public override void WriteLine(
+#if NET7_0_OR_GREATER
+                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                       string format,
+                                       object? arg0,
+                                       object? arg1)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(format, arg0, arg1);
         }
 
         /// <inheritdoc/>
-        public override void WriteLine(string format, object? arg0, object? arg1, object? arg2)
+        public override void WriteLine(
+#if NET7_0_OR_GREATER
+                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                       string format,
+                                       object? arg0,
+                                       object? arg1,
+                                       object? arg2)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(format, arg0, arg1, arg2);
         }
 
         /// <inheritdoc/>
-        public override void WriteLine(string format, params object?[] arg)
+        public override void WriteLine(
+#if NET7_0_OR_GREATER
+                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+#endif
+                                       string format,
+                                       params object?[] arg)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(format, arg);
         }
@@ -565,9 +695,19 @@ namespace CuiLib.Logging
 #if NETSTANDARD2_1_OR_GREATER || NET
 
         /// <inheritdoc/>
-        public override async Task WriteLineAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
+        public override Task WriteLineAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
         {
-            foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(buffer, cancellationToken);
+            return cancellationToken.IsCancellationRequested ? Task.FromCanceled(cancellationToken) : WriteLineAsyncCore(buffer, cancellationToken);
+        }
+
+        /// <inheritdoc cref="WriteLineAsync(ReadOnlyMemory{char}, CancellationToken)"/>
+        private async Task WriteLineAsyncCore(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken)
+        {
+            foreach (WriterEntry entry in writers)
+            {
+                if (cancellationToken.IsCancellationRequested) return;
+                await entry.Writer.WriteLineAsync(buffer, cancellationToken);
+            }
         }
 
 #endif
@@ -581,9 +721,19 @@ namespace CuiLib.Logging
 #if NET6_0_OR_GREATER
 
         /// <inheritdoc/>
-        public override async Task WriteLineAsync(StringBuilder? value, CancellationToken cancellationToken = default)
+        public override Task WriteLineAsync(StringBuilder? value, CancellationToken cancellationToken = default)
         {
-            foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(value, cancellationToken);
+            return cancellationToken.IsCancellationRequested ? Task.FromCanceled(cancellationToken) : WriteLineAsyncCore(value, cancellationToken);
+        }
+
+        /// <inheritdoc cref="WriteLineAsync(StringBuilder?, CancellationToken)"/>
+        private async Task WriteLineAsyncCore(StringBuilder? value, CancellationToken cancellationToken)
+        {
+            foreach (WriterEntry entry in writers)
+            {
+                if (cancellationToken.IsCancellationRequested) return;
+                await entry.Writer.WriteLineAsync(value, cancellationToken);
+            }
         }
 
 #endif
@@ -622,7 +772,7 @@ namespace CuiLib.Logging
         /// <summary>
         /// <see cref="TextWriter"/>のエントリーです。
         /// </summary>
-        private sealed class WriterEntry
+        internal sealed class WriterEntry
         {
             public bool MustDisposed;
             public string? Path;

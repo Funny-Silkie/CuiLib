@@ -8,6 +8,9 @@
   - `IValueChecker` 関連： `Options` → `Checkers`
   - `IValueConverter` 関連： `Options` → `Converters`
   - `Parameter` 関連： `Options` → `Parameters`
+- クラス名変更
+  - `Util` を `Utils` に変更
+  - `IOHelper` を `IOHelpers` に変更
 - Obsoleteな実装の削除
 - Checkersのファクトリメソッドの名称の変更
   - AlwaysSuccess -> AlwaysValid
@@ -26,9 +29,8 @@
   - VerifySourceFile -> ValidSourceFile
   - VerifyDestinationFile -> ValidDestinationFile
   - VerifySourceDirectory -> ValidSourceDirectory
-- 改名
-  - `Util` を `Utils` に変更
-  - `IOHelper` を `IOHelpers` に変更
+- Logger
+  - コンストラクタでファイルパスを指定した際のデフォルトの挙動が新規作成から追加モードに変更
 
 ### 変更
 - .NET 6.0，.NET Standard 2.1 (.NET Core 3.1) , .NET Standard 2.0 (.NET Framework 4.8.1) へのサポート拡大
@@ -36,6 +38,10 @@
 - 一部メソッドのnull許容・非許容の修正
 - `Logger`
   - `Flush`, `FlushAsync` 実装
+  - `FileInfo` を取るコンストラクタの追加
+  - ファイルパスを取るコンストラクタで追加or新規作成の選択，文字コードの設定が可能に
+  - デフォルトの文字コードを指定できるように `DefaultEncoding` プロパティを実装
+  - `AddLog(TextWriter, bool)` のオーバーロードを追加，インスタンス破棄時に同時に破棄するかを設定可能に
 - Checkers
   - 新たなファクトリメソッドの追加
     - `Empty()`, `Empty<TElement>()`, `NotEmpty()`, `NotEmpty<TElement>()`

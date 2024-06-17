@@ -481,7 +481,7 @@ namespace CuiLib.Converters
         /// <returns>ファイルまたはコンソールウィンドウへ文字を出力する<see cref="TextWriter"/>を生成するインスタンス</returns>
         public static IValueConverter<string, TextWriter> ToConsoleOrFileWriter(Encoding? encoding = null, bool append = false)
         {
-            return new FileOrConsoleWriterValueConverter(encoding ?? Encoding.UTF8, append);
+            return new FileOrConsoleWriterValueConverter(encoding ?? IOHelpers.UTF8N, append);
         }
 
         /// <summary>
@@ -491,7 +491,7 @@ namespace CuiLib.Converters
         /// <returns>ファイルまたはコンソールウィンドウから文字を読み取る<see cref="TextReader"/>を生成するインスタンス</returns>
         public static IValueConverter<string, TextReader> ToConsoleOrFileReader(Encoding? encoding = null)
         {
-            return new FileOrConsoleReaderValueConverter(encoding ?? Encoding.UTF8);
+            return new FileOrConsoleReaderValueConverter(encoding ?? IOHelpers.UTF8N);
         }
 
         /// <summary>
@@ -559,10 +559,10 @@ namespace CuiLib.Converters
 
             if (type == typeof(FileInfo)) return Cast(new FileInfoValueConverter());
             if (type == typeof(DirectoryInfo)) return Cast(new DirectoryInfoValueConverter());
-            if (type == typeof(TextReader)) return Cast(new FileOrConsoleReaderValueConverter(new UTF8Encoding(false)));
-            if (type == typeof(StreamReader)) return Cast(new StreamReaderValueConverter(new UTF8Encoding(false)));
-            if (type == typeof(TextWriter)) return Cast(new FileOrConsoleWriterValueConverter(new UTF8Encoding(false), false));
-            if (type == typeof(StreamWriter)) return Cast(new StreamWriterValueConverter(new UTF8Encoding(false), false));
+            if (type == typeof(TextReader)) return Cast(new FileOrConsoleReaderValueConverter(IOHelpers.UTF8N));
+            if (type == typeof(StreamReader)) return Cast(new StreamReaderValueConverter(IOHelpers.UTF8N));
+            if (type == typeof(TextWriter)) return Cast(new FileOrConsoleWriterValueConverter(IOHelpers.UTF8N, false));
+            if (type == typeof(StreamWriter)) return Cast(new StreamWriterValueConverter(IOHelpers.UTF8N, false));
             if (type == typeof(int)) return Cast(StringToInt32());
             if (type == typeof(double)) return Cast(StringToDouble());
             if (type == typeof(DateTime)) return Cast(StringToDateTime());
