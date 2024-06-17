@@ -106,7 +106,7 @@ namespace Test.CuiLib.Options
         }
 
         [Test]
-        public void ValueTypeName_Get()
+        public void ValueTypeName_Get_OnDefault()
         {
             Assert.That(option.ValueTypeName, Is.EqualTo("int"));
         }

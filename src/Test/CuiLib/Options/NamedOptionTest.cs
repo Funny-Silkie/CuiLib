@@ -216,9 +216,6 @@ namespace Test.CuiLib.Options
         private sealed class NamedOptionImpl : NamedOption
         {
             /// <inheritdoc/>
-            public override string? ValueTypeName => throw new NotImplementedException();
-
-            /// <inheritdoc/>
             public override bool ValueAvailable => throw new NotImplementedException();
 
             /// <inheritdoc/>

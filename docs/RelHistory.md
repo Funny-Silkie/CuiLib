@@ -31,6 +31,8 @@
   - VerifySourceDirectory -> ValidSourceDirectory
 - Logger
   - コンストラクタでファイルパスを指定した際のデフォルトの挙動が新規作成から追加モードに変更
+- Option
+  - `ValueTypeName` を設定可能に
 
 ### 変更
 - .NET 6.0，.NET Standard 2.1 (.NET Core 3.1) , .NET Standard 2.0 (.NET Framework 4.8.1) へのサポート拡大

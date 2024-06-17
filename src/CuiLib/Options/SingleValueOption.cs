@@ -14,9 +14,6 @@ namespace CuiLib.Options
         /// <inheritdoc/>
         internal override OptionType OptionType => OptionType.Valued | OptionType.SingleValue;
 
-        /// <inheritdoc/>
-        public override string? ValueTypeName => ValueConverter.GetValueTypeString<T>();
-
         /// <summary>
         /// 値の変換を行う<see cref="IValueConverter{TIn, TOut}"/>を取得または設定します。
         /// </summary>
@@ -80,6 +77,7 @@ namespace CuiLib.Options
         /// <param name="shortName">短縮名</param>
         public SingleValueOption(char shortName) : base(shortName)
         {
+            Initialize();
         }
 
         /// <summary>
@@ -90,6 +88,7 @@ namespace CuiLib.Options
         /// <exception cref="ArgumentException"><paramref name="fullName"/>が空文字</exception>
         public SingleValueOption(string fullName) : base(fullName)
         {
+            Initialize();
         }
 
         /// <summary>
@@ -101,6 +100,15 @@ namespace CuiLib.Options
         /// <exception cref="ArgumentException"><paramref name="fullName"/>が空文字</exception>
         public SingleValueOption(char shortName, string fullName) : base(shortName, fullName)
         {
+            Initialize();
+        }
+
+        /// <summary>
+        /// 初期化を行います。
+        /// </summary>
+        private void Initialize()
+        {
+            ValueTypeName = ValueConverter.GetValueTypeString<T>();
         }
     }
 }

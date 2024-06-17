@@ -91,9 +91,6 @@ namespace Test.CuiLib.Options
             /// <inheritdoc/>
             public override string Value => throw new NotImplementedException();
 
-            /// <inheritdoc/>
-            public override string? ValueTypeName => throw new NotImplementedException();
-
             /// <see cref="ValueSpecifiedOption{T}.ValueSpecifiedOption(char)"/>
             public ValueSpeficiedOptionImpl(char shortName) : base(shortName)
             {

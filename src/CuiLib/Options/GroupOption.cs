@@ -22,9 +22,6 @@ namespace CuiLib.Options
         internal override OptionType OptionType => OptionType.Group;
 
         /// <inheritdoc/>
-        public override string? ValueTypeName => null;
-
-        /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Required
         {

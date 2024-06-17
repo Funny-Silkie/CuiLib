@@ -15,9 +15,9 @@ namespace CuiLib.Options
         public string? Description { get; set; }
 
         /// <summary>
-        /// 取得する値の種類を取得します。
+        /// 取得する値の種類を取得または設定します。
         /// </summary>
-        public abstract string? ValueTypeName { get; }
+        public string? ValueTypeName { get; set; }
 
         /// <summary>
         /// 値を受け取ったかどうかを表す値を取得します。

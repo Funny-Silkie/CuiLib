@@ -137,9 +137,6 @@ namespace Test.CuiLib.Options
             /// <inheritdoc/>
             public override string Value => throw new NotImplementedException();
 
-            /// <inheritdoc/>
-            public override string? ValueTypeName => throw new NotImplementedException();
-
             /// <see cref="ValuedOption{T}.RawValues"/>
             public new ReadOnlyCollection<string>? RawValues => base.RawValues;
 

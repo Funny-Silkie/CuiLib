@@ -18,9 +18,6 @@ namespace CuiLib.Options
         protected override ReadOnlyCollection<string>? RawValues => null;
 
         /// <inheritdoc/>
-        public override string? ValueTypeName => null;
-
-        /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Required
         {
