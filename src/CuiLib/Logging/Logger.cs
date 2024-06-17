@@ -224,6 +224,22 @@ namespace CuiLib.Logging
         }
 
         /// <summary>
+        /// ログ出力先を追加します。
+        /// </summary>
+        /// <param name="writer">追加するログ出力先</param>
+        /// <param name="leaveOpen">インスタンス破棄後に<paramref name="writer"/>を破棄せずに残すかどうか</param>
+        /// <exception cref="ArgumentNullException"><paramref name="writer"/>がnull</exception>
+        public void AddLog(TextWriter writer, bool leaveOpen)
+        {
+            ThrowHelpers.ThrowIfNull(writer);
+
+            writers.Add(new WriterEntry(writer)
+            {
+                MustDisposed = !leaveOpen,
+            });
+        }
+
+        /// <summary>
         /// 指定したログファイルを管理中かどうかを検索します。
         /// </summary>
         /// <param name="path">検索するログファイルのパス</param>

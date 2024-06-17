@@ -661,13 +661,13 @@ namespace Test.CuiLib.Logging
         }
 
         [Test]
-        public void AddLog_WithNull()
+        public void AddLog_WithoutArgs_WithNull()
         {
             Assert.Throws<ArgumentNullException>(() => logger.AddLog(null!));
         }
 
         [Test]
-        public void AddLog_AsPositive()
+        public void AddLog_WithoutArgs_AsPositive()
         {
             FileInfo added = FileUtilHelpers.GetNoExistingFile();
             try
@@ -679,6 +679,72 @@ namespace Test.CuiLib.Logging
                     Assert.That(logger.writers, Has.Count.EqualTo(2));
                     Assert.That(logger.writers[1].Writer, Is.EqualTo(writer));
                     Assert.That(logger.writers[1].MustDisposed, Is.False);
+                    Assert.That(logger.writers[1].IsConsoleWriter, Is.False);
+                    Assert.That(logger.writers[1].Path, Is.Null);
+                });
+
+                logger.Write("content");
+                logger.Flush();
+
+                added.Refresh();
+
+                Assert.That(added.Length, Is.GreaterThan(0));
+            }
+            finally
+            {
+                added.Delete();
+            }
+        }
+
+        [Test]
+        public void AddLog_WithBool_WithNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => logger.AddLog(null!, true));
+        }
+
+        [Test]
+        public void AddLog_WithBool_AsPositive_AsLeaveOpen()
+        {
+            FileInfo added = FileUtilHelpers.GetNoExistingFile();
+            try
+            {
+                using StreamWriter writer = added.CreateText();
+                logger.AddLog(writer, true);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(logger.writers, Has.Count.EqualTo(2));
+                    Assert.That(logger.writers[1].Writer, Is.EqualTo(writer));
+                    Assert.That(logger.writers[1].MustDisposed, Is.False);
+                    Assert.That(logger.writers[1].IsConsoleWriter, Is.False);
+                    Assert.That(logger.writers[1].Path, Is.Null);
+                });
+
+                logger.Write("content");
+                logger.Flush();
+
+                added.Refresh();
+
+                Assert.That(added.Length, Is.GreaterThan(0));
+            }
+            finally
+            {
+                added.Delete();
+            }
+        }
+
+        [Test]
+        public void AddLog_WithBool_AsPositive_AsNoLeaveOpen()
+        {
+            FileInfo added = FileUtilHelpers.GetNoExistingFile();
+            try
+            {
+                using StreamWriter writer = added.CreateText();
+                logger.AddLog(writer, false);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(logger.writers, Has.Count.EqualTo(2));
+                    Assert.That(logger.writers[1].Writer, Is.EqualTo(writer));
+                    Assert.That(logger.writers[1].MustDisposed, Is.True);
                     Assert.That(logger.writers[1].IsConsoleWriter, Is.False);
                     Assert.That(logger.writers[1].Path, Is.Null);
                 });
