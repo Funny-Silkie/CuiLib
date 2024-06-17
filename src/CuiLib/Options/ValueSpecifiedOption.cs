@@ -9,11 +9,6 @@ namespace CuiLib.Options
     [Serializable]
     public abstract class ValueSpecifiedOption<T> : ValuedOption<T>
     {
-        /// <summary>
-        /// 必須かどうかを取得または設定します。
-        /// </summary>
-        public bool IsRequired { get; set; }
-
         /// <inheritdoc/>
         public override sealed bool Required { get; set; }
 
