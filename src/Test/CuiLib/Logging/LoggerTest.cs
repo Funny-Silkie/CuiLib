@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Test.Helpers;
 
 namespace Test.CuiLib.Logging
@@ -897,7 +898,17 @@ namespace Test.CuiLib.Logging
 #if NET8_0_OR_GREATER
 
         [Test]
-        public void FlushAsync_WithCancellationToken()
+        public void FlushAsync_WithCancellationToken_AsCanceled()
+        {
+            using var source = new CancellationTokenSource();
+            source.Cancel();
+
+            Assert.Throws<TaskCanceledException>(() => logger.FlushAsync(source.Token).GetAwaiter().GetResult());
+            Assert.That(innerWriter.GetData(), Is.Empty);
+        }
+
+        [Test]
+        public void FlushAsync_WithCancellationToken_AsNotCanceled()
         {
             logger.FlushAsync(CancellationToken.None).Wait();
 
@@ -1098,7 +1109,17 @@ namespace Test.CuiLib.Logging
 #if NETCOREAPP3_1_OR_GREATER
 
         [Test]
-        public void WriteAsync_WithReadOnlyMemory_Char()
+        public void WriteAsync_WithReadOnlyMemory_Char_AsCanceled()
+        {
+            using var source = new CancellationTokenSource();
+            source.Cancel();
+
+            Assert.Throws<TaskCanceledException>(() => logger.WriteAsync("test".AsMemory(), source.Token).GetAwaiter().GetResult());
+            Assert.That(innerWriter.GetData(), Is.Empty);
+        }
+
+        [Test]
+        public void WriteAsync_WithReadOnlyMemory_Char_AsNotCanceled()
         {
             logger.WriteAsync("test".AsMemory(), CancellationToken.None).Wait();
 
@@ -1118,7 +1139,22 @@ namespace Test.CuiLib.Logging
 #if NET6_0_OR_GREATER
 
         [Test]
-        public void WriteAsync_WithStringBuilder()
+        public void WriteAsync_WithStringBuilder_AsCanceled()
+        {
+            using var source = new CancellationTokenSource();
+            source.Cancel();
+
+            Assert.Multiple(() =>
+            {
+                Assert.Throws<TaskCanceledException>(() => logger.WriteAsync(new StringBuilder("test", 4), source.Token).GetAwaiter().GetResult());
+                Assert.Throws<TaskCanceledException>(() => logger.WriteAsync(null as StringBuilder, source.Token).GetAwaiter().GetResult());
+            });
+
+            Assert.That(innerWriter.GetData(), Is.Empty);
+        }
+
+        [Test]
+        public void WriteAsync_WithStringBuilder_AsNotCanceled()
         {
             logger.WriteAsync(new StringBuilder("test", 4), CancellationToken.None).Wait();
             logger.WriteAsync(null as StringBuilder, CancellationToken.None).Wait();
@@ -1346,7 +1382,17 @@ namespace Test.CuiLib.Logging
 #if NETCOREAPP3_1_OR_GREATER
 
         [Test]
-        public void WriteLineAsync_WithReadOnlyMemory_Char()
+        public void WriteLineAsync_WithReadOnlyMemory_Char_AsCanceled()
+        {
+            using var source = new CancellationTokenSource();
+            source.Cancel();
+
+            Assert.Throws<TaskCanceledException>(() => logger.WriteLineAsync("test".AsMemory(), source.Token).GetAwaiter().GetResult());
+            Assert.That(innerWriter.GetData(), Is.Empty);
+        }
+
+        [Test]
+        public void WriteLineAsync_WithReadOnlyMemory_Char_AsNotCanceled()
         {
             logger.WriteLineAsync("test".AsMemory(), CancellationToken.None).Wait();
 
@@ -1366,7 +1412,22 @@ namespace Test.CuiLib.Logging
 #if NET6_0_OR_GREATER
 
         [Test]
-        public void WriteLineAsync_WithStringBuilder()
+        public void WriteLineAsync_WithStringBuilder_AsCanceled()
+        {
+            using var source = new CancellationTokenSource();
+            source.Cancel();
+
+            Assert.Multiple(() =>
+            {
+                Assert.Throws<TaskCanceledException>(() => logger.WriteLineAsync(new StringBuilder("test", 4), source.Token).GetAwaiter().GetResult());
+                Assert.Throws<TaskCanceledException>(() => logger.WriteLineAsync(null as StringBuilder, source.Token).GetAwaiter().GetResult());
+            });
+
+            Assert.That(innerWriter.GetData(), Is.Empty);
+        }
+
+        [Test]
+        public void WriteLineAsync_WithStringBuilder_AsNotCanceled()
         {
             logger.WriteLineAsync(new StringBuilder("test", 4), CancellationToken.None).Wait();
             logger.WriteLineAsync(null as StringBuilder, CancellationToken.None).Wait();

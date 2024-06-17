@@ -309,9 +309,19 @@ namespace CuiLib.Logging
 #if NET8_0_OR_GREATER
 
         /// <inheritdoc/>
-        public override async Task FlushAsync(CancellationToken cancellationToken)
+        public override Task FlushAsync(CancellationToken cancellationToken)
         {
-            foreach (WriterEntry entry in writers) await entry.Writer.FlushAsync(cancellationToken);
+            return cancellationToken.IsCancellationRequested ? Task.FromCanceled(cancellationToken) : FlushAsyncCore(cancellationToken);
+        }
+
+        /// <inheritdoc cref="FlushAsync(CancellationToken)"/>
+        private async Task FlushAsyncCore(CancellationToken cancellationToken)
+        {
+            foreach (WriterEntry entry in writers)
+            {
+                if (cancellationToken.IsCancellationRequested) return;
+                await entry.Writer.FlushAsync(cancellationToken);
+            }
         }
 
 #endif
@@ -470,9 +480,19 @@ namespace CuiLib.Logging
 #if NETSTANDARD2_1_OR_GREATER || NET
 
         /// <inheritdoc/>
-        public override async Task WriteAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
+        public override Task WriteAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
         {
-            foreach (WriterEntry entry in writers) await entry.Writer.WriteAsync(buffer, cancellationToken);
+            return cancellationToken.IsCancellationRequested ? Task.FromCanceled(cancellationToken) : WriteAsyncCore(buffer, cancellationToken);
+        }
+
+        /// <inheritdoc cref="WriteAsync(ReadOnlyMemory{char}, CancellationToken)"/>
+        private async Task WriteAsyncCore(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken)
+        {
+            foreach (WriterEntry entry in writers)
+            {
+                if (cancellationToken.IsCancellationRequested) return;
+                await entry.Writer.WriteAsync(buffer, cancellationToken);
+            }
         }
 
 #endif
@@ -486,9 +506,19 @@ namespace CuiLib.Logging
 #if NET6_0_OR_GREATER
 
         /// <inheritdoc/>
-        public override async Task WriteAsync(StringBuilder? value, CancellationToken cancellationToken = default)
+        public override Task WriteAsync(StringBuilder? value, CancellationToken cancellationToken = default)
         {
-            foreach (WriterEntry entry in writers) await entry.Writer.WriteAsync(value, cancellationToken);
+            return cancellationToken.IsCancellationRequested ? Task.FromCanceled(cancellationToken) : WriteAsyncCore(value, cancellationToken);
+        }
+
+        /// <inheritdoc cref="WriteAsync(StringBuilder?, CancellationToken)"/>
+        private async Task WriteAsyncCore(StringBuilder? value, CancellationToken cancellationToken)
+        {
+            foreach (WriterEntry entry in writers)
+            {
+                if (cancellationToken.IsCancellationRequested) return;
+                await entry.Writer.WriteAsync(value, cancellationToken);
+            }
         }
 
 #endif
@@ -665,9 +695,19 @@ namespace CuiLib.Logging
 #if NETSTANDARD2_1_OR_GREATER || NET
 
         /// <inheritdoc/>
-        public override async Task WriteLineAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
+        public override Task WriteLineAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
         {
-            foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(buffer, cancellationToken);
+            return cancellationToken.IsCancellationRequested ? Task.FromCanceled(cancellationToken) : WriteLineAsyncCore(buffer, cancellationToken);
+        }
+
+        /// <inheritdoc cref="WriteLineAsync(ReadOnlyMemory{char}, CancellationToken)"/>
+        private async Task WriteLineAsyncCore(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken)
+        {
+            foreach (WriterEntry entry in writers)
+            {
+                if (cancellationToken.IsCancellationRequested) return;
+                await entry.Writer.WriteLineAsync(buffer, cancellationToken);
+            }
         }
 
 #endif
@@ -681,9 +721,19 @@ namespace CuiLib.Logging
 #if NET6_0_OR_GREATER
 
         /// <inheritdoc/>
-        public override async Task WriteLineAsync(StringBuilder? value, CancellationToken cancellationToken = default)
+        public override Task WriteLineAsync(StringBuilder? value, CancellationToken cancellationToken = default)
         {
-            foreach (WriterEntry entry in writers) await entry.Writer.WriteLineAsync(value, cancellationToken);
+            return cancellationToken.IsCancellationRequested ? Task.FromCanceled(cancellationToken) : WriteLineAsyncCore(value, cancellationToken);
+        }
+
+        /// <inheritdoc cref="WriteLineAsync(StringBuilder?, CancellationToken)"/>
+        private async Task WriteLineAsyncCore(StringBuilder? value, CancellationToken cancellationToken)
+        {
+            foreach (WriterEntry entry in writers)
+            {
+                if (cancellationToken.IsCancellationRequested) return;
+                await entry.Writer.WriteLineAsync(value, cancellationToken);
+            }
         }
 
 #endif
