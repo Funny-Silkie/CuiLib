@@ -216,9 +216,6 @@ namespace Test.CuiLib.Options
         private sealed class NamedOptionImpl : NamedOption
         {
             /// <inheritdoc/>
-            public override string? ValueTypeName => throw new NotImplementedException();
-
-            /// <inheritdoc/>
             public override bool ValueAvailable => throw new NotImplementedException();
 
             /// <inheritdoc/>
@@ -226,9 +223,6 @@ namespace Test.CuiLib.Options
 
             /// <inheritdoc/>
             internal override OptionType OptionType => throw new NotImplementedException();
-
-            /// <inheritdoc/>
-            internal override string? DefaultValueString => throw new NotImplementedException();
 
             /// <see cref="NamedOption(char)"/>
             public NamedOptionImpl(char shortName) : base(shortName)

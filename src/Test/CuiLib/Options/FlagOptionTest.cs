@@ -100,12 +100,6 @@ namespace Test.CuiLib.Options
         }
 
         [Test]
-        public void ValueTypeName_Get()
-        {
-            Assert.That(option.ValueTypeName, Is.Null);
-        }
-
-        [Test]
         public void Required_Get()
         {
             Assert.That(option.Required, Is.False);

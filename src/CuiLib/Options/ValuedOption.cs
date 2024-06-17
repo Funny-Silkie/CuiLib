@@ -32,9 +32,6 @@ namespace CuiLib.Options
         /// </summary>
         public T DefaultValue { get; set; } = default!;
 
-        /// <inheritdoc/>
-        internal override string? DefaultValueString => DefaultValue?.ToString();
-
         /// <summary>
         /// オプションの値を取得します。
         /// </summary>

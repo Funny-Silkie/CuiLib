@@ -106,7 +106,7 @@ namespace Test.CuiLib.Options
         }
 
         [Test]
-        public void ValueTypeName_Get()
+        public void ValueTypeName_Get_OnDefault()
         {
             Assert.That(option.ValueTypeName, Is.EqualTo("int"));
         }
@@ -181,28 +181,6 @@ namespace Test.CuiLib.Options
             option.ApplyValue("multi", "200");
 
             Assert.That(option.Value, Is.EqualTo(new[] { 100, 200 }));
-        }
-
-        [Test]
-        public void DefaultValueString_OnDefault()
-        {
-            Assert.That(option.DefaultValueString, Is.EqualTo("[]"));
-        }
-
-        [Test]
-        public void DefaultValueString_AsNullDefaultValue()
-        {
-            option.DefaultValue = null!;
-
-            Assert.That(option.DefaultValueString, Is.EqualTo("[]"));
-        }
-
-        [Test]
-        public void DefaultValueString_AsSpecifiedDefaultValue()
-        {
-            option.DefaultValue = [1, 2, 3];
-
-            Assert.That(option.DefaultValueString, Is.EqualTo("[1, 2, 3]"));
         }
 
         #endregion Properties

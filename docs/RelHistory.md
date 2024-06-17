@@ -54,8 +54,10 @@
     - `string` から `In128`, `UInt128` への変換
     - `string` から `DateTime`, `DateOnly`, `TimeOnly`, `DateTimeOffset`, `TimeSpan` 変換時にフォーマットを指定できるように
 - Options
+  - `Required` と重複しており且つ機能していなかった `IsRequired` プロパティを削除
   - `ValueTypeName`：型名に配列を指定した際のエラーを修正
   - `XorGroupOption` に `AndGroupOption` や `MultipleValueOption<T>` を格納した際に値が複数設定できない不具合を修正
+  - `ValueTypeName` を設定可能に
 - Parameters
   - 配列パラメータが存在する場合の `ParameterCollection` の挙動を修正
   - `ParameterCollection` の `ContainsAt(int)` の挙動を `TryGetValue(int, out Parameter?)` のものと同一化

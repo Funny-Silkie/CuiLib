@@ -46,21 +46,9 @@ namespace Test.CuiLib.Options
         }
 
         [Test]
-        public void DefaultValueString_Get()
-        {
-            Assert.That(option.DefaultValueString, Is.Null);
-        }
-
-        [Test]
         public void OptionType_Get()
         {
             Assert.That(option.OptionType, Is.EqualTo(OptionType.Group));
-        }
-
-        [Test]
-        public void ValueTypeName_Get()
-        {
-            Assert.That(option.ValueTypeName, Is.Null);
         }
 
         [Test]

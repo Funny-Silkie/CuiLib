@@ -15,9 +15,9 @@ namespace CuiLib.Options
         public string? Description { get; set; }
 
         /// <summary>
-        /// 取得する値の種類を取得します。
+        /// 取得する値の種類を取得または設定します。
         /// </summary>
-        public abstract string? ValueTypeName { get; }
+        public string? ValueTypeName { get; set; }
 
         /// <summary>
         /// 値を受け取ったかどうかを表す値を取得します。
@@ -48,11 +48,6 @@ namespace CuiLib.Options
         /// 必須のオプションかどうかを取得または設定します。
         /// </summary>
         public abstract bool Required { get; set; }
-
-        /// <summary>
-        /// 既定値の文字列を取得します。
-        /// </summary>
-        internal abstract string? DefaultValueString { get; }
 
         /// <summary>
         /// <see cref="Option"/>の新しいインスタンスを初期化します。

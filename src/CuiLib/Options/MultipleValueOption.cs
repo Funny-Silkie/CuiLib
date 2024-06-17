@@ -14,9 +14,6 @@ namespace CuiLib.Options
         /// <inheritdoc/>
         internal override OptionType OptionType => OptionType.Valued | OptionType.MultiValue;
 
-        /// <inheritdoc/>
-        public override string? ValueTypeName => ValueConverter.GetValueTypeString<T>();
-
         /// <summary>
         /// 値の変換を行う<see cref="IValueConverter{TIn, TOut}"/>を取得または設定します。
         /// </summary>
@@ -83,16 +80,13 @@ namespace CuiLib.Options
 
         private T[]? _valueCache;
 
-        /// <inheritdoc/>
-        internal override string? DefaultValueString => $"[{string.Join(", ", DefaultValue ?? [])}]";
-
         /// <summary>
         /// <see cref="MultipleValueOption{T}"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="shortName">短縮名</param>
         public MultipleValueOption(char shortName) : base(shortName)
         {
-            DefaultValue = [];
+            Initialize();
         }
 
         /// <summary>
@@ -103,7 +97,7 @@ namespace CuiLib.Options
         /// <exception cref="ArgumentException"><paramref name="fullName"/>が空文字</exception>
         public MultipleValueOption(string fullName) : base(fullName)
         {
-            DefaultValue = [];
+            Initialize();
         }
 
         /// <summary>
@@ -115,7 +109,16 @@ namespace CuiLib.Options
         /// <exception cref="ArgumentException"><paramref name="fullName"/>が空文字</exception>
         public MultipleValueOption(char shortName, string fullName) : base(shortName, fullName)
         {
+            Initialize();
+        }
+
+        /// <summary>
+        /// 初期化を行います。
+        /// </summary>
+        private void Initialize()
+        {
             DefaultValue = [];
+            ValueTypeName = ValueConverter.GetValueTypeString<T>();
         }
 
         /// <inheritdoc/>

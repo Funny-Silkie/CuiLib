@@ -25,6 +25,12 @@ namespace Test.CuiLib.Options
         }
 
         [Test]
+        public void ValueTypeName_Get_OnDefault()
+        {
+            Assert.That(option.ValueTypeName, Is.Null);
+        }
+
+        [Test]
         public void IsValued_Get_OnDefaultEnumValue()
         {
             Assert.That(option.IsValued, Is.False);
@@ -71,9 +77,6 @@ namespace Test.CuiLib.Options
         private sealed class OptionImpl : Option
         {
             /// <inheritdoc/>
-            public override string? ValueTypeName => throw new NotImplementedException();
-
-            /// <inheritdoc/>
             public override bool ValueAvailable => throw new NotImplementedException();
 
             /// <inheritdoc/>
@@ -83,9 +86,6 @@ namespace Test.CuiLib.Options
             internal override OptionType OptionType => _optionType;
 
             private OptionType _optionType;
-
-            /// <inheritdoc/>
-            internal override string? DefaultValueString => throw new NotImplementedException();
 
             public void SetOptionType(OptionType value) => _optionType = value;
 
