@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -14,7 +14,7 @@ namespace CuiLib.Logging
     /// </summary>
     public class Logger : TextWriter
     {
-        private readonly List<WriterEntry> writers;
+        internal readonly List<WriterEntry> writers;
 
         /// <summary>
         /// <inheritdoc/>
@@ -706,7 +706,7 @@ namespace CuiLib.Logging
         /// <summary>
         /// <see cref="TextWriter"/>のエントリーです。
         /// </summary>
-        private sealed class WriterEntry
+        internal sealed class WriterEntry
         {
             public bool MustDisposed;
             public string? Path;

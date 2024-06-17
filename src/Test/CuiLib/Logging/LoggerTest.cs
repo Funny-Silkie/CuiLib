@@ -59,10 +59,10 @@ namespace Test.CuiLib.Logging
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
-                    Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.writers, Has.Count.EqualTo(1));
+                    Assert.That(logger.writers[0].Writer, Is.InstanceOf<StreamWriter>());
                     Assert.That(target.Length, Is.GreaterThan(0));
-                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(logger.DefaultEncoding));
+                    Assert.That(logger.writers[0].Writer.Encoding, Is.EqualTo(logger.DefaultEncoding));
                 });
             }
             finally
@@ -86,10 +86,10 @@ namespace Test.CuiLib.Logging
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
-                    Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.writers, Has.Count.EqualTo(1));
+                    Assert.That(logger.writers[0].Writer, Is.InstanceOf<StreamWriter>());
                     Assert.That(target.Length, Is.GreaterThan(0));
-                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(encoding));
+                    Assert.That(logger.writers[0].Writer.Encoding, Is.EqualTo(encoding));
                 });
             }
             finally
@@ -112,10 +112,10 @@ namespace Test.CuiLib.Logging
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
-                    Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.writers, Has.Count.EqualTo(1));
+                    Assert.That(logger.writers[0].Writer, Is.InstanceOf<StreamWriter>());
                     Assert.That(target.Length, Is.EqualTo(0));
-                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(logger.DefaultEncoding));
+                    Assert.That(logger.writers[0].Writer.Encoding, Is.EqualTo(logger.DefaultEncoding));
                 });
             }
             finally
@@ -139,10 +139,10 @@ namespace Test.CuiLib.Logging
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
-                    Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.writers, Has.Count.EqualTo(1));
+                    Assert.That(logger.writers[0].Writer, Is.InstanceOf<StreamWriter>());
                     Assert.That(target.Length, Is.EqualTo(0));
-                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(encoding));
+                    Assert.That(logger.writers[0].Writer.Encoding, Is.EqualTo(encoding));
                 });
             }
             finally
@@ -165,10 +165,10 @@ namespace Test.CuiLib.Logging
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
-                    Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.writers, Has.Count.EqualTo(1));
+                    Assert.That(logger.writers[0].Writer, Is.InstanceOf<StreamWriter>());
                     Assert.That(target.Length, Is.GreaterThan(0));
-                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(logger.DefaultEncoding));
+                    Assert.That(logger.writers[0].Writer.Encoding, Is.EqualTo(logger.DefaultEncoding));
                 });
             }
             finally
@@ -192,10 +192,10 @@ namespace Test.CuiLib.Logging
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
-                    Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.writers, Has.Count.EqualTo(1));
+                    Assert.That(logger.writers[0].Writer, Is.InstanceOf<StreamWriter>());
                     Assert.That(target.Length, Is.GreaterThan(0));
-                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(encoding));
+                    Assert.That(logger.writers[0].Writer.Encoding, Is.EqualTo(encoding));
                 });
             }
             finally
@@ -218,10 +218,10 @@ namespace Test.CuiLib.Logging
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
-                    Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.writers, Has.Count.EqualTo(1));
+                    Assert.That(logger.writers[0].Writer, Is.InstanceOf<StreamWriter>());
                     Assert.That(target.Length, Is.EqualTo(0));
-                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(logger.DefaultEncoding));
+                    Assert.That(logger.writers[0].Writer.Encoding, Is.EqualTo(logger.DefaultEncoding));
                 });
             }
             finally
@@ -245,10 +245,10 @@ namespace Test.CuiLib.Logging
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
-                    Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.writers, Has.Count.EqualTo(1));
+                    Assert.That(logger.writers[0].Writer, Is.InstanceOf<StreamWriter>());
                     Assert.That(target.Length, Is.EqualTo(0));
-                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(encoding));
+                    Assert.That(logger.writers[0].Writer.Encoding, Is.EqualTo(encoding));
                 });
             }
             finally
@@ -287,15 +287,15 @@ namespace Test.CuiLib.Logging
         [Test]
         public void ConsoleStdoutLogEnabled_Set()
         {
-            var logger = new Logger
-            {
-                ConsoleStdoutLogEnabled = true
-            };
+            logger.ConsoleStdoutLogEnabled = true;
 
             Assert.Multiple(() =>
             {
-                Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
-                Assert.That(logger.GetAllTargets().First(), Is.EqualTo(Console.Out));
+                Assert.That(logger.writers, Has.Count.EqualTo(2));
+                Assert.That(logger.writers[1].Writer, Is.EqualTo(Console.Out));
+                Assert.That(logger.writers[1].IsConsoleWriter, Is.True);
+                Assert.That(logger.writers[1].MustDisposed, Is.False);
+                Assert.That(logger.writers[1].Path, Is.Null);
             });
         }
 
@@ -319,15 +319,15 @@ namespace Test.CuiLib.Logging
         [Test]
         public void ConsoleErrorLogEnabled_Set()
         {
-            var logger = new Logger
-            {
-                ConsoleErrorEnabled = true
-            };
+            logger.ConsoleErrorEnabled = true;
 
             Assert.Multiple(() =>
             {
-                Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
-                Assert.That(logger.GetAllTargets().First(), Is.EqualTo(Console.Error));
+                Assert.That(logger.writers, Has.Count.EqualTo(2));
+                Assert.That(logger.writers[1].Writer, Is.EqualTo(Console.Error));
+                Assert.That(logger.writers[1].IsConsoleWriter, Is.True);
+                Assert.That(logger.writers[1].MustDisposed, Is.False);
+                Assert.That(logger.writers[1].Path, Is.Null);
             });
         }
 
@@ -439,9 +439,12 @@ namespace Test.CuiLib.Logging
                 Assert.Multiple(() =>
                 {
                     Assert.That(added.Exists, Is.True);
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
-                    Assert.That(logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(logger.DefaultEncoding));
+                    Assert.That(logger.writers, Has.Count.EqualTo(2));
+                    Assert.That(logger.writers[1].Writer, Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.writers[1].Writer.Encoding, Is.EqualTo(logger.DefaultEncoding));
+                    Assert.That(logger.writers[1].IsConsoleWriter, Is.False);
+                    Assert.That(logger.writers[1].MustDisposed, Is.True);
+                    Assert.That(logger.writers[1].Path, Is.EqualTo(added.FullName));
                 });
 
                 logger.Write("content");
@@ -471,9 +474,12 @@ namespace Test.CuiLib.Logging
                 Assert.Multiple(() =>
                 {
                     Assert.That(added.Exists, Is.True);
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
-                    Assert.That(logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(encoding));
+                    Assert.That(logger.writers, Has.Count.EqualTo(2));
+                    Assert.That(logger.writers[1].Writer, Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.writers[1].Writer.Encoding, Is.EqualTo(encoding));
+                    Assert.That(logger.writers[1].IsConsoleWriter, Is.False);
+                    Assert.That(logger.writers[1].MustDisposed, Is.True);
+                    Assert.That(logger.writers[1].Path, Is.EqualTo(added.FullName));
                 });
 
                 logger.Write("content");
@@ -509,9 +515,12 @@ namespace Test.CuiLib.Logging
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
-                    Assert.That(logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(logger.DefaultEncoding));
+                    Assert.That(logger.writers, Has.Count.EqualTo(2));
+                    Assert.That(logger.writers[1].Writer, Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.writers[1].Writer.Encoding, Is.EqualTo(logger.DefaultEncoding));
+                    Assert.That(logger.writers[1].IsConsoleWriter, Is.False);
+                    Assert.That(logger.writers[1].MustDisposed, Is.True);
+                    Assert.That(logger.writers[1].Path, Is.EqualTo(added.FullName));
                 });
 
                 logger.Write('t');
@@ -554,9 +563,12 @@ namespace Test.CuiLib.Logging
                 Assert.Multiple(() =>
                 {
                     Assert.That(added.Exists, Is.True);
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
-                    Assert.That(logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(logger.DefaultEncoding));
+                    Assert.That(logger.writers, Has.Count.EqualTo(2));
+                    Assert.That(logger.writers[1].Writer, Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.writers[1].Writer.Encoding, Is.EqualTo(logger.DefaultEncoding));
+                    Assert.That(logger.writers[1].IsConsoleWriter, Is.False);
+                    Assert.That(logger.writers[1].MustDisposed, Is.True);
+                    Assert.That(logger.writers[1].Path, Is.EqualTo(added.FullName));
                 });
 
                 logger.Write("content");
@@ -586,9 +598,12 @@ namespace Test.CuiLib.Logging
                 Assert.Multiple(() =>
                 {
                     Assert.That(added.Exists, Is.True);
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
-                    Assert.That(logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(encoding));
+                    Assert.That(logger.writers, Has.Count.EqualTo(2));
+                    Assert.That(logger.writers[1].Writer, Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.writers[1].Writer.Encoding, Is.EqualTo(encoding));
+                    Assert.That(logger.writers[1].IsConsoleWriter, Is.False);
+                    Assert.That(logger.writers[1].MustDisposed, Is.True);
+                    Assert.That(logger.writers[1].Path, Is.EqualTo(added.FullName));
                 });
 
                 logger.Write("content");
@@ -624,9 +639,12 @@ namespace Test.CuiLib.Logging
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
-                    Assert.That(logger.GetAllTargets().Last(), Is.InstanceOf<StreamWriter>());
-                    Assert.That(logger.GetAllTargets().Last().Encoding, Is.EqualTo(logger.DefaultEncoding));
+                    Assert.That(logger.writers, Has.Count.EqualTo(2));
+                    Assert.That(logger.writers[1].Writer, Is.InstanceOf<StreamWriter>());
+                    Assert.That(logger.writers[1].Writer.Encoding, Is.EqualTo(logger.DefaultEncoding));
+                    Assert.That(logger.writers[1].IsConsoleWriter, Is.False);
+                    Assert.That(logger.writers[1].MustDisposed, Is.True);
+                    Assert.That(logger.writers[1].Path, Is.EqualTo(added.FullName));
                 });
 
                 logger.Write('t');
@@ -658,8 +676,11 @@ namespace Test.CuiLib.Logging
                 logger.AddLog(writer);
                 Assert.Multiple(() =>
                 {
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(2));
-                    Assert.That(logger.GetAllTargets().Last(), Is.EqualTo(writer));
+                    Assert.That(logger.writers, Has.Count.EqualTo(2));
+                    Assert.That(logger.writers[1].Writer, Is.EqualTo(writer));
+                    Assert.That(logger.writers[1].MustDisposed, Is.False);
+                    Assert.That(logger.writers[1].IsConsoleWriter, Is.False);
+                    Assert.That(logger.writers[1].Path, Is.Null);
                 });
 
                 logger.Write("content");
@@ -737,7 +758,7 @@ namespace Test.CuiLib.Logging
                     Assert.That(logger.RemoveLogFile("missing.txt"), Is.False);
                     Assert.That(logger.RemoveLogFile(added.FullName), Is.True);
 
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
+                    Assert.That(logger.writers, Has.Count.EqualTo(1));
                     Assert.That(logger.RemoveLogFile(added.Name), Is.False);
                     Assert.That(logger.RemoveLogFile(added.FullName), Is.False);
 
@@ -773,7 +794,7 @@ namespace Test.CuiLib.Logging
                     Assert.That(logger.RemoveLog(new MethodReceivedNotifiyingTextWriter()), Is.False);
                     Assert.That(logger.RemoveLog(writer), Is.True);
 
-                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
+                    Assert.That(logger.writers, Has.Count.EqualTo(1));
                     Assert.That(logger.RemoveLog(writer), Is.False);
 
                     Assert.DoesNotThrow(() => writer.Flush());
