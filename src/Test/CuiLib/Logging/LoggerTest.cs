@@ -46,47 +46,213 @@ namespace Test.CuiLib.Logging
         }
 
         [Test]
-        public void Ctor_WithString()
+        public void Ctor_WithStringAndDefaultEncodingAsAppending()
         {
-            Logger logger = default!;
             FileInfo target = FileUtilHelpers.GetNoExistingFile();
 
             try
             {
+                using (StreamWriter writer = target.CreateText()) writer.Write("hoge");
+
+                using Logger logger = new Logger(target.Name, true, null);
+                target.Refresh();
+
                 Assert.Multiple(() =>
                 {
-                    Assert.DoesNotThrow(() => logger = new Logger(target.Name));
                     Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
                     Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(target.Length, Is.GreaterThan(0));
                     Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(logger.DefaultEncoding));
                 });
             }
             finally
             {
-                logger?.Dispose();
                 target.Delete();
             }
         }
 
         [Test]
-        public void Ctor_WithFileInfo()
+        public void Ctor_WithStringAndSpecifiedEncodingAsAppending()
         {
-            Logger logger = default!;
             FileInfo target = FileUtilHelpers.GetNoExistingFile();
 
             try
             {
+                var encoding = Encoding.Unicode;
+                using (StreamWriter writer = target.CreateText()) writer.Write("hoge");
+
+                using Logger logger = new Logger(target.Name, true, encoding);
+                target.Refresh();
+
                 Assert.Multiple(() =>
                 {
-                    Assert.DoesNotThrow(() => logger = new Logger(target));
                     Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
                     Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(target.Length, Is.GreaterThan(0));
+                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(encoding));
+                });
+            }
+            finally
+            {
+                target.Delete();
+            }
+        }
+
+        [Test]
+        public void Ctor_WithStringAndDefaultEncodingAsNotAppending()
+        {
+            FileInfo target = FileUtilHelpers.GetNoExistingFile();
+
+            try
+            {
+                using (StreamWriter writer = target.CreateText()) writer.Write("hoge");
+
+                using Logger logger = new Logger(target.Name, false, null);
+                target.Refresh();
+
+                Assert.Multiple(() =>
+                {
+                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
+                    Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(target.Length, Is.EqualTo(0));
                     Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(logger.DefaultEncoding));
                 });
             }
             finally
             {
-                logger?.Dispose();
+                target.Delete();
+            }
+        }
+
+        [Test]
+        public void Ctor_WithStringAndSpecifiedEncodingAsNotAppending()
+        {
+            FileInfo target = FileUtilHelpers.GetNoExistingFile();
+
+            try
+            {
+                var encoding = Encoding.Unicode;
+                using (StreamWriter writer = target.CreateText()) writer.Write("hoge");
+
+                using Logger logger = new Logger(target.Name, false, encoding);
+                target.Refresh();
+
+                Assert.Multiple(() =>
+                {
+                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
+                    Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(target.Length, Is.EqualTo(0));
+                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(encoding));
+                });
+            }
+            finally
+            {
+                target.Delete();
+            }
+        }
+
+        [Test]
+        public void Ctor_WithFileInfoAndDefaultEncodingAsAppending()
+        {
+            FileInfo target = FileUtilHelpers.GetNoExistingFile();
+
+            try
+            {
+                using (StreamWriter writer = target.CreateText()) writer.Write("hoge");
+
+                using Logger logger = new Logger(target, true, null);
+                target.Refresh();
+
+                Assert.Multiple(() =>
+                {
+                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
+                    Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(target.Length, Is.GreaterThan(0));
+                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(logger.DefaultEncoding));
+                });
+            }
+            finally
+            {
+                target.Delete();
+            }
+        }
+
+        [Test]
+        public void Ctor_WithFileInfoAndSpecifiedEncodingAsAppending()
+        {
+            FileInfo target = FileUtilHelpers.GetNoExistingFile();
+
+            try
+            {
+                var encoding = Encoding.Unicode;
+                using (StreamWriter writer = target.CreateText()) writer.Write("hoge");
+
+                using Logger logger = new Logger(target, true, encoding);
+                target.Refresh();
+
+                Assert.Multiple(() =>
+                {
+                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
+                    Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(target.Length, Is.GreaterThan(0));
+                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(encoding));
+                });
+            }
+            finally
+            {
+                target.Delete();
+            }
+        }
+
+        [Test]
+        public void Ctor_WithFileInfoAndDefaultEncodingAsNotAppending()
+        {
+            FileInfo target = FileUtilHelpers.GetNoExistingFile();
+
+            try
+            {
+                using (StreamWriter writer = target.CreateText()) writer.Write("hoge");
+
+                using Logger logger = new Logger(target, false, null);
+                target.Refresh();
+
+                Assert.Multiple(() =>
+                {
+                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
+                    Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(target.Length, Is.EqualTo(0));
+                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(logger.DefaultEncoding));
+                });
+            }
+            finally
+            {
+                target.Delete();
+            }
+        }
+
+        [Test]
+        public void Ctor_WithFileInfoAndSpecifiedEncodingAsNotAppending()
+        {
+            FileInfo target = FileUtilHelpers.GetNoExistingFile();
+
+            try
+            {
+                var encoding = Encoding.Unicode;
+                using (StreamWriter writer = target.CreateText()) writer.Write("hoge");
+
+                using Logger logger = new Logger(target, false, encoding);
+                target.Refresh();
+
+                Assert.Multiple(() =>
+                {
+                    Assert.That(logger.GetAllTargets().Count(), Is.EqualTo(1));
+                    Assert.That(logger.GetAllTargets().First(), Is.InstanceOf<StreamWriter>());
+                    Assert.That(target.Length, Is.EqualTo(0));
+                    Assert.That(logger.GetAllTargets().First().Encoding, Is.EqualTo(encoding));
+                });
+            }
+            finally
+            {
                 target.Delete();
             }
         }

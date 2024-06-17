@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -86,6 +86,8 @@ namespace CuiLib.Logging
         /// <see cref="Logger"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="logFile">ログファイルのパス</param>
+        /// <param name="append">末尾追加モードにするかどうか</param>
+        /// <param name="encoding">文字コード，<see langword="null"/>で<see cref="IOHelpers.UTF8N"/></param>
         /// <exception cref="ArgumentNullException"><paramref name="logFile"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="logFile"/>が無効</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="logFile"/>のディレクトリが存在しない</exception>
@@ -93,26 +95,28 @@ namespace CuiLib.Logging
         /// <exception cref="PathTooLongException"><paramref name="logFile"/>が長すぎる</exception>
         /// <exception cref="UnauthorizedAccessException">アクセスが拒否された</exception>
         /// <exception cref="System.Security.SecurityException">アクセス権限がない</exception>
-        public Logger(string logFile)
+        public Logger(string logFile, bool append = true, Encoding? encoding = null)
         {
             writers = [];
-            AddLogFile(logFile);
+            AddLogFile(logFile, append, encoding);
         }
 
         /// <summary>
         /// <see cref="Logger"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="logFile">ログファイルの情報</param>
+        /// <param name="append">末尾追加モードにするかどうか</param>
+        /// <param name="encoding">文字コード，<see langword="null"/>で<see cref="IOHelpers.UTF8N"/></param>
         /// <exception cref="ArgumentNullException"><paramref name="logFile"/>がnull</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="logFile"/>のディレクトリが存在しない</exception>
         /// <exception cref="IOException"><paramref name="logFile"/>の書式が無効</exception>
         /// <exception cref="PathTooLongException"><paramref name="logFile"/>のパスが長すぎる</exception>
         /// <exception cref="UnauthorizedAccessException">アクセスが拒否された</exception>
         /// <exception cref="System.Security.SecurityException">アクセス権限がない</exception>
-        public Logger(FileInfo logFile)
+        public Logger(FileInfo logFile, bool append = true, Encoding? encoding = null)
         {
             writers = [];
-            AddLogFile(logFile);
+            AddLogFile(logFile, append, encoding);
         }
 
         /// <summary>
@@ -160,7 +164,7 @@ namespace CuiLib.Logging
         /// </summary>
         /// <param name="path">ログファイルのパス</param>
         /// <param name="append">末尾にテキストを追加するかどうか</param>
-        /// <param name="encoding">エンコーディング。nullでUTF-8N</param>
+        /// <param name="encoding">文字コード。<see langword="null"/>で<see cref="DefaultEncoding"/></param>
         /// <exception cref="ArgumentNullException"><paramref name="path"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="path"/>が無効</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="path"/>のディレクトリが存在しない</exception>
@@ -183,7 +187,7 @@ namespace CuiLib.Logging
         /// </summary>
         /// <param name="file">ログファイルの情報</param>
         /// <param name="append">末尾にテキストを追加するかどうか</param>
-        /// <param name="encoding">エンコーディング。nullでUTF-8N</param>
+        /// <param name="encoding">文字コード。<see langword="null"/>で<see cref="DefaultEncoding"/></param>
         /// <exception cref="ArgumentNullException"><paramref name="file"/>がnull</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="file"/>のディレクトリが存在しない</exception>
         /// <exception cref="IOException">ファイルが既に開かれている</exception>
