@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CuiLib.Internal;
 using CuiLib.Options;
 using CuiLib.Parameters;
+using CuiLib.Parsing;
 
 namespace CuiLib.Commands
 {
@@ -69,13 +70,13 @@ namespace CuiLib.Commands
         /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
         public static void InvokeFromCollection(string[] args, CommandCollection commands)
         {
-            ThrowHelpers.ThrowIfNull(args);
             ThrowHelpers.ThrowIfNull(commands);
+            var parser = new ArgumentParser(args);
 
             if (args.Length == 0) return;
 
-            if (!commands.TryGetCommand(args[0], out Command? command)) throw new ArgumentAnalysisException($"コマンド'{args[0]}'は存在しません");
-            command.Invoke(args.AsSpan(1));
+            Command command = parser.GetTargetCommand(commands) ?? throw new ArgumentAnalysisException($"コマンド'{args[0]}'は存在しません");
+            command.Invoke(args.AsSpan(parser.Index));
         }
 
         /// <summary>
@@ -88,13 +89,13 @@ namespace CuiLib.Commands
         /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
         public static async Task InvokeFromCollectionAsync(string[] args, CommandCollection commands)
         {
-            ThrowHelpers.ThrowIfNull(args);
             ThrowHelpers.ThrowIfNull(commands);
+            var parser = new ArgumentParser(args);
 
             if (args.Length == 0) return;
 
-            if (!commands.TryGetCommand(args[0], out Command? command)) throw new ArgumentAnalysisException($"コマンド'{args[0]}'は存在しません");
-            await command.InvokeAsync(new ReadOnlyMemory<string>(args, 1, args.Length - 1));
+            Command command = parser.GetTargetCommand(commands) ?? throw new ArgumentAnalysisException($"コマンド'{args[0]}'は存在しません");
+            await command.InvokeAsync(new ReadOnlyMemory<string>(args, parser.Index, args.Length - parser.Index));
         }
 
         /// <summary>

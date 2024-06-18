@@ -32,3 +32,12 @@ dotnet_diagnostic.IDE0290.severity = silent
 
 # CS8602: null 参照の可能性があるものの逆参照です。
 dotnet_diagnostic.CS8602.severity = error
+
+# CS8600: Null リテラルまたは Null の可能性がある値を Null 非許容型に変換しています。
+dotnet_diagnostic.CS8600.severity = error
+
+# CS8601: Null 参照代入の可能性があります。
+dotnet_diagnostic.CS8601.severity = error
+
+# CS8618: null 非許容のフィールドには、コンストラクターの終了時に null 以外の値が入っていなければなりません。Null 許容として宣言することをご検討ください。
+dotnet_diagnostic.CS8618.severity = error
