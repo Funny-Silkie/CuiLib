@@ -64,6 +64,7 @@
   - `ParameterCollection.Remove(Parameter)` の致命的な挙動を修正
 - Extensions
   - `SpanExtensions.SliceOrDefault` の挙動を変更
+  - `SpanExtensions` の各メソッドの `Span<T>` 版を実装
   - `CollectionExtensions.GetOrDefault<T>(IList<T>, int)`, `SpanExtensions.GetOrDefault<T>(ReadOnlySpan<T>, int)` の戻り値をnull許容に
   - `ExcapedSplit(string)` を `null` ・空文字非許容に，そして長い文字列を `separator` とした際の挙動を修正
 - `ThrowHelper` 公開の停止
