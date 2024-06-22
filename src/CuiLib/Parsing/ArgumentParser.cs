@@ -1,5 +1,8 @@
 ﻿using CuiLib.Commands;
+using CuiLib.Options;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace CuiLib.Parsing
@@ -27,9 +30,11 @@ namespace CuiLib.Parsing
         /// </summary>
         /// <param name="arguments">コマンドライン引数</param>
         /// <exception cref="ArgumentNullException"><paramref name="arguments"/>が<see langword="null"/></exception>
+        /// <exception cref="ArgumentException"><paramref name="arguments"/>の要素が<see langword="null"/></exception>
         public ArgumentParser(string[] arguments)
         {
             ThrowHelpers.ThrowIfNull(arguments);
+            if (arguments.Any(x => x is null)) throw new ArgumentException("コマンド引数にnullが含まれています", nameof(arguments));
 
             this.arguments = arguments;
         }
@@ -49,13 +54,15 @@ namespace CuiLib.Parsing
         }
 
         /// <summary>
-        /// 実行対象コマンドを取得します。
+        /// 実行対象コマンドを取得し，その分<see cref="Index"/>を進めます。
         /// </summary>
         /// <param name="commands">コマンド一覧</param>
         /// <returns>実行されるコマンドのインスタンス，対象がない場合は<see langword="null"/></returns>
         public Command? GetTargetCommand(CommandCollection commands)
         {
             ThrowHelpers.ThrowIfNull(commands);
+
+            if (EndOfArguments) return null;
 
             ref string argumentRef = ref arguments[Index];
             Command? result = null;
@@ -69,6 +76,79 @@ namespace CuiLib.Parsing
             }
             if (result is null) Index = startIndex;
             return result;
+        }
+
+        /// <summary>
+        /// オプションを検索して値を設定，その分<see cref="Index"/>を進めます。
+        /// </summary>
+        /// <param name="options">検索対象オプション一覧</param>
+        /// <returns>値が設定された<paramref name="options"/>の要素一覧，オプションが指定されていない場合は<see langword="null"/></returns>
+        /// <exception cref="ArgumentNullException"><paramref name="options"/>が<see langword="null"/></exception>
+        /// <exception cref="ArgumentAnalysisException">引数解析エラー</exception>
+        public Option[]? ParseOption(OptionCollection options)
+        {
+            ThrowHelpers.ThrowIfNull(options);
+
+            if (EndOfArguments) return null;
+
+            ref string argumentRef = ref arguments[Index];
+            (string[]? optionNames, bool isSingle) = GetOptionName(argumentRef);
+
+            // Current value does not represent an option name
+            if (optionNames is null) return null;
+
+            SkipArguments(1);
+
+            var list = new List<Option>(optionNames.Length);
+            int i = 0;
+
+            foreach (string optionName in optionNames)
+            {
+                string actualName = isSingle ? $"-{optionName}" : $"--{optionName}";
+
+                // Current value represents missing option
+                if (!options.TryGetValue(optionName, out Option? target)) throw new ArgumentAnalysisException($"オプション'{actualName}'は無効です");
+                list.Add(target);
+
+                Option actualTarget = target.GetActualOption(optionName, isSingle);
+                if (actualTarget.IsValued)
+                {
+                    if (EndOfArguments || i < optionNames.Length - 1) throw new ArgumentAnalysisException($"オプション'{actualName}'に値が設定されていません");
+
+                    if (!actualTarget.CanMultiValue && actualTarget.ValueAvailable) throw new ArgumentAnalysisException($"オプション'{actualName}'が複数指定されています");
+
+                    actualTarget.ApplyValue(optionName, Unsafe.Add(ref argumentRef, 1));
+                    SkipArguments(1);
+                    break;
+                }
+
+                if (!actualTarget.CanMultiValue && actualTarget.ValueAvailable) throw new ArgumentAnalysisException($"オプション'{actualName}'が複数指定されています");
+                actualTarget.ApplyValue(optionName, string.Empty);
+
+                i++;
+            }
+
+            return list.ToArray();
+        }
+
+        /// <summary>
+        /// ハイフン抜きのオプション名を取得します。
+        /// </summary>
+        /// <param name="value">コマンドライン引数の文字列</param>
+        /// <returns>ハイフン抜きのオプション名。短縮形の場合は全てのオプション名</returns>
+        private static (string[]? optionNames, bool isSingle) GetOptionName(string value)
+        {
+            if (value.Length <= 1 || value is "--") return (null, false);
+
+            if (value[0] == '-')
+            {
+                // As full name
+                if (value.Length > 2 && value[1] == '-') return ([value[2..]], false);
+                // As short names
+                return (value.Skip(1).Select(x => x.ToString()).ToArray(), true);
+            }
+
+            return (null, false);
         }
     }
 }

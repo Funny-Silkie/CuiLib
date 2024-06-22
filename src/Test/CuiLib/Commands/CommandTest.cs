@@ -1,4 +1,4 @@
-﻿using CuiLib;
+using CuiLib;
 using CuiLib.Commands;
 using CuiLib.Options;
 using CuiLib.Parameters;
@@ -146,6 +146,12 @@ namespace Test.CuiLib.Commands
         }
 
         [Test]
+        public void Invoke_WithNullContainingValue()
+        {
+            Assert.Throws<ArgumentException>(() => command.Invoke([null!]));
+        }
+
+        [Test]
         public void Invoke_WithUnknownOption()
         {
             Assert.Throws<ArgumentAnalysisException>(() => command.Invoke(["-e"]));
@@ -283,9 +289,54 @@ namespace Test.CuiLib.Commands
         }
 
         [Test]
+        public void Invoke_CombinedOptions_AsMissingValue()
+        {
+            var flag1 = new FlagOption('a');
+            var flag2 = new FlagOption('b');
+            var valued = new SingleValueOption<int>('c');
+
+            command.Options.Add(flag1);
+            command.Options.Add(flag2);
+            command.Options.Add(valued);
+
+            Assert.Throws<ArgumentAnalysisException>(() => command.Invoke(["-acb", "10"]));
+        }
+
+        [Test]
+        public void Invoke_CombinedOptions_AsPositive()
+        {
+            var flag1 = new FlagOption('a');
+            var flag2 = new FlagOption('b');
+            var valued = new SingleValueOption<int>('c');
+
+            command.Options.Add(flag1);
+            command.Options.Add(flag2);
+            command.Options.Add(valued);
+
+            command.Invoke(["-abc", "10"]);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(command.Invoked, Is.True);
+                Assert.That(flag1.ValueAvailable, Is.True);
+                Assert.That(flag1.Value, Is.True);
+                Assert.That(flag2.ValueAvailable, Is.True);
+                Assert.That(flag2.Value, Is.True);
+                Assert.That(valued.ValueAvailable, Is.True);
+                Assert.That(valued.Value, Is.EqualTo(10));
+            });
+        }
+
+        [Test]
         public void InvokeAsync_WithNull()
         {
             Assert.Throws<ArgumentNullException>(() => command.InvokeAsync(null!).GetAwaiter().GetResult());
+        }
+
+        [Test]
+        public void InvokeAsync_WithNullContainingValue()
+        {
+            Assert.Throws<ArgumentException>(() => command.InvokeAsync([null!]).GetAwaiter().GetResult());
         }
 
         [Test]
@@ -422,6 +473,45 @@ namespace Test.CuiLib.Commands
                 Assert.That(param1.Value, Is.EqualTo(13));
                 Assert.That(param2.ValueAvailable, Is.True);
                 Assert.That(param2.Values, Is.EqualTo(new[] { "value1", "-v", "value2" }));
+            });
+        }
+
+        [Test]
+        public void InvokeAsync_CombinedOptions_AsMissingValue()
+        {
+            var flag1 = new FlagOption('a');
+            var flag2 = new FlagOption('b');
+            var valued = new SingleValueOption<int>('c');
+
+            command.Options.Add(flag1);
+            command.Options.Add(flag2);
+            command.Options.Add(valued);
+
+            Assert.Throws<ArgumentAnalysisException>(() => command.InvokeAsync(["-acb", "10"]).GetAwaiter().GetResult());
+        }
+
+        [Test]
+        public void InvokeAsync_CombinedOptions_AsPositive()
+        {
+            var flag1 = new FlagOption('a');
+            var flag2 = new FlagOption('b');
+            var valued = new SingleValueOption<int>('c');
+
+            command.Options.Add(flag1);
+            command.Options.Add(flag2);
+            command.Options.Add(valued);
+
+            command.InvokeAsync(["-abc", "10"]).Wait();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(command.Invoked, Is.True);
+                Assert.That(flag1.ValueAvailable, Is.True);
+                Assert.That(flag1.Value, Is.True);
+                Assert.That(flag2.ValueAvailable, Is.True);
+                Assert.That(flag2.Value, Is.True);
+                Assert.That(valued.ValueAvailable, Is.True);
+                Assert.That(valued.Value, Is.EqualTo(10));
             });
         }
 

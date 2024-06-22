@@ -76,7 +76,7 @@ namespace CuiLib.Commands
             if (args.Length == 0) return;
 
             Command command = parser.GetTargetCommand(commands) ?? throw new ArgumentAnalysisException($"コマンド'{args[0]}'は存在しません");
-            command.Invoke(args.AsSpan(parser.Index));
+            command.Invoke(args, parser);
         }
 
         /// <summary>
@@ -95,85 +95,7 @@ namespace CuiLib.Commands
             if (args.Length == 0) return;
 
             Command command = parser.GetTargetCommand(commands) ?? throw new ArgumentAnalysisException($"コマンド'{args[0]}'は存在しません");
-            await command.InvokeAsync(new ReadOnlyMemory<string>(args, parser.Index, args.Length - parser.Index));
-        }
-
-        /// <summary>
-        /// 引数を解析します。
-        /// </summary>
-        /// <param name="args">コマンド引数</param>
-        /// <returns><paramref name="args"/>における非オプションのコマンド引数の開始インデックス</returns>
-        /// <exception cref="ArgumentException"><paramref name="args"/>内の値がnull</exception>
-        /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
-        private int ParseArguments(ReadOnlySpan<string> args)
-        {
-            Option? currentOption = null;
-            string? currentOptionName = null;
-            int result = -1;
-            for (int i = 0; i < args.Length; i++)
-            {
-                string argument = args[i] ?? throw new ArgumentException("コマンド引数にnullが含まれています", nameof(args));
-
-                // オプション
-                if (argument.StartsWith('-') && argument.Length >= 2)
-                {
-                    // --XXX
-                    if (argument[1] == '-')
-                    {
-                        if (argument.Length < 3 || argument[1] != '-') throw new ArgumentAnalysisException($"オプション'{argument}'は無効です");
-                        if (!Options.TryGetValue(argument[2..], out Option? option)) throw new ArgumentAnalysisException($"オプション'{argument}'は無効です");
-                        option = option.GetActualOption(argument[2..], false);
-                        if (currentOption is not null) throw new ArgumentAnalysisException($"オプション'{currentOptionName}'に値が設定されていません");
-                        if (option.IsValued)
-                        {
-                            currentOption = option;
-                            currentOptionName = argument;
-                        }
-                        else
-                        {
-                            if (!option.CanMultiValue && option.ValueAvailable) throw new ArgumentAnalysisException($"オプション'{argument}'が複数指定されています");
-                            option.ApplyValue(string.Empty, string.Empty);
-                        }
-                        continue;
-                    }
-
-                    // -X
-                    {
-                        if (currentOption is not null) throw new ArgumentAnalysisException($"オプション'{currentOptionName}'に値が設定されていません");
-
-                        for (int j = 1; j < argument.Length; j++)
-                        {
-                            char c = argument[j];
-                            if (!Options.TryGetValue(c, out Option? option)) throw new ArgumentAnalysisException($"オプション'-{c}'は無効です");
-                            option = option.GetActualOption(c.ToString(), true);
-                            if (!option.CanMultiValue && option.ValueAvailable) throw new ArgumentAnalysisException($"オプション'-{c}'が複数指定されています");
-                            if (option.IsValued)
-                            {
-                                if (j != argument.Length - 1) throw new ArgumentAnalysisException($"オプション'-{c}'に値が設定されていません");
-                                currentOption = option;
-                                currentOptionName = c.ToString();
-                            }
-                            else option.ApplyValue(string.Empty, string.Empty);
-                        }
-                        continue;
-                    }
-                }
-                if (currentOption is not null)
-                {
-                    if (!currentOption.CanMultiValue && currentOption.ValueAvailable) throw new ArgumentAnalysisException($"オプション'{currentOptionName}'が複数指定されています");
-                    currentOption.ApplyValue(currentOptionName!, argument);
-                    currentOption = null;
-                    currentOptionName = null;
-                    continue;
-                }
-
-                result = i;
-                break;
-            }
-
-            if (currentOption is not null) throw new ArgumentAnalysisException($"オプション'{currentOptionName}'に値が設定されていません");
-
-            return result;
+            await command.InvokeAsync(args, parser);
         }
 
         /// <summary>
@@ -185,9 +107,7 @@ namespace CuiLib.Commands
         /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
         public void Invoke(string[] args)
         {
-            ThrowHelpers.ThrowIfNull(args);
-
-            Invoke(args.AsSpan());
+            Invoke(args, new ArgumentParser(args));
         }
 
         /// <summary>
@@ -199,61 +119,63 @@ namespace CuiLib.Commands
         /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
         public async Task InvokeAsync(string[] args)
         {
-            ThrowHelpers.ThrowIfNull(args);
-
-            await InvokeAsync(new ReadOnlyMemory<string>(args));
+            await InvokeAsync(args, new ArgumentParser(args));
         }
 
         /// <summary>
         /// コマンドを実行します。
         /// </summary>
         /// <param name="args">引数</param>
+        /// <param name="parser">引数解析用のパーサー</param>
         /// <exception cref="ArgumentException"><paramref name="args"/>内の値がnull</exception>
         /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
-        private void Invoke(ReadOnlySpan<string> args)
+        private void Invoke(string[] args, ArgumentParser parser)
         {
-            int lastIndex = ParseArguments(args);
+            while (parser.ParseOption(Options) is not null) ;
 
-            if (Children.Count > 0 && 0 <= lastIndex && lastIndex <= args.Length - 1 && Children.TryGetCommand(args[lastIndex], out Command? next))
+            if (Children.Count > 0)
             {
-                lastIndex++;
-                ReadOnlySpan<string> values = lastIndex >= 0 && lastIndex < args.Length ? args[lastIndex..] : [];
-                next.Invoke(values);
-                return;
+                Command? child = parser.GetTargetCommand(Children);
+                if (child is not null)
+                {
+                    child.Invoke(args, parser);
+                    return;
+                }
             }
-            else
-            {
-                ReadOnlySpan<string> values = lastIndex >= 0 && lastIndex < args.Length ? args[lastIndex..] : [];
-                Parameters.SetValues(values);
-                OnExecution();
-                OnExecutionAsync().Wait();
-            }
+            int lastIndex = parser.Index;
+
+            if (!parser.EndOfArguments) Parameters.SetValues(args.AsSpan()[lastIndex..]);
+
+            OnExecution();
+            OnExecutionAsync().Wait();
         }
 
         /// <summary>
         /// コマンドを実行します。
         /// </summary>
         /// <param name="args">引数</param>
+        /// <param name="parser">引数解析用のパーサー</param>
         /// <exception cref="ArgumentException"><paramref name="args"/>内の値がnull</exception>
         /// <exception cref="ArgumentAnalysisException">引数解析時のエラー</exception>
-        private async Task InvokeAsync(ReadOnlyMemory<string> args)
+        private async Task InvokeAsync(string[] args, ArgumentParser parser)
         {
-            int lastIndex = ParseArguments(args.Span);
+            while (parser.ParseOption(Options) is not null) ;
 
-            if (Children.Count > 0 && 0 <= lastIndex && lastIndex <= args.Length - 1 && Children.TryGetCommand(args.Span[lastIndex], out Command? next))
+            if (Children.Count > 0)
             {
-                lastIndex++;
-                ReadOnlyMemory<string> values = lastIndex >= 0 && lastIndex < args.Length ? args[lastIndex..] : ReadOnlyMemory<string>.Empty;
-                await next.InvokeAsync(values);
-                return;
+                Command? child = parser.GetTargetCommand(Children);
+                if (child is not null)
+                {
+                    await child.InvokeAsync(args, parser);
+                    return;
+                }
             }
-            else
-            {
-                ReadOnlyMemory<string> values = lastIndex >= 0 && lastIndex < args.Length ? args[lastIndex..] : ReadOnlyMemory<string>.Empty;
-                Parameters.SetValues(values.Span);
-                OnExecution();
-                await OnExecutionAsync();
-            }
+            int lastIndex = parser.Index;
+
+            if (!parser.EndOfArguments) Parameters.SetValues(args.AsSpan()[lastIndex..]);
+
+            OnExecution();
+            await OnExecutionAsync();
         }
 
         /// <summary>
