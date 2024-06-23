@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using CuiLib.Checkers;
 using CuiLib.Converters;
 
@@ -29,7 +30,12 @@ namespace CuiLib.Parameters
         /// <summary>
         /// 配列かどうかを取得します。
         /// </summary>
-        public bool IsArray { get; }
+        public virtual bool IsArray { get; }
+
+        /// <summary>
+        /// 必須の値かどうかを取得または設定します。
+        /// </summary>
+        public bool Required { get; set; }
 
         /// <summary>
         /// 値を受け取ったかどうかを表す値を取得します。
@@ -93,7 +99,8 @@ namespace CuiLib.Parameters
         /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
         /// <returns>単一の値をとる<see cref="Parameter{T}"/>の新しいインスタンス</returns>
-        public static Parameter<T> Create<T>(string name, int index) => new Parameter<T>(name, index, false);
+        [Obsolete($"Use a constructor of {nameof(SingleValueParameter<T>)} instead")]
+        public static SingleValueParameter<T> Create<T>(string name, int index) => new SingleValueParameter<T>(name, index);
 
         /// <summary>
         /// 配列をとしての<see cref="Parameter{T}"/>の新しいインスタンスを生成します。
@@ -143,7 +150,11 @@ namespace CuiLib.Parameters
     {
         /// <inheritdoc/>
         [MemberNotNullWhen(true, nameof(Values))]
-        public override bool ValueAvailable => base.ValueAvailable;
+        public override bool ValueAvailable
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => base.ValueAvailable;
+        }
 
         /// <summary>
         /// 値の変換を行う<see cref="IValueConverter{TIn, TOut}"/>を取得または設定します。
@@ -157,10 +168,15 @@ namespace CuiLib.Parameters
         private IValueConverter<string, T>? _converter;
 
         /// <summary>
+        /// デフォルトの値を取得または設定します。
+        /// </summary>
+        public T DefaultValue { get; set; } = default!;
+
+        /// <summary>
         /// 値を取得します。
         /// </summary>
         /// <exception cref="InvalidOperationException">インスタンスが空の配列を表す</exception>
-        public T Value
+        public virtual T Value
         {
             get
             {
@@ -235,7 +251,7 @@ namespace CuiLib.Parameters
         /// <exception cref="ArgumentNullException"><paramref name="name"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
-        internal Parameter(string name, int index, bool isArray)
+        protected internal Parameter(string name, int index, bool isArray)
             : base(name, index, isArray)
         {
         }

@@ -83,20 +83,20 @@ namespace CuiLib.Parameters
         }
 
         /// <summary>
-        /// <see cref="Parameter{T}"/>の新しいインスタンスを生成して空きインデックスのうち先頭のものに追加します。
+        /// <see cref="SingleValueParameter{T}"/>の新しいインスタンスを生成して空きインデックスのうち先頭のものに追加します。
         /// </summary>
         /// <typeparam name="T">値の型</typeparam>
         /// <param name="name">パラメータ名</param>
-        /// <returns>追加された<see cref="Parameter{T}"/>のインスタンス</returns>
+        /// <returns>追加された<see cref="SingleValueParameter{T}"/>のインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="name"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         /// <exception cref="InvalidOperationException">追加できる空きインデックスが存在しない</exception>
-        public Parameter<T> CreateAndAdd<T>(string name)
+        public SingleValueParameter<T> CreateAndAdd<T>(string name)
         {
             int next = GetNextIndex();
             if (next < 0) throw new InvalidOperationException("空きインデックスが存在しません");
 
-            Parameter<T> result = Parameter.Create<T>(name, next);
+            var result = new SingleValueParameter<T>(name, next);
             items.Add(next, result);
             return result;
         }
@@ -136,7 +136,7 @@ namespace CuiLib.Parameters
             if (!items.TryGetValue(index, out Parameter? result))
             {
                 if (!AllowAutomaticallyCreate) throw new InvalidOperationException($"{index}番目のパラメータは存在しません");
-                result = Parameter.Create<string>($"Param {index}", index);
+                result = new SingleValueParameter<string>($"Param {index}", index);
                 items[index] = result;
             }
             result.SetValue(value);

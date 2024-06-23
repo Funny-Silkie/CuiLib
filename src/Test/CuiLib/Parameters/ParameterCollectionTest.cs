@@ -282,13 +282,13 @@ namespace Test.CuiLib.Parameters
         {
             collection.Add(Parameter.CreateAsArray<string>("array", 1));
 
-            Assert.Throws<ArgumentException>(() => collection.Add(Parameter.Create<string>("other", 2)));
+            Assert.Throws<ArgumentException>(() => collection.Add(new SingleValueParameter<string>("other", 2)));
         }
 
         [Test]
         public void Add_AsPositive_WithSingle()
         {
-            collection.Add(Parameter.Create<int>("num", 0));
+            collection.Add(new SingleValueParameter<int>("num", 0));
 
             Assert.Multiple(() =>
             {
@@ -301,7 +301,7 @@ namespace Test.CuiLib.Parameters
         public void Add_AsPositive_WithArray_OnHasArray()
         {
             collection.Add(Parameter.CreateAsArray<string>("array", 1));
-            collection.Add(Parameter.Create<string>("value", 0));
+            collection.Add(new SingleValueParameter<string>("value", 0));
 
             Assert.Multiple(() =>
             {
@@ -340,7 +340,7 @@ namespace Test.CuiLib.Parameters
             {
                 Assert.That(collection.Contains(paramSingle), Is.True);
                 Assert.That(collection.Contains(paramArray), Is.True);
-                Assert.That(collection.Contains(Parameter.Create<string>("value", 0)), Is.False);
+                Assert.That(collection.Contains(new SingleValueParameter<string>("value", 0)), Is.False);
                 Assert.That(collection.Contains(Parameter.CreateAsArray<string>("array", 1)), Is.False);
             });
         }
@@ -487,7 +487,7 @@ namespace Test.CuiLib.Parameters
 
             Assert.Multiple(() =>
             {
-                Assert.That(collection.Remove(Parameter.Create<string>("value", 0)), Is.False);
+                Assert.That(collection.Remove(new SingleValueParameter<string>("value", 0)), Is.False);
                 Assert.That(collection.Remove(Parameter.CreateAsArray<string>("array", 1)), Is.False);
             });
 

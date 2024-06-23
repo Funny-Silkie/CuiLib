@@ -67,6 +67,12 @@ namespace Test.CuiLib.Parameters
         }
 
         [Test]
+        public void Required_Get_OnDefault()
+        {
+            Assert.That(parameter.Required, Is.False);
+        }
+
+        [Test]
         public void RawValue_Get_OnDefault()
         {
             Assert.That(parameter.RawValue, Is.Null);
@@ -89,6 +95,8 @@ namespace Test.CuiLib.Parameters
         #endregion Properties
 
         #region Static Methods
+
+#pragma warning disable CS0618 // 型またはメンバーが旧型式です
 
         [Test]
         public void Create_WithNullName()
@@ -120,6 +128,8 @@ namespace Test.CuiLib.Parameters
                 Assert.That(parameter.IsArray, Is.False);
             });
         }
+
+#pragma warning restore CS0618 // 型またはメンバーが旧型式です
 
         [Test]
         public void CreateAsArray_WithNullName()
@@ -208,15 +218,17 @@ namespace Test.CuiLib.Parameters
 
     public class GenericParameterTest : TestBase
     {
-        private Parameter<string> parameterString;
-        private Parameter<int> parameterInt;
+        private ParameterImpl<string> parameterString;
+        private ParameterImpl<int> parameterInt;
 
         [SetUp]
         public void SetUp()
         {
-            parameterString = Parameter.Create<string>("param", 0);
-            parameterInt = Parameter.Create<int>("param", 0);
-            parameterInt.Checker = ValueChecker.GreaterThanOrEqualTo(0);
+            parameterString = new ParameterImpl<string>("param", 0, false);
+            parameterInt = new ParameterImpl<int>("param", 0, false)
+            {
+                Checker = ValueChecker.GreaterThanOrEqualTo(0)
+            };
         }
 
         #region Ctors
@@ -224,19 +236,19 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void Ctor_WithNullName()
         {
-            Assert.Throws<ArgumentNullException>(() => new Parameter<string>(null!, 0, false));
+            Assert.Throws<ArgumentNullException>(() => new ParameterImpl<string>(null!, 0, false));
         }
 
         [Test]
         public void Ctor_WithEmptyName()
         {
-            Assert.Throws<ArgumentException>(() => new Parameter<string>(string.Empty, 0, false));
+            Assert.Throws<ArgumentException>(() => new ParameterImpl<string>(string.Empty, 0, false));
         }
 
         [Test]
         public void Ctor_AsPositive()
         {
-            var parameter = new Parameter<string>("param", 0, true);
+            var parameter = new ParameterImpl<string>("param", 0, true);
 
             Assert.Multiple(() =>
             {
@@ -275,6 +287,16 @@ namespace Test.CuiLib.Parameters
         public void Checker_Set_WithNull()
         {
             Assert.Throws<ArgumentNullException>(() => parameterString.Checker = null!);
+        }
+
+        [Test]
+        public void DefaultValue_Get_OnDefault()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(parameterInt.DefaultValue, Is.Zero);
+                Assert.That(parameterString.DefaultValue, Is.Null);
+            });
         }
 
         [Test]
@@ -366,5 +388,15 @@ namespace Test.CuiLib.Parameters
         }
 
         #endregion Properties
+
+        private sealed class ParameterImpl<T> : Parameter<T>
+        {
+            public override bool IsArray { get; }
+
+            public ParameterImpl(string name, int index, bool isArray) : base(name, index, isArray)
+            {
+                IsArray = isArray;
+            }
+        }
     }
 }
