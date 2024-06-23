@@ -26,6 +26,12 @@ namespace Test.CuiLib.Parameters
         }
 
         [Test]
+        public void Ctor_WithNegativeIndex()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => new ParameterImpl("param", -1, false));
+        }
+
+        [Test]
         public void Ctor_WithEmptyName()
         {
             Assert.Throws<ArgumentException>(() => new ParameterImpl(string.Empty, 0, false));
@@ -91,9 +97,15 @@ namespace Test.CuiLib.Parameters
         }
 
         [Test]
-        public void Create_WithNullEmpty()
+        public void Create_WithEmptyName()
         {
             Assert.Throws<ArgumentException>(() => Parameter.Create<int>(string.Empty, 0));
+        }
+
+        [Test]
+        public void Create_WithNegativeIndex()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => Parameter.Create<int>("param", -1));
         }
 
         [Test]
@@ -116,9 +128,15 @@ namespace Test.CuiLib.Parameters
         }
 
         [Test]
-        public void CreateAsArray_WithNullEmpty()
+        public void CreateAsArray_WithEmptyName()
         {
             Assert.Throws<ArgumentException>(() => Parameter.CreateAsArray<int>(string.Empty, 0));
+        }
+
+        [Test]
+        public void CreateAsArray_WithNegativeIndex()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => Parameter.CreateAsArray<int>("params", -1));
         }
 
         [Test]
