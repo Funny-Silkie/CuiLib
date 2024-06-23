@@ -1,4 +1,4 @@
-﻿using CuiLib;
+using CuiLib;
 using CuiLib.Checkers;
 using CuiLib.Converters;
 using CuiLib.Parameters;
@@ -119,7 +119,7 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void Create_AsPositive()
         {
-            Parameter<int> parameter = Parameter.Create<int>("param", 0);
+            SingleValueParameter<int> parameter = Parameter.Create<int>("param", 0);
 
             Assert.Multiple(() =>
             {
@@ -128,8 +128,6 @@ namespace Test.CuiLib.Parameters
                 Assert.That(parameter.IsArray, Is.False);
             });
         }
-
-#pragma warning restore CS0618 // 型またはメンバーが旧型式です
 
         [Test]
         public void CreateAsArray_WithNullName()
@@ -161,6 +159,8 @@ namespace Test.CuiLib.Parameters
                 Assert.That(parameter.IsArray, Is.True);
             });
         }
+
+#pragma warning restore CS0618 // 型またはメンバーが旧型式です
 
         #endregion Static Methods
 

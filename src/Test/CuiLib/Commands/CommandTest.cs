@@ -173,7 +173,7 @@ namespace Test.CuiLib.Commands
             command.Children.Add(child);
             var childOption = new FlagOption('f');
             child.Options.Add(childOption);
-            Parameter<int> childParam = child.Parameters.CreateAndAdd<int>("num");
+            SingleValueParameter<int> childParam = child.Parameters.CreateAndAdd<int>("num");
 
             command.Invoke(["child", "-f", "100"]);
 
@@ -250,7 +250,7 @@ namespace Test.CuiLib.Commands
             command.Options.Add(option1);
             var option2 = new FlagOption('v');
             command.Options.Add(option2);
-            Parameter<int> param1 = command.Parameters.CreateAndAdd<int>("num");
+            SingleValueParameter<int> param1 = command.Parameters.CreateAndAdd<int>("num");
             Parameter<string> param2 = command.Parameters.CreateAndAddAsArray<string>("texts");
 
             command.Invoke(["-f", "13", "value1", "-v", "value2"]);
@@ -272,7 +272,7 @@ namespace Test.CuiLib.Commands
         [Test]
         public void Invoke_OnHasNoChild_WithParameter()
         {
-            Parameter<int> param1 = command.Parameters.CreateAndAdd<int>("num");
+            SingleValueParameter<int> param1 = command.Parameters.CreateAndAdd<int>("num");
             Parameter<string> param2 = command.Parameters.CreateAndAddAsArray<string>("texts");
 
             command.Invoke(["13", "value1", "-v", "value2"]);
@@ -361,7 +361,7 @@ namespace Test.CuiLib.Commands
             command.Children.Add(child);
             var childOption = new FlagOption('f');
             child.Options.Add(childOption);
-            Parameter<int> childParam = child.Parameters.CreateAndAdd<int>("num");
+            SingleValueParameter<int> childParam = child.Parameters.CreateAndAdd<int>("num");
 
             command.InvokeAsync(["child", "-f", "100"]).GetAwaiter().GetResult();
 
@@ -438,7 +438,7 @@ namespace Test.CuiLib.Commands
             command.Options.Add(option1);
             var option2 = new FlagOption('v');
             command.Options.Add(option2);
-            Parameter<int> param1 = command.Parameters.CreateAndAdd<int>("num");
+            SingleValueParameter<int> param1 = command.Parameters.CreateAndAdd<int>("num");
             Parameter<string> param2 = command.Parameters.CreateAndAddAsArray<string>("texts");
 
             command.InvokeAsync(["-f", "13", "value1", "-v", "value2"]).GetAwaiter().GetResult();
@@ -460,7 +460,7 @@ namespace Test.CuiLib.Commands
         [Test]
         public void InvokeAsync_OnHasNoChild_WithParameter()
         {
-            Parameter<int> param1 = command.Parameters.CreateAndAdd<int>("num");
+            SingleValueParameter<int> param1 = command.Parameters.CreateAndAdd<int>("num");
             Parameter<string> param2 = command.Parameters.CreateAndAddAsArray<string>("texts");
 
             command.InvokeAsync(["13", "value1", "-v", "value2"]).GetAwaiter().GetResult();
@@ -536,7 +536,7 @@ namespace Test.CuiLib.Commands
                 Required = true,
             });
             {
-                Parameter<int> param = command.Parameters.CreateAndAdd<int>("num");
+                SingleValueParameter<int> param = command.Parameters.CreateAndAdd<int>("num");
                 param.Description = "number parameter";
             }
             {

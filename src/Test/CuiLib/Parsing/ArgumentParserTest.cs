@@ -1,4 +1,4 @@
-﻿using CuiLib;
+using CuiLib;
 using CuiLib.Commands;
 using CuiLib.Options;
 using CuiLib.Parameters;
@@ -400,8 +400,8 @@ namespace Test.CuiLib.Parsing
         public void ParseParameters_AsPositive_OnEndOfArguments()
         {
             var parameters = new ParameterCollection();
-            Parameter<string> param1 = parameters.CreateAndAdd<string>("p1");
-            Parameter<string> param2 = parameters.CreateAndAdd<string>("p2");
+            SingleValueParameter<string> param1 = parameters.CreateAndAdd<string>("p1");
+            SingleValueParameter<string> param2 = parameters.CreateAndAdd<string>("p2");
 
             parser.SkipArguments(6);
             parser.ParseParameters(parameters);
@@ -417,8 +417,8 @@ namespace Test.CuiLib.Parsing
         public void ParseParameters_AsPositive_WithSingleValuesAsNoRedundancy()
         {
             var parameters = new ParameterCollection();
-            Parameter<string> param1 = parameters.CreateAndAdd<string>("p1");
-            Parameter<string> param2 = parameters.CreateAndAdd<string>("p2");
+            SingleValueParameter<string> param1 = parameters.CreateAndAdd<string>("p1");
+            SingleValueParameter<string> param2 = parameters.CreateAndAdd<string>("p2");
 
             parser.SkipArguments(4);
             parser.ParseParameters(parameters);
@@ -437,7 +437,7 @@ namespace Test.CuiLib.Parsing
         public void ParseParameters_AsPositive_WithSingleValuesAsRedundant()
         {
             var parameters = new ParameterCollection();
-            Parameter<string> param = parameters.CreateAndAdd<string>("p1");
+            SingleValueParameter<string> param = parameters.CreateAndAdd<string>("p1");
 
             parser.SkipArguments(4);
             Assert.That(() => parser.ParseParameters(parameters), Throws.TypeOf<ArgumentAnalysisException>());
