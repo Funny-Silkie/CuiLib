@@ -68,6 +68,7 @@ namespace CuiLib.Parameters
         /// 値を設定します。
         /// </summary>
         /// <param name="values">設定する値</param>
+        /// <exception cref="InvalidOperationException"><see cref="AllowAutomaticallyCreate"/>が<see langword="false"/>の時に未定義インデックスのパラメータが存在</exception>
         internal void SetValues(ReadOnlySpan<string> values)
         {
             if (arrayStart == -1 || values.Length - 1 < arrayStart)

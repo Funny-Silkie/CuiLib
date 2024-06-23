@@ -142,9 +142,8 @@ namespace CuiLib.Commands
                     return;
                 }
             }
-            int lastIndex = parser.Index;
 
-            if (!parser.EndOfArguments) Parameters.SetValues(args.AsSpan()[lastIndex..]);
+            parser.ParseParameters(Parameters);
 
             OnExecution();
             OnExecutionAsync().Wait();
@@ -170,9 +169,8 @@ namespace CuiLib.Commands
                     return;
                 }
             }
-            int lastIndex = parser.Index;
 
-            if (!parser.EndOfArguments) Parameters.SetValues(args.AsSpan()[lastIndex..]);
+            parser.ParseParameters(Parameters);
 
             OnExecution();
             await OnExecutionAsync();

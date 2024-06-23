@@ -1,6 +1,7 @@
 ﻿using CuiLib;
 using CuiLib.Commands;
 using CuiLib.Options;
+using CuiLib.Parameters;
 using CuiLib.Parsing;
 using NUnit.Framework;
 using System;
@@ -378,6 +379,84 @@ namespace Test.CuiLib.Parsing
                 Assert.That(flag2.Value, Is.True);
                 Assert.That(flag3.ValueAvailable, Is.True);
                 Assert.That(flag3.Value, Is.True);
+            });
+        }
+
+        [Test]
+        public void ParseParameters_WithNull()
+        {
+            Assert.That(() => parser.ParseParameters(null!), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void ParseParameters_AsPositive_WithEmpty()
+        {
+            parser.ParseParameters([]);
+
+            Assert.That(parser.Index, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ParseParameters_AsPositive_OnEndOfArguments()
+        {
+            var parameters = new ParameterCollection();
+            Parameter<string> param1 = parameters.CreateAndAdd<string>("p1");
+            Parameter<string> param2 = parameters.CreateAndAdd<string>("p2");
+
+            parser.SkipArguments(6);
+            parser.ParseParameters(parameters);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(param1.ValueAvailable, Is.False);
+                Assert.That(param2.ValueAvailable, Is.False);
+            });
+        }
+
+        [Test]
+        public void ParseParameters_AsPositive_WithSingleValuesAsNoRedundancy()
+        {
+            var parameters = new ParameterCollection();
+            Parameter<string> param1 = parameters.CreateAndAdd<string>("p1");
+            Parameter<string> param2 = parameters.CreateAndAdd<string>("p2");
+
+            parser.SkipArguments(4);
+            parser.ParseParameters(parameters);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parser.EndOfArguments, Is.True);
+                Assert.That(param1.ValueAvailable, Is.True);
+                Assert.That(param1.Value, Is.EqualTo("value1"));
+                Assert.That(param2.ValueAvailable, Is.True);
+                Assert.That(param2.Value, Is.EqualTo("value2"));
+            });
+        }
+
+        [Test]
+        public void ParseParameters_AsPositive_WithSingleValuesAsRedundant()
+        {
+            var parameters = new ParameterCollection();
+            Parameter<string> param = parameters.CreateAndAdd<string>("p1");
+
+            parser.SkipArguments(4);
+            Assert.That(() => parser.ParseParameters(parameters), Throws.TypeOf<ArgumentAnalysisException>());
+        }
+
+        [Test]
+        public void ParseParameters_AsPositive_WithMultipleValue()
+        {
+            var parameters = new ParameterCollection();
+            Parameter<string> param = parameters.CreateAndAddAsArray<string>("param");
+
+            parser.SkipArguments(4);
+            parser.ParseParameters(parameters);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parser.EndOfArguments, Is.True);
+                Assert.That(param.ValueAvailable, Is.True);
+                Assert.That(param.Values, Is.EqualTo(new[] { "value1", "value2" }));
             });
         }
 

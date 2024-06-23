@@ -1,5 +1,6 @@
 ﻿using CuiLib.Commands;
 using CuiLib.Options;
+using CuiLib.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace CuiLib.Parsing
     /// コマンドライン引数のパーサーを表します。
     /// </summary>
     [Serializable]
-    internal class ArgumentParser
+    public class ArgumentParser
     {
         private readonly string[] arguments;
 
@@ -149,6 +150,29 @@ namespace CuiLib.Parsing
             }
 
             return (null, false);
+        }
+
+        /// <summary>
+        /// パラメータの値を設定，その分<see cref="Index"/>を進めます。
+        /// </summary>
+        /// <param name="parameters">対象パラメータ一覧</param>
+        /// <exception cref="ArgumentNullException"><paramref name="parameters"/>が<see langword="null"/></exception>
+        /// <exception cref="ArgumentAnalysisException">存在しないパラメータが指定された</exception>
+        public void ParseParameters(ParameterCollection parameters)
+        {
+            ThrowHelpers.ThrowIfNull(parameters);
+
+            if (EndOfArguments || parameters.Count == 0) return;
+
+            try
+            {
+                parameters.SetValues(arguments.AsSpan()[Index..]);
+            }
+            catch (InvalidOperationException e)
+            {
+                throw new ArgumentAnalysisException(e.Message);
+            }
+            SkipArguments(arguments.Length - Index);
         }
     }
 }
