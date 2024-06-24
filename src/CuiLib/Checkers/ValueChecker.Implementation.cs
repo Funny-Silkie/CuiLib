@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CuiLib.Internal;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -376,15 +377,7 @@ namespace CuiLib.Checkers
             /// <inheritdoc/>
             public ValueCheckState CheckValue(IEnumerable<TElement>? value)
             {
-                bool isEmpty = value is null
-#if NET
-                    || (value.TryGetNonEnumeratedCount(out int count) && count == 0)
-#else
-                    || (value is ICollection<TElement> ic && ic.Count == 0)
-                    || (value is IReadOnlyCollection<TElement> irc && irc.Count == 0)
-                    || (value is ICollection inc && inc.Count == 0)
-#endif
-                    || !value.Any();
+                bool isEmpty = value is null || (value.TryGetNonEnumeratedCount(out int count) && count == 0) || !value.Any();
                 if (!isEmpty) return ValueCheckState.Success;
 
                 return ValueCheckState.AsError("コレクションが空です");

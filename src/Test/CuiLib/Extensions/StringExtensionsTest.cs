@@ -52,7 +52,45 @@ namespace Test.CuiLib.Extensions
         }
 
         [Test]
-        public void ReplaceAllWithIEnumerableAndChar_WithNullFrom()
+        public void ReplaceAll_WithStringAndIEnumerableAndChar_WithNullValue()
+        {
+            Assert.Throws<ArgumentNullException>(() => StringExtensions.ReplaceAll((null! as string)!, ['a', 'b', 'c'], 'R').ToString());
+        }
+
+        [Test]
+        public void ReplaceAll_WithStringAndIEnumerableAndChar_WithNullFrom()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.Throws<ArgumentNullException>(() => "123".ReplaceAll(null!, '!'));
+                Assert.Throws<ArgumentNullException>(() => string.Empty.ReplaceAll(null!, '!'));
+            });
+        }
+
+        [Test]
+        public void ReplaceAll_WithStringAndIEnumerableAndChar_AsPositiveWithEmptyValue()
+        {
+            Assert.That(string.Empty.ReplaceAll(['a', 'b', 'c'], 'R'), Is.Empty);
+        }
+
+        [Test]
+        public void ReplaceAll_WithStringAndIEnumerableAndChar_AsPositiveWithEmptyFrom()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That("ABC".ReplaceAll([], 'R'), Is.EqualTo("ABC"));
+                Assert.That("ABC".ReplaceAll(Enumerable.Empty<char>(), 'R'), Is.EqualTo("ABC"));
+            });
+        }
+
+        [Test]
+        public void ReplaceAll_WithStringAndIEnumerableAndChar_AsPositiveWithNotEmpty()
+        {
+            Assert.That("abcdABCD".ReplaceAll(['a', 'b', 'c'], 'R'), Is.EqualTo("RRRdABCD"));
+        }
+
+        [Test]
+        public void ReplaceAll_WithReadOnlySpanAndIEnumerableAndChar_WithNullFrom()
         {
             Assert.Multiple(() =>
             {
@@ -62,13 +100,13 @@ namespace Test.CuiLib.Extensions
         }
 
         [Test]
-        public void ReplaceAllWithIEnumerableAndChar_AsPositiveWithEmptyValue()
+        public void ReplaceAll_WithReadOnlySpanAndIEnumerableAndChar_AsPositiveWithEmptyValue()
         {
             Assert.That(ReadOnlySpan<char>.Empty.ReplaceAll(['a', 'b', 'c'], 'R').ToString(), Is.Empty);
         }
 
         [Test]
-        public void ReplaceAllWithIEnumerableAndChar_AsPositiveWithEmptyFrom()
+        public void ReplaceAll_WithReadOnlySpanAndIEnumerableAndChar_AsPositiveWithEmptyFrom()
         {
             Assert.Multiple(() =>
             {
@@ -78,13 +116,53 @@ namespace Test.CuiLib.Extensions
         }
 
         [Test]
-        public void ReplaceAllWithIEnumerableAndChar_AsPositiveWithNotEmpty()
+        public void ReplaceAll_WithReadOnlySpanAndIEnumerableAndChar_AsPositiveWithNotEmpty()
         {
             Assert.That("abcdABCD".AsSpan().ReplaceAll(['a', 'b', 'c'], 'R').ToString(), Is.EqualTo("RRRdABCD"));
         }
 
         [Test]
-        public void ReplaceAllWithIDictionary_WithNull()
+        public void ReplaceAll_WithStringAndIDictionary_WithNullValue()
+        {
+            Assert.Throws<ArgumentNullException>(() => StringExtensions.ReplaceAll((null! as string)!, new Dictionary<char, char>() { { 'a', 'R' } }));
+        }
+
+        [Test]
+        public void ReplaceAll_WithStringAndIDictionary_WithNullMap()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.Throws<ArgumentNullException>(() => "123".ReplaceAll(null!));
+                Assert.Throws<ArgumentNullException>(() => string.Empty.ReplaceAll(null!));
+            });
+        }
+
+        [Test]
+        public void ReplaceAll_WithStringAndIDictionary_AsPositiveWithEmptyValue()
+        {
+            Assert.That(string.Empty.ReplaceAll(new Dictionary<char, char>() { { 'a', 'R' } }), Is.Empty);
+        }
+
+        [Test]
+        public void ReplaceAll_WithStringAndIDictionary_AsPositiveWithEmptyFrom()
+        {
+            Assert.That("ABC".ReplaceAll(new Dictionary<char, char>()), Is.EqualTo("ABC"));
+        }
+
+        [Test]
+        public void ReplaceAll_WithStringAndIDictionary_AsPositiveWithNotEmpty()
+        {
+            var replaceMap = new Dictionary<char, char>
+            {
+                { 'a', '1' },
+                { 'b', '2' },
+                { 'c', '3' },
+            };
+            Assert.That("abcdABCD".ReplaceAll(replaceMap), Is.EqualTo("123dABCD"));
+        }
+
+        [Test]
+        public void ReplaceAll_WithReadOnlySpanAndIDictionary_WithNull()
         {
             Assert.Multiple(() =>
             {
@@ -94,23 +172,19 @@ namespace Test.CuiLib.Extensions
         }
 
         [Test]
-        public void ReplaceAllWithIDictionary_AsPositiveWithEmptyValue()
+        public void ReplaceAll_WithReadOnlySpanAndIDictionary_AsPositiveWithEmptyValue()
         {
             Assert.That(ReadOnlySpan<char>.Empty.ReplaceAll(new Dictionary<char, char>() { { 'a', 'R' } }).ToString(), Is.Empty);
         }
 
         [Test]
-        public void ReplaceAllWithIDictionary_AsPositiveWithEmptyFrom()
+        public void ReplaceAll_WithReadOnlySpanAndIDictionary_AsPositiveWithEmptyFrom()
         {
-            Assert.Multiple(() =>
-            {
-                Assert.That("ABC".AsSpan().ReplaceAll(new Dictionary<char, char>()).ToString(), Is.EqualTo("ABC"));
-                Assert.That("ABC".AsSpan().ReplaceAll(new Dictionary<char, char>()).ToString(), Is.EqualTo("ABC"));
-            });
+            Assert.That("ABC".AsSpan().ReplaceAll(new Dictionary<char, char>()).ToString(), Is.EqualTo("ABC"));
         }
 
         [Test]
-        public void ReplaceAllWithIDictionary_AsPositiveWithNotEmpty()
+        public void ReplaceAll_WithReadOnlySpanAndIDictionary_AsPositiveWithNotEmpty()
         {
             var replaceMap = new Dictionary<char, char>
             {
@@ -122,55 +196,121 @@ namespace Test.CuiLib.Extensions
         }
 
         [Test]
-        public void EscapedSplitWithChar_WithEmpty()
+        public void EscapedSplit_WithStringAndChar_WithNullValue()
+        {
+            Assert.Throws<ArgumentNullException>(() => StringExtensions.EscapedSplit((null! as string)!, ','));
+        }
+
+        [Test]
+        public void EscapedSplit_WithStringAndChar_WithEmptyValue()
+        {
+            Assert.That(string.Empty.EscapedSplit(','), Is.Empty);
+        }
+
+        [Test]
+        public void EscapedSplit_WithStringAndChar_WithNoQuoted()
+        {
+            Assert.That("hoge,fuga,piyo".EscapedSplit(','), Is.EqualTo(new[] { "hoge", "fuga", "piyo" }));
+        }
+
+        [Test]
+        public void EscapedSplit_WithStringAndChar_WithQuoted()
+        {
+            Assert.That("\"hoge1,hoge2,hoge3\",'fuga1,fuga2',p\"i'yo,\"dapo\"".EscapedSplit(','), Is.EqualTo(new[] { "hoge1,hoge2,hoge3", "fuga1,fuga2", "p\"i'yo", "dapo" }));
+        }
+
+        [Test]
+        public void EscapedSplit_WithReadOnlySpanAndChar_WithEmptyValue()
         {
             Assert.That(ReadOnlySpan<char>.Empty.EscapedSplit(','), Is.Empty);
         }
 
         [Test]
-        public void EscapedSplitWithChar_WithNoQuoted()
+        public void EscapedSplit_WithReadOnlySpanAndChar_WithNoQuoted()
         {
             Assert.That("hoge,fuga,piyo".AsSpan().EscapedSplit(','), Is.EqualTo(new[] { "hoge", "fuga", "piyo" }));
         }
 
         [Test]
-        public void EscapedSplitWithChar_WithQuoted()
+        public void EscapedSplit_WithReadOnlySpanAndChar_WithQuoted()
         {
             Assert.That("\"hoge1,hoge2,hoge3\",'fuga1,fuga2',p\"i'yo,\"dapo\"".AsSpan().EscapedSplit(','), Is.EqualTo(new[] { "hoge1,hoge2,hoge3", "fuga1,fuga2", "p\"i'yo", "dapo" }));
         }
 
         [Test]
-        public void EscapedSplitWithString_WithEmptyValue()
+        public void EscapedSplit_WithStringAndString_WithNullValue()
+        {
+            Assert.Throws<ArgumentNullException>(() => StringExtensions.EscapedSplit((null! as string)!, ","));
+        }
+
+        [Test]
+        public void EscapedSplit_WithStringAndString_WithEmptyValue()
+        {
+            Assert.That(string.Empty.EscapedSplit(","), Is.Empty);
+        }
+
+        [Test]
+        public void EscapedSplit_WithStringAndString_AsNullValue()
+        {
+            Assert.Throws<ArgumentNullException>(() => "hoge".EscapedSplit(null!));
+        }
+
+        [Test]
+        public void EscapedSplit_WithStringAndString_AsEmptyValue()
+        {
+            Assert.Throws<ArgumentException>(() => "hoge".EscapedSplit(string.Empty));
+        }
+
+        [Test]
+        public void EscapedSplit_WithStringAndString_WithShortValue()
+        {
+            Assert.That("hoge".EscapedSplit("fugafuga"), Is.EqualTo(new[] { "hoge" }));
+        }
+
+        [Test]
+        public void EscapedSplit_WithStringAndString_WithNoQuotedValue()
+        {
+            Assert.That("hoge<>fuga<>piyo".EscapedSplit("<>"), Is.EqualTo(new[] { "hoge", "fuga", "piyo" }));
+        }
+
+        [Test]
+        public void EscapedSplit_WithStringAndString_WithQuotedValue()
+        {
+            Assert.That("\"hoge1<>hoge2<>hoge3\"<>'fuga1<>fuga2'<>p\"i'yo<>\"dapo\"".EscapedSplit("<>"), Is.EqualTo(new[] { "hoge1<>hoge2<>hoge3", "fuga1<>fuga2", "p\"i'yo", "dapo" }));
+        }
+
+        [Test]
+        public void EscapedSplit_WithReadOnlySpanAndString_WithEmptyValue()
         {
             Assert.That(ReadOnlySpan<char>.Empty.EscapedSplit(","), Is.Empty);
         }
 
         [Test]
-        public void EscapedSplitWithString_AsNullValue()
+        public void EscapedSplit_WithReadOnlySpanAndString_AsNullValue()
         {
             Assert.Throws<ArgumentNullException>(() => "hoge".AsSpan().EscapedSplit(null!));
         }
 
         [Test]
-        public void EscapedSplitWithString_AsEmptyValue()
+        public void EscapedSplit_WithReadOnlySpanAndString_AsEmptyValue()
         {
             Assert.Throws<ArgumentException>(() => "hoge".AsSpan().EscapedSplit(string.Empty));
         }
 
         [Test]
-        public void EscapedSplitWithString_WithShortValue()
+        public void EscapedSplit_WithReadOnlySpanAndString_WithShortValue()
         {
             Assert.That("hoge".AsSpan().EscapedSplit("fugafuga"), Is.EqualTo(new[] { "hoge" }));
         }
 
         [Test]
-        public void EscapedSplitWithString_WithNoQuotedValue()
+        public void EscapedSplit_WithReadOnlySpanAndString_WithNoQuotedValue()
         {
             Assert.That("hoge<>fuga<>piyo".AsSpan().EscapedSplit("<>"), Is.EqualTo(new[] { "hoge", "fuga", "piyo" }));
         }
 
         [Test]
-        public void EscapedSplitWithString_WithQuotedValue()
+        public void EscapedSplit_WithReadOnlySpanAndString_WithQuotedValue()
         {
             Assert.That("\"hoge1<>hoge2<>hoge3\"<>'fuga1<>fuga2'<>p\"i'yo<>\"dapo\"".AsSpan().EscapedSplit("<>"), Is.EqualTo(new[] { "hoge1<>hoge2<>hoge3", "fuga1<>fuga2", "p\"i'yo", "dapo" }));
         }

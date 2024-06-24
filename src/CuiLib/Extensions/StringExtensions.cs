@@ -44,6 +44,35 @@ namespace CuiLib.Extensions
         /// <param name="from">置換前の文字一覧</param>
         /// <param name="to">置換後の文字</param>
         /// <returns>置換後の文字列</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="value"/>または<paramref name="from"/>がnull</exception>
+        public static string ReplaceAll(this string value, IEnumerable<char> from, char to)
+        {
+            ThrowHelpers.ThrowIfNull(value);
+
+            if (value.Length == 0)
+            {
+                ThrowHelpers.ThrowIfNull(from);
+                return string.Empty;
+            }
+            if (from.TryGetNonEnumeratedCount(out int c) && c == 0) return value;
+
+            HashSet<char> set = from.ToHashSet();
+            if (set.Count == 0) return value;
+
+            return VersionBufferExtensions.CreateString(value.Length, (to, set, value), (span, state) =>
+            {
+                (char to, HashSet<char> set, string value) = state;
+                for (int i = 0; i < span.Length; i++) span[i] = set.Contains(value[i]) ? to : value[i];
+            });
+        }
+
+        /// <summary>
+        /// 文字列の置換を纏めて行います。
+        /// </summary>
+        /// <param name="value">置換する文字列</param>
+        /// <param name="from">置換前の文字一覧</param>
+        /// <param name="to">置換後の文字</param>
+        /// <returns>置換後の文字列</returns>
         /// <exception cref="ArgumentNullException"><paramref name="from"/>がnull</exception>
         public static ReadOnlySpan<char> ReplaceAll(this ReadOnlySpan<char> value, IEnumerable<char> from, char to)
         {
@@ -61,6 +90,28 @@ namespace CuiLib.Extensions
             for (int i = 0; i < value.Length; i++) array[i] = set.Contains(value[i]) ? to : value[i];
 
             return array.AsSpan();
+        }
+
+        /// <summary>
+        /// 文字列の置換を纏めて行います。
+        /// </summary>
+        /// <param name="value">置換する文字列</param>
+        /// <param name="map">置換情報を表すマップ</param>
+        /// <returns>置換後の文字列</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="map"/>がnull</exception>
+        public static string ReplaceAll(this string value, IDictionary<char, char> map)
+        {
+            ThrowHelpers.ThrowIfNull(value);
+            ThrowHelpers.ThrowIfNull(map);
+
+            if (value.Length == 0) return string.Empty;
+            if (map.Count == 0) return value;
+
+            return VersionBufferExtensions.CreateString(value.Length, (map, value), (span, state) =>
+            {
+                (IDictionary<char, char> map, string value) = state;
+                for (int i = 0; i < span.Length; i++) span[i] = map.TryGetValue(value[i], out char to) ? to : value[i];
+            });
         }
 
         /// <summary>
@@ -89,6 +140,20 @@ namespace CuiLib.Extensions
         /// <param name="value">分割する文字列</param>
         /// <param name="separator">分割に利用する部分</param>
         /// <returns>分割後の文字列一覧</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="value"/>が<see langword="null"/></exception>
+        public static string[] EscapedSplit(this string value, char separator)
+        {
+            ThrowHelpers.ThrowIfNull(value);
+
+            return EscapedSplit(value.AsSpan(), separator);
+        }
+
+        /// <summary>
+        /// エスケープを考慮して文字列を分割します。
+        /// </summary>
+        /// <param name="value">分割する文字列</param>
+        /// <param name="separator">分割に利用する部分</param>
+        /// <returns>分割後の文字列一覧</returns>
         public static string[] EscapedSplit(this ReadOnlySpan<char> value, char separator)
         {
             ReadOnlySpan<char> separatorSpan;
@@ -101,6 +166,21 @@ namespace CuiLib.Extensions
             }
 #endif
             return EscapedSplitPrivate(value, separatorSpan);
+        }
+
+        /// <summary>
+        /// エスケープを考慮して文字列を分割します。
+        /// </summary>
+        /// <param name="value">分割する文字列</param>
+        /// <param name="separator">分割に利用する部分</param>
+        /// <returns>分割後の文字列一覧</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="value"/>または<paramref name="separator"/>が<see langword="null"/></exception>
+        /// <exception cref="ArgumentException"><paramref name="separator"/>が空文字</exception>
+        public static string[] EscapedSplit(this string value, string separator)
+        {
+            ThrowHelpers.ThrowIfNull(value);
+
+            return EscapedSplit(value.AsSpan(), separator);
         }
 
         /// <summary>
