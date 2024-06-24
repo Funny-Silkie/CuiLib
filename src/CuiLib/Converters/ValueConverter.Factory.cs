@@ -282,11 +282,7 @@ namespace CuiLib.Converters
         /// <returns>文字列から<see cref="DateTime"/>に変換するインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
         /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-        public static IValueConverter<string, DateTime> StringToDateTime(
-#if NET7_0_OR_GREATER
-                                                                         [StringSyntax(StringSyntaxAttribute.DateTimeFormat)]
-#endif
-                                                                         string format)
+        public static IValueConverter<string, DateTime> StringToDateTime([StringSyntax(StringSyntaxAttribute.DateTimeFormat)] string format)
         {
             return new DateTimeExactConverter(format);
         }
@@ -313,11 +309,7 @@ namespace CuiLib.Converters
         /// <returns>文字列から<see cref="DateOnly"/>に変換するインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
         /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-        public static IValueConverter<string, DateOnly> StringToDateOnly(
-#if NET7_0_OR_GREATER
-                                                                         [StringSyntax(StringSyntaxAttribute.DateOnlyFormat)]
-#endif
-                                                                         string format)
+        public static IValueConverter<string, DateOnly> StringToDateOnly([StringSyntax(StringSyntaxAttribute.DateOnlyFormat)] string format)
         {
             return new DateOnlyExactConverter(format);
         }
@@ -342,11 +334,7 @@ namespace CuiLib.Converters
         /// <returns>文字列から<see cref="TimeOnly"/>に変換するインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
         /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-        public static IValueConverter<string, TimeOnly> StringToTimeOnly(
-#if NET7_0_OR_GREATER
-                                                                         [StringSyntax(StringSyntaxAttribute.TimeOnlyFormat)]
-#endif
-                                                                         string format)
+        public static IValueConverter<string, TimeOnly> StringToTimeOnly([StringSyntax(StringSyntaxAttribute.TimeOnlyFormat)] string format)
         {
             return new TimeOnlyExactConverter(format);
         }
@@ -373,11 +361,7 @@ namespace CuiLib.Converters
         /// <returns>文字列から<see cref="TimeSpan"/>に変換するインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
         /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-        public static IValueConverter<string, TimeSpan> StringToTimeSpan(
-#if NET7_0_OR_GREATER
-                                                                         [StringSyntax(StringSyntaxAttribute.TimeSpanFormat)]
-#endif
-                                                                         string format)
+        public static IValueConverter<string, TimeSpan> StringToTimeSpan([StringSyntax(StringSyntaxAttribute.TimeSpanFormat)] string format)
         {
             return new TimeSpanExactConverter(format);
         }
@@ -402,11 +386,7 @@ namespace CuiLib.Converters
         /// <returns>文字列から<see cref="DateTimeOffset"/>に変換するインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
         /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-        public static IValueConverter<string, DateTimeOffset> StringToDateTimeOffset(
-#if NET7_0_OR_GREATER
-                                                                                     [StringSyntax(StringSyntaxAttribute.DateTimeFormat)]
-#endif
-                                                                                     string format)
+        public static IValueConverter<string, DateTimeOffset> StringToDateTimeOffset([StringSyntax(StringSyntaxAttribute.DateTimeFormat)] string format)
         {
             return new DateTimeOffsetExactConverter(format);
         }

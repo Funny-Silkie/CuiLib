@@ -425,48 +425,25 @@ namespace CuiLib.Logging
         }
 
         /// <inheritdoc/>
-        public override void Write(
-#if NET7_0_OR_GREATER
-                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
-#endif
-                                   string format,
-                                   object? arg0)
+        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(format, arg0);
         }
 
         /// <inheritdoc/>
-        public override void Write(
-#if NET7_0_OR_GREATER
-                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
-#endif
-                                   string format,
-                                   object? arg0,
-                                   object? arg1)
+        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0, object? arg1)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(format, arg0, arg1);
         }
 
         /// <inheritdoc/>
-        public override void Write(
-#if NET7_0_OR_GREATER
-                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
-#endif
-                                   string format,
-                                   object? arg0,
-                                   object? arg1,
-                                   object? arg2)
+        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0, object? arg1, object? arg2)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(format, arg0, arg1, arg2);
         }
 
         /// <inheritdoc/>
-        public override void Write(
-#if NET7_0_OR_GREATER
-                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
-#endif
-                                   string format,
-                                   params object?[] arg)
+        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, params object?[] arg)
         {
             foreach (WriterEntry entry in writers) entry.Writer.Write(format, arg);
         }
@@ -634,48 +611,25 @@ namespace CuiLib.Logging
         }
 
         /// <inheritdoc/>
-        public override void WriteLine(
-#if NET7_0_OR_GREATER
-                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
-#endif
-                                       string format,
-                                       object? arg0)
+        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(format, arg0);
         }
 
         /// <inheritdoc/>
-        public override void WriteLine(
-#if NET7_0_OR_GREATER
-                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
-#endif
-                                       string format,
-                                       object? arg0,
-                                       object? arg1)
+        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0, object? arg1)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(format, arg0, arg1);
         }
 
         /// <inheritdoc/>
-        public override void WriteLine(
-#if NET7_0_OR_GREATER
-                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
-#endif
-                                       string format,
-                                       object? arg0,
-                                       object? arg1,
-                                       object? arg2)
+        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0, object? arg1, object? arg2)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(format, arg0, arg1, arg2);
         }
 
         /// <inheritdoc/>
-        public override void WriteLine(
-#if NET7_0_OR_GREATER
-                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
-#endif
-                                       string format,
-                                       params object?[] arg)
+        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, params object?[] arg)
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(format, arg);
         }

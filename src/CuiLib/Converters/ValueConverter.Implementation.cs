@@ -140,11 +140,7 @@ namespace CuiLib.Converters
             /// <param name="format">フォーマット</param>
             /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
             /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-            public DateTimeExactConverter(
-#if NET7_0_OR_GREATER
-                                          [StringSyntax(StringSyntaxAttribute.DateTimeFormat)]
-#endif
-                                          string format)
+            public DateTimeExactConverter([StringSyntax(StringSyntaxAttribute.DateTimeFormat)] string format)
             {
                 ThrowHelpers.ThrowIfNullOrEmpty(format);
 
@@ -174,11 +170,7 @@ namespace CuiLib.Converters
             /// <param name="format">フォーマット</param>
             /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
             /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-            public DateOnlyExactConverter(
-#if NET7_0_OR_GREATER
-                                          [StringSyntax(StringSyntaxAttribute.DateOnlyFormat)]
-#endif
-                                          string format)
+            public DateOnlyExactConverter([StringSyntax(StringSyntaxAttribute.DateOnlyFormat)] string format)
             {
                 ThrowHelpers.ThrowIfNullOrEmpty(format);
 
@@ -206,11 +198,7 @@ namespace CuiLib.Converters
             /// <param name="format">フォーマット</param>
             /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
             /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-            public TimeOnlyExactConverter(
-#if NET7_0_OR_GREATER
-                                          [StringSyntax(StringSyntaxAttribute.TimeOnlyFormat)]
-#endif
-                                          string format)
+            public TimeOnlyExactConverter([StringSyntax(StringSyntaxAttribute.TimeOnlyFormat)] string format)
             {
                 ThrowHelpers.ThrowIfNullOrEmpty(format);
 
@@ -240,11 +228,7 @@ namespace CuiLib.Converters
             /// <param name="format">フォーマット</param>
             /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
             /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-            public TimeSpanExactConverter(
-#if NET7_0_OR_GREATER
-                                          [StringSyntax(StringSyntaxAttribute.TimeSpanFormat)]
-#endif
-                                          string format)
+            public TimeSpanExactConverter([StringSyntax(StringSyntaxAttribute.TimeSpanFormat)] string format)
             {
                 ThrowHelpers.ThrowIfNullOrEmpty(format);
 
@@ -272,11 +256,7 @@ namespace CuiLib.Converters
             /// <param name="format">フォーマット</param>
             /// <exception cref="ArgumentNullException"><paramref name="format"/>が<see langword="null"/></exception>
             /// <exception cref="ArgumentException"><paramref name="format"/>が空文字</exception>
-            public DateTimeOffsetExactConverter(
-#if NET7_0_OR_GREATER
-                                                [StringSyntax(StringSyntaxAttribute.DateTimeFormat)]
-#endif
-                                                string format)
+            public DateTimeOffsetExactConverter([StringSyntax(StringSyntaxAttribute.DateTimeFormat)] string format)
             {
                 ThrowHelpers.ThrowIfNullOrEmpty(format);
 
