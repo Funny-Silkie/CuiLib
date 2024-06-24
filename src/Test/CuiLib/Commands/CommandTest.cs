@@ -251,7 +251,7 @@ namespace Test.CuiLib.Commands
             var option2 = new FlagOption('v');
             command.Options.Add(option2);
             SingleValueParameter<int> param1 = command.Parameters.CreateAndAdd<int>("num");
-            Parameter<string> param2 = command.Parameters.CreateAndAddAsArray<string>("texts");
+            MultipleValueParameter<string> param2 = command.Parameters.CreateAndAddAsArray<string>("texts");
 
             command.Invoke(["-f", "13", "value1", "-v", "value2"]);
 
@@ -265,7 +265,7 @@ namespace Test.CuiLib.Commands
                 Assert.That(param1.ValueAvailable, Is.True);
                 Assert.That(param1.Value, Is.EqualTo(13));
                 Assert.That(param2.ValueAvailable, Is.True);
-                Assert.That(param2.Values, Is.EqualTo(new[] { "value1", "-v", "value2" }));
+                Assert.That(param2.Value, Is.EqualTo(new[] { "value1", "-v", "value2" }));
             });
         }
 
@@ -273,7 +273,7 @@ namespace Test.CuiLib.Commands
         public void Invoke_OnHasNoChild_WithParameter()
         {
             SingleValueParameter<int> param1 = command.Parameters.CreateAndAdd<int>("num");
-            Parameter<string> param2 = command.Parameters.CreateAndAddAsArray<string>("texts");
+            MultipleValueParameter<string> param2 = command.Parameters.CreateAndAddAsArray<string>("texts");
 
             command.Invoke(["13", "value1", "-v", "value2"]);
 
@@ -284,7 +284,7 @@ namespace Test.CuiLib.Commands
                 Assert.That(param1.ValueAvailable, Is.True);
                 Assert.That(param1.Value, Is.EqualTo(13));
                 Assert.That(param2.ValueAvailable, Is.True);
-                Assert.That(param2.Values, Is.EqualTo(new[] { "value1", "-v", "value2" }));
+                Assert.That(param2.Value, Is.EqualTo(new[] { "value1", "-v", "value2" }));
             });
         }
 
@@ -439,7 +439,7 @@ namespace Test.CuiLib.Commands
             var option2 = new FlagOption('v');
             command.Options.Add(option2);
             SingleValueParameter<int> param1 = command.Parameters.CreateAndAdd<int>("num");
-            Parameter<string> param2 = command.Parameters.CreateAndAddAsArray<string>("texts");
+            MultipleValueParameter<string> param2 = command.Parameters.CreateAndAddAsArray<string>("texts");
 
             command.InvokeAsync(["-f", "13", "value1", "-v", "value2"]).GetAwaiter().GetResult();
 
@@ -453,7 +453,7 @@ namespace Test.CuiLib.Commands
                 Assert.That(param1.ValueAvailable, Is.True);
                 Assert.That(param1.Value, Is.EqualTo(13));
                 Assert.That(param2.ValueAvailable, Is.True);
-                Assert.That(param2.Values, Is.EqualTo(new[] { "value1", "-v", "value2" }));
+                Assert.That(param2.Value, Is.EqualTo(new[] { "value1", "-v", "value2" }));
             });
         }
 
@@ -461,7 +461,7 @@ namespace Test.CuiLib.Commands
         public void InvokeAsync_OnHasNoChild_WithParameter()
         {
             SingleValueParameter<int> param1 = command.Parameters.CreateAndAdd<int>("num");
-            Parameter<string> param2 = command.Parameters.CreateAndAddAsArray<string>("texts");
+            MultipleValueParameter<string> param2 = command.Parameters.CreateAndAddAsArray<string>("texts");
 
             command.InvokeAsync(["13", "value1", "-v", "value2"]).GetAwaiter().GetResult();
 
@@ -472,7 +472,7 @@ namespace Test.CuiLib.Commands
                 Assert.That(param1.ValueAvailable, Is.True);
                 Assert.That(param1.Value, Is.EqualTo(13));
                 Assert.That(param2.ValueAvailable, Is.True);
-                Assert.That(param2.Values, Is.EqualTo(new[] { "value1", "-v", "value2" }));
+                Assert.That(param2.Value, Is.EqualTo(new[] { "value1", "-v", "value2" }));
             });
         }
 
@@ -540,7 +540,7 @@ namespace Test.CuiLib.Commands
                 param.Description = "number parameter";
             }
             {
-                Parameter<string> param = command.Parameters.CreateAndAddAsArray<string>("texts");
+                MultipleValueParameter<string> param = command.Parameters.CreateAndAddAsArray<string>("texts");
                 param.Description = "variable length parameter";
             }
 

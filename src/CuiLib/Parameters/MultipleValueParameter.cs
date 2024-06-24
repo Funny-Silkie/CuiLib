@@ -5,43 +5,53 @@ using System;
 namespace CuiLib.Parameters
 {
     /// <summary>
-    /// 一つの値を取る<see cref="Parameter{T}"/>の実装です。
+    /// 複数の値を取る<see cref="Parameter{T}"/>の実装です。
     /// </summary>
     /// <typeparam name="T">値の型</typeparam>
     [Serializable]
-    public class SingleValueParameter<T> : Parameter<T>
+    public class MultipleValueParameter<T> : Parameter<T[]>
     {
         /// <inheritdoc/>
-        public override sealed bool IsArray => false;
+        public override sealed bool IsArray => true;
 
         /// <inheritdoc/>
-        public override T Value
+        public override T[] Value
         {
             get
             {
                 if (ValueAvailable)
                 {
-                    T result;
-                    try
+                    if (_valueCache is null)
                     {
-                        result = Converter.Convert(RawValues[0]);
-                    }
-                    catch (Exception e)
-                    {
-                        ThrowHelpers.ThrowAsOptionParseFailed(e);
-                        return default;
-                    }
+                        if (RawValues.Length == 0) return [];
+                        var result = new T[RawValues.Length];
+                        for (int i = 0; i < result.Length; i++)
+                        {
+                            try
+                            {
+                                result[i] = Converter.Convert(RawValues[i]);
+                            }
+                            catch (Exception e)
+                            {
+                                ThrowHelpers.ThrowAsOptionParseFailed(e);
+                                return default;
+                            }
+                            ValueCheckState state = Checker.CheckValue(result[i]);
+                            ThrowHelpers.ThrowIfInvalidState(state);
+                        }
 
-                    ValueCheckState state = Checker.CheckValue(result);
-                    ThrowHelpers.ThrowIfInvalidState(state);
-
-                    return result;
+                        _valueCache = result;
+                    }
+                    return _valueCache;
                 }
                 if (Required) ThrowHelpers.ThrowAsEmptyParameter(this);
 
                 return DefaultValue;
             }
         }
+
+        [NonSerialized]
+        private T[]? _valueCache;
 
         /// <summary>
         /// 値の変換を行う<see cref="IValueConverter{TIn, TOut}"/>を取得または設定します。
@@ -72,15 +82,30 @@ namespace CuiLib.Parameters
         private IValueChecker<T> _checker = ValueChecker.AlwaysValid<T>();
 
         /// <summary>
-        /// <see cref="SingleValueParameter{T}"/>の新しいインスタンスを初期化します。
+        /// <see cref="MultipleValueParameter{T}"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="name">パラメータ名</param>
         /// <param name="index">インデックス</param>
         /// <exception cref="ArgumentNullException"><paramref name="name"/>が<see langword="null"/></exception>
         /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
-        public SingleValueParameter(string name, int index) : base(name, index)
+        public MultipleValueParameter(string name, int index) : base(name, index)
         {
+            DefaultValue = [];
+        }
+
+        /// <inheritdoc/>
+        internal override void SetValue(string rawValue)
+        {
+            base.SetValue(rawValue);
+            _valueCache = null;
+        }
+
+        /// <inheritdoc/>
+        internal override void SetValue(ReadOnlySpan<string> rawValues)
+        {
+            base.SetValue(rawValues);
+            _valueCache = null;
         }
     }
 }

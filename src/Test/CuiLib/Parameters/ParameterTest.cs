@@ -1,4 +1,4 @@
-using CuiLib;
+﻿using CuiLib;
 using CuiLib.Checkers;
 using CuiLib.Converters;
 using CuiLib.Parameters;
@@ -14,7 +14,7 @@ namespace Test.CuiLib.Parameters
         [SetUp]
         public void SetUp()
         {
-            parameter = new ParameterImpl("param", 0, false);
+            parameter = new ParameterImpl("param", 0);
         }
 
         #region Ctors
@@ -22,31 +22,30 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void Ctor_WithNullName()
         {
-            Assert.Throws<ArgumentNullException>(() => new ParameterImpl(null!, 0, false));
+            Assert.Throws<ArgumentNullException>(() => new ParameterImpl(null!, 0));
         }
 
         [Test]
         public void Ctor_WithNegativeIndex()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new ParameterImpl("param", -1, false));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new ParameterImpl("param", -1));
         }
 
         [Test]
         public void Ctor_WithEmptyName()
         {
-            Assert.Throws<ArgumentException>(() => new ParameterImpl(string.Empty, 0, false));
+            Assert.Throws<ArgumentException>(() => new ParameterImpl(string.Empty, 0));
         }
 
         [Test]
         public void Ctor_AsPositive()
         {
-            var parameter = new ParameterImpl("param", 0, true);
+            var parameter = new ParameterImpl("param", 0);
 
             Assert.Multiple(() =>
             {
                 Assert.That(parameter.Name, Is.EqualTo("param"));
                 Assert.That(parameter.Index, Is.EqualTo(0));
-                Assert.That(parameter.IsArray, Is.True);
             });
         }
 
@@ -150,7 +149,7 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void CreateAsArray_AsPositive()
         {
-            Parameter<int> parameter = Parameter.CreateAsArray<int>("params", 0);
+            MultipleValueParameter<int> parameter = Parameter.CreateAsArray<int>("params", 0);
 
             Assert.Multiple(() =>
             {
@@ -210,7 +209,9 @@ namespace Test.CuiLib.Parameters
 
         private sealed class ParameterImpl : Parameter
         {
-            public ParameterImpl(string name, int index, bool isArray) : base(name, index, isArray)
+            public override bool IsArray => throw new NotImplementedException();
+
+            public ParameterImpl(string name, int index) : base(name, index)
             {
             }
         }
@@ -224,11 +225,8 @@ namespace Test.CuiLib.Parameters
         [SetUp]
         public void SetUp()
         {
-            parameterString = new ParameterImpl<string>("param", 0, false);
-            parameterInt = new ParameterImpl<int>("param", 0, false)
-            {
-                Checker = ValueChecker.GreaterThanOrEqualTo(0)
-            };
+            parameterString = new ParameterImpl<string>("param", 0);
+            parameterInt = new ParameterImpl<int>("param", 0);
         }
 
         #region Ctors
@@ -236,58 +234,30 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void Ctor_WithNullName()
         {
-            Assert.Throws<ArgumentNullException>(() => new ParameterImpl<string>(null!, 0, false));
+            Assert.Throws<ArgumentNullException>(() => new ParameterImpl<string>(null!, 0));
         }
 
         [Test]
         public void Ctor_WithEmptyName()
         {
-            Assert.Throws<ArgumentException>(() => new ParameterImpl<string>(string.Empty, 0, false));
+            Assert.Throws<ArgumentException>(() => new ParameterImpl<string>(string.Empty, 0));
         }
 
         [Test]
         public void Ctor_AsPositive()
         {
-            var parameter = new ParameterImpl<string>("param", 0, true);
+            var parameter = new ParameterImpl<string>("param", 0);
 
             Assert.Multiple(() =>
             {
                 Assert.That(parameter.Name, Is.EqualTo("param"));
                 Assert.That(parameter.Index, Is.EqualTo(0));
-                Assert.That(parameter.IsArray, Is.True);
             });
         }
 
         #endregion Ctors
 
         #region Properties
-
-        [Test]
-        public void Converter_Get_OnDefault()
-        {
-            Assert.That(parameterString.Converter, Is.EqualTo(ValueConverter.GetDefault<string>()));
-        }
-
-        [Test]
-        public void Converter_Get_OnAfterSetting()
-        {
-            IValueConverter<string, string> converter = ValueConverter.FromDelegate<string, string>(x => x);
-            parameterString.Converter = converter;
-
-            Assert.That(parameterString.Converter, Is.EqualTo(converter));
-        }
-
-        [Test]
-        public void Checker_Get_OnDefault()
-        {
-            Assert.That(parameterString.Checker, Is.EqualTo(ValueChecker.AlwaysValid<string>()));
-        }
-
-        [Test]
-        public void Checker_Set_WithNull()
-        {
-            Assert.Throws<ArgumentNullException>(() => parameterString.Checker = null!);
-        }
 
         [Test]
         public void DefaultValue_Get_OnDefault()
@@ -299,103 +269,16 @@ namespace Test.CuiLib.Parameters
             });
         }
 
-        [Test]
-        public void Value_Get_OnDefault()
-        {
-            Assert.Multiple(() =>
-            {
-                Assert.That(parameterString.Value, Is.Null);
-                Assert.That(parameterInt.Value, Is.Zero);
-            });
-        }
-
-        [Test]
-        public void Value_Get_OnEmpty()
-        {
-            parameterString.SetValue([]);
-
-            Assert.Throws<InvalidOperationException>(() => _ = parameterString.Value);
-        }
-
-        [Test]
-        public void Value_Get_AfterApplyValue_OnConversionError()
-        {
-            parameterInt.SetValue(["!!!"]);
-
-            Assert.Throws<ArgumentAnalysisException>(() => _ = parameterInt.Value);
-        }
-
-        [Test]
-        public void Value_Get_AfterApplyValue_OnCheckError()
-        {
-            parameterInt.SetValue(["-1"]);
-
-            Assert.Throws<ArgumentAnalysisException>(() => _ = parameterInt.Value);
-        }
-
-        [Test]
-        public void Value_Get_AfterApplyValue_AsPositive_WithSingleValue()
-        {
-            parameterString.SetValue(["value"]);
-
-            Assert.That(parameterString.Value, Is.EqualTo("value"));
-        }
-
-        [Test]
-        public void Value_Get_AfterApplyValue_AsPositive_WithMultipleValue()
-        {
-            parameterString.SetValue(["val1", "val2"]);
-
-            Assert.That(parameterString.Value, Is.EqualTo("val1"));
-        }
-
-        [Test]
-        public void Values_Get_OnDefault()
-        {
-            Assert.That(parameterString.Values, Is.Null);
-        }
-
-        [Test]
-        public void Values_Get_OnEmpty()
-        {
-            parameterString.SetValue([]);
-
-            Assert.That(parameterString.Values, Is.Empty);
-        }
-
-        [Test]
-        public void Values_Get_AfterApplyValue_OnConversionError()
-        {
-            parameterInt.SetValue(["123", "!!!"]);
-
-            Assert.Throws<ArgumentAnalysisException>(() => _ = parameterInt.Values);
-        }
-
-        [Test]
-        public void Values_Get_AfterApplyValue_OnCheckError()
-        {
-            parameterInt.SetValue(["123", "-1"]);
-
-            Assert.Throws<ArgumentAnalysisException>(() => _ = _ = parameterInt.Values);
-        }
-
-        [Test]
-        public void Values_Get_AfterApplyValue_AsPositive()
-        {
-            parameterString.SetValue(["val1", "val2"]);
-
-            Assert.That(parameterString.Values, Is.EqualTo(new[] { "val1", "val2" }));
-        }
-
         #endregion Properties
 
         private sealed class ParameterImpl<T> : Parameter<T>
         {
-            public override bool IsArray { get; }
+            public override bool IsArray => throw new NotImplementedException();
 
-            public ParameterImpl(string name, int index, bool isArray) : base(name, index, isArray)
+            public override T Value => throw new NotImplementedException();
+
+            public ParameterImpl(string name, int index) : base(name, index)
             {
-                IsArray = isArray;
             }
         }
     }

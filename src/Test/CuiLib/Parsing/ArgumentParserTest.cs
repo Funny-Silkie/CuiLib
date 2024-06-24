@@ -1,4 +1,4 @@
-using CuiLib;
+﻿using CuiLib;
 using CuiLib.Commands;
 using CuiLib.Options;
 using CuiLib.Parameters;
@@ -447,7 +447,7 @@ namespace Test.CuiLib.Parsing
         public void ParseParameters_AsPositive_WithMultipleValue()
         {
             var parameters = new ParameterCollection();
-            Parameter<string> param = parameters.CreateAndAddAsArray<string>("param");
+            MultipleValueParameter<string> param = parameters.CreateAndAddAsArray<string>("param");
 
             parser.SkipArguments(4);
             parser.ParseParameters(parameters);
@@ -456,7 +456,7 @@ namespace Test.CuiLib.Parsing
             {
                 Assert.That(parser.EndOfArguments, Is.True);
                 Assert.That(param.ValueAvailable, Is.True);
-                Assert.That(param.Values, Is.EqualTo(new[] { "value1", "value2" }));
+                Assert.That(param.Value, Is.EqualTo(new[] { "value1", "value2" }));
             });
         }
 

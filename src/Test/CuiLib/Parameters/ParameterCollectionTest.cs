@@ -1,4 +1,4 @@
-using CuiLib.Parameters;
+﻿using CuiLib.Parameters;
 using NUnit.Framework;
 using System;
 using System.Collections;
@@ -104,7 +104,7 @@ namespace Test.CuiLib.Parameters
         {
             SingleValueParameter<string> param1 = collection.CreateAndAdd<string>("value1");
             SingleValueParameter<string> param2 = collection.CreateAndAdd<string>("value2");
-            Parameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
+            MultipleValueParameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
 
             Assert.Multiple(() =>
             {
@@ -165,7 +165,7 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void CreateAndAddAsArray_AsPositive()
         {
-            Parameter<string> param = collection.CreateAndAddAsArray<string>("value");
+            MultipleValueParameter<string> param = collection.CreateAndAddAsArray<string>("value");
 
             Assert.Multiple(() =>
             {
@@ -237,7 +237,7 @@ namespace Test.CuiLib.Parameters
         public void SetValues_OnHasArray_WithNotFullValues()
         {
             SingleValueParameter<string> paramSingle = collection.CreateAndAdd<string>("text");
-            Parameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
+            MultipleValueParameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
             collection.SetValues(["hoge"]);
 
             Assert.Multiple(() =>
@@ -251,13 +251,13 @@ namespace Test.CuiLib.Parameters
         public void SetValues_OnHasArray_WithFullValues()
         {
             SingleValueParameter<string> paramSingle = collection.CreateAndAdd<string>("text");
-            Parameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
+            MultipleValueParameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
             collection.SetValues(["hoge", "val1", "val2", "val3"]);
 
             Assert.Multiple(() =>
             {
                 Assert.That(paramSingle.Value, Is.EqualTo("hoge"));
-                Assert.That(paramArray.Values, Is.EqualTo(new[] { "val1", "val2", "val3" }));
+                Assert.That(paramArray.Value, Is.EqualTo(new[] { "val1", "val2", "val3" }));
             });
         }
 
@@ -274,13 +274,13 @@ namespace Test.CuiLib.Parameters
         {
             collection.CreateAndAddAsArray<string>("array");
 
-            Assert.Throws<InvalidOperationException>(() => collection.Add(Parameter.CreateAsArray<string>("other", 0)));
+            Assert.Throws<InvalidOperationException>(() => collection.Add(new MultipleValueParameter<string>("other", 0)));
         }
 
         [Test]
         public void Add_WithConflictSingle_OnHasArray()
         {
-            collection.Add(Parameter.CreateAsArray<string>("array", 1));
+            collection.Add(new MultipleValueParameter<string>("array", 1));
 
             Assert.Throws<ArgumentException>(() => collection.Add(new SingleValueParameter<string>("other", 2)));
         }
@@ -300,7 +300,7 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void Add_AsPositive_WithArray_OnHasArray()
         {
-            collection.Add(Parameter.CreateAsArray<string>("array", 1));
+            collection.Add(new MultipleValueParameter<string>("array", 1));
             collection.Add(new SingleValueParameter<string>("value", 0));
 
             Assert.Multiple(() =>
@@ -313,7 +313,7 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void Add_AsPositive_WithArray_OnHasNoArray()
         {
-            collection.Add(Parameter.CreateAsArray<int>("num", 0));
+            collection.Add(new MultipleValueParameter<int>("num", 0));
 
             Assert.Multiple(() =>
             {
@@ -334,14 +334,14 @@ namespace Test.CuiLib.Parameters
         public void Contains_AsPositive()
         {
             SingleValueParameter<string> paramSingle = collection.CreateAndAdd<string>("value");
-            Parameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
+            MultipleValueParameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
 
             Assert.Multiple(() =>
             {
                 Assert.That(collection.Contains(paramSingle), Is.True);
                 Assert.That(collection.Contains(paramArray), Is.True);
                 Assert.That(collection.Contains(new SingleValueParameter<string>("value", 0)), Is.False);
-                Assert.That(collection.Contains(Parameter.CreateAsArray<string>("array", 1)), Is.False);
+                Assert.That(collection.Contains(new MultipleValueParameter<string>("array", 1)), Is.False);
             });
         }
 
@@ -403,7 +403,7 @@ namespace Test.CuiLib.Parameters
         public void CopyTo_AsPositive()
         {
             SingleValueParameter<string> paramSingle = collection.CreateAndAdd<string>("value");
-            Parameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
+            MultipleValueParameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
 
             var array = new Parameter[3];
             collection.CopyTo(array, 1);
@@ -420,7 +420,7 @@ namespace Test.CuiLib.Parameters
         public void Interface_ICollection_CopyTo()
         {
             SingleValueParameter<string> paramSingle = collection.CreateAndAdd<string>("value");
-            Parameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
+            MultipleValueParameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
 
             var array = new Parameter[3];
             ((ICollection)collection).CopyTo(array, 1);
@@ -437,7 +437,7 @@ namespace Test.CuiLib.Parameters
         public void GetEnumerator()
         {
             SingleValueParameter<string> paramSingle = collection.CreateAndAdd<string>("value");
-            Parameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
+            MultipleValueParameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
 
             using IEnumerator<Parameter> enumerator = collection.GetEnumerator();
 
@@ -457,7 +457,7 @@ namespace Test.CuiLib.Parameters
         public void Interface_IEnumerable_GetEnumerator()
         {
             SingleValueParameter<string> paramSingle = collection.CreateAndAdd<string>("value");
-            Parameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
+            MultipleValueParameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
 
             IEnumerator enumerator = ((IEnumerable)collection).GetEnumerator();
 
@@ -483,12 +483,12 @@ namespace Test.CuiLib.Parameters
         public void Remove_AsPositive()
         {
             SingleValueParameter<string> paramSingle = collection.CreateAndAdd<string>("value");
-            Parameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
+            MultipleValueParameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
 
             Assert.Multiple(() =>
             {
                 Assert.That(collection.Remove(new SingleValueParameter<string>("value", 0)), Is.False);
-                Assert.That(collection.Remove(Parameter.CreateAsArray<string>("array", 1)), Is.False);
+                Assert.That(collection.Remove(new MultipleValueParameter<string>("array", 1)), Is.False);
             });
 
             Assert.Multiple(() =>
@@ -543,7 +543,7 @@ namespace Test.CuiLib.Parameters
         public void TryGetValue()
         {
             SingleValueParameter<string> paramSingle = collection.CreateAndAdd<string>("value");
-            Parameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
+            MultipleValueParameter<string> paramArray = collection.CreateAndAddAsArray<string>("array");
 
             Assert.Multiple(() =>
             {

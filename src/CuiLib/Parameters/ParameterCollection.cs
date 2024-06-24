@@ -102,20 +102,20 @@ namespace CuiLib.Parameters
         }
 
         /// <summary>
-        /// <see cref="Parameter{T}"/>の新しいインスタンスを生成して末尾の空きインデックスに追加します。
+        /// <see cref="MultipleValueParameter{T}"/>の新しいインスタンスを生成して末尾の空きインデックスに追加します。
         /// </summary>
         /// <typeparam name="T">値の型</typeparam>
         /// <param name="name">パラメータ名</param>
-        /// <returns>追加された<see cref="Parameter{T}"/>のインスタンス</returns>
+        /// <returns>追加された<see cref="MultipleValueParameter{T}"/>のインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="name"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         /// <exception cref="ArgumentAnalysisException">配列が既に含まれている</exception>
-        public Parameter<T> CreateAndAddAsArray<T>(string name)
+        public MultipleValueParameter<T> CreateAndAddAsArray<T>(string name)
         {
             if (arrayStart != -1) throw new ArgumentAnalysisException("既に配列が含まれています");
 
             int index = Count == 0 ? 0 : items.Last().Key + 1;
-            Parameter<T> result = Parameter.CreateAsArray<T>(name, index);
+            var result = new MultipleValueParameter<T>(name, index);
             items.Add(index, result);
             arrayStart = index;
             return result;
