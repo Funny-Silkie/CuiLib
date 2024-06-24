@@ -70,7 +70,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void ReplaceAll_WithStringAndIEnumerableAndChar_AsPositiveWithEmptyValue()
         {
-            Assert.That(string.Empty.ReplaceAll(['a', 'b', 'c'], 'R').ToString(), Is.Empty);
+            Assert.That(string.Empty.ReplaceAll(['a', 'b', 'c'], 'R'), Is.Empty);
         }
 
         [Test]
@@ -78,15 +78,15 @@ namespace Test.CuiLib.Extensions
         {
             Assert.Multiple(() =>
             {
-                Assert.That("ABC".ReplaceAll([], 'R').ToString(), Is.EqualTo("ABC"));
-                Assert.That("ABC".ReplaceAll(Enumerable.Empty<char>(), 'R').ToString(), Is.EqualTo("ABC"));
+                Assert.That("ABC".ReplaceAll([], 'R'), Is.EqualTo("ABC"));
+                Assert.That("ABC".ReplaceAll(Enumerable.Empty<char>(), 'R'), Is.EqualTo("ABC"));
             });
         }
 
         [Test]
         public void ReplaceAll_WithStringAndIEnumerableAndChar_AsPositiveWithNotEmpty()
         {
-            Assert.That("abcdABCD".ReplaceAll(['a', 'b', 'c'], 'R').ToString(), Is.EqualTo("RRRdABCD"));
+            Assert.That("abcdABCD".ReplaceAll(['a', 'b', 'c'], 'R'), Is.EqualTo("RRRdABCD"));
         }
 
         [Test]
@@ -140,13 +140,13 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void ReplaceAll_WithStringAndIDictionary_AsPositiveWithEmptyValue()
         {
-            Assert.That(string.Empty.ReplaceAll(new Dictionary<char, char>() { { 'a', 'R' } }).ToString(), Is.Empty);
+            Assert.That(string.Empty.ReplaceAll(new Dictionary<char, char>() { { 'a', 'R' } }), Is.Empty);
         }
 
         [Test]
         public void ReplaceAll_WithStringAndIDictionary_AsPositiveWithEmptyFrom()
         {
-            Assert.That("ABC".ReplaceAll(new Dictionary<char, char>()).ToString(), Is.EqualTo("ABC"));
+            Assert.That("ABC".ReplaceAll(new Dictionary<char, char>()), Is.EqualTo("ABC"));
         }
 
         [Test]
@@ -158,7 +158,7 @@ namespace Test.CuiLib.Extensions
                 { 'b', '2' },
                 { 'c', '3' },
             };
-            Assert.That("abcdABCD".ReplaceAll(replaceMap).ToString(), Is.EqualTo("123dABCD"));
+            Assert.That("abcdABCD".ReplaceAll(replaceMap), Is.EqualTo("123dABCD"));
         }
 
         [Test]

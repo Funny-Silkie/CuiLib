@@ -45,24 +45,25 @@ namespace CuiLib.Extensions
         /// <param name="to">置換後の文字</param>
         /// <returns>置換後の文字列</returns>
         /// <exception cref="ArgumentNullException"><paramref name="value"/>または<paramref name="from"/>がnull</exception>
-        public static ReadOnlySpan<char> ReplaceAll(this string value, IEnumerable<char> from, char to)
+        public static string ReplaceAll(this string value, IEnumerable<char> from, char to)
         {
             ThrowHelpers.ThrowIfNull(value);
 
             if (value.Length == 0)
             {
                 ThrowHelpers.ThrowIfNull(from);
-                return [];
+                return string.Empty;
             }
-            if (from is ICollection<int> c && c.Count == 0) return value.AsSpan();
+            if (from.TryGetNonEnumeratedCount(out int c) && c == 0) return value;
 
             HashSet<char> set = from.ToHashSet();
-            if (set.Count == 0) return value.AsSpan();
+            if (set.Count == 0) return value;
 
-            var array = new char[value.Length];
-            for (int i = 0; i < value.Length; i++) array[i] = set.Contains(value[i]) ? to : value[i];
-
-            return array.AsSpan();
+            return VersionBufferExtensions.CreateString(value.Length, (to, set, value), (span, state) =>
+            {
+                (char to, HashSet<char> set, string value) = state;
+                for (int i = 0; i < span.Length; i++) span[i] = set.Contains(value[i]) ? to : value[i];
+            });
         }
 
         /// <summary>
@@ -98,18 +99,19 @@ namespace CuiLib.Extensions
         /// <param name="map">置換情報を表すマップ</param>
         /// <returns>置換後の文字列</returns>
         /// <exception cref="ArgumentNullException"><paramref name="map"/>がnull</exception>
-        public static ReadOnlySpan<char> ReplaceAll(this string value, IDictionary<char, char> map)
+        public static string ReplaceAll(this string value, IDictionary<char, char> map)
         {
             ThrowHelpers.ThrowIfNull(value);
             ThrowHelpers.ThrowIfNull(map);
 
-            if (value.Length == 0) return [];
-            if (map.Count == 0) return value.AsSpan();
+            if (value.Length == 0) return string.Empty;
+            if (map.Count == 0) return value;
 
-            var array = new char[value.Length];
-            for (int i = 0; i < value.Length; i++) array[i] = map.TryGetValue(value[i], out char to) ? to : value[i];
-
-            return array.AsSpan();
+            return VersionBufferExtensions.CreateString(value.Length, (map, value), (span, state) =>
+            {
+                (IDictionary<char, char> map, string value) = state;
+                for (int i = 0; i < span.Length; i++) span[i] = map.TryGetValue(value[i], out char to) ? to : value[i];
+            });
         }
 
         /// <summary>
