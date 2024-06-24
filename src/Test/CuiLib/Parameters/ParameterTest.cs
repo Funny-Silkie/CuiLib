@@ -22,19 +22,19 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void Ctor_WithNullName()
         {
-            Assert.Throws<ArgumentNullException>(() => new ParameterImpl(null!, 0));
+            Assert.That(() => new ParameterImpl(null!, 0), Throws.ArgumentNullException);
         }
 
         [Test]
         public void Ctor_WithNegativeIndex()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new ParameterImpl("param", -1));
+            Assert.That(() => new ParameterImpl("param", -1), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
         public void Ctor_WithEmptyName()
         {
-            Assert.Throws<ArgumentException>(() => new ParameterImpl(string.Empty, 0));
+            Assert.That(() => new ParameterImpl(string.Empty, 0), Throws.ArgumentException);
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace Test.CuiLib.Parameters
         {
             parameter.SetValue([]);
 
-            Assert.Throws<InvalidOperationException>(() => _ = parameter.RawValue);
+            Assert.That(() => _ = parameter.RawValue, Throws.InvalidOperationException);
         }
 
         [Test]
@@ -100,19 +100,19 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void Create_WithNullName()
         {
-            Assert.Throws<ArgumentNullException>(() => Parameter.Create<int>(null!, 0));
+            Assert.That(() => Parameter.Create<int>(null!, 0), Throws.ArgumentNullException);
         }
 
         [Test]
         public void Create_WithEmptyName()
         {
-            Assert.Throws<ArgumentException>(() => Parameter.Create<int>(string.Empty, 0));
+            Assert.That(() => Parameter.Create<int>(string.Empty, 0), Throws.ArgumentException);
         }
 
         [Test]
         public void Create_WithNegativeIndex()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => Parameter.Create<int>("param", -1));
+            Assert.That(() => Parameter.Create<int>("param", -1), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -131,19 +131,19 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void CreateAsArray_WithNullName()
         {
-            Assert.Throws<ArgumentNullException>(() => Parameter.CreateAsArray<int>(null!, 0));
+            Assert.That(() => Parameter.CreateAsArray<int>(null!, 0), Throws.ArgumentNullException);
         }
 
         [Test]
         public void CreateAsArray_WithEmptyName()
         {
-            Assert.Throws<ArgumentException>(() => Parameter.CreateAsArray<int>(string.Empty, 0));
+            Assert.That(() => Parameter.CreateAsArray<int>(string.Empty, 0), Throws.ArgumentException);
         }
 
         [Test]
         public void CreateAsArray_WithNegativeIndex()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => Parameter.CreateAsArray<int>("params", -1));
+            Assert.That(() => Parameter.CreateAsArray<int>("params", -1), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -234,13 +234,13 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void Ctor_WithNullName()
         {
-            Assert.Throws<ArgumentNullException>(() => new ParameterImpl<string>(null!, 0));
+            Assert.That(() => new ParameterImpl<string>(null!, 0), Throws.ArgumentNullException);
         }
 
         [Test]
         public void Ctor_WithEmptyName()
         {
-            Assert.Throws<ArgumentException>(() => new ParameterImpl<string>(string.Empty, 0));
+            Assert.That(() => new ParameterImpl<string>(string.Empty, 0), Throws.ArgumentException);
         }
 
         [Test]

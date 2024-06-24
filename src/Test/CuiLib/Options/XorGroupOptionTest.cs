@@ -25,13 +25,13 @@ namespace Test.CuiLib.Options
         [Test]
         public void Ctor_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => new XorGroupOption(children: null!));
+            Assert.That(() => new XorGroupOption(children: null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void Ctor_WithEmpty()
         {
-            Assert.Throws<ArgumentException>(() => new XorGroupOption([]));
+            Assert.That(() => new XorGroupOption([]), Throws.ArgumentException);
         }
 
         #endregion Ctors
@@ -167,13 +167,13 @@ namespace Test.CuiLib.Options
         {
             option.ApplyValue("num", "100");
 
-            Assert.Throws<ArgumentAnalysisException>(() => option.ApplyValue("text", "oops!"));
+            Assert.That(() => option.ApplyValue("text", "oops!"), Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
         public void ApplyValue_ToMissedChild()
         {
-            Assert.Throws<ArgumentAnalysisException>(() => option.ApplyValue("unknown", "1"));
+            Assert.That(() => option.ApplyValue("unknown", "1"), Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         #endregion Methods

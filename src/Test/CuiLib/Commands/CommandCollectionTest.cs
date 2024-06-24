@@ -26,13 +26,13 @@ namespace Test.CuiLib.Commands
         [Test]
         public void CtorWithoutArgs()
         {
-            Assert.DoesNotThrow(() => new CommandCollection());
+            Assert.That(() => new CommandCollection(), Throws.Nothing);
         }
 
         [Test]
         public void CtorWithParent()
         {
-            Assert.DoesNotThrow(() => new CommandCollection(new Command("command")));
+            Assert.That(() => new CommandCollection(new Command("command")), Throws.Nothing);
         }
 
         #endregion Ctors
@@ -74,7 +74,7 @@ namespace Test.CuiLib.Commands
         [Test]
         public void Add_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => hasNoParent.Add(null!));
+            Assert.That(() => hasNoParent.Add(null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace Test.CuiLib.Commands
         {
             hasNoParent.Add(new Command("child"));
 
-            Assert.Throws<ArgumentException>(() => hasNoParent.Add(new Command("child")));
+            Assert.That(() => hasNoParent.Add(new Command("child")), Throws.ArgumentException);
         }
 
         [Test]
@@ -154,7 +154,7 @@ namespace Test.CuiLib.Commands
         [Test]
         public void Contains_WithCommandName_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => hasNoParent.Contains(commandName: null!));
+            Assert.That(() => hasNoParent.Contains(commandName: null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -174,7 +174,7 @@ namespace Test.CuiLib.Commands
         [Test]
         public void Contains_WithCommand_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => hasNoParent.Contains(command: null!));
+            Assert.That(() => hasNoParent.Contains(command: null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -300,7 +300,7 @@ namespace Test.CuiLib.Commands
         [Test]
         public void Remove_WithCommandName_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => hasNoParent.Remove(commandName: null!));
+            Assert.That(() => hasNoParent.Remove(commandName: null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -343,7 +343,7 @@ namespace Test.CuiLib.Commands
         [Test]
         public void Remove_WithCommand_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => hasNoParent.Remove(command: null!));
+            Assert.That(() => hasNoParent.Remove(command: null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -386,7 +386,7 @@ namespace Test.CuiLib.Commands
         [Test]
         public void TryGetCommand_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => hasNoParent.TryGetCommand(null!, out _));
+            Assert.That(() => hasNoParent.TryGetCommand(null!, out _), Throws.ArgumentNullException);
         }
 
         [Test]

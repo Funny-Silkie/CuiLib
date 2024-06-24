@@ -32,10 +32,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Ctor_WithNullFullName()
         {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var option = new NamedOptionImpl(fullName: null!);
-            });
+            Assert.That(() => new NamedOptionImpl(fullName: null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -65,10 +62,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Ctor_WithShortNameAndNullFullName()
         {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var option = new NamedOptionImpl('t', null!);
-            });
+            Assert.That(() => new NamedOptionImpl('t', null!), Throws.ArgumentNullException);
         }
 
         #endregion Ctors
@@ -106,13 +100,13 @@ namespace Test.CuiLib.Options
         [Test]
         public void MatchName_WithString_AsNull()
         {
-            Assert.Throws<ArgumentNullException>(() => option.MatchName(null!));
+            Assert.That(() => option.MatchName(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void MatchName_WithString_AsEmpty()
         {
-            Assert.Throws<ArgumentException>(() => option.MatchName(string.Empty));
+            Assert.That(() => option.MatchName(string.Empty), Throws.ArgumentException);
         }
 
         [Test]
@@ -148,9 +142,9 @@ namespace Test.CuiLib.Options
             {
                 Assert.That(option.GetActualOption("n", true), Is.EqualTo(option));
 
-                Assert.Throws<ArgumentException>(() => option.GetActualOption("N", true));
-                Assert.Throws<ArgumentException>(() => option.GetActualOption("-n", true));
-                Assert.Throws<ArgumentException>(() => option.GetActualOption("name", true));
+                Assert.That(() => option.GetActualOption("N", true), Throws.ArgumentException);
+                Assert.That(() => option.GetActualOption("-n", true), Throws.ArgumentException);
+                Assert.That(() => option.GetActualOption("name", true), Throws.ArgumentException);
             });
         }
 
@@ -161,9 +155,9 @@ namespace Test.CuiLib.Options
             {
                 Assert.That(option.GetActualOption("name", false), Is.EqualTo(option));
 
-                Assert.Throws<ArgumentException>(() => option.GetActualOption("123", false));
-                Assert.Throws<ArgumentException>(() => option.GetActualOption("--name", false));
-                Assert.Throws<ArgumentException>(() => option.GetActualOption("n", false));
+                Assert.That(() => option.GetActualOption("123", false), Throws.ArgumentException);
+                Assert.That(() => option.GetActualOption("--name", false), Throws.ArgumentException);
+                Assert.That(() => option.GetActualOption("n", false), Throws.ArgumentException);
             });
         }
 

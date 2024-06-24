@@ -49,10 +49,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Ctor_WithNullFullName()
         {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var option = new MultipleValueOption<int>(fullName: null!);
-            });
+            Assert.That(() => new MultipleValueOption<int>(fullName: null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -71,10 +68,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Ctor_WithShortNameAndValidFullName()
         {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var option = new MultipleValueOption<int>('m', null!);
-            });
+            Assert.That(() => new MultipleValueOption<int>('m', null!), Throws.ArgumentNullException);
         }
 
         #endregion Ctors
@@ -135,7 +129,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Checker_Set_WithNullValue()
         {
-            Assert.Throws<ArgumentNullException>(() => option.Checker = null!);
+            Assert.That(() => option.Checker = null!, Throws.ArgumentNullException);
         }
 
         [Test]
@@ -152,7 +146,7 @@ namespace Test.CuiLib.Options
             option.DefaultValue = [100];
             option.Required = true;
 
-            Assert.Throws<ArgumentAnalysisException>(() => _ = option.Value);
+            Assert.That(() => _ = option.Value, Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
@@ -161,7 +155,7 @@ namespace Test.CuiLib.Options
             option.ApplyValue("multi", "oops!");
             option.ApplyValue("multi", "100");
 
-            Assert.Throws<ArgumentAnalysisException>(() => _ = option.Value);
+            Assert.That(() => _ = option.Value, Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
@@ -171,7 +165,7 @@ namespace Test.CuiLib.Options
             option.ApplyValue("multi", "-100");
             option.ApplyValue("multi", "100");
 
-            Assert.Throws<ArgumentAnalysisException>(() => _ = option.Value);
+            Assert.That(() => _ = option.Value, Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]

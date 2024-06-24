@@ -44,10 +44,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Ctor_WithNullFullName()
         {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var option = new FlagOption(fullName: null!);
-            });
+            Assert.That(() => new FlagOption(fullName: null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -65,10 +62,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Ctor_WithShortNameAndValidFullName()
         {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var option = new FlagOption('f', null!);
-            });
+            Assert.That(() => new FlagOption('f', null!), Throws.ArgumentNullException);
         }
 
         #endregion Ctors
@@ -110,8 +104,8 @@ namespace Test.CuiLib.Options
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<NotSupportedException>(() => option.Required = true);
-                Assert.Throws<NotSupportedException>(() => option.Required = false);
+                Assert.That(() => option.Required = true, Throws.TypeOf<NotSupportedException>());
+                Assert.That(() => option.Required = false, Throws.TypeOf<NotSupportedException>());
             });
         }
 

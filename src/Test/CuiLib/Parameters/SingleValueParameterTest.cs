@@ -108,7 +108,7 @@ namespace Test.CuiLib.Parameters
         {
             parameter.SetValue("oops!");
 
-            Assert.Throws<ArgumentAnalysisException>(() => _ = parameter.Value);
+            Assert.That(() => _ = parameter.Value, Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace Test.CuiLib.Parameters
             parameter.Checker = ValueChecker.GreaterThan(0);
             parameter.SetValue("-100");
 
-            Assert.Throws<ArgumentAnalysisException>(() => _ = parameter.Value);
+            Assert.That(() => _ = parameter.Value, Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]

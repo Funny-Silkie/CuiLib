@@ -1,4 +1,4 @@
-﻿using CuiLib.Internal;
+﻿using CuiLib.Internal.Versions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

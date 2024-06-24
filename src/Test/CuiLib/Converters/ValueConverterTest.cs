@@ -17,8 +17,8 @@ namespace Test.CuiLib.Converters
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentNullException>(() => ValueConverter.GetDefault<int>().Combine<string, int, long>(second: null!));
-                Assert.Throws<ArgumentNullException>(() => ValueConverter.Combine<object, string, int>(null!, ValueConverter.GetDefault<int>()));
+                Assert.That(() => ValueConverter.GetDefault<int>().Combine<string, int, long>(second: null!), Throws.ArgumentNullException);
+                Assert.That(() => ValueConverter.Combine<object, string, int>(null!, ValueConverter.GetDefault<int>()), Throws.ArgumentNullException);
             });
         }
 
@@ -33,8 +33,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("0"), Is.EqualTo(0));
                 Assert.That(converter.Convert("-100"), Is.EqualTo(-200));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<OverflowException>(() => converter.Convert(int.MaxValue.ToString()));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert(int.MaxValue.ToString()), Throws.TypeOf<OverflowException>());
             });
         }
 
@@ -43,8 +43,8 @@ namespace Test.CuiLib.Converters
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentNullException>(() => ValueConverter.GetDefault<int>().Combine<string, int, long>(secondConverter: null!));
-                Assert.Throws<ArgumentNullException>(() => ValueConverter.Combine<object, string, int>(null!, int.Parse));
+                Assert.That(() => ValueConverter.GetDefault<int>().Combine<string, int, long>(secondConverter: null!), Throws.ArgumentNullException);
+                Assert.That(() => ValueConverter.Combine<object, string, int>(null!, int.Parse), Throws.ArgumentNullException);
             });
         }
 
@@ -59,15 +59,15 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("0"), Is.EqualTo(0));
                 Assert.That(converter.Convert("-100"), Is.EqualTo(-200));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<OverflowException>(() => converter.Convert(int.MaxValue.ToString()));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert(int.MaxValue.ToString()), Throws.TypeOf<OverflowException>());
             });
         }
 
         [Test]
         public void FromDelegate_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueConverter.FromDelegate<string, int>(null!));
+            Assert.That(() => ValueConverter.FromDelegate<string, int>(null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("123"), Is.EqualTo(123));
                 Assert.That(converter.Convert("-8000"), Is.EqualTo(-8000));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
             });
         }
 
@@ -125,8 +125,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(sbyte.MaxValue.ToString()), Is.EqualTo(sbyte.MaxValue));
                 Assert.That(converter.Convert(sbyte.MinValue.ToString()), Is.EqualTo(sbyte.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -143,8 +143,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(short.MaxValue.ToString()), Is.EqualTo(short.MaxValue));
                 Assert.That(converter.Convert(short.MinValue.ToString()), Is.EqualTo(short.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -161,8 +161,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(int.MaxValue.ToString()), Is.EqualTo(int.MaxValue));
                 Assert.That(converter.Convert(int.MinValue.ToString()), Is.EqualTo(int.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -179,8 +179,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(long.MaxValue.ToString()), Is.EqualTo(long.MaxValue));
                 Assert.That(converter.Convert(long.MinValue.ToString()), Is.EqualTo(long.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -199,8 +199,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(Int128.MaxValue.ToString()), Is.EqualTo(Int128.MaxValue));
                 Assert.That(converter.Convert(Int128.MinValue.ToString()), Is.EqualTo(Int128.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -218,8 +218,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(byte.MaxValue.ToString()), Is.EqualTo(byte.MaxValue));
                 Assert.That(converter.Convert(byte.MinValue.ToString()), Is.EqualTo(byte.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -235,8 +235,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(ushort.MaxValue.ToString()), Is.EqualTo(ushort.MaxValue));
                 Assert.That(converter.Convert(ushort.MinValue.ToString()), Is.EqualTo(ushort.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -252,8 +252,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(uint.MaxValue.ToString()), Is.EqualTo(uint.MaxValue));
                 Assert.That(converter.Convert(uint.MinValue.ToString()), Is.EqualTo(uint.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -269,8 +269,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(ulong.MaxValue.ToString()), Is.EqualTo(ulong.MaxValue));
                 Assert.That(converter.Convert(ulong.MinValue.ToString()), Is.EqualTo(ulong.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -288,8 +288,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(UInt128.MaxValue.ToString()), Is.EqualTo(UInt128.MaxValue));
                 Assert.That(converter.Convert(UInt128.MinValue.ToString()), Is.EqualTo(UInt128.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -311,8 +311,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("1.234E+30"), Is.EqualTo(1.234E+30f));
                 Assert.That(converter.Convert("-1.234E+30"), Is.EqualTo(-1.234E+30f));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -332,8 +332,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("1.23456789E+300"), Is.EqualTo(1.23456789E+300));
                 Assert.That(converter.Convert("-1.23456789E+300"), Is.EqualTo(-1.23456789E+300));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -350,8 +350,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(decimal.MaxValue.ToString()), Is.EqualTo(decimal.MaxValue));
                 Assert.That(converter.Convert(decimal.MinValue.ToString()), Is.EqualTo(decimal.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -367,8 +367,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(char.MaxValue.ToString()), Is.EqualTo(char.MaxValue));
                 Assert.That(converter.Convert(char.MinValue.ToString()), Is.EqualTo(char.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -383,21 +383,21 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("9999-12-31 23:59:59.9999999"), Is.EqualTo(DateTime.MaxValue));
                 Assert.That(converter.Convert("0001-01-01 00:00:00"), Is.EqualTo(DateTime.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
         [Test]
         public void StringToDateTime_WithNullFormat()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueConverter.StringToDateTime(null!));
+            Assert.That(() => ValueConverter.StringToDateTime(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void StringToDateTime_WithEmptyFormat()
         {
-            Assert.Throws<ArgumentException>(() => ValueConverter.StringToDateTime(string.Empty));
+            Assert.That(() => ValueConverter.StringToDateTime(string.Empty), Throws.ArgumentException);
         }
 
         [Test]
@@ -420,7 +420,7 @@ namespace Test.CuiLib.Converters
 #endif
             });
 
-            Assert.Throws<FormatException>(() => converter.Convert("!!!"));
+            Assert.That(() => converter.Convert("!!!"), Throws.TypeOf<FormatException>());
         }
 
 #if NET6_0_OR_GREATER
@@ -436,21 +436,21 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("9999-12-31"), Is.EqualTo(DateOnly.MaxValue));
                 Assert.That(converter.Convert("0001-01-01"), Is.EqualTo(DateOnly.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
         [Test]
         public void StringToDateOnly_WithNullFormat()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueConverter.StringToDateOnly(null!));
+            Assert.That(() => ValueConverter.StringToDateOnly(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void StringToDateOnly_WithEmptyFormat()
         {
-            Assert.Throws<ArgumentException>(() => ValueConverter.StringToDateOnly(string.Empty));
+            Assert.That(() => ValueConverter.StringToDateOnly(string.Empty), Throws.ArgumentException);
         }
 
         [Test]
@@ -466,7 +466,7 @@ namespace Test.CuiLib.Converters
                 Assert.That(value.Day, Is.EqualTo(1));
             });
 
-            Assert.Throws<FormatException>(() => converter.Convert("!!!"));
+            Assert.That(() => converter.Convert("!!!"), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -480,21 +480,21 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("23:59:59.9999999"), Is.EqualTo(TimeOnly.MaxValue));
                 Assert.That(converter.Convert("00:00:00"), Is.EqualTo(TimeOnly.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
         [Test]
         public void StringToTimeOnly_WithNullFormat()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueConverter.StringToTimeOnly(null!));
+            Assert.That(() => ValueConverter.StringToTimeOnly(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void StringToTimeOnly_WithEmptyFormat()
         {
-            Assert.Throws<ArgumentException>(() => ValueConverter.StringToTimeOnly(string.Empty));
+            Assert.That(() => ValueConverter.StringToTimeOnly(string.Empty), Throws.ArgumentException);
         }
 
         [Test]
@@ -514,7 +514,7 @@ namespace Test.CuiLib.Converters
 #endif
             });
 
-            Assert.Throws<FormatException>(() => converter.Convert("!!!"));
+            Assert.That(() => converter.Convert("!!!"), Throws.TypeOf<FormatException>());
         }
 
 #endif
@@ -530,21 +530,21 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("10675199.02:48:05.4775807"), Is.EqualTo(TimeSpan.MaxValue));
                 Assert.That(converter.Convert("-10675199.02:48:05.4775808"), Is.EqualTo(TimeSpan.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
         [Test]
         public void StringToTimeSpan_WithNullFormat()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueConverter.StringToTimeSpan(null!));
+            Assert.That(() => ValueConverter.StringToTimeSpan(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void StringToTimeSpan_WithEmptyFormat()
         {
-            Assert.Throws<ArgumentException>(() => ValueConverter.StringToTimeSpan(string.Empty));
+            Assert.That(() => ValueConverter.StringToTimeSpan(string.Empty), Throws.ArgumentException);
         }
 
         [Test]
@@ -565,7 +565,7 @@ namespace Test.CuiLib.Converters
 #endif
             });
 
-            Assert.Throws<FormatException>(() => converter.Convert("!!!"));
+            Assert.That(() => converter.Convert("!!!"), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -579,21 +579,21 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("9999-12-31 23:59:59.9999999+00:00"), Is.EqualTo(DateTimeOffset.MaxValue));
                 Assert.That(converter.Convert("0001-01-01 00:00:00+00:00"), Is.EqualTo(DateTimeOffset.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
         [Test]
         public void StringToDateTimeOffset_WithNullFormat()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueConverter.StringToDateTimeOffset(null!));
+            Assert.That(() => ValueConverter.StringToDateTimeOffset(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void StringToDateTimeOffset_WithEmptyFormat()
         {
-            Assert.Throws<ArgumentException>(() => ValueConverter.StringToDateTimeOffset(string.Empty));
+            Assert.That(() => ValueConverter.StringToDateTimeOffset(string.Empty), Throws.ArgumentException);
         }
 
         [Test]
@@ -616,7 +616,7 @@ namespace Test.CuiLib.Converters
 #endif
             });
 
-            Assert.Throws<FormatException>(() => converter.Convert("!!!"));
+            Assert.That(() => converter.Convert("!!!"), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -629,10 +629,10 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("None"), Is.EqualTo(OptionType.None));
                 Assert.That(converter.Convert("Flag"), Is.EqualTo(OptionType.Flag));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<ArgumentException>(() => converter.Convert("none"));
-                Assert.Throws<ArgumentException>(() => converter.Convert("fLAG"));
-                Assert.Throws<ArgumentException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("none"), Throws.ArgumentException);
+                Assert.That(() => converter.Convert("fLAG"), Throws.ArgumentException);
+                Assert.That(() => converter.Convert("!!"), Throws.ArgumentException);
             });
         }
 
@@ -646,10 +646,10 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("None"), Is.EqualTo(OptionType.None));
                 Assert.That(converter.Convert("Flag"), Is.EqualTo(OptionType.Flag));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<ArgumentException>(() => converter.Convert("none"));
-                Assert.Throws<ArgumentException>(() => converter.Convert("fLAG"));
-                Assert.Throws<ArgumentException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("none"), Throws.ArgumentException);
+                Assert.That(() => converter.Convert("fLAG"), Throws.ArgumentException);
+                Assert.That(() => converter.Convert("!!"), Throws.ArgumentException);
             });
         }
 
@@ -665,8 +665,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("Flag"), Is.EqualTo(OptionType.Flag));
                 Assert.That(converter.Convert("fLAG"), Is.EqualTo(OptionType.Flag));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<ArgumentException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.ArgumentException);
             });
         }
 
@@ -679,8 +679,8 @@ namespace Test.CuiLib.Converters
             {
                 Assert.That(converter.Convert("test.txt").Name, Is.EqualTo("test.txt"));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
             });
         }
 
@@ -709,8 +709,8 @@ namespace Test.CuiLib.Converters
             {
                 Assert.That(converter.Convert("folder").Name, Is.EqualTo("folder"));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
             });
         }
 
@@ -751,8 +751,8 @@ namespace Test.CuiLib.Converters
 #pragma warning restore NUnit2046 // Use CollectionConstraint for better assertion messages in case of failure
                     });
 
-                    Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
+                    Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                    Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
                 });
             }
             finally
@@ -782,8 +782,8 @@ namespace Test.CuiLib.Converters
 #pragma warning restore NUnit2046 // Use CollectionConstraint for better assertion messages in case of failure
                     });
 
-                    Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
+                    Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                    Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
                 });
             }
             finally
@@ -814,8 +814,8 @@ namespace Test.CuiLib.Converters
 #pragma warning restore NUnit2046 // Use CollectionConstraint for better assertion messages in case of failure
                     });
 
-                    Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
+                    Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                    Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
                 });
             }
             finally
@@ -841,9 +841,9 @@ namespace Test.CuiLib.Converters
                         Assert.That(reader.CurrentEncoding, Is.EqualTo(IOHelpers.UTF8N));
                     }
 
-                    Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
-                    Assert.Throws<FileNotFoundException>(() => converter.Convert(FileUtilHelpers.GetNoExistingFile().Name));
+                    Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                    Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
+                    Assert.That(() => converter.Convert(FileUtilHelpers.GetNoExistingFile().Name), Throws.TypeOf<FileNotFoundException>());
                 });
             }
             finally
@@ -870,9 +870,9 @@ namespace Test.CuiLib.Converters
                         Assert.That(reader.CurrentEncoding, Is.EqualTo(encoding));
                     }
 
-                    Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
-                    Assert.Throws<FileNotFoundException>(() => converter.Convert(FileUtilHelpers.GetNoExistingFile().Name));
+                    Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                    Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
+                    Assert.That(() => converter.Convert(FileUtilHelpers.GetNoExistingFile().Name), Throws.TypeOf<FileNotFoundException>());
                 });
             }
             finally
@@ -904,7 +904,7 @@ namespace Test.CuiLib.Converters
                     Assert.That(converter.Convert(null!), Is.EqualTo(Console.Out));
                     Assert.That(converter.Convert("-"), Is.EqualTo(Console.Out));
 
-                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
+                    Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
                 });
             }
             finally
@@ -937,7 +937,7 @@ namespace Test.CuiLib.Converters
                     Assert.That(converter.Convert(null!), Is.EqualTo(Console.Out));
                     Assert.That(converter.Convert("-"), Is.EqualTo(Console.Out));
 
-                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
+                    Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
                 });
             }
             finally
@@ -966,8 +966,8 @@ namespace Test.CuiLib.Converters
                     Assert.That(converter.Convert(null!), Is.EqualTo(Console.In));
                     Assert.That(converter.Convert("-"), Is.EqualTo(Console.In));
 
-                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
-                    Assert.Throws<FileNotFoundException>(() => converter.Convert(FileUtilHelpers.GetNoExistingFile().Name));
+                    Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
+                    Assert.That(() => converter.Convert(FileUtilHelpers.GetNoExistingFile().Name), Throws.TypeOf<FileNotFoundException>());
                 });
             }
             finally
@@ -997,8 +997,8 @@ namespace Test.CuiLib.Converters
                     Assert.That(converter.Convert(null!), Is.EqualTo(Console.In));
                     Assert.That(converter.Convert("-"), Is.EqualTo(Console.In));
 
-                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
-                    Assert.Throws<FileNotFoundException>(() => converter.Convert(FileUtilHelpers.GetNoExistingFile().Name));
+                    Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
+                    Assert.That(() => converter.Convert(FileUtilHelpers.GetNoExistingFile().Name), Throws.TypeOf<FileNotFoundException>());
                 });
             }
             finally
@@ -1010,25 +1010,25 @@ namespace Test.CuiLib.Converters
         [Test]
         public void SplitToArray_NonGeneric_WithNullElementType()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueConverter.SplitToArray(null!, ",", ValueConverter.GetDefault<string>()));
+            Assert.That(() => ValueConverter.SplitToArray(null!, ",", ValueConverter.GetDefault<string>()), Throws.ArgumentNullException);
         }
 
         [Test]
         public void SplitToArray_NonGeneric_WithNullSeparator()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueConverter.SplitToArray(typeof(string), null!, ValueConverter.GetDefault<string>()));
+            Assert.That(() => ValueConverter.SplitToArray(typeof(string), null!, ValueConverter.GetDefault<string>()), Throws.ArgumentNullException);
         }
 
         [Test]
         public void SplitToArray_NonGeneric_WithEmptySeparator()
         {
-            Assert.Throws<ArgumentException>(() => ValueConverter.SplitToArray(typeof(string), string.Empty, ValueConverter.GetDefault<string>()));
+            Assert.That(() => ValueConverter.SplitToArray(typeof(string), string.Empty, ValueConverter.GetDefault<string>()), Throws.ArgumentException);
         }
 
         [Test]
         public void SplitToArray_NonGeneric_WithNullConverter()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueConverter.SplitToArray(typeof(string), ",", null!));
+            Assert.That(() => ValueConverter.SplitToArray(typeof(string), ",", null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -1053,26 +1053,26 @@ namespace Test.CuiLib.Converters
                     Assert.That(((FileInfo)array.GetValue(1)!).Name, Is.EqualTo("b.txt"));
                 });
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
             });
         }
 
         [Test]
         public void SplitToArray_Generic_WithNullSeperator()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueConverter.SplitToArray(null!, ValueConverter.GetDefault<int>()));
+            Assert.That(() => ValueConverter.SplitToArray(null!, ValueConverter.GetDefault<int>()), Throws.ArgumentNullException);
         }
 
         [Test]
         public void SplitToArray_Generic_WithEmptySeperator()
         {
-            Assert.Throws<ArgumentException>(() => ValueConverter.SplitToArray(string.Empty, ValueConverter.GetDefault<int>()));
+            Assert.That(() => ValueConverter.SplitToArray(string.Empty, ValueConverter.GetDefault<int>()), Throws.ArgumentException);
         }
 
         [Test]
         public void SplitToArray_Generic_WithNullConverter()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueConverter.SplitToArray<int>(",", null!));
+            Assert.That(() => ValueConverter.SplitToArray<int>(",", null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -1086,7 +1086,7 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("1"), Is.EqualTo(new[] { 1 }));
                 Assert.That(converter.Convert("1,-2,3"), Is.EqualTo(new[] { 1, -2, 3 }));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
             });
         }
 
@@ -1158,8 +1158,8 @@ namespace Test.CuiLib.Converters
                     }
                     Assert.That(converter.Convert(null!), Is.EqualTo(Console.In));
 
-                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
-                    Assert.Throws<FileNotFoundException>(() => converter.Convert(FileUtilHelpers.GetNoExistingFile().Name));
+                    Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
+                    Assert.That(() => converter.Convert(FileUtilHelpers.GetNoExistingFile().Name), Throws.TypeOf<FileNotFoundException>());
                 });
             }
             finally
@@ -1186,9 +1186,9 @@ namespace Test.CuiLib.Converters
                         Assert.That(reader.CurrentEncoding, Is.EqualTo(IOHelpers.UTF8N));
                     }
 
-                    Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
-                    Assert.Throws<FileNotFoundException>(() => converter.Convert(FileUtilHelpers.GetNoExistingFile().Name));
+                    Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                    Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
+                    Assert.That(() => converter.Convert(FileUtilHelpers.GetNoExistingFile().Name), Throws.TypeOf<FileNotFoundException>());
                 });
             }
             finally
@@ -1219,7 +1219,7 @@ namespace Test.CuiLib.Converters
 
                     Assert.That(converter.Convert(null!), Is.EqualTo(Console.Out));
 
-                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
+                    Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
                 });
             }
             finally
@@ -1247,8 +1247,8 @@ namespace Test.CuiLib.Converters
                         Assert.That(target.Exists, Is.True);
                     });
 
-                    Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                    Assert.Throws<ArgumentException>(() => converter.Convert(string.Empty));
+                    Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                    Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
                 });
             }
             finally
@@ -1270,8 +1270,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(sbyte.MaxValue.ToString()), Is.EqualTo(sbyte.MaxValue));
                 Assert.That(converter.Convert(sbyte.MinValue.ToString()), Is.EqualTo(sbyte.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1288,8 +1288,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(short.MaxValue.ToString()), Is.EqualTo(short.MaxValue));
                 Assert.That(converter.Convert(short.MinValue.ToString()), Is.EqualTo(short.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1306,8 +1306,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(int.MaxValue.ToString()), Is.EqualTo(int.MaxValue));
                 Assert.That(converter.Convert(int.MinValue.ToString()), Is.EqualTo(int.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1324,8 +1324,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(long.MaxValue.ToString()), Is.EqualTo(long.MaxValue));
                 Assert.That(converter.Convert(long.MinValue.ToString()), Is.EqualTo(long.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1344,8 +1344,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(Int128.MaxValue.ToString()), Is.EqualTo(Int128.MaxValue));
                 Assert.That(converter.Convert(Int128.MinValue.ToString()), Is.EqualTo(Int128.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1363,8 +1363,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(byte.MaxValue.ToString()), Is.EqualTo(byte.MaxValue));
                 Assert.That(converter.Convert(byte.MinValue.ToString()), Is.EqualTo(byte.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1380,8 +1380,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(ushort.MaxValue.ToString()), Is.EqualTo(ushort.MaxValue));
                 Assert.That(converter.Convert(ushort.MinValue.ToString()), Is.EqualTo(ushort.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1397,8 +1397,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(uint.MaxValue.ToString()), Is.EqualTo(uint.MaxValue));
                 Assert.That(converter.Convert(uint.MinValue.ToString()), Is.EqualTo(uint.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1414,8 +1414,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(ulong.MaxValue.ToString()), Is.EqualTo(ulong.MaxValue));
                 Assert.That(converter.Convert(ulong.MinValue.ToString()), Is.EqualTo(ulong.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1433,8 +1433,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(UInt128.MaxValue.ToString()), Is.EqualTo(UInt128.MaxValue));
                 Assert.That(converter.Convert(UInt128.MinValue.ToString()), Is.EqualTo(UInt128.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1456,8 +1456,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("1.234E+30"), Is.EqualTo(1.234E+30f));
                 Assert.That(converter.Convert("-1.234E+30"), Is.EqualTo(-1.234E+30f));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1477,8 +1477,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("1.23456789E+300"), Is.EqualTo(1.23456789E+300));
                 Assert.That(converter.Convert("-1.23456789E+300"), Is.EqualTo(-1.23456789E+300));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1495,8 +1495,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(decimal.MaxValue.ToString()), Is.EqualTo(decimal.MaxValue));
                 Assert.That(converter.Convert(decimal.MinValue.ToString()), Is.EqualTo(decimal.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1512,8 +1512,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert(char.MaxValue.ToString()), Is.EqualTo(char.MaxValue));
                 Assert.That(converter.Convert(char.MinValue.ToString()), Is.EqualTo(char.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1528,8 +1528,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("9999-12-31 23:59:59.9999999"), Is.EqualTo(DateTime.MaxValue));
                 Assert.That(converter.Convert("0001-01-01 00:00:00"), Is.EqualTo(DateTime.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1546,8 +1546,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("9999-12-31"), Is.EqualTo(DateOnly.MaxValue));
                 Assert.That(converter.Convert("0001-01-01"), Is.EqualTo(DateOnly.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1562,8 +1562,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("23:59:59.9999999"), Is.EqualTo(TimeOnly.MaxValue));
                 Assert.That(converter.Convert("00:00:00"), Is.EqualTo(TimeOnly.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1580,8 +1580,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("10675199.02:48:05.4775807"), Is.EqualTo(TimeSpan.MaxValue));
                 Assert.That(converter.Convert("-10675199.02:48:05.4775808"), Is.EqualTo(TimeSpan.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1596,8 +1596,8 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("9999-12-31 23:59:59.9999999+00:00"), Is.EqualTo(DateTimeOffset.MaxValue));
                 Assert.That(converter.Convert("0001-01-01 00:00:00+00:00"), Is.EqualTo(DateTimeOffset.MinValue));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<FormatException>(() => converter.Convert("!!"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
             });
         }
 
@@ -1611,10 +1611,10 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("None"), Is.EqualTo(OptionType.None));
                 Assert.That(converter.Convert("Flag"), Is.EqualTo(OptionType.Flag));
 
-                Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
-                Assert.Throws<ArgumentException>(() => converter.Convert("!!"));
-                Assert.Throws<ArgumentException>(() => converter.Convert("none"));
-                Assert.Throws<ArgumentException>(() => converter.Convert("flag"));
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.ArgumentException);
+                Assert.That(() => converter.Convert("none"), Throws.ArgumentException);
+                Assert.That(() => converter.Convert("flag"), Throws.ArgumentException);
             });
         }
 
@@ -1623,10 +1623,10 @@ namespace Test.CuiLib.Converters
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<NotSupportedException>(() => ValueConverter.GetDefault<object>());
-                Assert.Throws<NotSupportedException>(() => ValueConverter.GetDefault<Enum>());
-                Assert.Throws<NotSupportedException>(() => ValueConverter.GetDefault<ValueType>());
-                Assert.Throws<NotSupportedException>(() => ValueConverter.GetDefault<ValueConverterTest>());
+                Assert.That(() => ValueConverter.GetDefault<object>(), Throws.TypeOf<NotSupportedException>());
+                Assert.That(() => ValueConverter.GetDefault<Enum>(), Throws.TypeOf<NotSupportedException>());
+                Assert.That(() => ValueConverter.GetDefault<ValueType>(), Throws.TypeOf<NotSupportedException>());
+                Assert.That(() => ValueConverter.GetDefault<ValueConverterTest>(), Throws.TypeOf<NotSupportedException>());
             });
         }
 

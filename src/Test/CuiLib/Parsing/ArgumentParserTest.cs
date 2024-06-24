@@ -23,19 +23,19 @@ namespace Test.CuiLib.Parsing
         [Test]
         public void Ctor_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => new ArgumentParser(null!));
+            Assert.That(() => new ArgumentParser(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void Ctor_WithNullContainingArray()
         {
-            Assert.Throws<ArgumentException>(() => new ArgumentParser([null!]));
+            Assert.That(() => new ArgumentParser([null!]), Throws.ArgumentException);
         }
 
         [Test]
         public void Ctor_AsPositive()
         {
-            Assert.DoesNotThrow(() => new ArgumentParser(["hoge"]));
+            Assert.That(() => new ArgumentParser(["hoge"]), Throws.Nothing);
         }
 
         #endregion Ctors
@@ -78,7 +78,7 @@ namespace Test.CuiLib.Parsing
         [Test]
         public void SkipArguments_WithNegative()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => parser.SkipArguments(-1));
+            Assert.That(() => parser.SkipArguments(-1), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace Test.CuiLib.Parsing
         [Test]
         public void GetTargetCommand_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => parser.GetTargetCommand(null!));
+            Assert.That(() => parser.GetTargetCommand(null!), Throws.ArgumentNullException);
         }
 
         [Test]

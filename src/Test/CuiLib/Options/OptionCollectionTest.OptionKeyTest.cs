@@ -24,13 +24,13 @@ namespace Test.CuiLib.Options
             [Test]
             public void Ctor_WithEmpty()
             {
-                Assert.Throws<ArgumentException>(() => new OptionCollection.OptionKey([]));
+                Assert.That(() => new OptionCollection.OptionKey([]), Throws.ArgumentException);
             }
 
             [Test]
             public void Ctor_AsPositive()
             {
-                Assert.DoesNotThrow(() => new OptionCollection.OptionKey(["s", "full"]));
+                Assert.That(() => new OptionCollection.OptionKey(["s", "full"]), Throws.Nothing);
             }
 
             #endregion Ctors

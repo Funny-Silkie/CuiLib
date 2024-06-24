@@ -14,15 +14,15 @@ namespace Test.CuiLib.Checkers
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentNullException>(() => new AndValueChecker<int>(ValueChecker.AlwaysValid<int>(), null!));
-                Assert.Throws<ArgumentNullException>(() => new AndValueChecker<int>(null!, ValueChecker.AlwaysValid<int>()));
+                Assert.That(() => new AndValueChecker<int>(ValueChecker.AlwaysValid<int>(), null!), Throws.ArgumentNullException);
+                Assert.That(() => new AndValueChecker<int>(null!, ValueChecker.AlwaysValid<int>()), Throws.ArgumentNullException);
             });
         }
 
         [Test]
         public void Ctor_WithTwoCheckers_AsPositive()
         {
-            Assert.DoesNotThrow(() => new AndValueChecker<int>(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>()));
+            Assert.That(() => new AndValueChecker<int>(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>()), Throws.Nothing);
         }
 
         [Test]
@@ -33,15 +33,15 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.DoesNotThrow(() => new AndValueChecker<int>(single, nested));
-                Assert.DoesNotThrow(() => new AndValueChecker<int>(nested, single));
+                Assert.That(() => new AndValueChecker<int>(single, nested), Throws.Nothing);
+                Assert.That(() => new AndValueChecker<int>(nested, single), Throws.Nothing);
             });
         }
 
         [Test]
         public void Ctor_WithMultipleCheckers_AsNull()
         {
-            Assert.Throws<ArgumentNullException>(() => new AndValueChecker<int>(source: null!));
+            Assert.That(() => new AndValueChecker<int>(source: null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -49,28 +49,28 @@ namespace Test.CuiLib.Checkers
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentException>(() => new AndValueChecker<int>([null!, ValueChecker.AlwaysValid<int>()]));
-                Assert.Throws<ArgumentException>(() => new AndValueChecker<int>([ValueChecker.AlwaysValid<int>(), null!]));
-                Assert.Throws<ArgumentException>(() => new AndValueChecker<int>(null!, ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>()));
+                Assert.That(() => new AndValueChecker<int>([null!, ValueChecker.AlwaysValid<int>()]), Throws.ArgumentException);
+                Assert.That(() => new AndValueChecker<int>([ValueChecker.AlwaysValid<int>(), null!]), Throws.ArgumentException);
+                Assert.That(() => new AndValueChecker<int>(null!, ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>()), Throws.ArgumentException);
             });
         }
 
         [Test]
         public void Ctor_WithMultipleCheckers_AsEmpty()
         {
-            Assert.DoesNotThrow(() => new AndValueChecker<int>());
+            Assert.That(() => new AndValueChecker<int>(), Throws.Nothing);
         }
 
         [Test]
         public void Ctor_WithMultipleCheckers_AsPositive_WithTwoCheckers()
         {
-            Assert.DoesNotThrow(() => new AndValueChecker<int>([ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>()]));
+            Assert.That(() => new AndValueChecker<int>([ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>()]), Throws.Nothing);
         }
 
         [Test]
         public void Ctor_WithMultipleCheckers_AsPositive()
         {
-            Assert.DoesNotThrow(() => new AndValueChecker<int>(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>()));
+            Assert.That(() => new AndValueChecker<int>(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>()), Throws.Nothing);
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace Test.CuiLib.Checkers
             IValueChecker<int> single = ValueChecker.AlwaysValid<int>();
             IValueChecker<int> nested = ValueChecker.And(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>());
 
-            Assert.DoesNotThrow(() => new AndValueChecker<int>(single, single, nested));
+            Assert.That(() => new AndValueChecker<int>(single, single, nested), Throws.Nothing);
         }
 
         #endregion Ctors

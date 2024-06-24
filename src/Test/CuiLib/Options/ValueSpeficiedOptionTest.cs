@@ -32,10 +32,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Ctor_WithNullFullName()
         {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var option = new ValueSpeficiedOptionImpl(fullName: null!);
-            });
+            Assert.That(() => new ValueSpeficiedOptionImpl(fullName: null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -65,10 +62,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Ctor_WithShortNameAndNullFullName()
         {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var option = new ValueSpeficiedOptionImpl('t', null!);
-            });
+            Assert.That(() => new ValueSpeficiedOptionImpl('t', null!), Throws.ArgumentNullException);
         }
 
         #endregion Ctors

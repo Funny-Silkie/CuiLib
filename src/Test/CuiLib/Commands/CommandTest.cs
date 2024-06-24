@@ -24,13 +24,13 @@ namespace Test.CuiLib.Commands
         [Test]
         public void Ctor_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => new Command(null!));
+            Assert.That(() => new Command(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void Ctor_AsPositive()
         {
-            Assert.DoesNotThrow(() => new Command("cmd"));
+            Assert.That(() => new Command("cmd"), Throws.Nothing);
         }
 
         #endregion Ctors
@@ -80,13 +80,13 @@ namespace Test.CuiLib.Commands
         [Test]
         public void InvokeFromCollection_WithNullArgs()
         {
-            Assert.Throws<ArgumentNullException>(() => Command.InvokeFromCollection(null!, []));
+            Assert.That(() => Command.InvokeFromCollection(null!, []), Throws.ArgumentNullException);
         }
 
         [Test]
         public void InvokeFromCollection_WithNullCommands()
         {
-            Assert.Throws<ArgumentNullException>(() => Command.InvokeFromCollection([], null!));
+            Assert.That(() => Command.InvokeFromCollection([], null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -94,7 +94,7 @@ namespace Test.CuiLib.Commands
         {
             var collection = new CommandCollection() { command };
 
-            Assert.Throws<ArgumentAnalysisException>(() => Command.InvokeFromCollection(["other"], collection));
+            Assert.That(() => Command.InvokeFromCollection(["other"], collection), Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
@@ -109,13 +109,13 @@ namespace Test.CuiLib.Commands
         [Test]
         public void InvokeFromCollectionAsync_WithNullArgs()
         {
-            Assert.Throws<ArgumentNullException>(() => Command.InvokeFromCollectionAsync(null!, []).GetAwaiter().GetResult());
+            Assert.That(() => Command.InvokeFromCollectionAsync(null!, []).GetAwaiter().GetResult(), Throws.ArgumentNullException);
         }
 
         [Test]
         public void InvokeFromCollectionAsync_WithNullCommands()
         {
-            Assert.Throws<ArgumentNullException>(() => Command.InvokeFromCollectionAsync([], null!).GetAwaiter().GetResult());
+            Assert.That(() => Command.InvokeFromCollectionAsync([], null!).GetAwaiter().GetResult(), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace Test.CuiLib.Commands
         {
             var collection = new CommandCollection() { command };
 
-            Assert.Throws<ArgumentAnalysisException>(() => Command.InvokeFromCollectionAsync(["other"], collection).GetAwaiter().GetResult());
+            Assert.That(() => Command.InvokeFromCollectionAsync(["other"], collection).GetAwaiter().GetResult(), Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
@@ -142,19 +142,19 @@ namespace Test.CuiLib.Commands
         [Test]
         public void Invoke_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => command.Invoke(null!));
+            Assert.That(() => command.Invoke(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void Invoke_WithNullContainingValue()
         {
-            Assert.Throws<ArgumentException>(() => command.Invoke([null!]));
+            Assert.That(() => command.Invoke([null!]), Throws.ArgumentException);
         }
 
         [Test]
         public void Invoke_WithUnknownOption()
         {
-            Assert.Throws<ArgumentAnalysisException>(() => command.Invoke(["-e"]));
+            Assert.That(() => command.Invoke(["-e"]), Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
@@ -163,7 +163,7 @@ namespace Test.CuiLib.Commands
             var option = new SingleValueOption<string>('v');
             command.Options.Add(option);
 
-            Assert.Throws<ArgumentAnalysisException>(() => command.Invoke(["-v"]));
+            Assert.That(() => command.Invoke(["-v"]), Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
@@ -299,7 +299,7 @@ namespace Test.CuiLib.Commands
             command.Options.Add(flag2);
             command.Options.Add(valued);
 
-            Assert.Throws<ArgumentAnalysisException>(() => command.Invoke(["-acb", "10"]));
+            Assert.That(() => command.Invoke(["-acb", "10"]), Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
@@ -330,19 +330,19 @@ namespace Test.CuiLib.Commands
         [Test]
         public void InvokeAsync_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => command.InvokeAsync(null!).GetAwaiter().GetResult());
+            Assert.That(() => command.InvokeAsync(null!).GetAwaiter().GetResult(), Throws.ArgumentNullException);
         }
 
         [Test]
         public void InvokeAsync_WithNullContainingValue()
         {
-            Assert.Throws<ArgumentException>(() => command.InvokeAsync([null!]).GetAwaiter().GetResult());
+            Assert.That(() => command.InvokeAsync([null!]).GetAwaiter().GetResult(), Throws.ArgumentException);
         }
 
         [Test]
         public void InvokeAsync_WithUnknownOption()
         {
-            Assert.Throws<ArgumentAnalysisException>(() => command.InvokeAsync(["-e"]).GetAwaiter().GetResult());
+            Assert.That(() => command.InvokeAsync(["-e"]).GetAwaiter().GetResult(), Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
@@ -351,7 +351,7 @@ namespace Test.CuiLib.Commands
             var option = new SingleValueOption<string>('v');
             command.Options.Add(option);
 
-            Assert.Throws<ArgumentAnalysisException>(() => command.InvokeAsync(["-v"]).GetAwaiter().GetResult());
+            Assert.That(() => command.InvokeAsync(["-v"]).GetAwaiter().GetResult(), Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
@@ -487,7 +487,7 @@ namespace Test.CuiLib.Commands
             command.Options.Add(flag2);
             command.Options.Add(valued);
 
-            Assert.Throws<ArgumentAnalysisException>(() => command.InvokeAsync(["-acb", "10"]).GetAwaiter().GetResult());
+            Assert.That(() => command.InvokeAsync(["-acb", "10"]).GetAwaiter().GetResult(), Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
@@ -518,7 +518,7 @@ namespace Test.CuiLib.Commands
         [Test]
         public void WriteHelp_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => command.WriteHelp(null!));
+            Assert.That(() => command.WriteHelp(null!), Throws.ArgumentNullException);
         }
 
         [Test]
