@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 
-namespace CuiLib.Internal
+namespace CuiLib.Internal.Versions
 {
     /// <summary>
     /// バージョン互換を保つための拡張のクラスです。
@@ -99,12 +99,4 @@ namespace CuiLib.Internal
 
 #endif
     }
-
-#if NETSTANDARD2_0
-
-    internal delegate void SpanAction<T, in TArg>(Span<T> span, TArg arg);
-
-    internal delegate void ReadOnlySpanAction<T, in TArg>(ReadOnlySpan<T> span, TArg arg);
-
-#endif
 }
