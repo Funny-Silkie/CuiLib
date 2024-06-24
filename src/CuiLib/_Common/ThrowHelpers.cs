@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using CuiLib.Options;
 using CuiLib.Checkers;
+using CuiLib.Parameters;
 
 namespace CuiLib
 {
@@ -61,6 +62,17 @@ namespace CuiLib
         }
 
         /// <summary>
+        /// 未入力のパラメータとして<see cref="ArgumentAnalysisException"/>をスローします。
+        /// </summary>
+        /// <param name="parameter">当該パラメータ</param>
+        public static void ThrowAsEmptyParameter(Parameter? parameter)
+        {
+            if (parameter == null) return;
+
+            throw new ArgumentAnalysisException($"パラメータ'{parameter.Name}'を入力してください");
+        }
+
+        /// <summary>
         /// 空のインスタンスとして<see cref="InvalidOperationException"/>をスローします。
         /// </summary>
         [DoesNotReturn]
@@ -82,7 +94,7 @@ namespace CuiLib
 #if NET6_0_OR_GREATER
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfNull<T>([NotNull] T? value, string? name = null)
+        public static void ThrowIfNull<T>([NotNull] T? value, [CallerArgumentExpression(nameof(value))] string? name = null)
         {
             ArgumentNullException.ThrowIfNull(value, name);
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using CuiLib.Checkers;
 using CuiLib.Converters;
 
@@ -29,7 +30,12 @@ namespace CuiLib.Parameters
         /// <summary>
         /// 配列かどうかを取得します。
         /// </summary>
-        public bool IsArray { get; }
+        public abstract bool IsArray { get; }
+
+        /// <summary>
+        /// 必須の値かどうかを取得または設定します。
+        /// </summary>
+        public bool Required { get; set; }
 
         /// <summary>
         /// 値を受け取ったかどうかを表す値を取得します。
@@ -69,18 +75,16 @@ namespace CuiLib.Parameters
         /// </summary>
         /// <param name="name">パラメータ名</param>
         /// <param name="index">インデックス</param>
-        /// <param name="isArray">配列かどうか</param>
         /// <exception cref="ArgumentNullException"><paramref name="name"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
-        protected Parameter(string name, int index, bool isArray)
+        protected Parameter(string name, int index)
         {
             ThrowHelpers.ThrowIfNullOrEmpty(name);
             ThrowHelpers.ThrowIfNegative(index);
 
             Name = name;
             Index = index;
-            IsArray = isArray;
         }
 
         /// <summary>
@@ -93,7 +97,8 @@ namespace CuiLib.Parameters
         /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
         /// <returns>単一の値をとる<see cref="Parameter{T}"/>の新しいインスタンス</returns>
-        public static Parameter<T> Create<T>(string name, int index) => new Parameter<T>(name, index, false);
+        [Obsolete($"Use a constructor of {nameof(SingleValueParameter<T>)} instead")]
+        public static SingleValueParameter<T> Create<T>(string name, int index) => new SingleValueParameter<T>(name, index);
 
         /// <summary>
         /// 配列をとしての<see cref="Parameter{T}"/>の新しいインスタンスを生成します。
@@ -105,7 +110,8 @@ namespace CuiLib.Parameters
         /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
         /// <returns>配列をとしての<see cref="Parameter{T}"/>の新しいインスタンス</returns>
-        public static Parameter<T> CreateAsArray<T>(string name, int index) => new Parameter<T>(name, index, true);
+        [Obsolete($"Use a constructor of {nameof(MultipleValueParameter<T>)} instead")]
+        public static MultipleValueParameter<T> CreateAsArray<T>(string name, int index) => new MultipleValueParameter<T>(name, index);
 
         /// <summary>
         /// 設定されている値をクリアします。
@@ -139,104 +145,29 @@ namespace CuiLib.Parameters
     /// </summary>
     /// <typeparam name="T">パラメータの値の型</typeparam>
     [Serializable]
-    public class Parameter<T> : Parameter
+    public abstract class Parameter<T> : Parameter
     {
-        /// <inheritdoc/>
-        [MemberNotNullWhen(true, nameof(Values))]
-        public override bool ValueAvailable => base.ValueAvailable;
-
         /// <summary>
-        /// 値の変換を行う<see cref="IValueConverter{TIn, TOut}"/>を取得または設定します。
+        /// デフォルトの値を取得または設定します。
         /// </summary>
-        public IValueConverter<string, T> Converter
-        {
-            get => _converter ?? ValueConverter.GetDefault<T>();
-            set => _converter = value;
-        }
-
-        private IValueConverter<string, T>? _converter;
+        public T DefaultValue { get; set; } = default!;
 
         /// <summary>
         /// 値を取得します。
         /// </summary>
         /// <exception cref="InvalidOperationException">インスタンスが空の配列を表す</exception>
-        public T Value
-        {
-            get
-            {
-                if (Values is null) return default!;
-                try
-                {
-                    return Values[0];
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    ThrowHelpers.ThrowAsEmptyCollection();
-                    return default;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 値を取得します。
-        /// </summary>
-        public T[]? Values
-        {
-            get
-            {
-                if (_values is not null) return _values;
-                if (!ValueAvailable) return null;
-                _values = Array.ConvertAll(RawValues, x =>
-                {
-                    T result;
-                    try
-                    {
-                        result = Converter.Convert(x);
-                    }
-                    catch (Exception e)
-                    {
-                        ThrowHelpers.ThrowAsOptionParseFailed(e);
-                        return default;
-                    }
-                    ValueCheckState state = Checker.CheckValue(result);
-                    ThrowHelpers.ThrowIfInvalidState(state);
-                    return result;
-                });
-                return _values;
-            }
-        }
-
-        private T[]? _values;
-
-        /// <summary>
-        /// 値の妥当性を検証する関数を取得または設定します。
-        /// </summary>
-        /// <remarks>既定値では無条件でOK</remarks>
-        /// <exception cref="ArgumentNullException">設定しようとした値がnull</exception>
-        public IValueChecker<T> Checker
-        {
-            get => _checker;
-            set
-            {
-                ThrowHelpers.ThrowIfNull(value);
-
-                _checker = value;
-            }
-        }
-
-        private IValueChecker<T> _checker = ValueChecker.AlwaysValid<T>();
+        public abstract T Value { get; }
 
         /// <summary>
         /// <see cref="Parameter{T}"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="name">パラメータ名</param>
         /// <param name="index">インデックス</param>
-        /// <param name="isArray">配列かどうか</param>
         /// <exception cref="ArgumentNullException"><paramref name="name"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="name"/>が空文字</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/>が0未満</exception>
-        internal Parameter(string name, int index, bool isArray)
-            : base(name, index, isArray)
+        protected internal Parameter(string name, int index)
+            : base(name, index)
         {
         }
     }

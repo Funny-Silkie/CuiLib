@@ -1,6 +1,7 @@
 ﻿using CuiLib;
 using CuiLib.Checkers;
 using CuiLib.Options;
+using CuiLib.Parameters;
 using NUnit.Framework;
 using System;
 using System.IO;
@@ -23,9 +24,27 @@ namespace Test.CuiLib
         }
 
         [Test]
-        public void ThrowAsEmptyOption()
+        public void ThrowAsEmptyOption_WithNull()
+        {
+            Assert.DoesNotThrow(() => ThrowHelpers.ThrowAsEmptyOption(null));
+        }
+
+        [Test]
+        public void ThrowAsEmptyOption_AsThrown()
         {
             Assert.Throws<ArgumentAnalysisException>(() => ThrowHelpers.ThrowAsEmptyOption(new SingleValueOption<int>("num")));
+        }
+
+        [Test]
+        public void ThrowAsEmptyParameter_WithNull()
+        {
+            Assert.That(() => ThrowHelpers.ThrowAsEmptyParameter(null), Throws.Nothing);
+        }
+
+        [Test]
+        public void ThrowAsEmptyParameter_AsThrown()
+        {
+            Assert.That(() => ThrowHelpers.ThrowAsEmptyParameter(new SingleValueParameter<string>("param", 0)), Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
@@ -39,7 +58,7 @@ namespace Test.CuiLib
         {
             Assert.Throws<ArgumentNullException>(() => ThrowHelpers.ThrowIfNull<object>(null));
         }
-        
+
         [Test]
         public void ThrowIfNull_AsPositive()
         {
