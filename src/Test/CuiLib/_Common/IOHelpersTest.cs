@@ -71,7 +71,7 @@ namespace Test.CuiLib
         [Test]
         public void OpenReadAllText_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => IOHelpers.OpenReadAllText(null!));
+            Assert.That(() => IOHelpers.OpenReadAllText(null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace Test.CuiLib
         [Test]
         public void OpenReadAllTextAsync_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => IOHelpers.OpenReadAllTextAsync(null!).GetAwaiter().GetResult());
+            Assert.That(() => IOHelpers.OpenReadAllTextAsync(null!).GetAwaiter().GetResult(), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace Test.CuiLib
         [Test]
         public void OpenIterateLines_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => IOHelpers.OpenIterateLines(null!));
+            Assert.That(() => IOHelpers.OpenIterateLines(null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -152,7 +152,7 @@ namespace Test.CuiLib
         [Test]
         public void OpenIterateLinesAsync_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => IOHelpers.OpenIterateLinesAsync(null!));
+            Assert.That(() => IOHelpers.OpenIterateLinesAsync(null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -179,7 +179,7 @@ namespace Test.CuiLib
         [Test]
         public void OpenReadLines_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => IOHelpers.OpenReadLines(null!));
+            Assert.That(() => IOHelpers.OpenReadLines(null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -206,7 +206,7 @@ namespace Test.CuiLib
         [Test]
         public void OpenReadLinesAsync_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => IOHelpers.OpenReadLinesAsync(null!).GetAwaiter().GetResult());
+            Assert.That(() => IOHelpers.OpenReadLinesAsync(null!).GetAwaiter().GetResult(), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -233,7 +233,7 @@ namespace Test.CuiLib
         [Test]
         public void IterateLines_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => IOHelpers.IterateLines(null!));
+            Assert.That(() => IOHelpers.IterateLines(null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -261,7 +261,7 @@ namespace Test.CuiLib
         [Test]
         public void IterateLinesAsync_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => IOHelpers.IterateLinesAsync(null!));
+            Assert.That(() => IOHelpers.IterateLinesAsync(null!), Throws.ArgumentNullException);
         }
 
         [Test]

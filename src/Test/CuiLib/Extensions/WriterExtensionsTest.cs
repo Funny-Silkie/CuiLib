@@ -31,13 +31,13 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void WriteJoinGenericWithChar_WithNullWriter()
         {
-            Assert.Throws<ArgumentNullException>(() => WriterExtensions.WriteJoin<string>(null!, ',', Array.Empty<string>()));
+            Assert.That(() => WriterExtensions.WriteJoin<string>(null!, ',', Array.Empty<string>()), Throws.ArgumentNullException);
         }
 
         [Test]
         public void WriteJoinGenericWithChar_WithNullValues()
         {
-            Assert.Throws<ArgumentNullException>(() => writer.WriteJoin<string>(',', null!));
+            Assert.That(() => writer.WriteJoin<string>(',', null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -91,13 +91,13 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void WriteJoinGenericWithString_WithNullWriter()
         {
-            Assert.Throws<ArgumentNullException>(() => WriterExtensions.WriteJoin<string>(null!, ",", Array.Empty<string>()));
+            Assert.That(() => WriterExtensions.WriteJoin<string>(null!, ",", Array.Empty<string>()), Throws.ArgumentNullException);
         }
 
         [Test]
         public void WriteJoinGenericWithString_WithNullValues()
         {
-            Assert.Throws<ArgumentNullException>(() => writer.WriteJoin<string>("<>", null!));
+            Assert.That(() => writer.WriteJoin<string>("<>", null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -151,13 +151,13 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void WriteJoinWithCharAndStringArray_WithNullWriter()
         {
-            Assert.Throws<ArgumentNullException>(() => WriterExtensions.WriteJoin(null!, ',', Array.Empty<string>()));
+            Assert.That(() => WriterExtensions.WriteJoin(null!, ',', Array.Empty<string>()), Throws.ArgumentNullException);
         }
 
         [Test]
         public void WriteJoinWithCharAndStringArray_WithNullArray()
         {
-            Assert.Throws<ArgumentNullException>(() => writer.WriteJoin(',', (string[])null!));
+            Assert.That(() => writer.WriteJoin(',', (string[])null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -179,13 +179,13 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void WriteJoinWithStringAndStringArray_WithNullWriter()
         {
-            Assert.Throws<ArgumentNullException>(() => WriterExtensions.WriteJoin(null!, "<>", Array.Empty<string>()));
+            Assert.That(() => WriterExtensions.WriteJoin(null!, "<>", Array.Empty<string>()), Throws.ArgumentNullException);
         }
 
         [Test]
         public void WriteJoinWithStringAndStringArray_WithNullArray()
         {
-            Assert.Throws<ArgumentNullException>(() => writer.WriteJoin("<>", (string[])null!));
+            Assert.That(() => writer.WriteJoin("<>", (string[])null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -207,13 +207,13 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void WriteJoinWithCharAndObjectArray_WithNullWriter()
         {
-            Assert.Throws<ArgumentNullException>(() => WriterExtensions.WriteJoin(null!, ',', Array.Empty<object>()));
+            Assert.That(() => WriterExtensions.WriteJoin(null!, ',', Array.Empty<object>()), Throws.ArgumentNullException);
         }
 
         [Test]
         public void WriteJoinWithCharAndObjectArray_WithNullArray()
         {
-            Assert.Throws<ArgumentNullException>(() => writer.WriteJoin(',', (object[])null!));
+            Assert.That(() => writer.WriteJoin(',', (object[])null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -235,13 +235,13 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void WriteJoinWithStringAndObjectArray_WithNullWriter()
         {
-            Assert.Throws<ArgumentNullException>(() => WriterExtensions.WriteJoin(null!, "<>", Array.Empty<object>()));
+            Assert.That(() => WriterExtensions.WriteJoin(null!, "<>", Array.Empty<object>()), Throws.ArgumentNullException);
         }
 
         [Test]
         public void WriteJoinWithStringAndObjectArray_WithNullArray()
         {
-            Assert.Throws<ArgumentNullException>(() => writer.WriteJoin("<>", (object[])null!));
+            Assert.That(() => writer.WriteJoin("<>", (object[])null!), Throws.ArgumentNullException);
         }
 
         [Test]

@@ -48,7 +48,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void Add_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => collection.Add(null!));
+            Assert.That(() => collection.Add(null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace Test.CuiLib.Options
         {
             collection.Add(new FlagOption('s', "short"));
 
-            Assert.Throws<ArgumentException>(() => collection.Add(new FlagOption('s', "collision")));
+            Assert.That(() => collection.Add(new FlagOption('s', "collision")), Throws.ArgumentException);
         }
 
         [Test]

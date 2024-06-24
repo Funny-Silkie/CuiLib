@@ -20,19 +20,19 @@ namespace Test.CuiLib
         [Test]
         public void ThrowAsOptionParseFailed()
         {
-            Assert.Throws<ArgumentAnalysisException>(() => ThrowHelpers.ThrowAsOptionParseFailed(new ArgumentException("Error")));
+            Assert.That(() => ThrowHelpers.ThrowAsOptionParseFailed(new ArgumentException("Error")), Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
         public void ThrowAsEmptyOption_WithNull()
         {
-            Assert.DoesNotThrow(() => ThrowHelpers.ThrowAsEmptyOption(null));
+            Assert.That(() => ThrowHelpers.ThrowAsEmptyOption(null), Throws.Nothing);
         }
 
         [Test]
         public void ThrowAsEmptyOption_AsThrown()
         {
-            Assert.Throws<ArgumentAnalysisException>(() => ThrowHelpers.ThrowAsEmptyOption(new SingleValueOption<int>("num")));
+            Assert.That(() => ThrowHelpers.ThrowAsEmptyOption(new SingleValueOption<int>("num")), Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
@@ -50,39 +50,39 @@ namespace Test.CuiLib
         [Test]
         public void ThrowAsEmptyCollection()
         {
-            Assert.Throws<InvalidOperationException>(ThrowHelpers.ThrowAsEmptyCollection);
+            Assert.That(ThrowHelpers.ThrowAsEmptyCollection, Throws.InvalidOperationException);
         }
 
         [Test]
         public void ThrowIfNull_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => ThrowHelpers.ThrowIfNull<object>(null));
+            Assert.That(() => ThrowHelpers.ThrowIfNull<object>(null), Throws.ArgumentNullException);
         }
 
         [Test]
         public void ThrowIfNull_AsPositive()
         {
-            Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNull<object>(string.Empty));
-            Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNull<object>(0));
-            Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNull<object>(false));
+            Assert.That(() => ThrowHelpers.ThrowIfNull<object>(string.Empty), Throws.Nothing);
+            Assert.That(() => ThrowHelpers.ThrowIfNull<object>(0), Throws.Nothing);
+            Assert.That(() => ThrowHelpers.ThrowIfNull<object>(false), Throws.Nothing);
         }
 
         [Test]
         public void ThrowIfNullOrEmpty_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => ThrowHelpers.ThrowIfNullOrEmpty(null));
+            Assert.That(() => ThrowHelpers.ThrowIfNullOrEmpty(null), Throws.ArgumentNullException);
         }
 
         [Test]
         public void ThrowIfNullOrEmpty_WithEmpty()
         {
-            Assert.Throws<ArgumentException>(() => ThrowHelpers.ThrowIfNullOrEmpty(string.Empty));
+            Assert.That(() => ThrowHelpers.ThrowIfNullOrEmpty(string.Empty), Throws.ArgumentException);
         }
 
         [Test]
         public void ThrowIfNullOrEmpty_AsPositive()
         {
-            Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNullOrEmpty("hoge"));
+            Assert.That(() => ThrowHelpers.ThrowIfNullOrEmpty("hoge"), Throws.Nothing);
         }
 
         [Test]
@@ -90,14 +90,14 @@ namespace Test.CuiLib
         {
             Assert.Multiple(() =>
             {
-                foreach (char current in Path.GetInvalidFileNameChars()) Assert.Throws<ArgumentException>(() => ThrowHelpers.ThrowIfHasInvalidFileNameChar("hoge/fuga"));
+                foreach (char current in Path.GetInvalidFileNameChars()) Assert.That(() => ThrowHelpers.ThrowIfHasInvalidFileNameChar("hoge/fuga"), Throws.ArgumentException);
             });
         }
 
         [Test]
         public void ThrowIfHasInvalidFileNameChar_AsPositive()
         {
-            Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfHasInvalidFileNameChar("hoge.txt"));
+            Assert.That(() => ThrowHelpers.ThrowIfHasInvalidFileNameChar("hoge.txt"), Throws.Nothing);
         }
 
         [Test]
@@ -105,20 +105,20 @@ namespace Test.CuiLib
         {
             Assert.Multiple(() =>
             {
-                foreach (char current in Path.GetInvalidPathChars()) Assert.Throws<ArgumentException>(() => ThrowHelpers.ThrowIfHasInvalidPathChar($"hoge{current}fuga"));
+                foreach (char current in Path.GetInvalidPathChars()) Assert.That(() => ThrowHelpers.ThrowIfHasInvalidPathChar($"hoge{current}fuga"), Throws.ArgumentException);
             });
         }
 
         [Test]
         public void ThrowIfHasInvalidPathChar_AsPositive()
         {
-            Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfHasInvalidPathChar("hoge/fuga.txt"));
+            Assert.That(() => ThrowHelpers.ThrowIfHasInvalidPathChar("hoge/fuga.txt"), Throws.Nothing);
         }
 
         [Test]
         public void ThrowIfNegativeWithInt32_WithNegative()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => ThrowHelpers.ThrowIfNegative(-1));
+            Assert.That(() => ThrowHelpers.ThrowIfNegative(-1), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -126,15 +126,15 @@ namespace Test.CuiLib
         {
             Assert.Multiple(() =>
             {
-                Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNegative(0));
-                Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNegative(1));
+                Assert.That(() => ThrowHelpers.ThrowIfNegative(0), Throws.Nothing);
+                Assert.That(() => ThrowHelpers.ThrowIfNegative(1), Throws.Nothing);
             });
         }
 
         [Test]
         public void ThrowIfNegativeWithInt64_WithNegative()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => ThrowHelpers.ThrowIfNegative(-1L));
+            Assert.That(() => ThrowHelpers.ThrowIfNegative(-1L), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -142,15 +142,15 @@ namespace Test.CuiLib
         {
             Assert.Multiple(() =>
             {
-                Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNegative(0L));
-                Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNegative(1L));
+                Assert.That(() => ThrowHelpers.ThrowIfNegative(0L), Throws.Nothing);
+                Assert.That(() => ThrowHelpers.ThrowIfNegative(1L), Throws.Nothing);
             });
         }
 
         [Test]
         public void ThrowIfNegativeWithDouble_WithNegative()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => ThrowHelpers.ThrowIfNegative(-1d));
+            Assert.That(() => ThrowHelpers.ThrowIfNegative(-1d), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -158,15 +158,15 @@ namespace Test.CuiLib
         {
             Assert.Multiple(() =>
             {
-                Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNegative(0d));
-                Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNegative(1d));
+                Assert.That(() => ThrowHelpers.ThrowIfNegative(0d), Throws.Nothing);
+                Assert.That(() => ThrowHelpers.ThrowIfNegative(1d), Throws.Nothing);
             });
         }
 
         [Test]
         public void ThrowIfNegativeWithDecimal_WithNegative()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => ThrowHelpers.ThrowIfNegative(-1m));
+            Assert.That(() => ThrowHelpers.ThrowIfNegative(-1m), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -174,8 +174,8 @@ namespace Test.CuiLib
         {
             Assert.Multiple(() =>
             {
-                Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNegative(0m));
-                Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNegative(1m));
+                Assert.That(() => ThrowHelpers.ThrowIfNegative(0m), Throws.Nothing);
+                Assert.That(() => ThrowHelpers.ThrowIfNegative(1m), Throws.Nothing);
             });
         }
 
@@ -184,8 +184,8 @@ namespace Test.CuiLib
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentOutOfRangeException>(() => ThrowHelpers.ThrowIfNotDefined((TestEnum)(-1)));
-                Assert.Throws<ArgumentOutOfRangeException>(() => ThrowHelpers.ThrowIfNotDefined((TestEnum)2));
+                Assert.That(() => ThrowHelpers.ThrowIfNotDefined((TestEnum)(-1)), Throws.TypeOf<ArgumentOutOfRangeException>());
+                Assert.That(() => ThrowHelpers.ThrowIfNotDefined((TestEnum)2), Throws.TypeOf<ArgumentOutOfRangeException>());
             });
         }
 
@@ -194,21 +194,21 @@ namespace Test.CuiLib
         {
             Assert.Multiple(() =>
             {
-                Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNotDefined(TestEnum.Zero));
-                Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfNotDefined(TestEnum.One));
+                Assert.That(() => ThrowHelpers.ThrowIfNotDefined(TestEnum.Zero), Throws.Nothing);
+                Assert.That(() => ThrowHelpers.ThrowIfNotDefined(TestEnum.One), Throws.Nothing);
             });
         }
 
         [Test]
         public void ThrowIfInvalidState_AsError()
         {
-            Assert.Throws<ArgumentAnalysisException>(() => ThrowHelpers.ThrowIfInvalidState(ValueCheckState.AsError("Error")));
+            Assert.That(() => ThrowHelpers.ThrowIfInvalidState(ValueCheckState.AsError("Error")), Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
         public void ThrowIfInvalidState_AsPositive()
         {
-            Assert.DoesNotThrow(() => ThrowHelpers.ThrowIfInvalidState(ValueCheckState.Success));
+            Assert.That(() => ThrowHelpers.ThrowIfInvalidState(ValueCheckState.Success), Throws.Nothing);
         }
     }
 }

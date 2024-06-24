@@ -41,7 +41,7 @@ namespace Test.CuiLib.Logging
 
             Assert.Multiple(() =>
             {
-                Assert.DoesNotThrow(() => logger = new Logger());
+                Assert.That(() => logger = new Logger(), Throws.Nothing);
                 Assert.That(logger.GetAllTargets(), Is.Empty);
             });
         }
@@ -265,7 +265,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void Encoding_Get()
         {
-            Assert.Throws<NotSupportedException>(() => _ = logger.Encoding);
+            Assert.That(() => _ = logger.Encoding, Throws.TypeOf<NotSupportedException>());
         }
 
         [Test]
@@ -341,7 +341,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void DefaultEncoding_Set_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => logger.DefaultEncoding = null!);
+            Assert.That(() => logger.DefaultEncoding = null!, Throws.ArgumentNullException);
         }
 
         [Test]
@@ -397,7 +397,7 @@ namespace Test.CuiLib.Logging
 
                 logger.Dispose();
 
-                Assert.Throws<ObjectDisposedException>(writer.WriteLine);
+                Assert.That(writer.WriteLine, Throws.TypeOf<ObjectDisposedException>());
             }
             finally
             {
@@ -410,13 +410,13 @@ namespace Test.CuiLib.Logging
         [Test]
         public void AddLogFile_WithPath_WithNullPath()
         {
-            Assert.Throws<ArgumentNullException>(() => logger.AddLogFile(path: null!));
+            Assert.That(() => logger.AddLogFile(path: null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void AddLogFile_WithPath_WithEmptyPath()
         {
-            Assert.Throws<ArgumentException>(() => logger.AddLogFile(string.Empty));
+            Assert.That(() => logger.AddLogFile(string.Empty), Throws.ArgumentException);
         }
 
         [Test]
@@ -424,7 +424,7 @@ namespace Test.CuiLib.Logging
         {
             string path = Path.Combine(FileUtilHelpers.GetNoExistingDirectory().Name, "missing.txt");
 
-            Assert.Throws<DirectoryNotFoundException>(() => logger.AddLogFile(path));
+            Assert.That(() => logger.AddLogFile(path), Throws.TypeOf<DirectoryNotFoundException>());
         }
 
         [Test]
@@ -540,7 +540,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void AddLogFile_WithFileInfo_WithNullPath()
         {
-            Assert.Throws<ArgumentNullException>(() => logger.AddLogFile(file: null!));
+            Assert.That(() => logger.AddLogFile(file: null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -548,7 +548,7 @@ namespace Test.CuiLib.Logging
         {
             string path = Path.Combine(FileUtilHelpers.GetNoExistingDirectory().Name, "missing.txt");
 
-            Assert.Throws<DirectoryNotFoundException>(() => logger.AddLogFile(new FileInfo(path)));
+            Assert.That(() => logger.AddLogFile(new FileInfo(path)), Throws.TypeOf<DirectoryNotFoundException>());
         }
 
         [Test]
@@ -664,7 +664,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void AddLog_WithoutArgs_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => logger.AddLog(null!));
+            Assert.That(() => logger.AddLog(null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -700,7 +700,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void AddLog_WithBool_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => logger.AddLog(null!, true));
+            Assert.That(() => logger.AddLog(null!, true), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -766,13 +766,13 @@ namespace Test.CuiLib.Logging
         [Test]
         public void HasLogFile_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => logger.HasLogFile(null!));
+            Assert.That(() => logger.HasLogFile(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void HasLogFile_WithEmpty()
         {
-            Assert.Throws<ArgumentException>(() => logger.HasLogFile(string.Empty));
+            Assert.That(() => logger.HasLogFile(string.Empty), Throws.ArgumentException);
         }
 
         [Test]
@@ -801,13 +801,13 @@ namespace Test.CuiLib.Logging
         [Test]
         public void RemoveLogFile_WithPath_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => logger.RemoveLogFile(null!));
+            Assert.That(() => logger.RemoveLogFile(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void RemoveLogFile_WithPath_WithEmpty()
         {
-            Assert.Throws<ArgumentException>(() => logger.RemoveLogFile(string.Empty));
+            Assert.That(() => logger.RemoveLogFile(string.Empty), Throws.ArgumentException);
         }
 
         [Test]
@@ -829,7 +829,7 @@ namespace Test.CuiLib.Logging
                     Assert.That(logger.RemoveLogFile(added.Name), Is.False);
                     Assert.That(logger.RemoveLogFile(added.FullName), Is.False);
 
-                    Assert.Throws<ObjectDisposedException>(() => writer.Flush());
+                    Assert.That(() => writer.Flush(), Throws.TypeOf<ObjectDisposedException>());
                 });
 
                 logger.Dispose();
@@ -843,7 +843,7 @@ namespace Test.CuiLib.Logging
         [Test]
         public void RemoveLogFile_WithTextWriter_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => logger.RemoveLog(null!));
+            Assert.That(() => logger.RemoveLog(null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -864,7 +864,7 @@ namespace Test.CuiLib.Logging
                     Assert.That(logger.writers, Has.Count.EqualTo(1));
                     Assert.That(logger.RemoveLog(writer), Is.False);
 
-                    Assert.DoesNotThrow(() => writer.Flush());
+                    Assert.That(() => writer.Flush(), Throws.Nothing);
                 });
 
                 logger.Dispose();
@@ -903,7 +903,7 @@ namespace Test.CuiLib.Logging
             using var source = new CancellationTokenSource();
             source.Cancel();
 
-            Assert.Throws<TaskCanceledException>(() => logger.FlushAsync(source.Token).GetAwaiter().GetResult());
+            Assert.That(() => logger.FlushAsync(source.Token).GetAwaiter().GetResult(), Throws.TypeOf<TaskCanceledException>());
             Assert.That(innerWriter.GetData(), Is.Empty);
         }
 
@@ -1114,7 +1114,7 @@ namespace Test.CuiLib.Logging
             using var source = new CancellationTokenSource();
             source.Cancel();
 
-            Assert.Throws<TaskCanceledException>(() => logger.WriteAsync("test".AsMemory(), source.Token).GetAwaiter().GetResult());
+            Assert.That(() => logger.WriteAsync("test".AsMemory(), source.Token).GetAwaiter().GetResult(), Throws.TypeOf<TaskCanceledException>());
             Assert.That(innerWriter.GetData(), Is.Empty);
         }
 
@@ -1146,8 +1146,8 @@ namespace Test.CuiLib.Logging
 
             Assert.Multiple(() =>
             {
-                Assert.Throws<TaskCanceledException>(() => logger.WriteAsync(new StringBuilder("test", 4), source.Token).GetAwaiter().GetResult());
-                Assert.Throws<TaskCanceledException>(() => logger.WriteAsync(null as StringBuilder, source.Token).GetAwaiter().GetResult());
+                Assert.That(() => logger.WriteAsync(new StringBuilder("test", 4), source.Token).GetAwaiter().GetResult(), Throws.TypeOf<TaskCanceledException>());
+                Assert.That(() => logger.WriteAsync(null as StringBuilder, source.Token).GetAwaiter().GetResult(), Throws.TypeOf<TaskCanceledException>());
             });
 
             Assert.That(innerWriter.GetData(), Is.Empty);
@@ -1387,7 +1387,7 @@ namespace Test.CuiLib.Logging
             using var source = new CancellationTokenSource();
             source.Cancel();
 
-            Assert.Throws<TaskCanceledException>(() => logger.WriteLineAsync("test".AsMemory(), source.Token).GetAwaiter().GetResult());
+            Assert.That(() => logger.WriteLineAsync("test".AsMemory(), source.Token).GetAwaiter().GetResult(), Throws.TypeOf<TaskCanceledException>());
             Assert.That(innerWriter.GetData(), Is.Empty);
         }
 
@@ -1419,8 +1419,8 @@ namespace Test.CuiLib.Logging
 
             Assert.Multiple(() =>
             {
-                Assert.Throws<TaskCanceledException>(() => logger.WriteLineAsync(new StringBuilder("test", 4), source.Token).GetAwaiter().GetResult());
-                Assert.Throws<TaskCanceledException>(() => logger.WriteLineAsync(null as StringBuilder, source.Token).GetAwaiter().GetResult());
+                Assert.That(() => logger.WriteLineAsync(new StringBuilder("test", 4), source.Token).GetAwaiter().GetResult(), Throws.TypeOf<TaskCanceledException>());
+                Assert.That(() => logger.WriteLineAsync(null as StringBuilder, source.Token).GetAwaiter().GetResult(), Throws.TypeOf<TaskCanceledException>());
             });
 
             Assert.That(innerWriter.GetData(), Is.Empty);

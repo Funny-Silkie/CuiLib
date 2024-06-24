@@ -24,13 +24,13 @@ namespace Test.CuiLib.Options
         [Test]
         public void Ctor_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => new AndGroupOption(children: null!));
+            Assert.That(() => new AndGroupOption(children: null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void Ctor_WithEmpty()
         {
-            Assert.Throws<ArgumentException>(() => new AndGroupOption([]));
+            Assert.That(() => new AndGroupOption([]), Throws.ArgumentException);
         }
 
         #endregion Ctors

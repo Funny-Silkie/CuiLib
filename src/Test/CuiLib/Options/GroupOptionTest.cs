@@ -56,8 +56,8 @@ namespace Test.CuiLib.Options
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<NotSupportedException>(() => option.Required = true);
-                Assert.Throws<NotSupportedException>(() => option.Required = false);
+                Assert.That(() => option.Required = true, Throws.TypeOf<NotSupportedException>());
+                Assert.That(() => option.Required = false, Throws.TypeOf<NotSupportedException>());
             });
         }
 
@@ -116,7 +116,7 @@ namespace Test.CuiLib.Options
         [Test]
         public void ApplyValue_ToMissedChild()
         {
-            Assert.Throws<ArgumentAnalysisException>(() => option.ApplyValue("unknown", "1"));
+            Assert.That(() => option.ApplyValue("unknown", "1"), Throws.TypeOf<ArgumentAnalysisException>());
         }
 
         [Test]
@@ -181,10 +181,10 @@ namespace Test.CuiLib.Options
         [Test]
         public void GetActualOption_ForMissingChild()
         {
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Multiple(() =>
             {
-                option.GetActualOption("oops!", true);
-                option.GetActualOption("!", false);
+                Assert.That(() => option.GetActualOption("oops!", false), Throws.TypeOf<ArgumentException>());
+                Assert.That(() => option.GetActualOption("!", true), Throws.TypeOf<ArgumentException>());
             });
         }
 
@@ -204,13 +204,13 @@ namespace Test.CuiLib.Options
         [Test]
         public void MatchName_WithString_AsNull()
         {
-            Assert.Throws<ArgumentNullException>(() => option.MatchName(null!));
+            Assert.That(() => option.MatchName(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void MatchName_WithString_AsEmpty()
         {
-            Assert.Throws<ArgumentException>(() => option.MatchName(string.Empty));
+            Assert.That(() => option.MatchName(string.Empty), Throws.ArgumentException);
         }
 
         [Test]

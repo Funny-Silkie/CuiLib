@@ -26,15 +26,15 @@ namespace Test.CuiLib.Converters
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentNullException>(() => new CombinedValueConverter<string, int, long>(ValueConverter.GetDefault<int>(), null!));
-                Assert.Throws<ArgumentNullException>(() => new CombinedValueConverter<object, string, int>(null!, ValueConverter.GetDefault<int>()));
+                Assert.That(() => new CombinedValueConverter<string, int, long>(ValueConverter.GetDefault<int>(), null!), Throws.ArgumentNullException);
+                Assert.That(() => new CombinedValueConverter<object, string, int>(null!, ValueConverter.GetDefault<int>()), Throws.ArgumentNullException);
             });
         }
 
         [Test]
         public void Ctor_AsPositive()
         {
-            Assert.DoesNotThrow(() => new CombinedValueConverter<string, int, int>(first, second));
+            Assert.That(() => new CombinedValueConverter<string, int, int>(first, second), Throws.Nothing);
         }
 
         #endregion Ctors
@@ -44,13 +44,13 @@ namespace Test.CuiLib.Converters
         [Test]
         public void Convert_AsErrorAtFirstConversion()
         {
-            Assert.Throws<ArgumentNullException>(() => converter.Convert(null!));
+            Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void Convert_AsErrorAtSecondConversion()
         {
-            Assert.Throws<OverflowException>(() => converter.Convert(int.MaxValue.ToString()));
+            Assert.That(() => converter.Convert(int.MaxValue.ToString()), Throws.TypeOf<OverflowException>());
         }
 
         [Test]

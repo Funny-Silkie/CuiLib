@@ -46,7 +46,7 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void FromDelegate_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.FromDelegate<string>(null!));
+            Assert.That(() => ValueChecker.FromDelegate<string>(null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -71,13 +71,13 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void And_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.And<int>(null!));
+            Assert.That(() => ValueChecker.And<int>(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void And_WithNullChecker()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.And(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), null!));
+            Assert.That(() => ValueChecker.And(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), null!), Throws.ArgumentException);
         }
 
         [Test]
@@ -102,13 +102,13 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void Or_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.Or<int>(null!));
+            Assert.That(() => ValueChecker.Or<int>(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void Or_WithNullChecker()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.Or(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), null!));
+            Assert.That(() => ValueChecker.Or(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), null!), Throws.ArgumentException);
         }
 
         [Test]
@@ -344,13 +344,13 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void ContainedIn_WithoutIEqualityComparer_WithNullCollection()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.ContainedIn<int[], int>(null!));
+            Assert.That(() => ValueChecker.ContainedIn<int[], int>(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void ContainedIn_WithoutIEqualityComparer_WithEmptyCollection()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.ContainedIn<int[], int>([]));
+            Assert.That(() => ValueChecker.ContainedIn<int[], int>([]), Throws.ArgumentException);
         }
 
         [Test]
@@ -372,13 +372,13 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void ContainedIn_WithIEqualityComparer_WithNullCollection()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.ContainedIn<int[], int>(null!, EqualityComparer<int>.Default));
+            Assert.That(() => ValueChecker.ContainedIn<int[], int>(null!, EqualityComparer<int>.Default), Throws.ArgumentNullException);
         }
 
         [Test]
         public void ContainedIn_WithIEqualityComparer_WithEmptyCollection()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.ContainedIn<int[], int>([], EqualityComparer<int>.Default));
+            Assert.That(() => ValueChecker.ContainedIn<int[], int>([], EqualityComparer<int>.Default), Throws.ArgumentException);
         }
 
         [Test]
@@ -602,13 +602,13 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void StartsWith_WithStringAsNullAndWithoutStringComparison()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.StartsWith(null!));
+            Assert.That(() => ValueChecker.StartsWith(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void StartsWith_WithStringAsEmptyAndWithoutStringComparison()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.StartsWith(string.Empty));
+            Assert.That(() => ValueChecker.StartsWith(string.Empty), Throws.ArgumentException);
         }
 
         [Test]
@@ -630,13 +630,13 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void StartsWith_WithStringAsNullAndWithStringComparison()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.StartsWith(null!, StringComparison.Ordinal));
+            Assert.That(() => ValueChecker.StartsWith(null!, StringComparison.Ordinal), Throws.ArgumentNullException);
         }
 
         [Test]
         public void StartsWith_WithStringAsEmptyAndWithStringComparison()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.StartsWith(string.Empty, StringComparison.Ordinal));
+            Assert.That(() => ValueChecker.StartsWith(string.Empty, StringComparison.Ordinal), Throws.ArgumentException);
         }
 
         [Test]
@@ -690,13 +690,13 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void EndsWith_WithStringAsNullAndWithoutStringComparison()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.EndsWith(null!));
+            Assert.That(() => ValueChecker.EndsWith(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void EndsWith_WithStringAsEmptyAndWithoutStringComparison()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.EndsWith(string.Empty));
+            Assert.That(() => ValueChecker.EndsWith(string.Empty), Throws.ArgumentException);
         }
 
         [Test]
@@ -718,13 +718,13 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void EndsWith_WithStringAsNullAndWithStringComparison()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.EndsWith(null!, StringComparison.Ordinal));
+            Assert.That(() => ValueChecker.EndsWith(null!, StringComparison.Ordinal), Throws.ArgumentNullException);
         }
 
         [Test]
         public void EndsWith_WithStringAsEmptyAndWithStringComparison()
         {
-            Assert.Throws<ArgumentException>(() => ValueChecker.EndsWith(string.Empty, StringComparison.Ordinal));
+            Assert.That(() => ValueChecker.EndsWith(string.Empty, StringComparison.Ordinal), Throws.ArgumentException);
         }
 
         [Test]
@@ -928,7 +928,7 @@ namespace Test.CuiLib.Checkers
                     Assert.That(checker.CheckValue(new FileInfo(Path.Combine(FileUtilHelpers.GetNoExistingDirectory().FullName, "missing.txt"))).IsValid, Is.False);
                     Assert.That(checker.CheckValue(FileUtilHelpers.GetNoExistingFile()).IsValid, Is.False);
 
-                    Assert.Throws<ArgumentNullException>(() => checker.CheckValue(null!));
+                    Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
                 });
             }
             finally
@@ -953,7 +953,7 @@ namespace Test.CuiLib.Checkers
                     Assert.That(checker.CheckValue(new FileInfo(Path.Combine(FileUtilHelpers.GetNoExistingDirectory().FullName, "missing.txt"))).IsValid, Is.True);
                     Assert.That(checker.CheckValue(FileUtilHelpers.GetNoExistingFile()).IsValid, Is.True);
 
-                    Assert.Throws<ArgumentNullException>(() => checker.CheckValue(null!));
+                    Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
                 });
             }
             finally
@@ -978,7 +978,7 @@ namespace Test.CuiLib.Checkers
                     Assert.That(checker.CheckValue(new FileInfo(Path.Combine(FileUtilHelpers.GetNoExistingDirectory().FullName, "missing.txt"))).IsValid, Is.False);
                     Assert.That(checker.CheckValue(FileUtilHelpers.GetNoExistingFile()).IsValid, Is.True);
 
-                    Assert.Throws<ArgumentNullException>(() => checker.CheckValue(null!));
+                    Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
                 });
             }
             finally
@@ -1004,7 +1004,7 @@ namespace Test.CuiLib.Checkers
                     Assert.That(checker.CheckValue(new FileInfo(Path.Combine(FileUtilHelpers.GetNoExistingDirectory().FullName, "missing.txt"))).IsValid, Is.True);
                     Assert.That(checker.CheckValue(FileUtilHelpers.GetNoExistingFile()).IsValid, Is.True);
 
-                    Assert.Throws<ArgumentNullException>(() => checker.CheckValue(null!));
+                    Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
                 });
             }
             finally
@@ -1029,7 +1029,7 @@ namespace Test.CuiLib.Checkers
                     Assert.That(checker.CheckValue(existing).IsValid, Is.True);
                     Assert.That(checker.CheckValue(FileUtilHelpers.GetNoExistingDirectory()).IsValid, Is.False);
 
-                    Assert.Throws<ArgumentNullException>(() => checker.CheckValue(null!));
+                    Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
                 });
             }
             finally
@@ -1041,7 +1041,7 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void MatchesWithoutRegexOptionsAndTimeSpan_AsNullPattern()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.Matches(pattern: null!));
+            Assert.That(() => ValueChecker.Matches(pattern: null!), Throws.ArgumentNullException);
         }
 
 #pragma warning disable RE0001 // 無効な RegEx パターン
@@ -1049,7 +1049,7 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void MatchesWithoutRegexOptionsAndTimeSpan_AsInvalidPattern()
         {
-            Assert.Catch<ArgumentException>(() => ValueChecker.Matches(@"(\d"));
+            Assert.That(() => ValueChecker.Matches(@"(\d"), Throws.InstanceOf<ArgumentException>());
         }
 
 #pragma warning restore RE0001 // 無効な RegEx パターン
@@ -1066,14 +1066,14 @@ namespace Test.CuiLib.Checkers
                 Assert.That(() => checker.CheckValue("--").IsValid, Is.False);
                 Assert.That(() => checker.CheckValue(string.Empty).IsValid, Is.False);
 
-                Assert.Throws<ArgumentNullException>(() => checker.CheckValue(null!));
+                Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
             });
         }
 
         [Test]
         public void MatchesWithRegexOptions_AsNullPattern()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.Matches(null!, RegexOptions.None));
+            Assert.That(() => ValueChecker.Matches(null!, RegexOptions.None), Throws.ArgumentNullException);
         }
 
 #pragma warning disable RE0001 // 無効な RegEx パターン
@@ -1081,7 +1081,7 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void MatchesWithRegexOptions_AsInvalidPattern()
         {
-            Assert.Catch<ArgumentException>(() => ValueChecker.Matches(@"(\d", RegexOptions.Compiled));
+            Assert.That(() => ValueChecker.Matches(@"(\d", RegexOptions.Compiled), Throws.InstanceOf<ArgumentException>());
         }
 
 #pragma warning restore RE0001 // 無効な RegEx パターン
@@ -1089,7 +1089,7 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void MatchesWithRegexOptions_AsInvalidRegexOptions()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => ValueChecker.Matches(@"\d+", (RegexOptions)2048));
+            Assert.That(() => ValueChecker.Matches(@"\d+", (RegexOptions)2048), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -1104,14 +1104,14 @@ namespace Test.CuiLib.Checkers
                 Assert.That(() => checker.CheckValue("--").IsValid, Is.False);
                 Assert.That(() => checker.CheckValue(string.Empty).IsValid, Is.False);
 
-                Assert.Throws<ArgumentNullException>(() => checker.CheckValue(null!));
+                Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
             });
         }
 
         [Test]
         public void MatchesWithRegexOptionsAndTimeSpan_AsNullPattern()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.Matches(null!, RegexOptions.None, TimeSpan.MaxValue));
+            Assert.That(() => ValueChecker.Matches(null!, RegexOptions.None, TimeSpan.MaxValue), Throws.ArgumentNullException);
         }
 
 #pragma warning disable RE0001 // 無効な RegEx パターン
@@ -1119,7 +1119,7 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void MatchesWithRegexOptionsAndTimeSpan_AsInvalidPattern()
         {
-            Assert.Catch<ArgumentException>(() => ValueChecker.Matches(@"(\d", RegexOptions.Compiled, TimeSpan.FromSeconds(10)));
+            Assert.That(() => ValueChecker.Matches(@"(\d", RegexOptions.Compiled, TimeSpan.FromSeconds(10)), Throws.InstanceOf<ArgumentException>());
         }
 
 #pragma warning restore RE0001 // 無効な RegEx パターン
@@ -1127,13 +1127,13 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void MatchesWithRegexOptionsAndTimeSpan_AsInvalidRegexOptions()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => ValueChecker.Matches(@"\d+", (RegexOptions)2048, TimeSpan.FromSeconds(10)));
+            Assert.That(() => ValueChecker.Matches(@"\d+", (RegexOptions)2048, TimeSpan.FromSeconds(10)), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
         public void MatchesWithRegexOptionsAndTimeSpan_AsInvalidTimeSpan()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => ValueChecker.Matches(@"\d+", RegexOptions.None, TimeSpan.FromSeconds(-1)));
+            Assert.That(() => ValueChecker.Matches(@"\d+", RegexOptions.None, TimeSpan.FromSeconds(-1)), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -1148,14 +1148,14 @@ namespace Test.CuiLib.Checkers
                 Assert.That(() => checker.CheckValue("--").IsValid, Is.False);
                 Assert.That(() => checker.CheckValue(string.Empty).IsValid, Is.False);
 
-                Assert.Throws<ArgumentNullException>(() => checker.CheckValue(null!));
+                Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
             });
         }
 
         [Test]
         public void MatchesWithRegex_AsNull()
         {
-            Assert.Throws<ArgumentNullException>(() => ValueChecker.Matches(regex: null!));
+            Assert.That(() => ValueChecker.Matches(regex: null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -1172,7 +1172,7 @@ namespace Test.CuiLib.Checkers
                 Assert.That(() => checker.CheckValue("--").IsValid, Is.False);
                 Assert.That(() => checker.CheckValue(string.Empty).IsValid, Is.False);
 
-                Assert.Throws<ArgumentNullException>(() => checker.CheckValue(null!));
+                Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
             });
         }
     }

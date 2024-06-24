@@ -14,13 +14,13 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void And_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => IValueChecker<int>.And(null!));
+            Assert.That(() => IValueChecker<int>.And(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void And_WithNullChecker()
         {
-            Assert.Throws<ArgumentException>(() => IValueChecker<int>.And(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), null!));
+            Assert.That(() => IValueChecker<int>.And(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), null!), Throws.ArgumentException);
         }
 
         [Test]
@@ -45,13 +45,13 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void Or_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => IValueChecker<int>.Or(null!));
+            Assert.That(() => IValueChecker<int>.Or(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void Or_WithNullChecker()
         {
-            Assert.Throws<ArgumentException>(() => IValueChecker<int>.Or(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), null!));
+            Assert.That(() => IValueChecker<int>.Or(ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), null!), Throws.ArgumentException);
         }
 
         [Test]
@@ -84,8 +84,8 @@ namespace Test.CuiLib.Checkers
         [Test]
         public void Op_And_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => _ = ValueChecker.AlwaysValid<int>() & null!);
-            Assert.Throws<ArgumentNullException>(() => _ = null! & ValueChecker.AlwaysValid<int>());
+            Assert.That(() => _ = ValueChecker.AlwaysValid<int>() & null!, Throws.ArgumentNullException);
+            Assert.That(() => _ = null! & ValueChecker.AlwaysValid<int>(), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -112,8 +112,8 @@ namespace Test.CuiLib.Checkers
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentNullException>(() => _ = ValueChecker.AlwaysValid<int>() | null!);
-                Assert.Throws<ArgumentNullException>(() => _ = null! | ValueChecker.AlwaysValid<int>());
+                Assert.That(() => _ = ValueChecker.AlwaysValid<int>() | null!, Throws.ArgumentNullException);
+                Assert.That(() => _ = null! | ValueChecker.AlwaysValid<int>(), Throws.ArgumentNullException);
             });
         }
 

@@ -21,7 +21,7 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void Ctor()
         {
-            Assert.DoesNotThrow(() => new ParameterCollection());
+            Assert.That(() => new ParameterCollection(), Throws.Nothing);
         }
 
         #endregion Ctors
@@ -75,7 +75,7 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void Indexer_Get_WithNegative()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => _ = collection[-1]);
+            Assert.That(() => _ = collection[-1], Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace Test.CuiLib.Parameters
         {
             collection.CreateAndAdd<string>("value");
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => _ = collection[1]);
+            Assert.That(() => _ = collection[1], Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -123,13 +123,13 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void CreateAndAdd_WithNullName()
         {
-            Assert.Throws<ArgumentNullException>(() => collection.CreateAndAdd<string>(null!));
+            Assert.That(() => collection.CreateAndAdd<string>(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void CreateAndAdd_WithEmptyName()
         {
-            Assert.Throws<ArgumentException>(() => collection.CreateAndAdd<string>(string.Empty));
+            Assert.That(() => collection.CreateAndAdd<string>(string.Empty), Throws.ArgumentException);
         }
 
         [Test]
@@ -153,13 +153,13 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void CreateAndAddAsArray_WithNullName()
         {
-            Assert.Throws<ArgumentNullException>(() => collection.CreateAndAddAsArray<string>(null!));
+            Assert.That(() => collection.CreateAndAddAsArray<string>(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void CreateAndAddAsArray_WithEmptyName()
         {
-            Assert.Throws<ArgumentException>(() => collection.CreateAndAddAsArray<string>(string.Empty));
+            Assert.That(() => collection.CreateAndAddAsArray<string>(string.Empty), Throws.ArgumentException);
         }
 
         [Test]
@@ -210,7 +210,7 @@ namespace Test.CuiLib.Parameters
             SingleValueParameter<string> param1 = collection.CreateAndAdd<string>("text");
             SingleValueParameter<int> param2 = collection.CreateAndAdd<int>("num");
 
-            Assert.Throws<InvalidOperationException>(() => collection.SetValues(["hoge", "10", "over"]));
+            Assert.That(() => collection.SetValues(["hoge", "10", "over"]), Throws.InvalidOperationException);
         }
 
         [Test]
@@ -266,7 +266,7 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void Add_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => collection.Add(null!));
+            Assert.That(() => collection.Add(null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -274,7 +274,7 @@ namespace Test.CuiLib.Parameters
         {
             collection.CreateAndAddAsArray<string>("array");
 
-            Assert.Throws<InvalidOperationException>(() => collection.Add(new MultipleValueParameter<string>("other", 0)));
+            Assert.That(() => collection.Add(new MultipleValueParameter<string>("other", 0)), Throws.InvalidOperationException);
         }
 
         [Test]
@@ -282,7 +282,7 @@ namespace Test.CuiLib.Parameters
         {
             collection.Add(new MultipleValueParameter<string>("array", 1));
 
-            Assert.Throws<ArgumentException>(() => collection.Add(new SingleValueParameter<string>("other", 2)));
+            Assert.That(() => collection.Add(new SingleValueParameter<string>("other", 2)), Throws.ArgumentException);
         }
 
         [Test]
@@ -325,7 +325,7 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void Contains_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => collection.Contains(null!));
+            Assert.That(() => collection.Contains(null!), Throws.ArgumentNullException);
         }
 
 #pragma warning disable NUnit2014 // Use SomeItemsConstraint for better assertion messages in case of failure
@@ -381,13 +381,13 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void CopyTo_WithNullArray()
         {
-            Assert.Throws<ArgumentNullException>(() => collection.CopyTo(null!, 0));
+            Assert.That(() => collection.CopyTo(null!, 0), Throws.ArgumentNullException);
         }
 
         [Test]
         public void CopyTo_WithNegativeArrayIndex()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo([], -1));
+            Assert.That(() => collection.CopyTo([], -1), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -396,7 +396,7 @@ namespace Test.CuiLib.Parameters
             collection.CreateAndAdd<string>("value");
             collection.CreateAndAddAsArray<string>("array");
 
-            Assert.Throws<ArgumentException>(() => collection.CopyTo(new Parameter[2], 1));
+            Assert.That(() => collection.CopyTo(new Parameter[2], 1), Throws.ArgumentException);
         }
 
         [Test]
@@ -476,7 +476,7 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void Remove_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => collection.Remove(null!));
+            Assert.That(() => collection.Remove(null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -511,7 +511,7 @@ namespace Test.CuiLib.Parameters
         [Test]
         public void RemoveAt_WithNegative()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => collection.RemoveAt(-1));
+            Assert.That(() => collection.RemoveAt(-1), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]

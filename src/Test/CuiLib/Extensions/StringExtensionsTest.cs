@@ -54,7 +54,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void ReplaceAll_WithStringAndIEnumerableAndChar_WithNullValue()
         {
-            Assert.Throws<ArgumentNullException>(() => StringExtensions.ReplaceAll((null! as string)!, ['a', 'b', 'c'], 'R').ToString());
+            Assert.That(() => StringExtensions.ReplaceAll((null! as string)!, ['a', 'b', 'c'], 'R').ToString(), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -62,8 +62,8 @@ namespace Test.CuiLib.Extensions
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentNullException>(() => "123".ReplaceAll(null!, '!'));
-                Assert.Throws<ArgumentNullException>(() => string.Empty.ReplaceAll(null!, '!'));
+                Assert.That(() => "123".ReplaceAll(null!, '!'), Throws.ArgumentNullException);
+                Assert.That(() => string.Empty.ReplaceAll(null!, '!'), Throws.ArgumentNullException);
             });
         }
 
@@ -94,8 +94,8 @@ namespace Test.CuiLib.Extensions
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentNullException>(() => "123".AsSpan().ReplaceAll(null!, '!'));
-                Assert.Throws<ArgumentNullException>(() => string.Empty.AsSpan().ReplaceAll(null!, '!'));
+                Assert.That(() => "123".AsSpan().ReplaceAll(null!, '!'), Throws.ArgumentNullException);
+                Assert.That(() => string.Empty.AsSpan().ReplaceAll(null!, '!'), Throws.ArgumentNullException);
             });
         }
 
@@ -124,7 +124,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void ReplaceAll_WithStringAndIDictionary_WithNullValue()
         {
-            Assert.Throws<ArgumentNullException>(() => StringExtensions.ReplaceAll((null! as string)!, new Dictionary<char, char>() { { 'a', 'R' } }));
+            Assert.That(() => StringExtensions.ReplaceAll((null! as string)!, new Dictionary<char, char>() { { 'a', 'R' } }), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -132,8 +132,8 @@ namespace Test.CuiLib.Extensions
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentNullException>(() => "123".ReplaceAll(null!));
-                Assert.Throws<ArgumentNullException>(() => string.Empty.ReplaceAll(null!));
+                Assert.That(() => "123".ReplaceAll(null!), Throws.ArgumentNullException);
+                Assert.That(() => string.Empty.ReplaceAll(null!), Throws.ArgumentNullException);
             });
         }
 
@@ -166,8 +166,8 @@ namespace Test.CuiLib.Extensions
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws<ArgumentNullException>(() => "123".AsSpan().ReplaceAll(null!));
-                Assert.Throws<ArgumentNullException>(() => string.Empty.AsSpan().ReplaceAll(null!));
+                Assert.That(() => "123".AsSpan().ReplaceAll(null!), Throws.ArgumentNullException);
+                Assert.That(() => string.Empty.AsSpan().ReplaceAll(null!), Throws.ArgumentNullException);
             });
         }
 
@@ -198,7 +198,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void EscapedSplit_WithStringAndChar_WithNullValue()
         {
-            Assert.Throws<ArgumentNullException>(() => StringExtensions.EscapedSplit((null! as string)!, ','));
+            Assert.That(() => StringExtensions.EscapedSplit((null! as string)!, ','), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -240,7 +240,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void EscapedSplit_WithStringAndString_WithNullValue()
         {
-            Assert.Throws<ArgumentNullException>(() => StringExtensions.EscapedSplit((null! as string)!, ","));
+            Assert.That(() => StringExtensions.EscapedSplit((null! as string)!, ","), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -252,13 +252,13 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void EscapedSplit_WithStringAndString_AsNullValue()
         {
-            Assert.Throws<ArgumentNullException>(() => "hoge".EscapedSplit(null!));
+            Assert.That(() => "hoge".EscapedSplit(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void EscapedSplit_WithStringAndString_AsEmptyValue()
         {
-            Assert.Throws<ArgumentException>(() => "hoge".EscapedSplit(string.Empty));
+            Assert.That(() => "hoge".EscapedSplit(string.Empty), Throws.ArgumentException);
         }
 
         [Test]
@@ -288,13 +288,13 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void EscapedSplit_WithReadOnlySpanAndString_AsNullValue()
         {
-            Assert.Throws<ArgumentNullException>(() => "hoge".AsSpan().EscapedSplit(null!));
+            Assert.That(() => "hoge".AsSpan().EscapedSplit(null!), Throws.ArgumentNullException);
         }
 
         [Test]
         public void EscapedSplit_WithReadOnlySpanAndString_AsEmptyValue()
         {
-            Assert.Throws<ArgumentException>(() => "hoge".AsSpan().EscapedSplit(string.Empty));
+            Assert.That(() => "hoge".AsSpan().EscapedSplit(string.Empty), Throws.ArgumentException);
         }
 
         [Test]

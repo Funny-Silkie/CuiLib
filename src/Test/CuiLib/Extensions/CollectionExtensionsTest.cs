@@ -10,7 +10,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void GetOrDefault_WithoutDefaultValue_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => CollectionExtensions.GetOrDefault<int>(null!, 0));
+            Assert.That(() => CollectionExtensions.GetOrDefault<int>(null!, 0), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void GetOrDefault_WithDefaultValue_WithNull()
         {
-            Assert.Throws<ArgumentNullException>(() => CollectionExtensions.GetOrDefault(null!, 0, -1));
+            Assert.That(() => CollectionExtensions.GetOrDefault(null!, 0, -1), Throws.ArgumentNullException);
         }
 
         [Test]
