@@ -88,7 +88,7 @@ namespace Test.CuiLib.Commands
                 description
 
                 Usage:
-                command [-h] [-v] -i file [--out file] <num> 
+                command [-h] [-v] -i file [--out file] <num>
 
                 Options:
                   -h, --help     Display help message

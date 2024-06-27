@@ -554,7 +554,7 @@ namespace Test.CuiLib.Commands
                               Sample command
 
                               Usage:
-                              cmd [-f] -n int <num> <texts ..> 
+                              cmd [-f] -n int <num> <texts ..>
 
                               Options:
                                 -f, --flag  flag option
