@@ -47,19 +47,17 @@ namespace CuiLib.Commands
 
             // Usage
             writer.WriteLine("Usage:");
-            if (!string.IsNullOrEmpty(command.Name))
-            {
-                writer.Write(command.Name);
-                writer.Write(' ');
-            }
+
+            writer.Write(command.Name);
+
             if (command.Options.Count > 0)
                 foreach (Option option in command.Options)
                 {
+                    writer.Write(' ');
                     if (!option.Required) writer.Write('[');
                     WriteOption(writer, option);
                     if (option.IsValued) writer.Write($" {option.ValueTypeName}");
                     if (!option.Required) writer.Write(']');
-                    writer.Write(' ');
 
                     static void WriteOption(TextWriter writer, Option option)
                     {
@@ -91,15 +89,15 @@ namespace CuiLib.Commands
                     }
                 }
 
-            if (command.Children.Count > 0) writer.Write("[Subcommand]");
+            if (command.Children.Count > 0) writer.Write(" [Subcommand]");
             else if (command.Parameters.Count > 0)
                 foreach (Parameter current in command.Parameters)
                 {
+                    writer.Write(' ');
                     writer.Write('<');
                     writer.Write(current.Name);
                     if (current.IsArray) writer.Write(" ..");
                     writer.Write('>');
-                    writer.Write(' ');
                 }
             writer.WriteLine();
             writer.WriteLine();
