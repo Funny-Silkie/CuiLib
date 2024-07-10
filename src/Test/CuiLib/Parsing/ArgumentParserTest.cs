@@ -71,6 +71,12 @@ namespace Test.CuiLib.Parsing
             Assert.That(parser.Index, Is.EqualTo(0));
         }
 
+        [Test]
+        public void ForcingParameter_Get_OnDefault()
+        {
+            Assert.That(parser.ForcingParameter, Is.False);
+        }
+
         #endregion Properties
 
         #region Methods
@@ -219,6 +225,17 @@ namespace Test.CuiLib.Parsing
         }
 
         [Test]
+        public void ParseOption_AsPositive_OnForcingParameter()
+        {
+            var parser = new ArgumentParser(["-s", "--", "value", "-f"]);
+            var flag = new FlagOption('f');
+            var valued = new SingleValueOption<string>('s');
+            parser.ParseOption([flag, valued]);
+
+            Assert.That(parser.ParseOption([flag, valued]), Is.Null);
+        }
+
+        [Test]
         public void ParseOption_AsPositive_OnNoOptionString()
         {
             var parser = new ArgumentParser(["-f", "value"]);
@@ -247,6 +264,7 @@ namespace Test.CuiLib.Parsing
             {
                 Assert.That(parser.ParseOption([flag]), Is.EquivalentTo(new[] { flag }));
                 Assert.That(parser.Index, Is.EqualTo(1));
+                Assert.That(parser.ForcingParameter, Is.False);
                 Assert.That(flag.ValueAvailable, Is.True);
                 Assert.That(flag.Value, Is.True);
             });
@@ -262,6 +280,7 @@ namespace Test.CuiLib.Parsing
             {
                 Assert.That(parser.ParseOption([flag]), Is.EqualTo(new[] { flag }));
                 Assert.That(parser.Index, Is.EqualTo(1));
+                Assert.That(parser.ForcingParameter, Is.False);
                 Assert.That(flag.ValueAvailable, Is.True);
                 Assert.That(flag.Value, Is.True);
             });
@@ -288,6 +307,7 @@ namespace Test.CuiLib.Parsing
             {
                 Assert.That(parser.ParseOption([valued]), Is.EquivalentTo(new[] { valued }));
                 Assert.That(parser.Index, Is.EqualTo(2));
+                Assert.That(parser.ForcingParameter, Is.False);
                 Assert.That(valued.ValueAvailable, Is.True);
                 Assert.That(valued.Value, Is.EqualTo(100));
             });
@@ -303,6 +323,23 @@ namespace Test.CuiLib.Parsing
             {
                 Assert.That(parser.ParseOption([valued]), Is.EquivalentTo(new[] { valued }));
                 Assert.That(parser.Index, Is.EqualTo(2));
+                Assert.That(parser.ForcingParameter, Is.False);
+                Assert.That(valued.ValueAvailable, Is.True);
+                Assert.That(valued.Value, Is.EqualTo(100));
+            });
+        }
+
+        [Test]
+        public void ParseOption_AsPositive_OnSingleValuedOptionWithForcingToken()
+        {
+            var parser = new ArgumentParser(["-n", "--", "100", "value"]);
+            var valued = new SingleValueOption<int>('n', "num");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parser.ParseOption([valued]), Is.EquivalentTo(new[] { valued }));
+                Assert.That(parser.Index, Is.EqualTo(3));
+                Assert.That(parser.ForcingParameter, Is.True);
                 Assert.That(valued.ValueAvailable, Is.True);
                 Assert.That(valued.Value, Is.EqualTo(100));
             });
@@ -351,6 +388,30 @@ namespace Test.CuiLib.Parsing
             {
                 Assert.That(parser.ParseOption(options), Is.EquivalentTo(options));
                 Assert.That(parser.Index, Is.EqualTo(2));
+                Assert.That(parser.ForcingParameter, Is.False);
+                Assert.That(flag1.ValueAvailable, Is.True);
+                Assert.That(flag1.Value, Is.True);
+                Assert.That(flag2.ValueAvailable, Is.True);
+                Assert.That(flag2.Value, Is.True);
+                Assert.That(valued.ValueAvailable, Is.True);
+                Assert.That(valued.Value, Is.EqualTo(100));
+            });
+        }
+
+        [Test]
+        public void ParseOption_AsCombinedOptionsWithFlagAndValued_WithForcingToken_AsPositive()
+        {
+            var flag1 = new FlagOption('a');
+            var flag2 = new FlagOption('b');
+            var valued = new SingleValueOption<int>('c');
+            var options = new OptionCollection() { flag1, flag2, valued };
+            var parser = new ArgumentParser(["-abc", "--", "100"]);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parser.ParseOption(options), Is.EquivalentTo(options));
+                Assert.That(parser.Index, Is.EqualTo(3));
+                Assert.That(parser.ForcingParameter, Is.True);
                 Assert.That(flag1.ValueAvailable, Is.True);
                 Assert.That(flag1.Value, Is.True);
                 Assert.That(flag2.ValueAvailable, Is.True);
@@ -373,6 +434,7 @@ namespace Test.CuiLib.Parsing
             {
                 Assert.That(parser.ParseOption(options), Is.EquivalentTo(options));
                 Assert.That(parser.Index, Is.EqualTo(1));
+                Assert.That(parser.ForcingParameter, Is.False);
                 Assert.That(flag1.ValueAvailable, Is.True);
                 Assert.That(flag1.Value, Is.True);
                 Assert.That(flag2.ValueAvailable, Is.True);
@@ -393,7 +455,11 @@ namespace Test.CuiLib.Parsing
         {
             parser.ParseParameters([]);
 
-            Assert.That(parser.Index, Is.EqualTo(0));
+            Assert.Multiple(() =>
+            {
+                Assert.That(parser.Index, Is.EqualTo(0));
+                Assert.That(parser.EndOfArguments, Is.False);
+            });
         }
 
         [Test]
@@ -408,6 +474,7 @@ namespace Test.CuiLib.Parsing
 
             Assert.Multiple(() =>
             {
+                Assert.That(parser.ForcingParameter, Is.False);
                 Assert.That(param1.ValueAvailable, Is.False);
                 Assert.That(param2.ValueAvailable, Is.False);
             });
@@ -426,6 +493,7 @@ namespace Test.CuiLib.Parsing
             Assert.Multiple(() =>
             {
                 Assert.That(parser.EndOfArguments, Is.True);
+                Assert.That(parser.ForcingParameter, Is.False);
                 Assert.That(param1.ValueAvailable, Is.True);
                 Assert.That(param1.Value, Is.EqualTo("value1"));
                 Assert.That(param2.ValueAvailable, Is.True);
@@ -455,8 +523,85 @@ namespace Test.CuiLib.Parsing
             Assert.Multiple(() =>
             {
                 Assert.That(parser.EndOfArguments, Is.True);
+                Assert.That(parser.ForcingParameter, Is.False);
                 Assert.That(param.ValueAvailable, Is.True);
                 Assert.That(param.Value, Is.EqualTo(new[] { "value1", "value2" }));
+            });
+        }
+
+        [Test]
+        public void ParseParameters_AsPositive_WithFirstForcingToken()
+        {
+            var parser = new ArgumentParser(["--", "value1", "value2"]);
+            var parameters = new ParameterCollection();
+            MultipleValueParameter<string> param = parameters.CreateAndAddAsArray<string>("param");
+
+            parser.ParseParameters(parameters);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parser.EndOfArguments, Is.True);
+                Assert.That(parser.ForcingParameter, Is.True);
+                Assert.That(param.ValueAvailable, Is.True);
+                Assert.That(param.Value, Is.EqualTo(new[] { "value1", "value2" }));
+            });
+        }
+
+        [Test]
+        public void ParseParameters_AsPositive_WithMiddleForcingToken()
+        {
+            var parser = new ArgumentParser(["value1", "--", "value2"]);
+            var parameters = new ParameterCollection();
+            MultipleValueParameter<string> param = parameters.CreateAndAddAsArray<string>("param");
+
+            parser.ParseParameters(parameters);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parser.EndOfArguments, Is.True);
+                Assert.That(parser.ForcingParameter, Is.True);
+                Assert.That(param.ValueAvailable, Is.True);
+                Assert.That(param.Value, Is.EqualTo(new[] { "value1", "value2" }));
+            });
+        }
+
+        [Test]
+        public void ParseParameters_AsPositive_WithLastForcingToken()
+        {
+            var parser = new ArgumentParser(["value1", "value2", "--"]);
+            var parameters = new ParameterCollection();
+            MultipleValueParameter<string> param = parameters.CreateAndAddAsArray<string>("param");
+
+            parser.ParseParameters(parameters);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parser.EndOfArguments, Is.True);
+                Assert.That(parser.ForcingParameter, Is.True);
+                Assert.That(param.ValueAvailable, Is.True);
+                Assert.That(param.Value, Is.EqualTo(new[] { "value1", "value2" }));
+            });
+        }
+
+        [Test]
+        public void ParseParameters_AsPositive_WithForcingToken_OnForcingParameter()
+        {
+            var parser = new ArgumentParser(["-n", "--", "100", "value1", "--", "value2"]);
+            var option = new SingleValueOption<int>('n');
+
+            parser.ParseOption([option]);
+
+            var parameters = new ParameterCollection();
+            MultipleValueParameter<string> param = parameters.CreateAndAddAsArray<string>("param");
+
+            parser.ParseParameters(parameters);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parser.EndOfArguments, Is.True);
+                Assert.That(parser.ForcingParameter, Is.True);
+                Assert.That(param.ValueAvailable, Is.True);
+                Assert.That(param.Value, Is.EqualTo(new[] { "value1", "--", "value2" }));
             });
         }
 

@@ -14,12 +14,19 @@ namespace CuiLib.Parsing
     [Serializable]
     public class ArgumentParser
     {
+        private const string ForcingParameterToken = "--";
+
         private readonly string[] arguments;
 
         /// <summary>
         /// 現在パースの進んだ引数のインデックスを取得します。
         /// </summary>
-        internal int Index { get; private set; }
+        public int Index { get; private set; }
+
+        /// <summary>
+        /// 以降の値をパラメータとして強制するかどうかを表す値を取得します。
+        /// </summary>
+        public bool ForcingParameter { get; private set; }
 
         /// <summary>
         /// 引数解析が終了したか否かを表す値を取得します。
@@ -90,9 +97,11 @@ namespace CuiLib.Parsing
         {
             ThrowHelpers.ThrowIfNull(options);
 
-            if (EndOfArguments) return null;
+            if (EndOfArguments || ForcingParameter) return null;
 
             ref string argumentRef = ref arguments[Index];
+            if (argumentRef == ForcingParameterToken) return null;
+
             (string[]? optionNames, bool isSingle) = GetOptionName(argumentRef);
 
             // Current value does not represent an option name
@@ -118,7 +127,14 @@ namespace CuiLib.Parsing
 
                     if (!actualTarget.CanMultiValue && actualTarget.ValueAvailable) throw new ArgumentAnalysisException($"オプション'{actualName}'が複数指定されています");
 
-                    actualTarget.ApplyValue(optionName, Unsafe.Add(ref argumentRef, 1));
+                    argumentRef = ref Unsafe.Add(ref argumentRef, 1);
+                    if (!ForcingParameter && argumentRef == ForcingParameterToken)
+                    {
+                        ForcingParameter = true;
+                        argumentRef = ref Unsafe.Add(ref argumentRef, 1);
+                        SkipArguments(1);
+                    }
+                    actualTarget.ApplyValue(optionName, argumentRef);
                     SkipArguments(1);
                     break;
                 }
@@ -139,7 +155,7 @@ namespace CuiLib.Parsing
         /// <returns>ハイフン抜きのオプション名。短縮形の場合は全てのオプション名</returns>
         private static (string[]? optionNames, bool isSingle) GetOptionName(string value)
         {
-            if (value.Length <= 1 || value is "--") return (null, false);
+            if (value.Length <= 1) return (null, false);
 
             if (value[0] == '-')
             {
@@ -164,9 +180,28 @@ namespace CuiLib.Parsing
 
             if (EndOfArguments || parameters.Count == 0) return;
 
+            Span<string> args = arguments.AsSpan()[Index..];
+            if (!ForcingParameter)
+            {
+                int forcingTokenIndex = args.IndexOf(ForcingParameterToken);
+                if (forcingTokenIndex != -1)
+                {
+                    if (forcingTokenIndex == args.Length - 1) args = args[..^1];
+                    else if (forcingTokenIndex == 0) args = args[1..];
+                    else
+                    {
+                        var newArgs = new Span<string>(new string[args.Length - 1]);
+                        args[..forcingTokenIndex].CopyTo(newArgs);
+                        args[(forcingTokenIndex + 1)..].CopyTo(newArgs[forcingTokenIndex..]);
+                        args = newArgs;
+                    }
+                    ForcingParameter = true;
+                }
+            }
+
             try
             {
-                parameters.SetValues(arguments.AsSpan()[Index..]);
+                parameters.SetValues(args);
             }
             catch (InvalidOperationException e)
             {
