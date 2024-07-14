@@ -9,7 +9,7 @@ namespace CuiLib.Options
     /// </summary>
     /// <typeparam name="T">オプションの値の型</typeparam>
     [Serializable]
-    public class SingleValueOption<T> : ValueSpecifiedOption<T>
+    public class SingleValueOption<T> : ValueSpecifiedOption<T>, IValuedOption
     {
         /// <inheritdoc/>
         internal override OptionType OptionType => OptionType.Valued | OptionType.SingleValue;
@@ -70,6 +70,8 @@ namespace CuiLib.Options
                 return DefaultValue;
             }
         }
+
+        int IValuedOption.ValueCount => 1;
 
         /// <summary>
         /// <see cref="SingleValueOption{T}"/>の新しいインスタンスを初期化します。

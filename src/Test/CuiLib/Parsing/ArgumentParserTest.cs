@@ -346,6 +346,123 @@ namespace Test.CuiLib.Parsing
         }
 
         [Test]
+        public void ParseOption_AsPositive_OnMultipleValuedOption_WithOneValue()
+        {
+            var parser = new ArgumentParser(["-n", "100", "-n", "200", "300", "value"]);
+            var valued = new MultipleValueOption<int>('n', "num")
+            {
+                ValueCount = 1,
+            };
+            var parameters = new ParameterCollection();
+            MultipleValueParameter<string> param = parameters.CreateAndAddAsArray<string>("param");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parser.ParseOption([valued]), Is.EquivalentTo(new[] { valued }));
+                Assert.That(parser.Index, Is.EqualTo(2));
+                Assert.That(parser.ForcingParameter, Is.False);
+                Assert.That(valued.ValueAvailable, Is.True);
+                Assert.That(valued.Value, Is.EqualTo(new[] { 100 }));
+            });
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parser.ParseOption([valued]), Is.EquivalentTo(new[] { valued }));
+                Assert.That(parser.Index, Is.EqualTo(4));
+                Assert.That(parser.ForcingParameter, Is.False);
+                Assert.That(valued.ValueAvailable, Is.True);
+                Assert.That(valued.Value, Is.EqualTo(new[] { 100, 200 }));
+            });
+
+            parser.ParseParameters(parameters);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(param.ValueAvailable, Is.True);
+                Assert.That(param.Value, Is.EqualTo(new[] { "300", "value" }));
+            });
+        }
+
+        [Test]
+        public void ParseOption_AsPositive_OnMultipleValuedOption_WithThreeValues()
+        {
+            var parser = new ArgumentParser(["-n", "100", "200", "300", "value"]);
+            var valued = new MultipleValueOption<int>('n', "num")
+            {
+                ValueCount = 3,
+            };
+            var parameters = new ParameterCollection();
+            MultipleValueParameter<string> param = parameters.CreateAndAddAsArray<string>("param");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parser.ParseOption([valued]), Is.EquivalentTo(new[] { valued }));
+                Assert.That(parser.Index, Is.EqualTo(4));
+                Assert.That(parser.ForcingParameter, Is.False);
+                Assert.That(valued.ValueAvailable, Is.True);
+                Assert.That(valued.Value, Is.EqualTo(new[] { 100, 200, 300 }));
+            });
+
+            parser.ParseParameters(parameters);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(param.ValueAvailable, Is.True);
+                Assert.That(param.Value, Is.EqualTo(new[] { "value" }));
+            });
+        }
+
+        [Test]
+        public void ParseOption_AsPositive_OnMultipleValuedOption_WithAllValues1()
+        {
+            var parser = new ArgumentParser(["-n", "100", "200", "300", "-f", "value"]);
+            var valued = new MultipleValueOption<int>('n', "num")
+            {
+                ValueCount = 0,
+            };
+            var flag = new FlagOption('f');
+            var parameters = new ParameterCollection();
+            MultipleValueParameter<string> param = parameters.CreateAndAddAsArray<string>("param");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parser.ParseOption([valued, flag]), Is.EquivalentTo(new[] { valued }));
+                Assert.That(parser.Index, Is.EqualTo(4));
+                Assert.That(parser.ForcingParameter, Is.False);
+                Assert.That(valued.ValueAvailable, Is.True);
+                Assert.That(valued.Value, Is.EqualTo(new[] { 100, 200, 300 }));
+            });
+
+            parser.ParseOption([valued, flag]);
+            parser.ParseParameters(parameters);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(param.ValueAvailable, Is.True);
+                Assert.That(param.Value, Is.EqualTo(new[] { "value" }));
+            });
+        }
+
+        [Test]
+        public void ParseOption_AsPositive_OnMultipleValuedOption_WithAllValues2()
+        {
+            var parser = new ArgumentParser(["-n", "100", "--", "200", "300"]);
+            var valued = new MultipleValueOption<int>('n', "num")
+            {
+                ValueCount = 0,
+            };
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parser.ParseOption([valued]), Is.EquivalentTo(new[] { valued }));
+                Assert.That(parser.Index, Is.EqualTo(5));
+                Assert.That(parser.ForcingParameter, Is.True);
+                Assert.That(valued.ValueAvailable, Is.True);
+                Assert.That(valued.Value, Is.EqualTo(new[] { 100, 200, 300 }));
+            });
+        }
+
+        [Test]
         public void ParseOption_AsMissingValueOfValuedOption()
         {
             var parser = new ArgumentParser(["-n"]);

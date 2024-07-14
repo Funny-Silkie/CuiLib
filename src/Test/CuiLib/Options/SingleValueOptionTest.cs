@@ -171,6 +171,12 @@ namespace Test.CuiLib.Options
             Assert.That(option.Value, Is.EqualTo(100));
         }
 
+        [Test]
+        public void Interface_IValuedOption_ValueCount_Get()
+        {
+            Assert.That(((IValuedOption)option).ValueCount, Is.EqualTo(1));
+        }
+
         #endregion Properties
     }
 }

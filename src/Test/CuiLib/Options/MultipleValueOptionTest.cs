@@ -177,6 +177,27 @@ namespace Test.CuiLib.Options
             Assert.That(option.Value, Is.EqualTo(new[] { 100, 200 }));
         }
 
+        [Test]
+        public void ValueCount_Get_OnDefault()
+        {
+            Assert.That(option.ValueCount, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ValueCount_Set_WithNegative()
+        {
+            Assert.That(() => option.ValueCount = -1, Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [TestCase(0)]
+        [TestCase(2)]
+        [TestCase(100)]
+        public void ValueCount_Set_AsPositive(int value)
+        {
+            option.ValueCount = value;
+            Assert.That(option.ValueCount, Is.EqualTo(value));
+        }
+
         #endregion Properties
     }
 }

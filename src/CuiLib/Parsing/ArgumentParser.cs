@@ -110,7 +110,7 @@ namespace CuiLib.Parsing
             SkipArguments(1);
 
             var list = new List<Option>(optionNames.Length);
-            int i = 0;
+            int optionIndex = 0;
 
             foreach (string optionName in optionNames)
             {
@@ -123,26 +123,58 @@ namespace CuiLib.Parsing
                 Option actualTarget = target.GetActualOption(optionName, isSingle);
                 if (actualTarget.IsValued)
                 {
-                    if (EndOfArguments || i < optionNames.Length - 1) throw new ArgumentAnalysisException($"オプション'{actualName}'に値が設定されていません");
+                    if (EndOfArguments || optionIndex < optionNames.Length - 1) throw new ArgumentAnalysisException($"オプション'{actualName}'に値が設定されていません");
 
                     if (!actualTarget.CanMultiValue && actualTarget.ValueAvailable) throw new ArgumentAnalysisException($"オプション'{actualName}'が複数指定されています");
 
-                    argumentRef = ref Unsafe.Add(ref argumentRef, 1);
-                    if (!ForcingParameter && argumentRef == ForcingParameterToken)
+                    int valueCount = ((IValuedOption)actualTarget).ValueCount;
+
+                    if (valueCount == 0)
                     {
-                        ForcingParameter = true;
-                        argumentRef = ref Unsafe.Add(ref argumentRef, 1);
-                        SkipArguments(1);
+                        while (true)
+                        {
+                            if (EndOfArguments) break;
+
+                            argumentRef = ref Unsafe.Add(ref argumentRef, 1);
+
+                            if (GetOptionName(argumentRef).optionNames is not null) break;
+
+                            if (!ForcingParameter && argumentRef == ForcingParameterToken)
+                            {
+                                ForcingParameter = true;
+                                argumentRef = ref Unsafe.Add(ref argumentRef, 1);
+                                SkipArguments(1);
+                            }
+                            actualTarget.ApplyValue(optionName, argumentRef);
+                            SkipArguments(1);
+                        }
                     }
-                    actualTarget.ApplyValue(optionName, argumentRef);
-                    SkipArguments(1);
+                    else
+                    {
+                        for (int valueIndex = 0; valueIndex < valueCount; valueIndex++)
+                        {
+                            if (EndOfArguments) throw new ArgumentAnalysisException($"オプション'{actualName}'の値の数が足りません");
+
+                            argumentRef = ref Unsafe.Add(ref argumentRef, 1);
+
+                            if (!ForcingParameter && argumentRef == ForcingParameterToken)
+                            {
+                                ForcingParameter = true;
+                                argumentRef = ref Unsafe.Add(ref argumentRef, 1);
+                                SkipArguments(1);
+                            }
+                            actualTarget.ApplyValue(optionName, argumentRef);
+                            SkipArguments(1);
+                        }
+                    }
+
                     break;
                 }
 
                 if (!actualTarget.CanMultiValue && actualTarget.ValueAvailable) throw new ArgumentAnalysisException($"オプション'{actualName}'が複数指定されています");
                 actualTarget.ApplyValue(optionName, string.Empty);
 
-                i++;
+                optionIndex++;
             }
 
             return list.ToArray();
@@ -155,7 +187,7 @@ namespace CuiLib.Parsing
         /// <returns>ハイフン抜きのオプション名。短縮形の場合は全てのオプション名</returns>
         private static (string[]? optionNames, bool isSingle) GetOptionName(string value)
         {
-            if (value.Length <= 1) return (null, false);
+            if (value.Length <= 1 || value == ForcingParameterToken) return (null, false);
 
             if (value[0] == '-')
             {
