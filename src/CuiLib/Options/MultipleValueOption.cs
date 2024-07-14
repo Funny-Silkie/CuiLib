@@ -9,7 +9,7 @@ namespace CuiLib.Options
     /// </summary>
     /// <typeparam name="T">オプションの値の型</typeparam>
     [Serializable]
-    public class MultipleValueOption<T> : ValueSpecifiedOption<T[]>
+    public class MultipleValueOption<T> : ValueSpecifiedOption<T[]>, IValuedOption
     {
         /// <inheritdoc/>
         internal override OptionType OptionType => OptionType.Valued | OptionType.MultiValue;
@@ -79,6 +79,22 @@ namespace CuiLib.Options
         }
 
         private T[]? _valueCache;
+
+        /// <summary>
+        /// 取る連続した値の個数を取得または設定します。
+        /// </summary>
+        /// <remarks>0にすることで次のオプション迄の全ての値を取得</remarks>
+        public int ValueCount
+        {
+            get => _valueCount;
+            set
+            {
+                ThrowHelpers.ThrowIfNegative(value);
+                _valueCount = value;
+            }
+        }
+
+        private int _valueCount = 1;
 
         /// <summary>
         /// <see cref="MultipleValueOption{T}"/>の新しいインスタンスを初期化します。
