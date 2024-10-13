@@ -1,3 +1,4 @@
+using CuiLib.Data;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -392,6 +393,19 @@ namespace CuiLib.Converters
         }
 
         /// <summary>
+        /// 文字列から<see cref="ValueRange"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="ValueRange"/>に変換するインスタンス</returns>
+        public static IValueConverter<string, ValueRange> StringToValueRange()
+        {
+#if NET7_0_OR_GREATER
+            return new ParsableValueConverter<ValueRange>();
+#else
+            return FromDelegate<string, ValueRange>(ValueRange.Parse);
+#endif
+        }
+
+        /// <summary>
         /// 文字列から列挙型に変換するインスタンスを生成します。
         /// </summary>
         /// <typeparam name="TEnum">列挙型</typeparam>
@@ -553,6 +567,7 @@ namespace CuiLib.Converters
             if (type == typeof(DateOnly)) return Cast(StringToDateOnly());
             if (type == typeof(TimeOnly)) return Cast(StringToTimeOnly());
 #endif
+            if (type == typeof(ValueRange)) return Cast(StringToValueRange());
             if (type == typeof(char)) return Cast(StringToChar());
             if (type == typeof(float)) return Cast(StringToSingle());
             if (type == typeof(decimal)) return Cast(StringToDecimal());
