@@ -46,6 +46,8 @@
   - ファイルパスを取るコンストラクタで追加or新規作成の選択，文字コードの設定が可能に
   - デフォルトの文字コードを指定できるように `DefaultEncoding` プロパティを実装
   - `AddLog(TextWriter, bool)` のオーバーロードを追加，インスタンス破棄時に同時に破棄するかを設定可能に
+- Data
+  - 範囲を表すオブジェクトである `ValueRange`, `ValueRangeCollection` を追加
 - Checkers
   - 新たなファクトリメソッドの追加
     - `Empty()`, `Empty<TElement>()`, `NotEmpty()`, `NotEmpty<TElement>()`
