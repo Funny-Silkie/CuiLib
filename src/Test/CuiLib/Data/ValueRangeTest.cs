@@ -1,4 +1,4 @@
-﻿using CuiLib.Data;
+using CuiLib.Data;
 using NUnit.Framework;
 using System;
 using System.Collections;
@@ -820,7 +820,7 @@ namespace Test.CuiLib.Data
         [Test]
         public void TryFormat_WithShortSpan()
         {
-            var span = new Span<char>(new char[2]);
+            Span<char> span = stackalloc char[2];
 
             Assert.That(range.TryFormat(span, out _, null, null), Is.False);
         }
@@ -835,7 +835,7 @@ namespace Test.CuiLib.Data
 
             static void CheckTryFormat(ValueRange range, int length, string expectedValue, int expectedCharsWritten)
             {
-                var span = new Span<char>(new char[length]);
+                Span<char> span = stackalloc char[length];
 
 #pragma warning disable NUnit2045 // Use Assert.Multiple
                 Assert.That(range.TryFormat(span, out int actualCharsWritten, null, null), Is.True);

@@ -406,6 +406,19 @@ namespace CuiLib.Converters
         }
 
         /// <summary>
+        /// 文字列から<see cref="ValueRangeCollection"/>に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>文字列から<see cref="ValueRangeCollection"/>に変換するインスタンス</returns>
+        public static IValueConverter<string, ValueRangeCollection> StringToValueRangeCollection()
+        {
+#if NET7_0_OR_GREATER
+            return new ParsableValueConverter<ValueRangeCollection>();
+#else
+            return FromDelegate<string, ValueRangeCollection>(ValueRangeCollection.Parse);
+#endif
+        }
+
+        /// <summary>
         /// 文字列から列挙型に変換するインスタンスを生成します。
         /// </summary>
         /// <typeparam name="TEnum">列挙型</typeparam>
@@ -568,6 +581,7 @@ namespace CuiLib.Converters
             if (type == typeof(TimeOnly)) return Cast(StringToTimeOnly());
 #endif
             if (type == typeof(ValueRange)) return Cast(StringToValueRange());
+            if (type == typeof(ValueRangeCollection)) return Cast(StringToValueRangeCollection());
             if (type == typeof(char)) return Cast(StringToChar());
             if (type == typeof(float)) return Cast(StringToSingle());
             if (type == typeof(decimal)) return Cast(StringToDecimal());

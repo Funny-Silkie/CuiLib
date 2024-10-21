@@ -638,6 +638,20 @@ namespace Test.CuiLib.Converters
         }
 
         [Test]
+        public void StringToValueRangeCollection()
+        {
+            IValueConverter<string, ValueRangeCollection> converter = ValueConverter.StringToValueRangeCollection();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("1,3-5,10-11"), Is.EqualTo(new[] { 1, new ValueRange(3, 5), new ValueRange(10, 11) }));
+
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
+            });
+        }
+
+        [Test]
         public void StringToEnum_WithoutArgs()
         {
             IValueConverter<string, OptionType> converter = ValueConverter.StringToEnum<OptionType>();
@@ -1630,6 +1644,20 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("1-3"), Is.EqualTo(new ValueRange(1, 3)));
                 Assert.That(converter.Convert("-10"), Is.EqualTo(new ValueRange(end: 10)));
                 Assert.That(converter.Convert("10-"), Is.EqualTo(new ValueRange(start: 10)));
+
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
+            });
+        }
+
+        [Test]
+        public void GetDefault_AsValueRangeCollection()
+        {
+            IValueConverter<string, ValueRangeCollection> converter = ValueConverter.GetDefault<ValueRangeCollection>();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("1,3-5,10-11"), Is.EqualTo(new[] { 1, new ValueRange(3, 5), new ValueRange(10, 11) }));
 
                 Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
                 Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
