@@ -1,5 +1,6 @@
 ﻿using CuiLib;
 using CuiLib.Converters;
+using CuiLib.Data;
 using CuiLib.Options;
 using NUnit.Framework;
 using System;
@@ -617,6 +618,37 @@ namespace Test.CuiLib.Converters
             });
 
             Assert.That(() => converter.Convert("!!!"), Throws.TypeOf<FormatException>());
+        }
+
+        [Test]
+        public void StringToValueRange()
+        {
+            IValueConverter<string, ValueRange> converter = ValueConverter.StringToValueRange();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("10"), Is.EqualTo(new ValueRange(10)));
+                Assert.That(converter.Convert("1-3"), Is.EqualTo(new ValueRange(1, 3)));
+                Assert.That(converter.Convert("-10"), Is.EqualTo(new ValueRange(end: 10)));
+                Assert.That(converter.Convert("10-"), Is.EqualTo(new ValueRange(start: 10)));
+
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
+            });
+        }
+
+        [Test]
+        public void StringToValueRangeCollection()
+        {
+            IValueConverter<string, ValueRangeCollection> converter = ValueConverter.StringToValueRangeCollection();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("1,3-5,10-11"), Is.EqualTo(new[] { 1, new ValueRange(3, 5), new ValueRange(10, 11) }));
+
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
+            });
         }
 
         [Test]
@@ -1595,6 +1627,37 @@ namespace Test.CuiLib.Converters
                 Assert.That(converter.Convert("2024-05-06 12:34:56"), Is.EqualTo(new DateTimeOffset(new DateTime(2024, 05, 06, 12, 34, 56))));
                 Assert.That(converter.Convert("9999-12-31 23:59:59.9999999+00:00"), Is.EqualTo(DateTimeOffset.MaxValue));
                 Assert.That(converter.Convert("0001-01-01 00:00:00+00:00"), Is.EqualTo(DateTimeOffset.MinValue));
+
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
+            });
+        }
+
+        [Test]
+        public void GetDefault_AsValueRange()
+        {
+            IValueConverter<string, ValueRange> converter = ValueConverter.GetDefault<ValueRange>();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("10"), Is.EqualTo(new ValueRange(10)));
+                Assert.That(converter.Convert("1-3"), Is.EqualTo(new ValueRange(1, 3)));
+                Assert.That(converter.Convert("-10"), Is.EqualTo(new ValueRange(end: 10)));
+                Assert.That(converter.Convert("10-"), Is.EqualTo(new ValueRange(start: 10)));
+
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());
+            });
+        }
+
+        [Test]
+        public void GetDefault_AsValueRangeCollection()
+        {
+            IValueConverter<string, ValueRangeCollection> converter = ValueConverter.GetDefault<ValueRangeCollection>();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("1,3-5,10-11"), Is.EqualTo(new[] { 1, new ValueRange(3, 5), new ValueRange(10, 11) }));
 
                 Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
                 Assert.That(() => converter.Convert("!!"), Throws.TypeOf<FormatException>());

@@ -2,6 +2,7 @@
 using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 
@@ -32,6 +33,26 @@ namespace CuiLib.Internal.Versions
                 }
             }
             return result;
+#endif
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int ParseToInt32(ReadOnlySpan<char> s, IFormatProvider? provider)
+        {
+#if NET7_0_OR_GREATER
+            return int.Parse(s, provider);
+#else
+            return int.Parse(s.ToString(), provider);
+#endif
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryParseToInt32(ReadOnlySpan<char> s, IFormatProvider? provider, out int result)
+        {
+#if NET7_0_OR_GREATER
+            return int.TryParse(s, provider, out result);
+#else
+            return int.TryParse(s.ToString(), NumberStyles.Integer, provider, out result);
 #endif
         }
 

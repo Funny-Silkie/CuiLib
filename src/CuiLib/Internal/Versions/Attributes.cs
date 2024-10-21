@@ -26,6 +26,7 @@ namespace System.Diagnostics.CodeAnalysis
         public const string CompositeFormat = "CompositeFormat";
         public const string DateOnlyFormat = "DateOnlyFormat";
         public const string DateTimeFormat = "DateTimeFormat";
+        public const string NumericFormat = "NumericFormat";
         public const string Regex = "Regex";
         public const string TimeOnlyFormat = "TimeOnlyFormat";
         public const string TimeSpanFormat = "TimeSpanFormat";
