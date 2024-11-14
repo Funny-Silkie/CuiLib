@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace CuiLib.Internal.Versions
@@ -55,6 +56,15 @@ namespace CuiLib.Internal.Versions
             return int.TryParse(s.ToString(), NumberStyles.Integer, provider, out result);
 #endif
         }
+
+#if !NET7_0_OR_GREATER
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Order<T>(this IEnumerable<T> source)
+        {
+            return source.OrderBy(x => x);
+        }
+#endif
 
 #if NETSTANDARD
 

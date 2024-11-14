@@ -1,6 +1,7 @@
 ﻿using CuiLib;
 using CuiLib.Converters;
 using CuiLib.Data;
+using CuiLib.Internal.Versions;
 using CuiLib.Options;
 using NUnit.Framework;
 using System;
@@ -51,6 +52,34 @@ namespace Test.CuiLib.Converters
         }
 
         [Test]
+        public void GetDefault_AsArrayOfFileInfo()
+        {
+            IValueConverter<string, FileInfo[]> converter = ValueConverter.GetDefault<FileInfo[]>();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("*.test.tmp").Select(x => x.Name).Order(), Is.EqualTo(new[] { "1.test.tmp", "2.test.tmp", "3.test.tmp" }));
+
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
+            });
+        }
+
+        [Test]
+        public void GetDefault_AsIEnumerableOfFileInfo()
+        {
+            IValueConverter<string, IEnumerable<FileInfo>> converter = ValueConverter.GetDefault<IEnumerable<FileInfo>>();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("*.test.tmp").Select(x => x.Name).Order(), Is.EqualTo(new[] { "1.test.tmp", "2.test.tmp", "3.test.tmp" }));
+
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
+            });
+        }
+
+        [Test]
         public void GetDefault_AsDirectoryInfo()
         {
             IValueConverter<string, DirectoryInfo> converter = ValueConverter.GetDefault<DirectoryInfo>();
@@ -59,6 +88,62 @@ namespace Test.CuiLib.Converters
             {
                 Assert.That(converter.Convert("test").Name, Is.EqualTo("test"));
                 Assert.That(converter.Convert("test/new").Name, Is.EqualTo("new"));
+            });
+        }
+
+        [Test]
+        public void GetDefault_AsArrayOfDirectoryInfo()
+        {
+            IValueConverter<string, DirectoryInfo[]> converter = ValueConverter.GetDefault<DirectoryInfo[]>();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("*.test.tmp").Select(x => x.Name).Order(), Is.EqualTo(new[] { "4.test.tmp", "5.test.tmp", "6.test.tmp" }));
+
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
+            });
+        }
+
+        [Test]
+        public void GetDefault_AsIEnumerableOfDirectoryInfo()
+        {
+            IValueConverter<string, IEnumerable<DirectoryInfo>> converter = ValueConverter.GetDefault<IEnumerable<DirectoryInfo>>();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("*.test.tmp").Select(x => x.Name).Order(), Is.EqualTo(new[] { "4.test.tmp", "5.test.tmp", "6.test.tmp" }));
+
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
+            });
+        }
+
+        [Test]
+        public void GetDefault_AsArrayOfFileSystemInfo()
+        {
+            IValueConverter<string, FileSystemInfo[]> converter = ValueConverter.GetDefault<FileSystemInfo[]>();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("*.test.tmp").Select(x => x.Name).Order(), Is.EqualTo(new[] { "1.test.tmp", "2.test.tmp", "3.test.tmp", "4.test.tmp", "5.test.tmp", "6.test.tmp" }));
+
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
+            });
+        }
+
+        [Test]
+        public void GetDefault_AsIEnumerableOfFileSystemInfo()
+        {
+            IValueConverter<string, IEnumerable<FileSystemInfo>> converter = ValueConverter.GetDefault<IEnumerable<FileSystemInfo>>();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("*.test.tmp").Select(x => x.Name).Order(), Is.EqualTo(new[] { "1.test.tmp", "2.test.tmp", "3.test.tmp", "4.test.tmp", "5.test.tmp", "6.test.tmp" }));
+
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
             });
         }
 

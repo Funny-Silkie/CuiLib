@@ -1,10 +1,12 @@
-using CuiLib;
+﻿using CuiLib;
 using CuiLib.Converters;
 using CuiLib.Data;
+using CuiLib.Internal.Versions;
 using CuiLib.Options;
 using NUnit.Framework;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Test.Helpers;
 
@@ -13,6 +15,17 @@ namespace Test.CuiLib.Converters
     [TestFixture]
     public partial class ValueConverterTest : TestBase
     {
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            foreach (string current in Enumerable.Range(1, 3).Select(x => $"{x}.test.tmp"))
+                if (!File.Exists(current))
+                    File.Create(current);
+            foreach (string current in Enumerable.Range(4, 3).Select(x => $"{x}.test.tmp"))
+                if (!Directory.Exists(current))
+                    Directory.CreateDirectory(current);
+        }
+
         [Test]
         public void Combine_WithNullIValueConverter()
         {
@@ -733,6 +746,36 @@ namespace Test.CuiLib.Converters
 #pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
 
         [Test]
+        public void StringToFileInfos_Convert()
+        {
+            IValueConverter<string, FileInfo[]> converter = ValueConverter.StringToFileInfos();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("*.test.tmp").Select(x => x.Name).Order(), Is.EqualTo(new[] { "1.test.tmp", "2.test.tmp", "3.test.tmp" }));
+
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
+            });
+        }
+
+#pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
+
+        [Test]
+        public void StringToFileInfos_Equals()
+        {
+            Assert.That(ValueConverter.StringToFileInfos(), Is.EqualTo(ValueConverter.StringToFileInfos()));
+        }
+
+        [Test]
+        public void StringToFileInfos_GetHashCode()
+        {
+            Assert.That(ValueConverter.StringToFileInfos().GetHashCode(), Is.EqualTo(ValueConverter.StringToFileInfos().GetHashCode()));
+        }
+
+#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
+
+        [Test]
         public void StringToDirectoryInfo_Convert()
         {
             IValueConverter<string, DirectoryInfo> converter = ValueConverter.StringToDirectoryInfo();
@@ -758,6 +801,66 @@ namespace Test.CuiLib.Converters
         public void StringToDirectoryInfo_GetHashCode()
         {
             Assert.That(ValueConverter.StringToDirectoryInfo().GetHashCode(), Is.EqualTo(ValueConverter.StringToDirectoryInfo().GetHashCode()));
+        }
+
+#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
+
+        [Test]
+        public void StringToDirectoryInfos_Convert()
+        {
+            IValueConverter<string, DirectoryInfo[]> converter = ValueConverter.StringToDirectoryInfos();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("*.test.tmp").Select(x => x.Name).Order(), Is.EqualTo(new[] { "4.test.tmp", "5.test.tmp", "6.test.tmp" }));
+
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
+            });
+        }
+
+#pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
+
+        [Test]
+        public void StringToDirectoryInfos_Equals()
+        {
+            Assert.That(ValueConverter.StringToDirectoryInfos(), Is.EqualTo(ValueConverter.StringToDirectoryInfos()));
+        }
+
+        [Test]
+        public void StringToDirectoryInfos_GetHashCode()
+        {
+            Assert.That(ValueConverter.StringToDirectoryInfos().GetHashCode(), Is.EqualTo(ValueConverter.StringToDirectoryInfos().GetHashCode()));
+        }
+
+#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
+
+        [Test]
+        public void StringToFileSystemInfos_Convert()
+        {
+            IValueConverter<string, FileSystemInfo[]> converter = ValueConverter.StringToFileSystemInfos();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(converter.Convert("*.test.tmp").Select(x => x.Name).Order(), Is.EqualTo(new[] { "1.test.tmp", "2.test.tmp", "3.test.tmp", "4.test.tmp", "5.test.tmp", "6.test.tmp" }));
+
+                Assert.That(() => converter.Convert(null!), Throws.ArgumentNullException);
+                Assert.That(() => converter.Convert(string.Empty), Throws.ArgumentException);
+            });
+        }
+
+#pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
+
+        [Test]
+        public void StringToFileSystemInfos_Equals()
+        {
+            Assert.That(ValueConverter.StringToFileSystemInfos(), Is.EqualTo(ValueConverter.StringToFileSystemInfos()));
+        }
+
+        [Test]
+        public void StringToFileSystemInfos_GetHashCode()
+        {
+            Assert.That(ValueConverter.StringToFileSystemInfos().GetHashCode(), Is.EqualTo(ValueConverter.StringToFileSystemInfos().GetHashCode()));
         }
 
 #pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
