@@ -297,6 +297,90 @@ namespace CuiLib.Converters
         }
 
         /// <summary>
+        /// <see cref="FileInfo"/>の一覧を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
+        /// </summary>
+        [Serializable]
+        private sealed class FilePatternValueConverter : IValueConverter<string, FileInfo[]>
+        {
+            /// <summary>
+            /// <see cref="FilePatternValueConverter"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            internal FilePatternValueConverter()
+            {
+            }
+
+            /// <inheritdoc/>
+            public FileInfo[] Convert(string value)
+            {
+                ThrowHelpers.ThrowIfNullOrEmpty(value);
+
+                return new DirectoryInfo(".").GetFiles(value);
+            }
+
+            /// <inheritdoc/>
+            public override bool Equals(object? obj) => obj is FilePatternValueConverter;
+
+            /// <inheritdoc/>
+            public override int GetHashCode() => GetType().GetHashCode();
+        }
+
+        /// <summary>
+        /// <see cref="DirectoryInfo"/>の一覧を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
+        /// </summary>
+        [Serializable]
+        private sealed class DirectoryPatternValueConverter : IValueConverter<string, DirectoryInfo[]>
+        {
+            /// <summary>
+            /// <see cref="DirectoryPatternValueConverter"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            internal DirectoryPatternValueConverter()
+            {
+            }
+
+            /// <inheritdoc/>
+            public DirectoryInfo[] Convert(string value)
+            {
+                ThrowHelpers.ThrowIfNullOrEmpty(value);
+
+                return new DirectoryInfo(".").GetDirectories(value);
+            }
+
+            /// <inheritdoc/>
+            public override bool Equals(object? obj) => obj is DirectoryPatternValueConverter;
+
+            /// <inheritdoc/>
+            public override int GetHashCode() => GetType().GetHashCode();
+        }
+
+        /// <summary>
+        /// <see cref="FileSystemInfo"/>の一覧を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
+        /// </summary>
+        [Serializable]
+        private sealed class FileSystemPatternValueConverter : IValueConverter<string, FileSystemInfo[]>
+        {
+            /// <summary>
+            /// <see cref="FileSystemPatternValueConverter"/>の新しいインスタンスを初期化します。
+            /// </summary>
+            internal FileSystemPatternValueConverter()
+            {
+            }
+
+            /// <inheritdoc/>
+            public FileSystemInfo[] Convert(string value)
+            {
+                ThrowHelpers.ThrowIfNullOrEmpty(value);
+
+                return new DirectoryInfo(".").GetFileSystemInfos(value);
+            }
+
+            /// <inheritdoc/>
+            public override bool Equals(object? obj) => obj is FileSystemPatternValueConverter;
+
+            /// <inheritdoc/>
+            public override int GetHashCode() => GetType().GetHashCode();
+        }
+
+        /// <summary>
         /// <see cref="DirectoryInfo"/>を生成する<see cref="IValueConverter{TIn, TOut}"/>のクラスです。
         /// </summary>
         [Serializable]

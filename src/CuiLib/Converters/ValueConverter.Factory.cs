@@ -1,5 +1,6 @@
 using CuiLib.Data;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
@@ -451,12 +452,39 @@ namespace CuiLib.Converters
         }
 
         /// <summary>
+        /// 検索パターンから<see cref="FileInfo"/>一覧に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>ファイル検索パターンから<see cref="FileInfo"/>一覧に変換するインスタンス</returns>
+        public static IValueConverter<string, FileInfo[]> StringToFileInfos()
+        {
+            return new FilePatternValueConverter();
+        }
+
+        /// <summary>
         /// 文字列から<see cref="DirectoryInfo"/>に変換するインスタンスを生成します。
         /// </summary>
         /// <returns>文字列から<see cref="DirectoryInfo"/>に変換するインスタンス</returns>
         public static IValueConverter<string, DirectoryInfo> StringToDirectoryInfo()
         {
             return new DirectoryInfoValueConverter();
+        }
+
+        /// <summary>
+        /// 検索パターンから<see cref="DirectoryInfo"/>一覧に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>検索パターンから<see cref="DirectoryInfo"/>一覧に変換するインスタンス</returns>
+        public static IValueConverter<string, DirectoryInfo[]> StringToDirectoryInfos()
+        {
+            return new DirectoryPatternValueConverter();
+        }
+
+        /// <summary>
+        /// 検索パターンから<see cref="FileSystemInfo"/>一覧に変換するインスタンスを生成します。
+        /// </summary>
+        /// <returns>ファイル検索パターンから<see cref="FileSystemInfo"/>一覧に変換するインスタンス</returns>
+        public static IValueConverter<string, FileSystemInfo[]> StringToFileSystemInfos()
+        {
+            return new FileSystemPatternValueConverter();
         }
 
         /// <summary>
@@ -549,6 +577,10 @@ namespace CuiLib.Converters
         private static IValueConverter<string, object?> GetDefault(Type type)
         {
             if (type == typeof(string)) return Cast(new ThroughValueConverter<string>());
+            if (type == typeof(FileInfo[]) || type == typeof(IEnumerable<FileInfo>)) return Cast(new FilePatternValueConverter());
+            if (type == typeof(DirectoryInfo[]) || type == typeof(IEnumerable<DirectoryInfo>)) return Cast(new DirectoryPatternValueConverter());
+            if (type == typeof(FileSystemInfo[]) || type == typeof(IEnumerable<FileSystemInfo>)) return Cast(new FileSystemPatternValueConverter());
+
 #if NETSTANDARD2_1_OR_GREATER || NET
             if (type.IsSZArray)
 #else

@@ -61,6 +61,7 @@
     - `string` から `StreamWriter`, `StreamReader` への変換
     - `string` から `In128`, `UInt128` への変換
     - `string` から `DateTime`, `DateOnly`, `TimeOnly`, `DateTimeOffset`, `TimeSpan` 変換時にフォーマットを指定できるように
+    - `string` からワイルドカードを用いた `FileInfo[]`, `DirectoryInfo[]`, `FileSystemInfo[]` への変換
 - Options
   - `Required` と重複しており且つ機能していなかった `IsRequired` プロパティを削除
   - `ValueTypeName`：型名に配列を指定した際のエラーを修正
