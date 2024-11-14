@@ -1090,13 +1090,29 @@ namespace Test.CuiLib.Logging
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(string, object?, object?, object?): val1=1, val2=True, val3=hoge" }));
         }
 
+#pragma warning disable IDE0300 // コレクションの初期化を簡略化します
+
         [Test]
-        public void Write_WithFormattedStringAndMultiArgs()
+        public void Write_WithFormattedStringAndMultiArgsAsArray()
         {
-            logger.Write("val1={0}, val2={1}, val3={2}, val4={3}", 1, true, "hoge", 'v');
+            logger.Write("val1={0}, val2={1}, val3={2}, val4={3}", new object?[] { 1, true, "hoge", 'v' });
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(string, object?[]): val1=1, val2=True, val3=hoge, val4=v" }));
         }
+
+#pragma warning restore IDE0300 // コレクションの初期化を簡略化します
+
+#if NET9_0_OR_GREATER
+
+        [Test]
+        public void Write_WithFormattedStringAndMultiArgsAsReadOnlySpan()
+        {
+            logger.Write("val1={0}, val2={1}, val3={2}, val4={3}", 1, true, "hoge", 'v');
+
+            Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "Write(string, ReadOnlySpan<object?>): val1=1, val2=True, val3=hoge, val4=v" }));
+        }
+
+#endif
 
         [Test]
         public void WriteAsync_WithChar()
@@ -1355,13 +1371,29 @@ namespace Test.CuiLib.Logging
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(string, object?, object?, object?): val1=1, val2=True, val3=hoge" }));
         }
 
+#pragma warning disable IDE0300 // コレクションの初期化を簡略化します
+
         [Test]
-        public void WriteLine_WithFormattedStringAndMultiArgs()
+        public void WriteLine_WithFormattedStringAndMultiArgsAsArray()
         {
-            logger.WriteLine("val1={0}, val2={1}, val3={2}, val4={3}", 1, true, "hoge", 'v');
+            logger.WriteLine("val1={0}, val2={1}, val3={2}, val4={3}", new object?[] { 1, true, "hoge", 'v' });
 
             Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(string, object?[]): val1=1, val2=True, val3=hoge, val4=v" }));
         }
+
+#pragma warning restore IDE0300 // コレクションの初期化を簡略化します
+
+#if NET9_0_OR_GREATER
+
+        [Test]
+        public void WriteLine_WithFormattedStringAndMultiArgsAsReadOnlySpan()
+        {
+            logger.WriteLine("val1={0}, val2={1}, val3={2}, val4={3}", 1, true, "hoge", 'v');
+
+            Assert.That(innerWriter.GetData(), Is.EqualTo(new[] { "WriteLine(string, ReadOnlySpan<object?>): val1=1, val2=True, val3=hoge, val4=v" }));
+        }
+
+#endif
 
         [Test]
         public void WriteLineAsync_WithoutArgs()
