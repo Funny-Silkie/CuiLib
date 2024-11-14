@@ -31,7 +31,9 @@
   - VerifySourceDirectory -> ValidSourceDirectory
 - Logger
   - コンストラクタでファイルパスを指定した際のデフォルトの挙動が新規作成から追加モードに変更
-- Parameter
+- Options
+  - `FlagOption.DefaultValue` が `true` の時，対象のオプションが指定されると `Value` プロパティが `false` へ反転される仕様に変更
+- Parameters
   - `Parameter<T>` を値の個数に応じて `SingleValueParameter<T>` と `MultpileValueParameter<T>` に分割， `SingleValueOption<T>`, `MultipleValueOption<T>` と同じ使用感に
   - `Parameter<T>.Checker`, `Parameter<T>.Converter`, `Parameter<T>.Values` を削除
   - `Parameter<T>.CreateAsArray<T>(string, int)`, `ParameterCollection.CreateAndAddAsArray<T>(string)` の戻り値が `Parameter<T>` から `MultipleValueParameter<T>` （`Parameter<T[]>`）に変更

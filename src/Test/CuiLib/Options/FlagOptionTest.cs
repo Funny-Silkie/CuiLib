@@ -137,7 +137,7 @@ namespace Test.CuiLib.Options
             option.DefaultValue = true;
             option.ApplyValue(string.Empty, string.Empty);
 
-            Assert.That(option.Value, Is.True);
+            Assert.That(option.Value, Is.False);
         }
 
         #endregion Properties
