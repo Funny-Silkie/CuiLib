@@ -80,6 +80,7 @@
 - `ThrowHelper` 公開の停止
 - `CommandCollection.Remove(string)` で親コマンドが解除されない不具合を修正
 - ヘルプメッセージのフォーマット変更
+- 参照するNuGetパッケージのバージョン変更
 
 ## v1.1.0
 
