@@ -68,10 +68,35 @@ namespace Test.CuiLib.Checkers
             });
         }
 
-        [Test]
-        public void And_WithNull()
+        [Test, Obsolete]
+        public void And_WithArray_WithNull()
         {
             Assert.That(() => ValueChecker.And<int>(null!), Throws.ArgumentNullException);
+        }
+
+        [Test, Obsolete]
+        public void And_WithArray_WithNullChecker()
+        {
+            Assert.That(() => ValueChecker.And(new[] { ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), null! }), Throws.ArgumentException);
+        }
+
+        [Test, Obsolete]
+        public void And_WithArray_AsPositive()
+        {
+            IValueChecker<int> checker = ValueChecker.And(new[] { ValueChecker.GreaterThanOrEqualTo(0), ValueChecker.LessThan(10) });
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(checker.CheckValue(int.MinValue).IsValid, Is.False);
+                Assert.That(checker.CheckValue(-1).IsValid, Is.False);
+                Assert.That(checker.CheckValue(0).IsValid, Is.True);
+                Assert.That(checker.CheckValue(1).IsValid, Is.True);
+                Assert.That(checker.CheckValue(5).IsValid, Is.True);
+                Assert.That(checker.CheckValue(9).IsValid, Is.True);
+                Assert.That(checker.CheckValue(10).IsValid, Is.False);
+                Assert.That(checker.CheckValue(11).IsValid, Is.False);
+                Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.False);
+            });
         }
 
         [Test]
@@ -99,10 +124,35 @@ namespace Test.CuiLib.Checkers
             });
         }
 
-        [Test]
-        public void Or_WithNull()
+        [Test, Obsolete]
+        public void Or_WithArray_WithNull()
         {
             Assert.That(() => ValueChecker.Or<int>(null!), Throws.ArgumentNullException);
+        }
+
+        [Test, Obsolete]
+        public void Or_WithArray_WithNullChecker()
+        {
+            Assert.That(() => ValueChecker.Or(new[] { ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), null! }), Throws.ArgumentException);
+        }
+
+        [Test, Obsolete]
+        public void Or_WithArray_AsPositive()
+        {
+            IValueChecker<int> checker = ValueChecker.Or(new[] { ValueChecker.LessThanOrEqualTo(0), ValueChecker.GreaterThan(10) });
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(checker.CheckValue(int.MinValue).IsValid, Is.True);
+                Assert.That(checker.CheckValue(-1).IsValid, Is.True);
+                Assert.That(checker.CheckValue(0).IsValid, Is.True);
+                Assert.That(checker.CheckValue(1).IsValid, Is.False);
+                Assert.That(checker.CheckValue(5).IsValid, Is.False);
+                Assert.That(checker.CheckValue(9).IsValid, Is.False);
+                Assert.That(checker.CheckValue(10).IsValid, Is.False);
+                Assert.That(checker.CheckValue(11).IsValid, Is.True);
+                Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.True);
+            });
         }
 
         [Test]

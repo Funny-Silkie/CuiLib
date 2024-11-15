@@ -110,32 +110,23 @@ namespace Test.Helpers
         public override void Write(string? value) => builder.Append("Write(string?): ").Append(value).AppendLine();
 
         /// <inheritdoc/>
-        public override void Write(
-#if NEN_7_0_OR_GREATER
-                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
-#endif
-                                   string format, object? arg0) => builder.Append("Write(string, object?): ").AppendFormat(format, arg0).AppendLine();
+        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0) => builder.Append("Write(string, object?): ").AppendFormat(format, arg0).AppendLine();
 
         /// <inheritdoc/>
-        public override void Write(
-#if NEN_7_0_OR_GREATER
-                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
-#endif
-                                   string format, object? arg0, object? arg1) => builder.Append("Write(string, object?, object?): ").AppendFormat(format, arg0, arg1).AppendLine();
+        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0, object? arg1) => builder.Append("Write(string, object?, object?): ").AppendFormat(format, arg0, arg1).AppendLine();
 
         /// <inheritdoc/>
-        public override void Write(
-#if NEN_7_0_OR_GREATER
-                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
-#endif
-                                   string format, object? arg0, object? arg1, object? arg2) => builder.Append("Write(string, object?, object?, object?): ").AppendFormat(format, arg0, arg1, arg2).AppendLine();
+        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0, object? arg1, object? arg2) => builder.Append("Write(string, object?, object?, object?): ").AppendFormat(format, arg0, arg1, arg2).AppendLine();
 
         /// <inheritdoc/>
-        public override void Write(
-#if NEN_7_0_OR_GREATER
-                                   [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, params object?[] args) => builder.Append("Write(string, object?[]): ").AppendFormat(format, args).AppendLine();
+
+#if NET9_0_OR_GREATER
+
+        /// <inheritdoc/>
+        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, params ReadOnlySpan<object?> arg) => builder.Append("Write(string, ReadOnlySpan<object?>): ").AppendFormat(format, arg).AppendLine();
+
 #endif
-                                   string format, params object?[] args) => builder.Append("Write(string, object?[]): ").AppendFormat(format, args).AppendLine();
 
         /// <inheritdoc/>
         public override async Task WriteAsync(char value)
@@ -237,32 +228,23 @@ namespace Test.Helpers
         public override void WriteLine(string? value) => builder.Append("WriteLine(string?): ").Append(value).AppendLine();
 
         /// <inheritdoc/>
-        public override void WriteLine(
-#if NEN_7_0_OR_GREATER
-                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
-#endif
-                                       string format, object? arg0) => builder.Append("WriteLine(string, object?): ").AppendFormat(format, arg0).AppendLine();
+        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0) => builder.Append("WriteLine(string, object?): ").AppendFormat(format, arg0).AppendLine();
 
         /// <inheritdoc/>
-        public override void WriteLine(
-#if NEN_7_0_OR_GREATER
-                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
-#endif
-                                       string format, object? arg0, object? arg1) => builder.Append("WriteLine(string, object?, object?): ").AppendFormat(format, arg0, arg1).AppendLine();
+        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0, object? arg1) => builder.Append("WriteLine(string, object?, object?): ").AppendFormat(format, arg0, arg1).AppendLine();
 
         /// <inheritdoc/>
-        public override void WriteLine(
-#if NEN_7_0_OR_GREATER
-                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
-#endif
-                                       string format, object? arg0, object? arg1, object? arg2) => builder.Append("WriteLine(string, object?, object?, object?): ").AppendFormat(format, arg0, arg1, arg2).AppendLine();
+        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0, object? arg1, object? arg2) => builder.Append("WriteLine(string, object?, object?, object?): ").AppendFormat(format, arg0, arg1, arg2).AppendLine();
 
         /// <inheritdoc/>
-        public override void WriteLine(
-#if NEN_7_0_OR_GREATER
-                                       [StringSyntax(StringSyntaxAttribute.CompositeFormat)]
+        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, params object?[] args) => builder.Append("WriteLine(string, object?[]): ").AppendFormat(format, args).AppendLine();
+
+#if NET9_0_OR_GREATER
+
+        /// <inheritdoc/>
+        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, params ReadOnlySpan<object?> args) => builder.Append("WriteLine(string, ReadOnlySpan<object?>): ").AppendFormat(format, args).AppendLine();
+
 #endif
-                                       string format, params object?[] args) => builder.Append("WriteLine(string, object?[]): ").AppendFormat(format, args).AppendLine();
 
         /// <inheritdoc/>
         public override async Task WriteLineAsync()

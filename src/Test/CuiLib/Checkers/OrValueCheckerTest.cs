@@ -38,11 +38,46 @@ namespace Test.CuiLib.Checkers
             });
         }
 
-        [Test]
-        public void Ctor_WithMultipleCheckers_AsNull()
+        [Test, Obsolete]
+        public void Ctor_WithMultipleCheckersAsArray_AsNull()
         {
             Assert.That(() => new OrValueChecker<int>(source: null!), Throws.ArgumentNullException);
         }
+
+#pragma warning disable IDE0300 // コレクションの初期化を簡略化します
+#pragma warning disable IDE0301 // コレクションの初期化を簡略化します
+
+        [Test, Obsolete]
+        public void Ctor_WithMultipleCheckersAsArray_WithNull()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(() => new OrValueChecker<int>(new[] { null!, ValueChecker.AlwaysValid<int>() }), Throws.ArgumentException);
+                Assert.That(() => new OrValueChecker<int>([ValueChecker.AlwaysValid<int>(), null!]), Throws.ArgumentException);
+                Assert.That(() => new OrValueChecker<int>(null!, ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>()), Throws.ArgumentException);
+            });
+        }
+
+        [Test, Obsolete]
+        public void Ctor_WithMultipleCheckersAsArray_AsEmpty()
+        {
+            Assert.That(() => new OrValueChecker<int>(Array.Empty<IValueChecker<int>>()), Throws.Nothing);
+        }
+
+        [Test, Obsolete]
+        public void Ctor_WithMultipleCheckersAsArray_AsPositive_WithTwoCheckers()
+        {
+            Assert.That(() => new OrValueChecker<int>(new[] { ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>() }), Throws.Nothing);
+        }
+
+        [Test, Obsolete]
+        public void Ctor_WithMultipleCheckersAsArray_AsPositive()
+        {
+            Assert.That(() => new OrValueChecker<int>(new[] { ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>() }), Throws.Nothing);
+        }
+
+#pragma warning restore IDE0301 // コレクションの初期化を簡略化します
+#pragma warning restore IDE0300 // コレクションの初期化を簡略化します
 
         [Test]
         public void Ctor_WithMultipleCheckers_WithNull()

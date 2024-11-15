@@ -11,10 +11,16 @@ namespace Test.CuiLib.Checkers
 
 #if NET6_0_OR_GREATER
 
-        [Test]
-        public void And_WithNull()
+        [Test, Obsolete]
+        public void And_WithArray_WithNull()
         {
             Assert.That(() => IValueChecker<int>.And(null!), Throws.ArgumentNullException);
+        }
+
+        [Test, Obsolete]
+        public void And_WithArray_WithNullChecker()
+        {
+            Assert.That(() => IValueChecker<int>.And(new[] { ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), null! }), Throws.ArgumentException);
         }
 
         [Test]
@@ -42,10 +48,16 @@ namespace Test.CuiLib.Checkers
             });
         }
 
-        [Test]
-        public void Or_WithNull()
+        [Test, Obsolete]
+        public void Or_WithArray_WithNull()
         {
             Assert.That(() => IValueChecker<int>.Or(null!), Throws.ArgumentNullException);
+        }
+
+        [Test, Obsolete]
+        public void Or_WithArray_WithNullChecker()
+        {
+            Assert.That(() => IValueChecker<int>.Or(new[] { ValueChecker.AlwaysValid<int>(), ValueChecker.AlwaysValid<int>(), null! }), Throws.ArgumentException);
         }
 
         [Test]

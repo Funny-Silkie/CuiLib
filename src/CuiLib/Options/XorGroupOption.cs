@@ -22,7 +22,7 @@ namespace CuiLib.Options
         /// <param name="children">子オプション</param>
         /// <exception cref="ArgumentNullException"><paramref name="children"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="children"/>が空または名前に重複が生じている</exception>
-        public XorGroupOption(IEnumerable<Option> children)
+        public XorGroupOption(params IEnumerable<Option> children)
         {
             ThrowHelpers.ThrowIfNull(children);
 
@@ -36,6 +36,7 @@ namespace CuiLib.Options
         /// <param name="children">子オプション</param>
         /// <exception cref="ArgumentNullException"><paramref name="children"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="children"/>が空または名前に重複が生じている</exception>
+        [Obsolete("Use 'new XorGroupOption(IEnumerable<Option>)' instead.")]
         public XorGroupOption(params Option[] children)
             : this(children as IEnumerable<Option>)
         {

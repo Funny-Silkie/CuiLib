@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-	<LangVersion>12</LangVersion>
-    <TargetFrameWorks>net8.0;net7.0;net6.0;netstandard2.1;netstandard2.0</TargetFrameWorks>
+	<LangVersion>13</LangVersion>
+    <TargetFrameWorks>net9.0;net8.0;net7.0;net6.0;netstandard2.1;netstandard2.0</TargetFrameWorks>
     <OutputPath>$(SolutionDir)Build\$(Configuration)</OutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

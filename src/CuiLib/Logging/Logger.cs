@@ -448,6 +448,16 @@ namespace CuiLib.Logging
             foreach (WriterEntry entry in writers) entry.Writer.Write(format, arg);
         }
 
+#if NET9_0_OR_GREATER
+
+        /// <inheritdoc/>
+        public override void Write([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, params ReadOnlySpan<object?> arg)
+        {
+            foreach (WriterEntry entry in writers) entry.Writer.Write(format, arg);
+        }
+
+#endif
+
         /// <inheritdoc/>
         public override async Task WriteAsync(char value)
         {
@@ -633,6 +643,16 @@ namespace CuiLib.Logging
         {
             foreach (WriterEntry entry in writers) entry.Writer.WriteLine(format, arg);
         }
+
+#if NET9_0_OR_GREATER
+
+        /// <inheritdoc/>
+        public override void WriteLine([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, params ReadOnlySpan<object?> arg)
+        {
+            foreach (WriterEntry entry in writers) entry.Writer.WriteLine(format, arg);
+        }
+
+#endif
 
         /// <inheritdoc/>
         public override async Task WriteLineAsync()

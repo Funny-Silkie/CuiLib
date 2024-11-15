@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <LangVersion>12</LangVersion>
-    <TargetFrameworks>net8.0;net7.0;net6.0;netcoreapp3.1;net481</TargetFrameworks>
+    <LangVersion>13</LangVersion>
+    <TargetFrameworks>net9.0;net8.0;net7.0;net6.0;netcoreapp3.1;net481</TargetFrameworks>
     <OutputPath>$(SolutionDir)Build\Test\$(Configuration)</OutputPath>
     <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>

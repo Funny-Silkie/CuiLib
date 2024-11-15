@@ -21,7 +21,7 @@ namespace CuiLib.Extensions
         /// <exception cref="ArgumentNullException"><paramref name="writer"/>または<paramref name="values"/>がnull</exception>
         /// <exception cref="ObjectDisposedException"><paramref name="writer"/>が既に破棄されている</exception>
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
-        public static void WriteJoin<T>(this TextWriter writer, char separator, IEnumerable<T> values)
+        public static void WriteJoin<T>(this TextWriter writer, char separator, params IEnumerable<T> values)
         {
             ReadOnlySpan<char> separatorSpan;
 #if NETSTANDARD2_1_OR_GREATER || NET
@@ -45,7 +45,7 @@ namespace CuiLib.Extensions
         /// <exception cref="ArgumentNullException"><paramref name="writer"/>または<paramref name="values"/>がnull</exception>
         /// <exception cref="ObjectDisposedException"><paramref name="writer"/>が既に破棄されている</exception>
         /// <exception cref="IOException">I/Oエラーが発生した</exception>
-        public static void WriteJoin<T>(this TextWriter writer, string? separator, IEnumerable<T> values)
+        public static void WriteJoin<T>(this TextWriter writer, string? separator, params IEnumerable<T> values)
         {
             WriteJoinPrivate(writer, separator.AsSpan(), values);
         }
@@ -118,6 +118,29 @@ namespace CuiLib.Extensions
         /// 文字列を結合して出力します。
         /// </summary>s
         /// <param name="writer">使用する<see cref="TextWriter"/>のインスタンス</param>
+        /// <param name="separator">区切り文字</param>
+        /// <param name="values">結合する文字列一覧</param>
+        /// <exception cref="ArgumentNullException"><paramref name="writer"/>がnull</exception>
+        /// <exception cref="ObjectDisposedException"><paramref name="writer"/>が既に破棄されている</exception>
+        /// <exception cref="IOException">I/Oエラーが発生した</exception>
+        public static void WriteJoin(this TextWriter writer, char separator, params ReadOnlySpan<string?> values)
+        {
+            ReadOnlySpan<char> separatorSpan;
+#if NETSTANDARD2_1_OR_GREATER || NET
+            separatorSpan = MemoryMarshal.CreateReadOnlySpan(ref separator, 1);
+#else
+            unsafe
+            {
+                separatorSpan = new ReadOnlySpan<char>(&separator, 1);
+            }
+#endif
+            WriteJoinPrivate(writer, separatorSpan, values);
+        }
+
+        /// <summary>
+        /// 文字列を結合して出力します。
+        /// </summary>s
+        /// <param name="writer">使用する<see cref="TextWriter"/>のインスタンス</param>
         /// <param name="separator">区切り文字列</param>
         /// <param name="values">結合する文字列一覧</param>
         /// <exception cref="ArgumentNullException"><paramref name="writer"/>または<paramref name="values"/>がnull</exception>
@@ -128,6 +151,20 @@ namespace CuiLib.Extensions
             ThrowHelpers.ThrowIfNull(values);
 
             WriteJoinPrivate(writer, separator.AsSpan(), values.AsSpan());
+        }
+
+        /// <summary>
+        /// 文字列を結合して出力します。
+        /// </summary>s
+        /// <param name="writer">使用する<see cref="TextWriter"/>のインスタンス</param>
+        /// <param name="separator">区切り文字列</param>
+        /// <param name="values">結合する文字列一覧</param>
+        /// <exception cref="ArgumentNullException"><paramref name="writer"/>がnull</exception>
+        /// <exception cref="ObjectDisposedException"><paramref name="writer"/>が既に破棄されている</exception>
+        /// <exception cref="IOException">I/Oエラーが発生した</exception>
+        public static void WriteJoin(this TextWriter writer, string? separator, params ReadOnlySpan<string?> values)
+        {
+            WriteJoinPrivate(writer, separator.AsSpan(), values);
         }
 
         /// <summary>
@@ -182,6 +219,29 @@ namespace CuiLib.Extensions
         /// 文字列を結合して出力します。
         /// </summary>s
         /// <param name="writer">使用する<see cref="TextWriter"/>のインスタンス</param>
+        /// <param name="separator">区切り文字</param>
+        /// <param name="values">結合するオブジェクト一覧</param>
+        /// <exception cref="ArgumentNullException"><paramref name="writer"/>がnull</exception>
+        /// <exception cref="ObjectDisposedException"><paramref name="writer"/>が既に破棄されている</exception>
+        /// <exception cref="IOException">I/Oエラーが発生した</exception>
+        public static void WriteJoin(this TextWriter writer, char separator, params ReadOnlySpan<object?> values)
+        {
+            ReadOnlySpan<char> separatorSpan;
+#if NETSTANDARD2_1_OR_GREATER || NET
+            separatorSpan = MemoryMarshal.CreateReadOnlySpan(ref separator, 1);
+#else
+            unsafe
+            {
+                separatorSpan = new ReadOnlySpan<char>(&separator, 1);
+            }
+#endif
+            WriteJoinPrivate(writer, separatorSpan, values);
+        }
+
+        /// <summary>
+        /// 文字列を結合して出力します。
+        /// </summary>s
+        /// <param name="writer">使用する<see cref="TextWriter"/>のインスタンス</param>
         /// <param name="separator">区切り文字列</param>
         /// <param name="values">結合するオブジェクト一覧</param>
         /// <exception cref="ArgumentNullException"><paramref name="writer"/>または<paramref name="values"/>がnull</exception>
@@ -192,6 +252,20 @@ namespace CuiLib.Extensions
             ThrowHelpers.ThrowIfNull(values);
 
             WriteJoinPrivate(writer, separator.AsSpan(), values.AsSpan());
+        }
+
+        /// <summary>
+        /// 文字列を結合して出力します。
+        /// </summary>s
+        /// <param name="writer">使用する<see cref="TextWriter"/>のインスタンス</param>
+        /// <param name="separator">区切り文字列</param>
+        /// <param name="values">結合するオブジェクト一覧</param>
+        /// <exception cref="ArgumentNullException"><paramref name="writer"/>がnull</exception>
+        /// <exception cref="ObjectDisposedException"><paramref name="writer"/>が既に破棄されている</exception>
+        /// <exception cref="IOException">I/Oエラーが発生した</exception>
+        public static void WriteJoin(this TextWriter writer, string? separator, params ReadOnlySpan<object?> values)
+        {
+            WriteJoinPrivate(writer, separator.AsSpan(), values);
         }
 
         /// <summary>

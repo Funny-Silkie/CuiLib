@@ -41,3 +41,6 @@ dotnet_diagnostic.CS8601.severity = error
 
 # CS8618: null 非許容のフィールドには、コンストラクターの終了時に null 以外の値が入っていなければなりません。Null 許容として宣言することをご検討ください。
 dotnet_diagnostic.CS8618.severity = error
+
+# CS8620: 参照型の NULL 値の許容の違いにより、パラメーターに引数を使用できません。
+dotnet_diagnostic.CS8620.severity = error
