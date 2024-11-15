@@ -22,7 +22,7 @@ namespace CuiLib.Options
         /// <param name="children">子オプション</param>
         /// <exception cref="ArgumentNullException"><paramref name="children"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="children"/>が空または名前に重複が生じている</exception>
-        public OrGroupOption(IEnumerable<Option> children)
+        public OrGroupOption(params IEnumerable<Option> children)
         {
             ThrowHelpers.ThrowIfNull(children);
 
@@ -36,6 +36,7 @@ namespace CuiLib.Options
         /// <param name="children">子オプション</param>
         /// <exception cref="ArgumentNullException"><paramref name="children"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="children"/>が空または名前に重複が生じている</exception>
+        [Obsolete("Use 'new OrGroupOption(IEnumerable<Option>)' instead.")]
         public OrGroupOption(params Option[] children)
             : this(children as IEnumerable<Option>)
         {

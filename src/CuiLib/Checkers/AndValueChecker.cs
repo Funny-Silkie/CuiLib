@@ -29,10 +29,34 @@ namespace CuiLib.Checkers
         /// <param name="source">評価する関数のリスト</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
+        [Obsolete]
         internal AndValueChecker(params IValueChecker<T>[] source)
         {
             ThrowHelpers.ThrowIfNull(source);
 
+            if (source.Length == 2)
+            {
+                try
+                {
+                    Initialize(source[0], source[1]);
+                }
+                catch (ArgumentNullException)
+                {
+                    throw new ArgumentException("要素がnullです", nameof(source));
+                }
+                return;
+            }
+
+            Initialize(source);
+        }
+
+        /// <summary>
+        /// <see cref="AndValueChecker{T}"/>の新しいインスタンスを初期化します。
+        /// </summary>
+        /// <param name="source">評価する関数のリスト</param>
+        /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
+        internal AndValueChecker(params ReadOnlySpan<IValueChecker<T>> source)
+        {
             if (source.Length == 2)
             {
                 try
@@ -89,10 +113,9 @@ namespace CuiLib.Checkers
         /// 初期化を行います。
         /// </summary>
         /// <param name="source">評価する関数のリスト</param>
-        /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
         [MemberNotNull(nameof(checkers))]
-        private void Initialize(IValueChecker<T>[] source)
+        private void Initialize(ReadOnlySpan<IValueChecker<T>> source)
         {
             int length = 0;
             for (int i = 0; i < source.Length; i++)

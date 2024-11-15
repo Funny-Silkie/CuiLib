@@ -171,6 +171,28 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void WriteJoinWithCharAndStringArray_WithValues()
         {
+            writer.WriteJoin(',', new[] { "hoge", "fuga", "piyo" });
+
+            Assert.That(writer.GetData(), Is.EqualTo("hoge,fuga,piyo"));
+        }
+
+        [Test]
+        public void WriteJoinWithCharAndStringReadOnlySpan_WithNullWriter()
+        {
+            Assert.That(() => WriterExtensions.WriteJoin(null!, ',', ReadOnlySpan<string?>.Empty), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void WriteJoinWithCharAndStringReadOnlySpan_WithEmpty()
+        {
+            writer.WriteJoin(',', ReadOnlySpan<string?>.Empty);
+
+            Assert.That(writer.GetData(), Is.Empty);
+        }
+
+        [Test]
+        public void WriteJoinWithCharAndStringReadOnlySpan_WithValues()
+        {
             writer.WriteJoin(',', "hoge", "fuga", "piyo");
 
             Assert.That(writer.GetData(), Is.EqualTo("hoge,fuga,piyo"));
@@ -199,6 +221,28 @@ namespace Test.CuiLib.Extensions
         [Test]
         public void WriteJoinWithStringAndStringArray_WithValues()
         {
+            writer.WriteJoin("<>", new[] { "hoge", "fuga", "piyo" });
+
+            Assert.That(writer.GetData(), Is.EqualTo("hoge<>fuga<>piyo"));
+        }
+
+        [Test]
+        public void WriteJoinWithStringAndStringReadOnlySpan_WithNullWriter()
+        {
+            Assert.That(() => WriterExtensions.WriteJoin(null!, "<>", ReadOnlySpan<string?>.Empty), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void WriteJoinWithStringAndStringReadOnlySpan_WithEmpty()
+        {
+            writer.WriteJoin("<>", ReadOnlySpan<string?>.Empty);
+
+            Assert.That(writer.GetData(), Is.Empty);
+        }
+
+        [Test]
+        public void WriteJoinWithStringAndStringReadOnlySpan_WithValues()
+        {
             writer.WriteJoin("<>", "hoge", "fuga", "piyo");
 
             Assert.That(writer.GetData(), Is.EqualTo("hoge<>fuga<>piyo"));
@@ -224,8 +268,34 @@ namespace Test.CuiLib.Extensions
             Assert.That(writer.GetData(), Is.Empty);
         }
 
+#pragma warning disable IDE0300 // コレクションの初期化を簡略化します
+
         [Test]
         public void WriteJoinWithCharAndObjectArray_WithValues()
+        {
+            writer.WriteJoin(',', new object?[] { 1, "hoge", null, 'c' });
+
+            Assert.That(writer.GetData(), Is.EqualTo("1,hoge,,c"));
+        }
+
+#pragma warning restore IDE0300 // コレクションの初期化を簡略化します
+
+        [Test]
+        public void WriteJoinWithCharAndObjectReadOnlySpan_WithNullWriter()
+        {
+            Assert.That(() => WriterExtensions.WriteJoin(null!, ',', ReadOnlySpan<object?>.Empty), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void WriteJoinWithCharAndObjectReadOnlySpan_WithEmpty()
+        {
+            writer.WriteJoin(',', ReadOnlySpan<object?>.Empty);
+
+            Assert.That(writer.GetData(), Is.Empty);
+        }
+
+        [Test]
+        public void WriteJoinWithCharAndObjectReadOnlySpan_WithValues()
         {
             writer.WriteJoin(',', 1, "hoge", null, 'c');
 
@@ -252,8 +322,34 @@ namespace Test.CuiLib.Extensions
             Assert.That(writer.GetData(), Is.Empty);
         }
 
+#pragma warning disable IDE0300 // コレクションの初期化を簡略化します
+
         [Test]
         public void WriteJoinWithStringAndObjectArray_WithValues()
+        {
+            writer.WriteJoin("<>", new object?[] { 1, "hoge", null, 'c' });
+
+            Assert.That(writer.GetData(), Is.EqualTo("1<>hoge<><>c"));
+        }
+
+#pragma warning restore IDE0300 // コレクションの初期化を簡略化します
+
+        [Test]
+        public void WriteJoinWithStringAndObjectReadOnlySpan_WithNullWriter()
+        {
+            Assert.That(() => WriterExtensions.WriteJoin(null!, "<>", ReadOnlySpan<object?>.Empty), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void WriteJoinWithStringAndObjectReadOnlySpan_WithEmpty()
+        {
+            writer.WriteJoin("<>", ReadOnlySpan<object?>.Empty);
+
+            Assert.That(writer.GetData(), Is.Empty);
+        }
+
+        [Test]
+        public void WriteJoinWithStringAndObjectReadOnlySpan_WithValues()
         {
             writer.WriteJoin("<>", 1, "hoge", null, 'c');
 

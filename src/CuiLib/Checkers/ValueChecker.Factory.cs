@@ -35,7 +35,18 @@ namespace CuiLib.Checkers
         /// <param name="source">評価する関数のリスト</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
+        [Obsolete($"Use And(ReadOnlySpan<IValueChecker<T>>) instead.")]
         public static IValueChecker<T> And<T>(params IValueChecker<T>[] source)
+        {
+            return new AndValueChecker<T>(source);
+        }
+
+        /// <summary>
+        /// 複数の<see cref="IValueChecker{T}"/>をAND結合します。
+        /// </summary>
+        /// <param name="source">評価する関数のリスト</param>
+        /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
+        public static IValueChecker<T> And<T>(params ReadOnlySpan<IValueChecker<T>> source)
         {
             return new AndValueChecker<T>(source);
         }
@@ -46,7 +57,18 @@ namespace CuiLib.Checkers
         /// <param name="source">評価する関数のリスト</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/>がnull</exception>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
+        [Obsolete($"Use Or(ReadOnlySpan<IValueChecker<T>>) instead.")]
         public static IValueChecker<T> Or<T>(params IValueChecker<T>[] source)
+        {
+            return new OrValueChecker<T>(source);
+        }
+
+        /// <summary>
+        /// 複数の<see cref="IValueChecker{T}"/>をOR結合します。
+        /// </summary>
+        /// <param name="source">評価する関数のリスト</param>
+        /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
+        public static IValueChecker<T> Or<T>(params ReadOnlySpan<IValueChecker<T>> source)
         {
             return new OrValueChecker<T>(source);
         }

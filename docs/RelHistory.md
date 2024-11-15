@@ -37,9 +37,17 @@
   - `Parameter<T>` を値の個数に応じて `SingleValueParameter<T>` と `MultpileValueParameter<T>` に分割， `SingleValueOption<T>`, `MultipleValueOption<T>` と同じ使用感に
   - `Parameter<T>.Checker`, `Parameter<T>.Converter`, `Parameter<T>.Values` を削除
   - `Parameter<T>.CreateAsArray<T>(string, int)`, `ParameterCollection.CreateAndAddAsArray<T>(string)` の戻り値が `Parameter<T>` から `MultipleValueParameter<T>` （`Parameter<T[]>`）に変更
+- 可変長引数を取るメソッドのうち，一部の配列をとるものを `Obsolete` に
+  - `IValueChecker<T>.And(IValueChecker<T>[])`
+  - `IValueChecker<T>.Or(IValueChecker<T>[])`
+  - `ValueChecker.And(IValueChecker<T>[])`
+  - `ValueChecker.Or(IValueChecker<T>[])`
+  - `AndOption.new(Option[])`
+  - `OrOption.new(Option[])`
+  - `XorOption.new(Option[])`
 
 ### 変更
-- .NET 6.0，.NET Standard 2.1 (.NET Core 3.1) , .NET Standard 2.0 (.NET Framework 4.8.1) へのサポート拡大
+- .NET 6.0, NET 9.0，.NET Standard 2.1 (.NET Core 3.1) , .NET Standard 2.0 (.NET Framework 4.8.1) へのサポート拡大
 - 例外処理修正
 - 一部メソッドのnull許容・非許容の修正
 - `Logger`
@@ -82,6 +90,7 @@
   - `CollectionExtensions.GetOrDefault<T>(IList<T>, int)`, `SpanExtensions.GetOrDefault<T>(ReadOnlySpan<T>, int)` の戻り値をnull許容に
 - `ThrowHelper` 公開の停止
 - `CommandCollection.Remove(string)` で親コマンドが解除されない不具合を修正
+- 一部可変長引数を取るメソッドに `ReadOnlySpan<T>` を可変長引数にとるオーバーロードを追加
 - ヘルプメッセージのフォーマット変更
 - 参照するNuGetパッケージのバージョン変更
 
