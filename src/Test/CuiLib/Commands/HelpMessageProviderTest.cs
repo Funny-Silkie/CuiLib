@@ -109,7 +109,6 @@ namespace Test.CuiLib.Commands
                 Description:
                 description
 
-
                 """;
 
             Assert.That(writer.GetData(), Is.EqualTo(expected));
@@ -123,7 +122,6 @@ namespace Test.CuiLib.Commands
 
             string expected = """
                 command
-
 
                 """;
 
@@ -142,7 +140,6 @@ namespace Test.CuiLib.Commands
 
                 Description:
                 description
-
 
                 """;
 
@@ -183,7 +180,6 @@ namespace Test.CuiLib.Commands
                 Usage:
                 command [-h] [-v] -i file [--out file] [(--or1|--or2)] [Subcommand]
 
-
                 """;
 
             Assert.That(writer.GetData(), Is.EqualTo(expected));
@@ -197,7 +193,6 @@ namespace Test.CuiLib.Commands
             string expected = """
                 Usage:
                 command [-h] [-v] -i file [--out file] [(--or1|--or2)] <num> <array ..>
-
 
                 """;
 
@@ -214,7 +209,6 @@ namespace Test.CuiLib.Commands
             string expected = """
                 Usage:
                 command [-h] [-v] -i file [--out file] [(--or1|--or2)]
-
 
                 """;
 
@@ -255,7 +249,6 @@ namespace Test.CuiLib.Commands
                       --out      Output file
                       --or1      Or-1
                       --or2      Or-2
-
 
                 """;
 

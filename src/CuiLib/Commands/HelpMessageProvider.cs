@@ -31,18 +31,15 @@ namespace CuiLib.Commands
             ThrowHelpers.ThrowIfNull(command);
 
             // Title
-            if (!string.IsNullOrEmpty(command.Name))
-            {
-                writer.WriteLine(command.Name);
-                writer.WriteLine();
-            }
+            if (!string.IsNullOrEmpty(command.Name)) writer.WriteLine(command.Name);
 
             // Description
             if (!string.IsNullOrEmpty(command.Description))
             {
+                if (!string.IsNullOrEmpty(command.Name)) writer.WriteLine();
+
                 writer.WriteLine("Description:");
                 writer.WriteLine(command.Description);
-                writer.WriteLine();
             }
         }
 
@@ -110,7 +107,6 @@ namespace CuiLib.Commands
                     writer.Write('>');
                 }
             writer.WriteLine();
-            writer.WriteLine();
         }
 
         /// <summary>
@@ -174,8 +170,6 @@ namespace CuiLib.Commands
                             WriteOption(writer, child, maxNameLength);
                 }
             }
-
-            writer.WriteLine();
         }
 
         /// <summary>
@@ -264,8 +258,13 @@ namespace CuiLib.Commands
         public virtual void WriteHelp(TextWriter writer, Command command)
         {
             WriteHeader(writer, command);
+            writer.WriteLine();
+
             WriteUsage(writer, command);
+            writer.WriteLine();
+
             WriteOptions(writer, command);
+            writer.WriteLine();
 
             if (command.Children.Count > 0) WriteSubcommands(writer, command);
             else WriteParameters(writer, command);
