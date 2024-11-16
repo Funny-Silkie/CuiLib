@@ -4,6 +4,7 @@ using CuiLib.Options;
 using CuiLib.Parameters;
 using NUnit.Framework;
 using System;
+using System.IO;
 using Test.Helpers;
 
 namespace Test.CuiLib.Commands
@@ -515,14 +516,14 @@ namespace Test.CuiLib.Commands
             });
         }
 
-        [Test]
-        public void WriteHelp_WithNull()
+        [Test, Obsolete]
+        public void WriteHelp_WithWriter_WithNull()
         {
             Assert.That(() => command.WriteHelp(null!), Throws.ArgumentNullException);
         }
 
-        [Test]
-        public void WriteHelp_AsPositive()
+        [Test, Obsolete]
+        public void WriteHelp_WithWriter_AsPositive()
         {
             command.Description = "Sample command";
 
@@ -569,6 +570,72 @@ namespace Test.CuiLib.Commands
             Assert.That(writer.GetData(), Is.EqualTo(expected));
         }
 
+        [Test]
+        public void WriteHelp_WithNullWriter()
+        {
+            Assert.That(() => command.WriteHelp(null!, null), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void WriteHelp_AsPositive_WithNullProvider()
+        {
+            command.Description = "Sample command";
+
+            command.Options.Add(new FlagOption('f', "flag")
+            {
+                Description = "flag option",
+            });
+            command.Options.Add(new SingleValueOption<int>('n', "num")
+            {
+                Description = "number option\n(required)",
+                Required = true,
+            });
+            {
+                SingleValueParameter<int> param = command.Parameters.CreateAndAdd<int>("num");
+                param.Description = "number parameter";
+            }
+            {
+                MultipleValueParameter<string> param = command.Parameters.CreateAndAddAsArray<string>("texts");
+                param.Description = "variable length parameter";
+            }
+
+            using var writer = new BufferedTextWriter();
+            command.WriteHelp(writer, null);
+
+            string expected = """
+                              cmd
+
+                              Description:
+                              Sample command
+
+                              Usage:
+                              cmd [-f] -n int <num> <texts ..>
+
+                              Options:
+                                -f, --flag  flag option
+                                -n, --num   number option
+                                            (required)
+
+                              Parameters:
+                                  num  number parameter
+                                texts  variable length parameter
+
+                              """;
+            Assert.That(writer.GetData(), Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void WriteHelp_AsPositive_WithProvider()
+        {
+            command.Description = "Sample command";
+
+            using var writer = new BufferedTextWriter();
+            command.WriteHelp(writer, new DummyHelpMessageProvider());
+
+            string expected = "Help";
+            Assert.That(writer.GetData(), Is.EqualTo(expected));
+        }
+
         #endregion Instance Methods
 
         private sealed class MemorizeCommand : Command
@@ -584,6 +651,12 @@ namespace Test.CuiLib.Commands
             {
                 Invoked = true;
             }
+        }
+
+        private sealed class DummyHelpMessageProvider : IHelpMessageProvider
+        {
+            /// <inheritdoc/>
+            public void WriteHelp(TextWriter writer, Command command) => writer.Write("Help");
         }
     }
 }

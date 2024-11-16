@@ -196,10 +196,23 @@ namespace CuiLib.Commands
         /// </summary>
         /// <param name="writer">出力先</param>
         /// <exception cref="ArgumentNullException"><paramref name="writer"/>がnull</exception>
+        [Obsolete($"Use '{nameof(WriteHelp)}({nameof(TextWriter)}, {nameof(HelpMessageProvider)}) method instead.'")]
         public virtual void WriteHelp(TextWriter writer)
         {
             var provider = new HelpMessageProvider();
             provider.WriteHelp(writer, this);
+        }
+
+        /// <summary>
+        /// ヘルプを表示します。
+        /// </summary>
+        /// <param name="writer">出力先</param>
+        /// <param name="messageProvider">ヘルプメッセージを提供するオブジェクト</param>
+        /// <exception cref="ArgumentNullException"><paramref name="writer"/>がnull</exception>
+        public void WriteHelp(TextWriter writer, IHelpMessageProvider? messageProvider = null)
+        {
+            messageProvider ??= new HelpMessageProvider();
+            messageProvider.WriteHelp(writer, this);
         }
     }
 }

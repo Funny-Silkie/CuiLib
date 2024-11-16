@@ -7,9 +7,9 @@ using System.Linq;
 namespace CuiLib.Commands
 {
     /// <summary>
-    /// ヘルプメッセージを提供するクラスです。
+    /// <see cref="IHelpMessageProvider"/>の実装を表します。
     /// </summary>
-    public class HelpMessageProvider
+    public class HelpMessageProvider : IHelpMessageProvider
     {
         /// <summary>
         /// <see cref="HelpMessageProvider"/>の新しいインスタンスを初期化します。
@@ -248,13 +248,7 @@ namespace CuiLib.Commands
             }
         }
 
-        /// <summary>
-        /// コマンドのヘルプメッセージを出力します。
-        /// </summary>
-        /// <param name="writer">出力先の<see cref="TextWriter"/>のインスタンス</param>
-        /// <param name="command">ヘルプメッセージを出力するコマンド</param>
-        /// <exception cref="ArgumentNullException"><paramref name="writer"/>または<paramref name="command"/>が<see langword="null"/></exception>
-        /// <exception cref="ObjectDisposedException"><paramref name="writer"/>が既に破棄されている</exception>
+        /// <inheritdoc/>
         public virtual void WriteHelp(TextWriter writer, Command command)
         {
             WriteHeader(writer, command);
