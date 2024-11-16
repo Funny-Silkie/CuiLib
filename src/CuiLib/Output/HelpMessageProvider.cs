@@ -4,14 +4,18 @@ using CuiLib.Parameters;
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CuiLib.Output
 {
     /// <summary>
     /// <see cref="IHelpMessageProvider"/>の実装を表します。
     /// </summary>
-    public class HelpMessageProvider : IHelpMessageProvider
+    public partial class HelpMessageProvider : IHelpMessageProvider
     {
+        // lang=regex
+        private const string NewLineRegex = @"\r?\n";
+
         /// <summary>
         /// <see cref="HelpMessageProvider"/>の新しいインスタンスを初期化します。
         /// </summary>
@@ -101,8 +105,7 @@ namespace CuiLib.Output
             else if (command.Parameters.Count > 0)
                 foreach (Parameter current in command.Parameters)
                 {
-                    writer.Write(' ');
-                    writer.Write('<');
+                    writer.Write(" <");
                     writer.Write(current.Name);
                     if (current.IsArray) writer.Write(" ..");
                     writer.Write('>');
@@ -132,43 +135,48 @@ namespace CuiLib.Output
 
                 static void WriteOption(TextWriter writer, Option option, int maxNameLength)
                 {
-                    if (option is NamedOption named)
+                    switch (option)
                     {
-                        writer.Write("  ");
-                        if (named.ShortName != null)
-                        {
-                            writer.Write('-');
-                            writer.Write(named.ShortName);
-                            if (named.FullName != null) writer.Write(", ");
-                            else writer.Write("  ");
-                        }
-                        else writer.Write("    ");
-                        if (named.FullName != null)
-                        {
-                            writer.Write("--");
-                            writer.Write(named.FullName);
-                            int surplus = maxNameLength - named.FullName.Length;
-                            if (surplus > 0) writer.Write(new string(' ', surplus));
-                        }
-                        else writer.Write(new string(' ', maxNameLength + 2));
-
-                        writer.Write("  ");
-
-                        string[] descriptions = named.Description?.Split('\n') ?? [];
-                        if (descriptions.Length > 0)
-                        {
-                            writer.WriteLine(descriptions[0]);
-                            for (int i = 1; i < descriptions.Length; i++)
+                        case NamedOption named:
+                            writer.Write("  ");
+                            if (named.ShortName != null)
                             {
-                                writer.Write(new string(' ', maxNameLength + 10));
-                                writer.WriteLine(descriptions[i]);
+                                writer.Write('-');
+                                writer.Write(named.ShortName);
+                                if (named.FullName != null) writer.Write(", ");
+                                else writer.Write("  ");
                             }
-                        }
-                        else writer.WriteLine();
+                            else writer.Write("    ");
+                            if (named.FullName != null)
+                            {
+                                writer.Write("--");
+                                writer.Write(named.FullName.PadRight(maxNameLength));
+                            }
+                            else writer.Write(new string(' ', maxNameLength + 2));
+
+                            writer.Write("  ");
+
+                            string[] descriptions = string.IsNullOrEmpty(named.Description) ? [] : GetNewLineRegex().Split(named.Description);
+                            string blanks = new string(' ', maxNameLength + 10);
+
+                            if (descriptions.Length > 0)
+                            {
+                                writer.WriteLine(descriptions[0]);
+
+                                for (int i = 1; i < descriptions.Length; i++)
+                                {
+                                    writer.Write(blanks);
+                                    writer.WriteLine(descriptions[i]);
+                                }
+                            }
+                            else writer.WriteLine();
+                            break;
+
+                        case GroupOption group:
+                            foreach (Option child in group)
+                                WriteOption(writer, child, maxNameLength);
+                            break;
                     }
-                    if (option is GroupOption group)
-                        foreach (Option child in group)
-                            WriteOption(writer, child, maxNameLength);
                 }
             }
         }
@@ -192,18 +200,18 @@ namespace CuiLib.Output
             foreach (Command child in command.Children)
             {
                 writer.Write("  ");
-                int surplus = maxLength - child.Name.Length;
-                if (surplus > 0) writer.Write(new string(' ', surplus));
-                writer.Write(child.Name);
+                writer.Write(child.Name.PadLeft(maxLength));
                 writer.Write("  ");
 
-                string[] descriptions = child.Description?.Split('\n') ?? [];
+                string[] descriptions = string.IsNullOrEmpty(child.Description) ? [] : GetNewLineRegex().Split(child.Description);
+                string blanks = new string(' ', maxLength + 4);
+
                 if (descriptions.Length > 0)
                 {
                     writer.WriteLine(descriptions[0]);
                     for (int i = 1; i < descriptions.Length; i++)
                     {
-                        writer.Write(new string(' ', maxLength + 4));
+                        writer.Write(blanks);
                         writer.WriteLine(descriptions[i]);
                     }
                 }
@@ -230,18 +238,18 @@ namespace CuiLib.Output
             foreach (Parameter parameter in command.Parameters)
             {
                 writer.Write("  ");
-                int surplus = maxLength - parameter.Name.Length;
-                if (surplus > 0) writer.Write(new string(' ', surplus));
-                writer.Write(parameter.Name);
+                writer.Write(parameter.Name.PadLeft(maxLength));
                 writer.Write("  ");
 
-                string[] descriptions = parameter.Description?.Split('\n') ?? [];
+                string[] descriptions = string.IsNullOrEmpty(parameter.Description) ? [] : GetNewLineRegex().Split(parameter.Description);
+                string blanks = new string(' ', maxLength + 4);
+
                 if (descriptions.Length > 0)
                 {
                     writer.WriteLine(descriptions[0]);
                     for (int i = 1; i < descriptions.Length; i++)
                     {
-                        writer.Write(new string(' ', maxLength + 4));
+                        writer.Write(blanks);
                         writer.WriteLine(descriptions[i]);
                     }
                 }
@@ -264,5 +272,18 @@ namespace CuiLib.Output
             if (command.Children.Count > 0) WriteSubcommands(writer, command);
             else WriteParameters(writer, command);
         }
+
+#if NET7_0_OR_GREATER
+
+        [GeneratedRegex(NewLineRegex)]
+        private static partial Regex GetNewLineRegex();
+
+#else
+
+        private static Regex GetNewLineRegex() => _newLineRegex;
+
+        private static readonly Regex _newLineRegex = new Regex(NewLineRegex);
+
+#endif
     }
 }
