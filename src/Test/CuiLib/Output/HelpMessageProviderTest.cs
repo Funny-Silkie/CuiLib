@@ -1,11 +1,12 @@
 using CuiLib.Commands;
 using CuiLib.Options;
+using CuiLib.Output;
 using CuiLib.Parameters;
 using NUnit.Framework;
 using System.IO;
 using Test.Helpers;
 
-namespace Test.CuiLib.Commands
+namespace Test.CuiLib.Output
 {
     public class HelpMessageProviderTest
     {

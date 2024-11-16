@@ -1,7 +1,8 @@
-﻿using System;
+﻿using CuiLib.Commands;
+using System;
 using System.IO;
 
-namespace CuiLib.Commands
+namespace CuiLib.Output
 {
     /// <summary>
     /// ヘルプメッセージを提供するインターフェイスを表します。

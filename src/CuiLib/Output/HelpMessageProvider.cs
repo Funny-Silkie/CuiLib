@@ -1,10 +1,11 @@
-﻿using CuiLib.Options;
+﻿using CuiLib.Commands;
+using CuiLib.Options;
 using CuiLib.Parameters;
 using System;
 using System.IO;
 using System.Linq;
 
-namespace CuiLib.Commands
+namespace CuiLib.Output
 {
     /// <summary>
     /// <see cref="IHelpMessageProvider"/>の実装を表します。

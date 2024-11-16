@@ -1,6 +1,7 @@
 using CuiLib;
 using CuiLib.Commands;
 using CuiLib.Options;
+using CuiLib.Output;
 using CuiLib.Parameters;
 using NUnit.Framework;
 using System;
