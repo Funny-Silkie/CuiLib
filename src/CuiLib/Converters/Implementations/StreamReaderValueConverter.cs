@@ -10,7 +10,10 @@ namespace CuiLib.Converters.Implementations
     [Serializable]
     internal sealed class StreamReaderValueConverter : IValueConverter<string, StreamReader>
     {
-        private readonly Encoding encoding;
+        /// <summary>
+        /// 末尾にテキストを追加するかどうかを表す値を取得します。
+        /// </summary>
+        public Encoding Encoding { get; }
 
         /// <summary>
         /// <see cref="StreamReaderValueConverter"/>の新しいインスタンスを初期化します。
@@ -21,13 +24,10 @@ namespace CuiLib.Converters.Implementations
         {
             ThrowHelpers.ThrowIfNull(encoding);
 
-            this.encoding = encoding;
+            Encoding = encoding;
         }
 
         /// <inheritdoc/>
-        public StreamReader Convert(string value)
-        {
-            return new StreamReader(value, encoding);
-        }
+        public StreamReader Convert(string value) => new StreamReader(value, Encoding);
     }
 }

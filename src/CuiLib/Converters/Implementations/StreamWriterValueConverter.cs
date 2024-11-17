@@ -10,8 +10,15 @@ namespace CuiLib.Converters.Implementations
     [Serializable]
     internal sealed class StreamWriterValueConverter : IValueConverter<string, StreamWriter>
     {
-        private readonly bool append;
-        private readonly Encoding encoding;
+        /// <summary>
+        /// 末尾にテキストを追加するかどうかを表す値を取得します。
+        /// </summary>
+        public bool Append { get; }
+
+        /// <summary>
+        /// エンコーディング情報を取得します。
+        /// </summary>
+        public Encoding Encoding { get; }
 
         /// <summary>
         /// <see cref="StreamWriterValueConverter"/>の新しいインスタンスを初期化します。
@@ -23,14 +30,11 @@ namespace CuiLib.Converters.Implementations
         {
             ThrowHelpers.ThrowIfNull(encoding);
 
-            this.encoding = encoding;
-            this.append = append;
+            Encoding = encoding;
+            Append = append;
         }
 
         /// <inheritdoc/>
-        public StreamWriter Convert(string value)
-        {
-            return new StreamWriter(value, append, encoding);
-        }
+        public StreamWriter Convert(string value) => new StreamWriter(value, Append, Encoding);
     }
 }

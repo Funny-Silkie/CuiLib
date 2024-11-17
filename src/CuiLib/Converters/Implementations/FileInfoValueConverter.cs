@@ -17,10 +17,7 @@ namespace CuiLib.Converters.Implementations
         }
 
         /// <inheritdoc/>
-        public FileInfo Convert(string value)
-        {
-            return new FileInfo(value);
-        }
+        public FileInfo Convert(string value) => new FileInfo(value);
 
         /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is FileInfoValueConverter;

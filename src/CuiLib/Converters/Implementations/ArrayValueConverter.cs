@@ -9,13 +9,28 @@ namespace CuiLib.Converters.Implementations
     [Serializable]
     internal sealed class ArrayValueConverter : IValueConverter<string, Array>
     {
-        private readonly IValueConverter<string, object?> elementConverter;
-        private readonly Type elementType;
-        private readonly string separator;
-        private readonly StringSplitOptions splitOptions;
+        /// <summary>
+        /// 要素の変換を行う<see cref="IValueConverter{TIn, TOut}"/>のインスタンスを取得します。
+        /// </summary>
+        public IValueConverter<string, object?> ElementConverter { get; }
 
         /// <summary>
-        /// <see cref="ArrayValueConverter{T}"/>の新しいインスタンスを初期化します。
+        /// 要素の型を取得します。
+        /// </summary>
+        public Type ElementType { get; }
+
+        /// <summary>
+        /// 要素の区切り文字を取得します。
+        /// </summary>
+        public string Separator { get; }
+
+        /// <summary>
+        /// 文字列の分割時のオプションを取得します。
+        /// </summary>
+        public StringSplitOptions SplitOptions { get; }
+
+        /// <summary>
+        /// <see cref="ArrayValueConverter"/>の新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="elementType">要素の型</param>
         /// <param name="separator">区切り文字</param>
@@ -27,10 +42,10 @@ namespace CuiLib.Converters.Implementations
             ThrowHelpers.ThrowIfNull(converter);
             ThrowHelpers.ThrowIfNullOrEmpty(separator);
 
-            this.separator = separator;
-            this.elementType = elementType;
-            elementConverter = converter;
-            this.splitOptions = splitOptions;
+            Separator = separator;
+            ElementType = elementType;
+            ElementConverter = converter;
+            SplitOptions = splitOptions;
         }
 
         /// <inheritdoc/>
@@ -38,11 +53,11 @@ namespace CuiLib.Converters.Implementations
         {
             ThrowHelpers.ThrowIfNull(value);
 
-            if (value.Length == 0) return Array.CreateInstance(elementType, 0);
+            if (value.Length == 0) return Array.CreateInstance(ElementType, 0);
 
-            string[] elements = value.Split(separator, splitOptions);
-            Array result = Array.CreateInstance(elementType, elements.Length);
-            for (int i = 0; i < elements.Length; i++) result.SetValue(elementConverter.Convert(elements[i]), i);
+            string[] elements = value.Split(Separator, SplitOptions);
+            Array result = Array.CreateInstance(ElementType, elements.Length);
+            for (int i = 0; i < elements.Length; i++) result.SetValue(ElementConverter.Convert(elements[i]), i);
             return result;
         }
     }
@@ -54,9 +69,20 @@ namespace CuiLib.Converters.Implementations
     [Serializable]
     internal sealed class ArrayValueConverter<T> : IValueConverter<string, T[]>
     {
-        private readonly IValueConverter<string, T> elementConverter;
-        private readonly string separator;
-        private readonly StringSplitOptions splitOptions;
+        /// <summary>
+        /// 要素の変換を行う<see cref="IValueConverter{TIn, TOut}"/>のインスタンスを取得します。
+        /// </summary>
+        public IValueConverter<string, T> ElementConverter { get; }
+
+        /// <summary>
+        /// 要素の区切り文字を取得します。
+        /// </summary>
+        public string Separator { get; }
+
+        /// <summary>
+        /// 文字列の分割時のオプションを取得します。
+        /// </summary>
+        public StringSplitOptions SplitOptions { get; }
 
         /// <summary>
         /// <see cref="ArrayValueConverter{T}"/>の新しいインスタンスを初期化します。
@@ -69,9 +95,9 @@ namespace CuiLib.Converters.Implementations
             ThrowHelpers.ThrowIfNull(converter);
             ThrowHelpers.ThrowIfNullOrEmpty(separator);
 
-            this.separator = separator;
-            elementConverter = converter;
-            this.splitOptions = splitOptions;
+            Separator = separator;
+            ElementConverter = converter;
+            SplitOptions = splitOptions;
         }
 
         /// <inheritdoc/>
@@ -81,8 +107,8 @@ namespace CuiLib.Converters.Implementations
 
             if (value.Length == 0) return [];
 
-            string[] elements = value.Split(separator, splitOptions);
-            return Array.ConvertAll(elements, elementConverter.Convert);
+            string[] elements = value.Split(Separator, SplitOptions);
+            return Array.ConvertAll(elements, ElementConverter.Convert);
         }
     }
 }

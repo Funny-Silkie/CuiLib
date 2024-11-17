@@ -10,7 +10,10 @@ namespace CuiLib.Converters.Implementations
     internal sealed class EnumValueConverter<T> : IValueConverter<string, T>
         where T : struct, Enum
     {
-        private readonly bool ignoreCase;
+        /// <summary>
+        /// 大文字・小文字の区別を無視するかどうかを表す値を取得します。
+        /// </summary>
+        public bool IgnoreCase { get; }
 
         /// <summary>
         /// <see cref="EnumValueConverter{T}"/>の新しいインスタンスを初期化します。
@@ -18,16 +21,16 @@ namespace CuiLib.Converters.Implementations
         /// <param name="ignoreCase">文字列の大文字小文字の区別を無視するかどうか</param>
         internal EnumValueConverter(bool ignoreCase)
         {
-            this.ignoreCase = ignoreCase;
+            IgnoreCase = ignoreCase;
         }
 
         /// <inheritdoc/>
         public T Convert(string value)
         {
 #if NETSTANDARD2_1_OR_GREATER || NET
-            return Enum.Parse<T>(value, ignoreCase);
+            return Enum.Parse<T>(value, IgnoreCase);
 #else
-            return (T)Enum.Parse(typeof(T), value, ignoreCase);
+            return (T)Enum.Parse(typeof(T), value, IgnoreCase);
 #endif
         }
     }

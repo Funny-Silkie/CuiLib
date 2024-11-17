@@ -10,7 +10,10 @@ namespace CuiLib.Converters.Implementations
     [Serializable]
     internal sealed class DelegateValueConverter<TIn, TOut> : IValueConverter<TIn, TOut>
     {
-        private readonly Converter<TIn, TOut> converter;
+        /// <summary>
+        /// 実行する変換処理を取得します。
+        /// </summary>
+        public Converter<TIn, TOut> Converter { get; }
 
         /// <summary>
         /// <see cref="DelegateValueConverter{TIn, TOut}"/>の新しいインスタンスを初期化します。
@@ -21,13 +24,13 @@ namespace CuiLib.Converters.Implementations
         {
             ThrowHelpers.ThrowIfNull(converter);
 
-            this.converter = converter;
+            Converter = converter;
         }
 
         /// <inheritdoc/>
         public TOut Convert(TIn value)
         {
-            return converter.Invoke(value);
+            return Converter.Invoke(value);
         }
     }
 }

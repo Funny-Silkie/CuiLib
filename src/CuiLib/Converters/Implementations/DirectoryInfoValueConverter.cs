@@ -17,10 +17,7 @@ namespace CuiLib.Converters.Implementations
         }
 
         /// <inheritdoc/>
-        public DirectoryInfo Convert(string value)
-        {
-            return new DirectoryInfo(value);
-        }
+        public DirectoryInfo Convert(string value) => new DirectoryInfo(value);
 
         /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is DirectoryInfoValueConverter;

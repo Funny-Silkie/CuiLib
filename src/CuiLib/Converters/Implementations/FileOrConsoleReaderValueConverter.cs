@@ -10,7 +10,10 @@ namespace CuiLib.Converters.Implementations
     [Serializable]
     internal sealed class FileOrConsoleReaderValueConverter : IValueConverter<string, TextReader>
     {
-        private readonly Encoding encoding;
+        /// <summary>
+        /// 末尾にテキストを追加するかどうかを表す値を取得します。
+        /// </summary>
+        public Encoding Encoding { get; }
 
         /// <summary>
         /// <see cref="FileOrConsoleReaderValueConverter"/>の新しいインスタンスを初期化します。
@@ -21,14 +24,14 @@ namespace CuiLib.Converters.Implementations
         {
             ThrowHelpers.ThrowIfNull(encoding);
 
-            this.encoding = encoding;
+            this.Encoding = encoding;
         }
 
         /// <inheritdoc/>
         public TextReader Convert(string value)
         {
             if (value is null or "-") return Console.In;
-            return new StreamReader(value, encoding);
+            return new StreamReader(value, Encoding);
         }
     }
 }

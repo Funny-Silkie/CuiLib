@@ -10,8 +10,15 @@ namespace CuiLib.Converters.Implementations
     [Serializable]
     internal sealed class FileOrConsoleWriterValueConverter : IValueConverter<string, TextWriter>
     {
-        private readonly bool append;
-        private readonly Encoding encoding;
+        /// <summary>
+        /// 末尾にテキストを追加するかどうかを表す値を取得します。
+        /// </summary>
+        public bool Append { get; }
+
+        /// <summary>
+        /// エンコーディング情報を取得します。
+        /// </summary>
+        public Encoding Encoding { get; }
 
         /// <summary>
         /// <see cref="FileOrConsoleWriterValueConverter"/>の新しいインスタンスを初期化します。
@@ -23,15 +30,15 @@ namespace CuiLib.Converters.Implementations
         {
             ThrowHelpers.ThrowIfNull(encoding);
 
-            this.encoding = encoding;
-            this.append = append;
+            Encoding = encoding;
+            Append = append;
         }
 
         /// <inheritdoc/>
         public TextWriter Convert(string value)
         {
             if (value is null or "-") return Console.Out;
-            return new StreamWriter(value, append, encoding);
+            return new StreamWriter(value, Append, Encoding);
         }
     }
 }

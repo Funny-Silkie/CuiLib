@@ -20,10 +20,7 @@ namespace CuiLib.Converters.Implementations
         }
 
         /// <inheritdoc/>
-        public T Convert(string value)
-        {
-            return T.Parse(value, null);
-        }
+        public T Convert(string value) => T.Parse(value, null);
 
         /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is ParsableValueConverter<T>;
