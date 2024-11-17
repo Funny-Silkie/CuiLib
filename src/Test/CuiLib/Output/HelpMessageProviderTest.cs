@@ -34,7 +34,7 @@ namespace Test.CuiLib.Output
             });
             command.Options.Add(new SingleValueOption<FileInfo>('i')
             {
-                Description = "Input file",
+                Description = "Input file\nThis is required",
                 Required = true,
             });
             command.Options.Add(new SingleValueOption<FileInfo>("out")
@@ -50,7 +50,7 @@ namespace Test.CuiLib.Output
             }));
             command.Parameters.Add(new SingleValueParameter<int>("num", 0)
             {
-                Description = "Number",
+                Description = "Number\r\nInteger only",
             });
             command.Parameters.Add(new MultipleValueParameter<string>("array", 1)
             {
@@ -247,6 +247,7 @@ namespace Test.CuiLib.Output
                   -h, --help     Display help message
                   -v, --version  Display version
                   -i             Input file
+                                 This is required
                       --out      Output file
                       --or1      Or-1
                       --or2      Or-2
@@ -290,7 +291,7 @@ namespace Test.CuiLib.Output
             });
             command.Children.Add(new Command("child")
             {
-                Description = "Child command",
+                Description = "Child command\nThis is dummy",
             });
             provider.WriteSubcommands(writer, command);
 
@@ -299,6 +300,7 @@ namespace Test.CuiLib.Output
                   child1  Child command No. 1
                   child2  Child command No. 2
                    child  Child command
+                          This is dummy
 
                 """;
 
@@ -334,6 +336,7 @@ namespace Test.CuiLib.Output
             string expected = """
                 Parameters:
                     num  Number
+                         Integer only
                   array  Array
 
                 """;
@@ -371,12 +374,14 @@ namespace Test.CuiLib.Output
                   -h, --help     Display help message
                   -v, --version  Display version
                   -i             Input file
+                                 This is required
                       --out      Output file
                       --or1      Or-1
                       --or2      Or-2
 
                 Parameters:
                     num  Number
+                         Integer only
                   array  Array
 
                 """;
