@@ -45,6 +45,7 @@
   - `AndOption.new(Option[])`
   - `OrOption.new(Option[])`
   - `XorOption.new(Option[])`
+- `Command.WriteHelp(TextWriter)` メソッドを `Obsolete` に
 
 ### 変更
 - .NET 6.0, NET 9.0，.NET Standard 2.1 (.NET Core 3.1) , .NET Standard 2.0 (.NET Framework 4.8.1) へのサポート拡大
@@ -91,6 +92,7 @@
 - `ThrowHelper` 公開の停止
 - `CommandCollection.Remove(string)` で親コマンドが解除されない不具合を修正
 - 一部可変長引数を取るメソッドに `ReadOnlySpan<T>` を可変長引数にとるオーバーロードを追加
+- ヘルプメッセージを生成する型として `IHelpMessageProvider` ・ `HelpMessageProvider` を実装，より詳細なカスタマイズが可能に
 - ヘルプメッセージのフォーマット変更
 - 参照するNuGetパッケージのバージョン変更
 
