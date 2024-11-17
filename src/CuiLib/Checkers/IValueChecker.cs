@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CuiLib.Checkers.Implementations;
+using System;
 
 namespace CuiLib.Checkers
 {

@@ -1,8 +1,9 @@
 ﻿using CuiLib.Converters;
+using CuiLib.Converters.Implementations;
 using NUnit.Framework;
 using System;
 
-namespace Test.CuiLib.Converters
+namespace Test.CuiLib.Converters.Implementations
 {
     [TestFixture]
     public class CombinedValueConverterTest : TestBase
