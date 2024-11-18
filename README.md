@@ -33,20 +33,23 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using CuiLib.Checkers;
 using CuiLib.Commands;
-using CuiLib.Loggers;
+using CuiLib.Logging;
 using CuiLib.Options;
 
-static void Main(string[] args)
+internal class Program
 {
-    var command = new ConcatCommand();
-    // Invoke command with parameter analysis
-    command.Invoke(args);
+    private static void Main(string[] args)
+    {
+        var command = new ConcatCommand();
+        // Invoke command with parameter analysis
+        command.Invoke(args);
+    }
 }
 
-
 // concat command class
-class ConcatCommand : Command
+internal class ConcatCommand : Command
 {
     private readonly FlagOption optionHelp;
     private readonly MultipleValueOption<FileInfo> optionInput;
@@ -64,13 +67,13 @@ class ConcatCommand : Command
         optionInput = new MultipleValueOption<FileInfo>('i', "in")
         {
             Description = "Input files",
-            Checker = ValueChecker.VerifySourceFile(),
+            Checker = ValueChecker.ValidSourceFile(),
             Required = true,
         };
         optionOutput = new SingleValueOption<FileInfo>('o', "out")
         {
             Description = "Output file",
-            Checker = ValueChecker.VerifyDestinationFile(false, true),
+            Checker = ValueChecker.ValidDestinationFile(false, true),
             Required = true,
         };
 
@@ -88,10 +91,10 @@ class ConcatCommand : Command
             ConsoleStdoutLogEnabled = true,
         };
 
-        // show help if "-h" or "--help" option available
-        if (optionHelp.ValueAvailable)
+        // show help when "-h" or "--help" option is specified
+        if (optionHelp.Value)
         {
-            WriteHelp(logger);
+            WriteHelp(logger, null);
             return;
         }
 
