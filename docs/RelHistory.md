@@ -42,6 +42,7 @@
   - `IValueChecker<T>.Or(IValueChecker<T>[])`
   - `ValueChecker.And(IValueChecker<T>[])`
   - `ValueChecker.Or(IValueChecker<T>[])`
+- 以下メソッドは `IEnumerable<T>` をとる可変長引数のメソッドに統合し廃止
   - `AndOption.new(Option[])`
   - `OrOption.new(Option[])`
   - `XorOption.new(Option[])`

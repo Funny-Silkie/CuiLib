@@ -1,8 +1,9 @@
 ﻿using CuiLib.Checkers;
+using CuiLib.Checkers.Implementations;
 using NUnit.Framework;
 using System;
 
-namespace Test.CuiLib.Checkers
+namespace Test.CuiLib.Checkers.Implementations
 {
     [TestFixture]
     public class AndValueCheckerTest : TestBase

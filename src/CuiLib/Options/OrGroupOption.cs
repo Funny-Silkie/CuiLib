@@ -29,17 +29,5 @@ namespace CuiLib.Options
             foreach (Option current in children) Children.Add(current);
             if (Children.Count == 0) throw new ArgumentException("子要素が空です", nameof(children));
         }
-
-        /// <summary>
-        /// <see cref="OrGroupOption"/>の新しいインスタンスを初期化します。
-        /// </summary>
-        /// <param name="children">子オプション</param>
-        /// <exception cref="ArgumentNullException"><paramref name="children"/>がnull</exception>
-        /// <exception cref="ArgumentException"><paramref name="children"/>が空または名前に重複が生じている</exception>
-        [Obsolete("Use 'new OrGroupOption(IEnumerable<Option>)' instead.")]
-        public OrGroupOption(params Option[] children)
-            : this(children as IEnumerable<Option>)
-        {
-        }
     }
 }

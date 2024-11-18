@@ -30,18 +30,6 @@ namespace CuiLib.Options
             if (Children.Count == 0) throw new ArgumentException("子要素が空です", nameof(children));
         }
 
-        /// <summary>
-        /// <see cref="XorGroupOption"/>の新しいインスタンスを初期化します。
-        /// </summary>
-        /// <param name="children">子オプション</param>
-        /// <exception cref="ArgumentNullException"><paramref name="children"/>がnull</exception>
-        /// <exception cref="ArgumentException"><paramref name="children"/>が空または名前に重複が生じている</exception>
-        [Obsolete("Use 'new XorGroupOption(IEnumerable<Option>)' instead.")]
-        public XorGroupOption(params Option[] children)
-            : this(children as IEnumerable<Option>)
-        {
-        }
-
         /// <inheritdoc/>
         internal override void ApplyValue(string name, string rawValue)
         {
