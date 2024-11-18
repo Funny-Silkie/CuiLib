@@ -166,8 +166,8 @@ namespace Test.CuiLib.Parsing
                 Assert.Multiple(() =>
                 {
                     var parser = new ArgumentParser(["1-2", "2-0"]);
-                    Assert.That(parser.GetTargetCommand(commandCollection), Is.Null);
-                    Assert.That(parser.Index, Is.EqualTo(0));
+                    Assert.That(parser.GetTargetCommand(commandCollection), Is.EqualTo(child));
+                    Assert.That(parser.Index, Is.EqualTo(1));
                 });
             });
         }

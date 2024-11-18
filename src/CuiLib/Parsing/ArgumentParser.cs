@@ -76,9 +76,10 @@ namespace CuiLib.Parsing
             Command? result = null;
             int startIndex = Index;
 
-            while (!EndOfArguments && commands.Count > 0 && commands.TryGetCommand(argumentRef, out result))
+            while (!EndOfArguments && commands.Count > 0 && commands.TryGetCommand(argumentRef, out Command? currentCommand))
             {
-                commands = result.Children;
+                result = currentCommand;
+                commands = currentCommand.Children;
                 Index++;
                 argumentRef = ref Unsafe.Add(ref argumentRef, 1);
             }
@@ -145,7 +146,7 @@ namespace CuiLib.Parsing
                                 argumentRef = ref Unsafe.Add(ref argumentRef, 1);
                                 SkipArguments(1);
                             }
-                            actualTarget.ApplyValue(optionName, argumentRef);
+                            target.ApplyValue(optionName, argumentRef);
                             SkipArguments(1);
                         }
                     }
@@ -163,7 +164,7 @@ namespace CuiLib.Parsing
                                 argumentRef = ref Unsafe.Add(ref argumentRef, 1);
                                 SkipArguments(1);
                             }
-                            actualTarget.ApplyValue(optionName, argumentRef);
+                            target.ApplyValue(optionName, argumentRef);
                             SkipArguments(1);
                         }
                     }
@@ -172,7 +173,7 @@ namespace CuiLib.Parsing
                 }
 
                 if (!actualTarget.CanMultiValue && actualTarget.ValueAvailable) throw new ArgumentAnalysisException($"オプション'{actualName}'が複数指定されています");
-                actualTarget.ApplyValue(optionName, string.Empty);
+                target.ApplyValue(optionName, string.Empty);
 
                 optionIndex++;
             }

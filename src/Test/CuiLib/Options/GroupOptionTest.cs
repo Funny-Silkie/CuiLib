@@ -13,6 +13,8 @@ namespace Test.CuiLib.Options
         private GroupOptionImpl option;
         private FlagOption child1;
         private SingleValueOption<int> child2;
+        private GroupOptionImpl child3;
+        private SingleValueOption<string> gChild;
 
         [SetUp]
         public void SetUp()
@@ -20,9 +22,15 @@ namespace Test.CuiLib.Options
             option = new GroupOptionImpl();
             child1 = new FlagOption('f', "flag");
             child2 = new SingleValueOption<int>('n', "num");
+            gChild = new SingleValueOption<string>('t', "text");
+
+            child3 = new GroupOptionImpl();
+
+            child3.AddChildOption(gChild);
 
             option.AddChildOption(child1);
             option.AddChildOption(child2);
+            option.AddChildOption(child3);
         }
 
         #region Properties
@@ -149,13 +157,13 @@ namespace Test.CuiLib.Options
         [Test]
         public void GetAllNames_WithoutHyphen()
         {
-            Assert.That(option.GetAllNames(false), Is.EquivalentTo(new[] { "f", "flag", "n", "num" }));
+            Assert.That(option.GetAllNames(false), Is.EquivalentTo(new[] { "f", "flag", "n", "num", "t", "text" }));
         }
 
         [Test]
         public void GetAllNames_WithHyphen()
         {
-            Assert.That(option.GetAllNames(true), Is.EquivalentTo(new[] { "-f", "--flag", "-n", "--num" }));
+            Assert.That(option.GetAllNames(true), Is.EquivalentTo(new[] { "-f", "--flag", "-n", "--num", "-t", "--text" }));
         }
 
         [Test]
@@ -176,6 +184,18 @@ namespace Test.CuiLib.Options
                 Assert.That(option.GetActualOption("flag", true), Is.EqualTo(child1));
                 Assert.That(option.GetActualOption("num", true), Is.EqualTo(child2));
             });
+        }
+
+        [Test]
+        public void GetActualOption_ForNestedChild_AsSingle()
+        {
+            Assert.That(option.GetActualOption("t", true), Is.EqualTo(gChild));
+        }
+
+        [Test]
+        public void GetActualOption_ForNestedChild_AsNotSingle()
+        {
+            Assert.That(option.GetActualOption("text", true), Is.EqualTo(gChild));
         }
 
         [Test]
@@ -233,7 +253,7 @@ namespace Test.CuiLib.Options
             var list = new List<Option>();
             foreach (Option current in option) list.Add(current);
 
-            Assert.That(list, Is.EqualTo(new Option[] { child1, child2 }));
+            Assert.That(list, Is.EqualTo(new Option[] { child1, child2, child3 }));
         }
 
         [Test]
@@ -242,7 +262,7 @@ namespace Test.CuiLib.Options
             var list = new List<Option>();
             foreach (object? current in (IEnumerable)option) list.Add((Option)current!);
 
-            Assert.That(list, Is.EqualTo(new Option[] { child1, child2 }));
+            Assert.That(list, Is.EqualTo(new Option[] { child1, child2, child3 }));
         }
 
         #endregion Methods
