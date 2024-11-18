@@ -9,7 +9,10 @@ namespace CuiLib.Checkers.Implementations
     [Serializable]
     internal sealed class DelegateValueChecker<T> : IValueChecker<T>
     {
-        private readonly Func<T, ValueCheckState> func;
+        /// <summary>
+        /// 条件判定関数を取得します。
+        /// </summary>
+        public Func<T, ValueCheckState> Condition { get; }
 
         /// <summary>
         /// <see cref="DelegateValueChecker{T}"/>の新しいインスタンスを初期化します。
@@ -20,7 +23,7 @@ namespace CuiLib.Checkers.Implementations
         {
             ThrowHelpers.ThrowIfNull(func);
 
-            this.func = func;
+            Condition = func;
         }
 
         /// <inheritdoc/>
@@ -28,7 +31,7 @@ namespace CuiLib.Checkers.Implementations
         {
             try
             {
-                return func.Invoke(value);
+                return Condition.Invoke(value);
             }
             catch (Exception e) when (e is not ArgumentAnalysisException)
             {

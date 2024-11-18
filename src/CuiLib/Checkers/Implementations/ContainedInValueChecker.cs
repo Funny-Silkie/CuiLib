@@ -13,8 +13,12 @@ namespace CuiLib.Checkers.Implementations
     internal sealed class ContainedInValueChecker<TCollection, TElement> : IValueChecker<TElement>
         where TCollection : IEnumerable<TElement>
     {
-        private readonly TCollection source;
-        private readonly IEqualityComparer<TElement> comparer;
+        /// <summary>
+        /// 対象のコレクションを取得します。
+        /// </summary>
+        public TCollection Source { get; }
+
+        public IEqualityComparer<TElement> Comparer { get; }
 
         /// <summary>
         /// <see cref="ContainedInValueChecker{TCollection, TElement}"/>の新しいインスタンスを初期化します。
@@ -28,15 +32,15 @@ namespace CuiLib.Checkers.Implementations
             ThrowHelpers.ThrowIfNull(source);
             if (!source.Any()) throw new ArgumentException("空のコレクションです", nameof(source));
 
-            this.source = source;
-            this.comparer = comparer ?? EqualityComparer<TElement>.Default;
+            Source = source;
+            Comparer = comparer ?? EqualityComparer<TElement>.Default;
         }
 
         /// <inheritdoc/>
         public ValueCheckState CheckValue(TElement value)
         {
-            if (source.Contains(value, comparer)) return ValueCheckState.Success;
-            return ValueCheckState.AsError($"値が含まれていません。[{string.Join(", ", source)}]の何れかを選択してください");
+            if (Source.Contains(value, Comparer)) return ValueCheckState.Success;
+            return ValueCheckState.AsError($"値が含まれていません。[{string.Join(", ", Source)}]の何れかを選択してください");
         }
     }
 }

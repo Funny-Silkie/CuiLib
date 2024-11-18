@@ -10,8 +10,15 @@ namespace CuiLib.Checkers.Implementations
     [Serializable]
     internal sealed class NotEqualToValueChecker<T> : IValueChecker<T>
     {
-        private readonly IEqualityComparer<T> comparer;
-        private readonly T comparison;
+        /// <summary>
+        /// 比較を行う<see cref="IEqualityComparer{T}"/>のインスタンスを取得します。
+        /// </summary>
+        public IEqualityComparer<T> Comparer { get; }
+
+        /// <summary>
+        /// 比較対象の値を取得します。
+        /// </summary>
+        public T Comparison { get; }
 
         /// <summary>
         /// <see cref="NotEqualToValueChecker{T}"/>の新しいインスタンスを初期化します。
@@ -20,15 +27,15 @@ namespace CuiLib.Checkers.Implementations
         /// <param name="comparison">比較対象</param>
         internal NotEqualToValueChecker(IEqualityComparer<T>? comparer, T comparison)
         {
-            this.comparer = comparer ?? EqualityComparer<T>.Default;
-            this.comparison = comparison;
+            Comparer = comparer ?? EqualityComparer<T>.Default;
+            Comparison = comparison;
         }
 
         /// <inheritdoc/>
         public ValueCheckState CheckValue(T value)
         {
-            if (!comparer.Equals(value, comparison)) return ValueCheckState.Success;
-            return ValueCheckState.AsError($"値は'{comparison}'と異なる必要があります");
+            if (!Comparer.Equals(value, Comparison)) return ValueCheckState.Success;
+            return ValueCheckState.AsError($"値は'{Comparison}'と異なる必要があります");
         }
     }
 }

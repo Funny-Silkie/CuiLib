@@ -1,4 +1,5 @@
-﻿using CuiLib.Checkers;
+using CuiLib.Checkers;
+using CuiLib.Checkers.Implementations;
 using CuiLib.Options;
 using NUnit.Framework;
 using System;
@@ -17,31 +18,8 @@ namespace Test.CuiLib.Checkers
         {
             IValueChecker<int> checker = ValueChecker.AlwaysValid<int>();
 
-            Assert.Multiple(() =>
-            {
-                Assert.That(checker.CheckValue(1).IsValid, Is.True);
-                Assert.That(checker.CheckValue(0).IsValid, Is.True);
-                Assert.That(checker.CheckValue(-1).IsValid, Is.True);
-                Assert.That(checker.CheckValue(int.MinValue).IsValid, Is.True);
-                Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.True);
-            });
+            Assert.That(checker, Is.TypeOf<AlwaysValidValueChecker<int>>());
         }
-
-#pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
-
-        [Test]
-        public void AlwaysValid_Equals()
-        {
-            Assert.That(ValueChecker.AlwaysValid<int>(), Is.EqualTo(ValueChecker.AlwaysValid<int>()));
-        }
-
-        [Test]
-        public void AlwaysValid_GetHashCode()
-        {
-            Assert.That(ValueChecker.AlwaysValid<int>().GetHashCode(), Is.EqualTo(ValueChecker.AlwaysValid<int>().GetHashCode()));
-        }
-
-#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
 
         [Test]
         public void FromDelegate_WithNull()
@@ -50,21 +28,19 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
-        public void FromDelegate_WithFunc()
+        public void FromDelegate_AsPositive()
         {
-            IValueChecker<int> checker = ValueChecker.FromDelegate<int>(x =>
+            Func<int, ValueCheckState> condition = x =>
             {
                 if (x < 0) return ValueCheckState.AsError("ERROR!");
                 return ValueCheckState.Success;
-            });
+            };
+            IValueChecker<int> checker = ValueChecker.FromDelegate(condition);
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue(0).IsValid, Is.True);
-                Assert.That(checker.CheckValue(1).IsValid, Is.True);
-                Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.True);
-                Assert.That(checker.CheckValue(-1).Error, Is.EqualTo("ERROR!"));
-                Assert.That(checker.CheckValue(int.MinValue).Error, Is.EqualTo("ERROR!"));
+                Assert.That(checker, Is.TypeOf<DelegateValueChecker<int>>());
+                Assert.That(((DelegateValueChecker<int>)checker).Condition, Is.EqualTo(condition));
             });
         }
 
@@ -187,12 +163,9 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.True);
-                Assert.That(checker.CheckValue(101).IsValid, Is.True);
-                Assert.That(checker.CheckValue(100).IsValid, Is.False);
-                Assert.That(checker.CheckValue(99).IsValid, Is.False);
-                Assert.That(checker.CheckValue(0).IsValid, Is.False);
-                Assert.That(checker.CheckValue(int.MinValue).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<GreaterThanValueChecker<int>>());
+                Assert.That(((GreaterThanValueChecker<int>)checker).Comparison, Is.EqualTo(100));
+                Assert.That(((GreaterThanValueChecker<int>)checker).Comparer, Is.EqualTo(Comparer<int>.Default));
             });
         }
 
@@ -203,28 +176,23 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.True);
-                Assert.That(checker.CheckValue(101).IsValid, Is.True);
-                Assert.That(checker.CheckValue(100).IsValid, Is.False);
-                Assert.That(checker.CheckValue(99).IsValid, Is.False);
-                Assert.That(checker.CheckValue(0).IsValid, Is.False);
-                Assert.That(checker.CheckValue(int.MinValue).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<GreaterThanValueChecker<int>>());
+                Assert.That(((GreaterThanValueChecker<int>)checker).Comparison, Is.EqualTo(100));
+                Assert.That(((GreaterThanValueChecker<int>)checker).Comparer, Is.EqualTo(Comparer<int>.Default));
             });
         }
 
         [Test]
         public void GreaterThan_WithIComparerAsSpecified()
         {
-            IValueChecker<int> checker = ValueChecker.GreaterThan(100, Comparer<int>.Create((x, y) => Comparer<int>.Default.Compare(y, x)));
+            Comparer<int> comparer = Comparer<int>.Create((x, y) => Comparer<int>.Default.Compare(y, x));
+            IValueChecker<int> checker = ValueChecker.GreaterThan(100, comparer);
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.False);
-                Assert.That(checker.CheckValue(101).IsValid, Is.False);
-                Assert.That(checker.CheckValue(100).IsValid, Is.False);
-                Assert.That(checker.CheckValue(99).IsValid, Is.True);
-                Assert.That(checker.CheckValue(0).IsValid, Is.True);
-                Assert.That(checker.CheckValue(int.MinValue).IsValid, Is.True);
+                Assert.That(checker, Is.TypeOf<GreaterThanValueChecker<int>>());
+                Assert.That(((GreaterThanValueChecker<int>)checker).Comparison, Is.EqualTo(100));
+                Assert.That(((GreaterThanValueChecker<int>)checker).Comparer, Is.EqualTo(comparer));
             });
         }
 
@@ -235,12 +203,9 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.True);
-                Assert.That(checker.CheckValue(101).IsValid, Is.True);
-                Assert.That(checker.CheckValue(100).IsValid, Is.True);
-                Assert.That(checker.CheckValue(99).IsValid, Is.False);
-                Assert.That(checker.CheckValue(0).IsValid, Is.False);
-                Assert.That(checker.CheckValue(int.MinValue).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<GreaterThanOrEqualToValueChecker<int>>());
+                Assert.That(((GreaterThanOrEqualToValueChecker<int>)checker).Comparison, Is.EqualTo(100));
+                Assert.That(((GreaterThanOrEqualToValueChecker<int>)checker).Comparer, Is.EqualTo(Comparer<int>.Default));
             });
         }
 
@@ -251,28 +216,23 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.True);
-                Assert.That(checker.CheckValue(101).IsValid, Is.True);
-                Assert.That(checker.CheckValue(100).IsValid, Is.True);
-                Assert.That(checker.CheckValue(99).IsValid, Is.False);
-                Assert.That(checker.CheckValue(0).IsValid, Is.False);
-                Assert.That(checker.CheckValue(int.MinValue).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<GreaterThanOrEqualToValueChecker<int>>());
+                Assert.That(((GreaterThanOrEqualToValueChecker<int>)checker).Comparison, Is.EqualTo(100));
+                Assert.That(((GreaterThanOrEqualToValueChecker<int>)checker).Comparer, Is.EqualTo(Comparer<int>.Default));
             });
         }
 
         [Test]
         public void GreaterThanOrEqualTo_WithIComparerAsSpecified()
         {
-            IValueChecker<int> checker = ValueChecker.GreaterThanOrEqualTo(100, Comparer<int>.Create((x, y) => Comparer<int>.Default.Compare(y, x)));
+            Comparer<int> comparer = Comparer<int>.Create((x, y) => Comparer<int>.Default.Compare(y, x));
+            IValueChecker<int> checker = ValueChecker.GreaterThanOrEqualTo(100, comparer);
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.False);
-                Assert.That(checker.CheckValue(101).IsValid, Is.False);
-                Assert.That(checker.CheckValue(100).IsValid, Is.True);
-                Assert.That(checker.CheckValue(99).IsValid, Is.True);
-                Assert.That(checker.CheckValue(0).IsValid, Is.True);
-                Assert.That(checker.CheckValue(int.MinValue).IsValid, Is.True);
+                Assert.That(checker, Is.TypeOf<GreaterThanOrEqualToValueChecker<int>>());
+                Assert.That(((GreaterThanOrEqualToValueChecker<int>)checker).Comparison, Is.EqualTo(100));
+                Assert.That(((GreaterThanOrEqualToValueChecker<int>)checker).Comparer, Is.EqualTo(comparer));
             });
         }
 
@@ -283,12 +243,9 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.False);
-                Assert.That(checker.CheckValue(101).IsValid, Is.False);
-                Assert.That(checker.CheckValue(100).IsValid, Is.False);
-                Assert.That(checker.CheckValue(99).IsValid, Is.True);
-                Assert.That(checker.CheckValue(0).IsValid, Is.True);
-                Assert.That(checker.CheckValue(int.MinValue).IsValid, Is.True);
+                Assert.That(checker, Is.TypeOf<LessThanValueChecker<int>>());
+                Assert.That(((LessThanValueChecker<int>)checker).Comparison, Is.EqualTo(100));
+                Assert.That(((LessThanValueChecker<int>)checker).Comparer, Is.EqualTo(Comparer<int>.Default));
             });
         }
 
@@ -299,28 +256,23 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.False);
-                Assert.That(checker.CheckValue(101).IsValid, Is.False);
-                Assert.That(checker.CheckValue(100).IsValid, Is.False);
-                Assert.That(checker.CheckValue(99).IsValid, Is.True);
-                Assert.That(checker.CheckValue(0).IsValid, Is.True);
-                Assert.That(checker.CheckValue(int.MinValue).IsValid, Is.True);
+                Assert.That(checker, Is.TypeOf<LessThanValueChecker<int>>());
+                Assert.That(((LessThanValueChecker<int>)checker).Comparison, Is.EqualTo(100));
+                Assert.That(((LessThanValueChecker<int>)checker).Comparer, Is.EqualTo(Comparer<int>.Default));
             });
         }
 
         [Test]
         public void LessThan_WithIComparerAsSpecified()
         {
-            IValueChecker<int> checker = ValueChecker.LessThan(100, Comparer<int>.Create((x, y) => Comparer<int>.Default.Compare(y, x)));
+            Comparer<int> comparer = Comparer<int>.Create((x, y) => Comparer<int>.Default.Compare(y, x));
+            IValueChecker<int> checker = ValueChecker.LessThan(100, comparer);
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.True);
-                Assert.That(checker.CheckValue(101).IsValid, Is.True);
-                Assert.That(checker.CheckValue(100).IsValid, Is.False);
-                Assert.That(checker.CheckValue(99).IsValid, Is.False);
-                Assert.That(checker.CheckValue(0).IsValid, Is.False);
-                Assert.That(checker.CheckValue(int.MinValue).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<LessThanValueChecker<int>>());
+                Assert.That(((LessThanValueChecker<int>)checker).Comparison, Is.EqualTo(100));
+                Assert.That(((LessThanValueChecker<int>)checker).Comparer, Is.EqualTo(comparer));
             });
         }
 
@@ -331,12 +283,9 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.False);
-                Assert.That(checker.CheckValue(101).IsValid, Is.False);
-                Assert.That(checker.CheckValue(100).IsValid, Is.True);
-                Assert.That(checker.CheckValue(99).IsValid, Is.True);
-                Assert.That(checker.CheckValue(0).IsValid, Is.True);
-                Assert.That(checker.CheckValue(int.MinValue).IsValid, Is.True);
+                Assert.That(checker, Is.TypeOf<LessThanOrEqualToValueChecker<int>>());
+                Assert.That(((LessThanOrEqualToValueChecker<int>)checker).Comparison, Is.EqualTo(100));
+                Assert.That(((LessThanOrEqualToValueChecker<int>)checker).Comparer, Is.EqualTo(Comparer<int>.Default));
             });
         }
 
@@ -347,28 +296,23 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.False);
-                Assert.That(checker.CheckValue(101).IsValid, Is.False);
-                Assert.That(checker.CheckValue(100).IsValid, Is.True);
-                Assert.That(checker.CheckValue(99).IsValid, Is.True);
-                Assert.That(checker.CheckValue(0).IsValid, Is.True);
-                Assert.That(checker.CheckValue(int.MinValue).IsValid, Is.True);
+                Assert.That(checker, Is.TypeOf<LessThanOrEqualToValueChecker<int>>());
+                Assert.That(((LessThanOrEqualToValueChecker<int>)checker).Comparison, Is.EqualTo(100));
+                Assert.That(((LessThanOrEqualToValueChecker<int>)checker).Comparer, Is.EqualTo(Comparer<int>.Default));
             });
         }
 
         [Test]
         public void LessThanOrEqualTo_WithIComparerAsSpecified()
         {
-            IValueChecker<int> checker = ValueChecker.LessThanOrEqualTo(100, Comparer<int>.Create((x, y) => Comparer<int>.Default.Compare(y, x)));
+            Comparer<int> comparer = Comparer<int>.Create((x, y) => Comparer<int>.Default.Compare(y, x));
+            IValueChecker<int> checker = ValueChecker.LessThanOrEqualTo(100, comparer);
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue(int.MaxValue).IsValid, Is.True);
-                Assert.That(checker.CheckValue(101).IsValid, Is.True);
-                Assert.That(checker.CheckValue(100).IsValid, Is.True);
-                Assert.That(checker.CheckValue(99).IsValid, Is.False);
-                Assert.That(checker.CheckValue(0).IsValid, Is.False);
-                Assert.That(checker.CheckValue(int.MinValue).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<LessThanOrEqualToValueChecker<int>>());
+                Assert.That(((LessThanOrEqualToValueChecker<int>)checker).Comparison, Is.EqualTo(100));
+                Assert.That(((LessThanOrEqualToValueChecker<int>)checker).Comparer, Is.EqualTo(comparer));
             });
         }
 
@@ -377,18 +321,7 @@ namespace Test.CuiLib.Checkers
         {
             IValueChecker<OptionType> checker = ValueChecker.Defined<OptionType>();
 
-            Assert.Multiple(() =>
-            {
-                Assert.That(checker.CheckValue(OptionType.None).IsValid, Is.True);
-                Assert.That(checker.CheckValue(OptionType.Flag).IsValid, Is.True);
-                Assert.That(checker.CheckValue(OptionType.Valued).IsValid, Is.True);
-                Assert.That(checker.CheckValue(OptionType.SingleValue).IsValid, Is.True);
-                Assert.That(checker.CheckValue(OptionType.MultiValue).IsValid, Is.True);
-                Assert.That(checker.CheckValue((OptionType)100).IsValid, Is.False);
-                Assert.That(checker.CheckValue((OptionType)(-1)).IsValid, Is.False);
-                Assert.That(checker.CheckValue((OptionType)(-2)).IsValid, Is.False);
-                Assert.That(checker.CheckValue((OptionType)(-4)).IsValid, Is.False);
-            });
+            Assert.That(checker, Is.TypeOf<DefinedEnumValueChecker<OptionType>>());
         }
 
         [Test]
@@ -410,12 +343,9 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue(1).IsValid, Is.True);
-                Assert.That(checker.CheckValue(2).IsValid, Is.True);
-                Assert.That(checker.CheckValue(3).IsValid, Is.True);
-
-                Assert.That(checker.CheckValue(0).IsValid, Is.False);
-                Assert.That(checker.CheckValue(4).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<ContainedInValueChecker<int[], int>>());
+                Assert.That(((ContainedInValueChecker<int[], int>)checker).Source, Is.EqualTo(new[] { 1, 2, 3 }));
+                Assert.That(((ContainedInValueChecker<int[], int>)checker).Comparer, Is.EqualTo(EqualityComparer<int>.Default));
             });
         }
 
@@ -438,184 +368,57 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue(1).IsValid, Is.True);
-                Assert.That(checker.CheckValue(2).IsValid, Is.True);
-                Assert.That(checker.CheckValue(3).IsValid, Is.True);
-
-                Assert.That(checker.CheckValue(0).IsValid, Is.False);
-                Assert.That(checker.CheckValue(4).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<ContainedInValueChecker<int[], int>>());
+                Assert.That(((ContainedInValueChecker<int[], int>)checker).Source, Is.EqualTo(new[] { 1, 2, 3 }));
+                Assert.That(((ContainedInValueChecker<int[], int>)checker).Comparer, Is.EqualTo(EqualityComparer<int>.Default));
             });
         }
 
         [Test]
         public void ContainedIn_WithIEqualityComparerAsSpecified_AsPositive()
         {
-            IValueChecker<int> checker = ValueChecker.ContainedIn(new[] { 1, 2, 3 }, EqualityComparer<int>.Default);
+            EqualityComparer<int> comparer = EqualityComparer<int>.Default;
+            IValueChecker<int> checker = ValueChecker.ContainedIn(new[] { 1, 2, 3 }, comparer);
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue(1).IsValid, Is.True);
-                Assert.That(checker.CheckValue(2).IsValid, Is.True);
-                Assert.That(checker.CheckValue(3).IsValid, Is.True);
-
-                Assert.That(checker.CheckValue(0).IsValid, Is.False);
-                Assert.That(checker.CheckValue(4).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<ContainedInValueChecker<int[], int>>());
+                Assert.That(((ContainedInValueChecker<int[], int>)checker).Source, Is.EqualTo(new[] { 1, 2, 3 }));
+                Assert.That(((ContainedInValueChecker<int[], int>)checker).Comparer, Is.SameAs(comparer));
             });
         }
 
         [Test]
-        public void Empty_As_String_Check()
+        public void Empty_NonGeneric()
         {
             IValueChecker<string?> checker = ValueChecker.Empty();
 
-            Assert.Multiple(() =>
-            {
-                Assert.That(checker.CheckValue(null).IsValid, Is.True);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.True);
-                Assert.That(checker.CheckValue("not-empty").IsValid, Is.False);
-                Assert.That(checker.CheckValue("  ").IsValid, Is.False);
-            });
-        }
-
-#pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
-
-        [Test]
-        public void Empty_As_String_Equals()
-        {
-            Assert.That(ValueChecker.Empty(), Is.EqualTo(ValueChecker.Empty()));
+            Assert.That(checker, Is.TypeOf<EmptyValueChecker>());
         }
 
         [Test]
-        public void Empty_As_String_GetHashCode()
-        {
-            Assert.That(ValueChecker.Empty().GetHashCode(), Is.EqualTo(ValueChecker.Empty().GetHashCode()));
-        }
-
-#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
-
-        [Test]
-        public void Empty_As_Collection_Check()
+        public void Empty_Generic()
         {
             IValueChecker<IEnumerable<char>?> checker = ValueChecker.Empty<char>();
 
-#pragma warning disable IDE0028 // コレクションの初期化を簡略化します
-            Assert.Multiple(() =>
-            {
-                Assert.That(checker.CheckValue(null).IsValid, Is.True);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.True);
-                Assert.That(checker.CheckValue([]).IsValid, Is.True);
-                Assert.That(checker.CheckValue(new List<char>()).IsValid, Is.True);
-                Assert.That(checker.CheckValue(new HashSet<char>()).IsValid, Is.True);
-
-                Assert.That(checker.CheckValue("hoge").IsValid, Is.False);
-                Assert.That(checker.CheckValue(['1', '2', '3']).IsValid, Is.False);
-                Assert.That(checker.CheckValue(new List<char>() { '1', '2', '3' }).IsValid, Is.False);
-                Assert.That(checker.CheckValue(new HashSet<char>() { '1', '2', '3' }).IsValid, Is.False);
-            });
-#pragma warning restore IDE0028 // コレクションの初期化を簡略化します
-        }
-
-#pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
-
-        [Test]
-        public void Empty_As_Collection_Equals()
-        {
-            Assert.Multiple(() =>
-            {
-                Assert.That(ValueChecker.Empty<char>(), Is.EqualTo(ValueChecker.Empty<char>()));
-                Assert.That(ValueChecker.Empty<int>(), Is.EqualTo(ValueChecker.Empty<int>()));
-                Assert.That(ValueChecker.Empty<char>(), Is.Not.EqualTo(ValueChecker.Empty<int>()));
-            });
+            Assert.That(checker, Is.TypeOf<EmptyValueChecker<char>>());
         }
 
         [Test]
-        public void Empty_As_Collection_GetHashCode()
-        {
-            Assert.Multiple(() =>
-            {
-                Assert.That(ValueChecker.Empty<char>().GetHashCode(), Is.EqualTo(ValueChecker.Empty<char>().GetHashCode()));
-                Assert.That(ValueChecker.Empty<int>().GetHashCode(), Is.EqualTo(ValueChecker.Empty<int>().GetHashCode()));
-            });
-        }
-
-#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
-
-        [Test]
-        public void NotEmpty_As_String_Check()
+        public void NotEmpty_NonGeneric()
         {
             IValueChecker<string?> checker = ValueChecker.NotEmpty();
 
-            Assert.Multiple(() =>
-            {
-                Assert.That(checker.CheckValue(null).IsValid, Is.False);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.False);
-                Assert.That(checker.CheckValue("not-empty").IsValid, Is.True);
-                Assert.That(checker.CheckValue("  ").IsValid, Is.True);
-            });
+            Assert.That(checker, Is.TypeOf<NotEmptyValueChecker>());
         }
-
-#pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
-
-        [Test]
-        public void NotEmpty_As_String_Equals()
-        {
-            Assert.That(ValueChecker.NotEmpty(), Is.EqualTo(ValueChecker.NotEmpty()));
-        }
-
-        [Test]
-        public void NotEmpty_As_String_GetHashCode()
-        {
-            Assert.That(ValueChecker.NotEmpty().GetHashCode(), Is.EqualTo(ValueChecker.NotEmpty().GetHashCode()));
-        }
-
-#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
 
         [Test]
         public void NotEmpty_As_Collection_Check()
         {
             IValueChecker<IEnumerable<char>?> checker = ValueChecker.NotEmpty<char>();
 
-#pragma warning disable IDE0028 // コレクションの初期化を簡略化します
-            Assert.Multiple(() =>
-            {
-                Assert.That(checker.CheckValue(null).IsValid, Is.False);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.False);
-                Assert.That(checker.CheckValue([]).IsValid, Is.False);
-                Assert.That(checker.CheckValue(new List<char>()).IsValid, Is.False);
-                Assert.That(checker.CheckValue(new HashSet<char>()).IsValid, Is.False);
-
-                Assert.That(checker.CheckValue("hoge").IsValid, Is.True);
-                Assert.That(checker.CheckValue(['1', '2', '3']).IsValid, Is.True);
-                Assert.That(checker.CheckValue(new List<char>() { '1', '2', '3' }).IsValid, Is.True);
-                Assert.That(checker.CheckValue(new HashSet<char>() { '1', '2', '3' }).IsValid, Is.True);
-            });
-#pragma warning restore IDE0028 // コレクションの初期化を簡略化します
+            Assert.That(checker, Is.TypeOf<NotEmptyValueChecker<char>>());
         }
-
-#pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
-
-        [Test]
-        public void NotEmpty_As_Collection_Equals()
-        {
-            Assert.Multiple(() =>
-            {
-                Assert.That(ValueChecker.NotEmpty<char>(), Is.EqualTo(ValueChecker.NotEmpty<char>()));
-                Assert.That(ValueChecker.NotEmpty<int>(), Is.EqualTo(ValueChecker.NotEmpty<int>()));
-                Assert.That(ValueChecker.NotEmpty<char>(), Is.Not.EqualTo(ValueChecker.NotEmpty<int>()));
-            });
-        }
-
-        [Test]
-        public void NotEmpty_As_Collection_GetHashCode()
-        {
-            Assert.Multiple(() =>
-            {
-                Assert.That(ValueChecker.NotEmpty<char>().GetHashCode(), Is.EqualTo(ValueChecker.NotEmpty<char>().GetHashCode()));
-                Assert.That(ValueChecker.NotEmpty<int>().GetHashCode(), Is.EqualTo(ValueChecker.NotEmpty<int>().GetHashCode()));
-            });
-        }
-
-#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
 
         [Test]
         public void StartsWith_WithCharAndWithoutStringComparison()
@@ -624,13 +427,16 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue("start").IsValid, Is.True);
-                Assert.That(checker.CheckValue("s").IsValid, Is.True);
-                Assert.That(checker.CheckValue("Start").IsValid, Is.False);
-                Assert.That(checker.CheckValue("S").IsValid, Is.False);
-                Assert.That(checker.CheckValue(null!).IsValid, Is.False);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<StartsWithValueChecker>());
+                Assert.That(((StartsWithValueChecker)checker).Comparison, Is.EqualTo("s"));
+                Assert.That(((StartsWithValueChecker)checker).StringComparison, Is.EqualTo(StringComparison.CurrentCulture));
             });
+        }
+
+        [Test]
+        public void StartsWith_WithCharAndWithStringComparisonAsInvalid()
+        {
+            Assert.That(() => ValueChecker.StartsWith('s', (StringComparison)(-1)), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -640,12 +446,9 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue("start").IsValid, Is.True);
-                Assert.That(checker.CheckValue("s").IsValid, Is.True);
-                Assert.That(checker.CheckValue("Start").IsValid, Is.True);
-                Assert.That(checker.CheckValue("S").IsValid, Is.True);
-                Assert.That(checker.CheckValue(null!).IsValid, Is.False);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<StartsWithValueChecker>());
+                Assert.That(((StartsWithValueChecker)checker).Comparison, Is.EqualTo("s"));
+                Assert.That(((StartsWithValueChecker)checker).StringComparison, Is.EqualTo(StringComparison.OrdinalIgnoreCase));
             });
         }
 
@@ -668,12 +471,9 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue("start").IsValid, Is.True);
-                Assert.That(checker.CheckValue("st").IsValid, Is.True);
-                Assert.That(checker.CheckValue("Start").IsValid, Is.False);
-                Assert.That(checker.CheckValue("St").IsValid, Is.False);
-                Assert.That(checker.CheckValue(null!).IsValid, Is.False);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<StartsWithValueChecker>());
+                Assert.That(((StartsWithValueChecker)checker).Comparison, Is.EqualTo("st"));
+                Assert.That(((StartsWithValueChecker)checker).StringComparison, Is.EqualTo(StringComparison.CurrentCulture));
             });
         }
 
@@ -690,18 +490,21 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
+        public void StartsWith_WithStringAndWithStringComparisonAsInvalid()
+        {
+            Assert.That(() => ValueChecker.StartsWith("st", (StringComparison)(-1)), Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [Test]
         public void StartsWith_WithStringAsPositiveAndWithStringComparison()
         {
             IValueChecker<string> checker = ValueChecker.StartsWith("st", StringComparison.OrdinalIgnoreCase);
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue("start").IsValid, Is.True);
-                Assert.That(checker.CheckValue("st").IsValid, Is.True);
-                Assert.That(checker.CheckValue("Start").IsValid, Is.True);
-                Assert.That(checker.CheckValue("St").IsValid, Is.True);
-                Assert.That(checker.CheckValue(null!).IsValid, Is.False);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<StartsWithValueChecker>());
+                Assert.That(((StartsWithValueChecker)checker).Comparison, Is.EqualTo("st"));
+                Assert.That(((StartsWithValueChecker)checker).StringComparison, Is.EqualTo(StringComparison.OrdinalIgnoreCase));
             });
         }
 
@@ -712,13 +515,16 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue("end").IsValid, Is.True);
-                Assert.That(checker.CheckValue("d").IsValid, Is.True);
-                Assert.That(checker.CheckValue("END").IsValid, Is.False);
-                Assert.That(checker.CheckValue("D").IsValid, Is.False);
-                Assert.That(checker.CheckValue(null!).IsValid, Is.False);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<EndsWithValueChecker>());
+                Assert.That(((EndsWithValueChecker)checker).Comparison, Is.EqualTo("d"));
+                Assert.That(((EndsWithValueChecker)checker).StringComparison, Is.EqualTo(StringComparison.CurrentCulture));
             });
+        }
+
+        [Test]
+        public void EndsWith_WithCharAndWithStringComparisonAsInvalid()
+        {
+            Assert.That(() => ValueChecker.EndsWith('s', (StringComparison)(-1)), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -728,12 +534,9 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue("end").IsValid, Is.True);
-                Assert.That(checker.CheckValue("d").IsValid, Is.True);
-                Assert.That(checker.CheckValue("END").IsValid, Is.True);
-                Assert.That(checker.CheckValue("D").IsValid, Is.True);
-                Assert.That(checker.CheckValue(null!).IsValid, Is.False);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<EndsWithValueChecker>());
+                Assert.That(((EndsWithValueChecker)checker).Comparison, Is.EqualTo("d"));
+                Assert.That(((EndsWithValueChecker)checker).StringComparison, Is.EqualTo(StringComparison.OrdinalIgnoreCase));
             });
         }
 
@@ -756,12 +559,9 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue("end").IsValid, Is.True);
-                Assert.That(checker.CheckValue("nd").IsValid, Is.True);
-                Assert.That(checker.CheckValue("END").IsValid, Is.False);
-                Assert.That(checker.CheckValue("ND").IsValid, Is.False);
-                Assert.That(checker.CheckValue(null!).IsValid, Is.False);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<EndsWithValueChecker>());
+                Assert.That(((EndsWithValueChecker)checker).Comparison, Is.EqualTo("nd"));
+                Assert.That(((EndsWithValueChecker)checker).StringComparison, Is.EqualTo(StringComparison.CurrentCulture));
             });
         }
 
@@ -778,18 +578,21 @@ namespace Test.CuiLib.Checkers
         }
 
         [Test]
+        public void EndsWith_WithStringAndWithStringComparisonAsInvalid()
+        {
+            Assert.That(() => ValueChecker.EndsWith("st", (StringComparison)(-1)), Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [Test]
         public void EndsWith_WithStringAsPositiveAndWithStringComparison()
         {
             IValueChecker<string> checker = ValueChecker.EndsWith("nd", StringComparison.OrdinalIgnoreCase);
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue("end").IsValid, Is.True);
-                Assert.That(checker.CheckValue("nd").IsValid, Is.True);
-                Assert.That(checker.CheckValue("END").IsValid, Is.True);
-                Assert.That(checker.CheckValue("ND").IsValid, Is.True);
-                Assert.That(checker.CheckValue(null!).IsValid, Is.False);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<EndsWithValueChecker>());
+                Assert.That(((EndsWithValueChecker)checker).Comparison, Is.EqualTo("nd"));
+                Assert.That(((EndsWithValueChecker)checker).StringComparison, Is.EqualTo(StringComparison.OrdinalIgnoreCase));
             });
         }
 
@@ -800,11 +603,9 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue("value").IsValid, Is.True);
-                Assert.That(checker.CheckValue("Value").IsValid, Is.False);
-                Assert.That(checker.CheckValue("other").IsValid, Is.False);
-                Assert.That(checker.CheckValue(null!).IsValid, Is.False);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<EqualToValueChecker<string>>());
+                Assert.That(((EqualToValueChecker<string>)checker).Comparison, Is.EqualTo("value"));
+                Assert.That(((EqualToValueChecker<string>)checker).Comparer, Is.EqualTo(EqualityComparer<string>.Default));
             });
         }
 
@@ -815,11 +616,9 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue("value").IsValid, Is.True);
-                Assert.That(checker.CheckValue("Value").IsValid, Is.False);
-                Assert.That(checker.CheckValue("other").IsValid, Is.False);
-                Assert.That(checker.CheckValue(null!).IsValid, Is.False);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<EqualToValueChecker<string>>());
+                Assert.That(((EqualToValueChecker<string>)checker).Comparison, Is.EqualTo("value"));
+                Assert.That(((EqualToValueChecker<string>)checker).Comparer, Is.EqualTo(EqualityComparer<string>.Default));
             });
         }
 
@@ -830,11 +629,9 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue("value").IsValid, Is.True);
-                Assert.That(checker.CheckValue("Value").IsValid, Is.True);
-                Assert.That(checker.CheckValue("other").IsValid, Is.False);
-                Assert.That(checker.CheckValue(null!).IsValid, Is.False);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.False);
+                Assert.That(checker, Is.TypeOf<EqualToValueChecker<string>>());
+                Assert.That(((EqualToValueChecker<string>)checker).Comparison, Is.EqualTo("value"));
+                Assert.That(((EqualToValueChecker<string>)checker).Comparer, Is.EqualTo(StringComparer.OrdinalIgnoreCase));
             });
         }
 
@@ -845,11 +642,9 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue("value").IsValid, Is.False);
-                Assert.That(checker.CheckValue("Value").IsValid, Is.True);
-                Assert.That(checker.CheckValue("other").IsValid, Is.True);
-                Assert.That(checker.CheckValue(null!).IsValid, Is.True);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.True);
+                Assert.That(checker, Is.TypeOf<NotEqualToValueChecker<string>>());
+                Assert.That(((NotEqualToValueChecker<string>)checker).Comparison, Is.EqualTo("value"));
+                Assert.That(((NotEqualToValueChecker<string>)checker).Comparer, Is.EqualTo(EqualityComparer<string>.Default));
             });
         }
 
@@ -860,11 +655,9 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue("value").IsValid, Is.False);
-                Assert.That(checker.CheckValue("Value").IsValid, Is.True);
-                Assert.That(checker.CheckValue("other").IsValid, Is.True);
-                Assert.That(checker.CheckValue(null!).IsValid, Is.True);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.True);
+                Assert.That(checker, Is.TypeOf<NotEqualToValueChecker<string>>());
+                Assert.That(((NotEqualToValueChecker<string>)checker).Comparison, Is.EqualTo("value"));
+                Assert.That(((NotEqualToValueChecker<string>)checker).Comparer, Is.EqualTo(EqualityComparer<string>.Default));
             });
         }
 
@@ -875,192 +668,50 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(checker.CheckValue("value").IsValid, Is.False);
-                Assert.That(checker.CheckValue("Value").IsValid, Is.False);
-                Assert.That(checker.CheckValue("other").IsValid, Is.True);
-                Assert.That(checker.CheckValue(null!).IsValid, Is.True);
-                Assert.That(checker.CheckValue(string.Empty).IsValid, Is.True);
+                Assert.That(checker, Is.TypeOf<NotEqualToValueChecker<string>>());
+                Assert.That(((NotEqualToValueChecker<string>)checker).Comparison, Is.EqualTo("value"));
+                Assert.That(((NotEqualToValueChecker<string>)checker).Comparer, Is.EqualTo(StringComparer.OrdinalIgnoreCase));
             });
         }
 
         [Test]
-        public void ExistsAsFile_Check()
+        public void ExistsAsFile()
         {
             IValueChecker<string> checker = ValueChecker.ExistsAsFile();
 
-            FileInfo existing = FileUtilHelpers.GetNoExistingFile();
-            try
-            {
-                existing.Create().Dispose();
-                FileInfo missing = FileUtilHelpers.GetNoExistingFile();
-
-                Assert.Multiple(() =>
-                {
-                    Assert.That(checker.CheckValue(existing.FullName).IsValid, Is.True);
-                    Assert.That(checker.CheckValue(missing.FullName).IsValid, Is.False);
-                });
-            }
-            finally
-            {
-                existing.Delete();
-            }
-        }
-
-#pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
-
-        [Test]
-        public void ExistsAsFile_Equals()
-        {
-            Assert.That(ValueChecker.ExistsAsFile(), Is.EqualTo(ValueChecker.ExistsAsFile()));
+            Assert.That(checker, Is.TypeOf<ExistsAsFileValueChecker>());
         }
 
         [Test]
-        public void ExistsAsFile_GetHashCode()
-        {
-            Assert.That(ValueChecker.ExistsAsFile().GetHashCode(), Is.EqualTo(ValueChecker.ExistsAsFile().GetHashCode()));
-        }
-
-#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
-
-        [Test]
-        public void ExistsAsDirectory_Check()
+        public void ExistsAsDirectory()
         {
             IValueChecker<string> checker = ValueChecker.ExistsAsDirectory();
 
-            DirectoryInfo existing = FileUtilHelpers.GetNoExistingDirectory();
-            try
-            {
-                existing.Create();
-                DirectoryInfo missing = FileUtilHelpers.GetNoExistingDirectory();
-
-                Assert.Multiple(() =>
-                {
-                    Assert.That(checker.CheckValue(existing.FullName).IsValid, Is.True);
-                    Assert.That(checker.CheckValue(missing.FullName).IsValid, Is.False);
-                });
-            }
-            finally
-            {
-                existing.Delete();
-            }
+            Assert.That(checker, Is.TypeOf<ExistsAsDirectoryValueChecker>());
         }
-
-#pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
-
-        [Test]
-        public void ExistsAsDirectory_Equals()
-        {
-            Assert.That(ValueChecker.ExistsAsDirectory(), Is.EqualTo(ValueChecker.ExistsAsDirectory()));
-        }
-
-        [Test]
-        public void ExistsAsDirectory_GetHashCode()
-        {
-            Assert.That(ValueChecker.ExistsAsDirectory().GetHashCode(), Is.EqualTo(ValueChecker.ExistsAsDirectory().GetHashCode()));
-        }
-
-#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
 
         [Test]
         public void ValidSourceFile()
         {
             IValueChecker<FileInfo> checker = ValueChecker.ValidSourceFile();
 
-            FileInfo existing = FileUtilHelpers.GetNoExistingFile();
-            try
-            {
-                existing.Create().Dispose();
-                existing.Refresh();
-
-                Assert.Multiple(() =>
-                {
-                    Assert.That(checker.CheckValue(existing).IsValid, Is.True);
-                    Assert.That(checker.CheckValue(new FileInfo(Path.Combine(FileUtilHelpers.GetNoExistingDirectory().FullName, "missing.txt"))).IsValid, Is.False);
-                    Assert.That(checker.CheckValue(FileUtilHelpers.GetNoExistingFile()).IsValid, Is.False);
-
-                    Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
-                });
-            }
-            finally
-            {
-                existing.Delete();
-            }
+            Assert.That(checker, Is.TypeOf<ValidSourceFileChecker>());
         }
 
-        [Test]
-        public void ValidDestinationFile_AsAllowAll()
+        [TestCase(false, false)]
+        [TestCase(false, true)]
+        [TestCase(true, false)]
+        [TestCase(true, true)]
+        public void ValidDestinationFile(bool allowMissedDirectory, bool allowOverwrite)
         {
-            IValueChecker<FileInfo> checker = ValueChecker.ValidDestinationFile(true, true);
+            IValueChecker<FileInfo> checker = ValueChecker.ValidDestinationFile(allowMissedDirectory, allowOverwrite);
 
-            FileInfo existing = FileUtilHelpers.GetNoExistingFile();
-            try
+            Assert.Multiple(() =>
             {
-                existing.Create().Dispose();
-
-                Assert.Multiple(() =>
-                {
-                    Assert.That(checker.CheckValue(existing).IsValid, Is.True);
-                    Assert.That(checker.CheckValue(new FileInfo(Path.Combine(FileUtilHelpers.GetNoExistingDirectory().FullName, "missing.txt"))).IsValid, Is.True);
-                    Assert.That(checker.CheckValue(FileUtilHelpers.GetNoExistingFile()).IsValid, Is.True);
-
-                    Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
-                });
-            }
-            finally
-            {
-                existing.Delete();
-            }
-        }
-
-        [Test]
-        public void ValidDestinationFile_AsNotAllowMissedDir()
-        {
-            IValueChecker<FileInfo> checker = ValueChecker.ValidDestinationFile(false, true);
-
-            FileInfo existing = FileUtilHelpers.GetNoExistingFile();
-            try
-            {
-                existing.Create().Dispose();
-
-                Assert.Multiple(() =>
-                {
-                    Assert.That(checker.CheckValue(existing).IsValid, Is.True);
-                    Assert.That(checker.CheckValue(new FileInfo(Path.Combine(FileUtilHelpers.GetNoExistingDirectory().FullName, "missing.txt"))).IsValid, Is.False);
-                    Assert.That(checker.CheckValue(FileUtilHelpers.GetNoExistingFile()).IsValid, Is.True);
-
-                    Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
-                });
-            }
-            finally
-            {
-                existing.Delete();
-            }
-        }
-
-        [Test]
-        public void ValidDestinationFile_AsNotAllowOverwrite()
-        {
-            IValueChecker<FileInfo> checker = ValueChecker.ValidDestinationFile(true, false);
-
-            FileInfo existing = FileUtilHelpers.GetNoExistingFile();
-            try
-            {
-                existing.Create().Dispose();
-                existing.Refresh();
-
-                Assert.Multiple(() =>
-                {
-                    Assert.That(checker.CheckValue(existing).IsValid, Is.False);
-                    Assert.That(checker.CheckValue(new FileInfo(Path.Combine(FileUtilHelpers.GetNoExistingDirectory().FullName, "missing.txt"))).IsValid, Is.True);
-                    Assert.That(checker.CheckValue(FileUtilHelpers.GetNoExistingFile()).IsValid, Is.True);
-
-                    Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
-                });
-            }
-            finally
-            {
-                existing.Delete();
-            }
+                Assert.That(checker, Is.TypeOf<ValidDestinationFileChecker>());
+                Assert.That(((ValidDestinationFileChecker)checker).AllowMissedDirectory, Is.EqualTo(allowMissedDirectory));
+                Assert.That(((ValidDestinationFileChecker)checker).AllowOverwrite, Is.EqualTo(allowOverwrite));
+            });
         }
 
         [Test]
@@ -1068,24 +719,7 @@ namespace Test.CuiLib.Checkers
         {
             IValueChecker<DirectoryInfo> checker = ValueChecker.ValidSourceDirectory();
 
-            DirectoryInfo existing = FileUtilHelpers.GetNoExistingDirectory();
-            try
-            {
-                existing.Create();
-                existing.Refresh();
-
-                Assert.Multiple(() =>
-                {
-                    Assert.That(checker.CheckValue(existing).IsValid, Is.True);
-                    Assert.That(checker.CheckValue(FileUtilHelpers.GetNoExistingDirectory()).IsValid, Is.False);
-
-                    Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
-                });
-            }
-            finally
-            {
-                existing.Delete();
-            }
+            Assert.That(checker, Is.TypeOf<ValidSourceDirectoryChecker>());
         }
 
         [Test]
@@ -1111,12 +745,8 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(() => checker.CheckValue("123").IsValid, Is.True);
-                Assert.That(() => checker.CheckValue("-123-").IsValid, Is.True);
-                Assert.That(() => checker.CheckValue("--").IsValid, Is.False);
-                Assert.That(() => checker.CheckValue(string.Empty).IsValid, Is.False);
-
-                Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
+                Assert.That(checker, Is.TypeOf<MatchesValueChecker>());
+                Assert.That(((MatchesValueChecker)checker).Regex.ToString(), Is.EqualTo(@"\d+"));
             });
         }
 
@@ -1149,12 +779,9 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(() => checker.CheckValue("123").IsValid, Is.True);
-                Assert.That(() => checker.CheckValue("-123-").IsValid, Is.True);
-                Assert.That(() => checker.CheckValue("--").IsValid, Is.False);
-                Assert.That(() => checker.CheckValue(string.Empty).IsValid, Is.False);
-
-                Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
+                Assert.That(checker, Is.TypeOf<MatchesValueChecker>());
+                Assert.That(((MatchesValueChecker)checker).Regex.ToString(), Is.EqualTo(@"\d+"));
+                Assert.That(((MatchesValueChecker)checker).Regex.Options, Is.EqualTo(RegexOptions.None));
             });
         }
 
@@ -1193,12 +820,10 @@ namespace Test.CuiLib.Checkers
 
             Assert.Multiple(() =>
             {
-                Assert.That(() => checker.CheckValue("123").IsValid, Is.True);
-                Assert.That(() => checker.CheckValue("-123-").IsValid, Is.True);
-                Assert.That(() => checker.CheckValue("--").IsValid, Is.False);
-                Assert.That(() => checker.CheckValue(string.Empty).IsValid, Is.False);
-
-                Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
+                Assert.That(checker, Is.TypeOf<MatchesValueChecker>());
+                Assert.That(((MatchesValueChecker)checker).Regex.ToString(), Is.EqualTo(@"\d+"));
+                Assert.That(((MatchesValueChecker)checker).Regex.Options, Is.EqualTo(RegexOptions.None));
+                Assert.That(((MatchesValueChecker)checker).Regex.MatchTimeout, Is.EqualTo(TimeSpan.FromSeconds(10)));
             });
         }
 
@@ -1212,17 +837,15 @@ namespace Test.CuiLib.Checkers
         public void MatchesWithRegex_AsPositive()
         {
 #pragma warning disable SYSLIB1045 // 'GeneratedRegexAttribute' に変換します。
-            IValueChecker<string> checker = ValueChecker.Matches(new Regex(@"\d+"));
+            var regex = new Regex(@"\d+");
 #pragma warning restore SYSLIB1045 // 'GeneratedRegexAttribute' に変換します。
+
+            IValueChecker<string> checker = ValueChecker.Matches(regex);
 
             Assert.Multiple(() =>
             {
-                Assert.That(() => checker.CheckValue("123").IsValid, Is.True);
-                Assert.That(() => checker.CheckValue("-123-").IsValid, Is.True);
-                Assert.That(() => checker.CheckValue("--").IsValid, Is.False);
-                Assert.That(() => checker.CheckValue(string.Empty).IsValid, Is.False);
-
-                Assert.That(() => checker.CheckValue(null!), Throws.ArgumentNullException);
+                Assert.That(checker, Is.TypeOf<MatchesValueChecker>());
+                Assert.That(((MatchesValueChecker)checker).Regex, Is.EqualTo(regex));
             });
         }
     }

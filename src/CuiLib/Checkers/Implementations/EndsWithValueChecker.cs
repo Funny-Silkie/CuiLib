@@ -8,8 +8,15 @@ namespace CuiLib.Checkers.Implementations
     [Serializable]
     internal sealed class EndsWithValueChecker : IValueChecker<string>
     {
-        private readonly string comparison;
-        private readonly StringComparison stringComparison;
+        /// <summary>
+        /// 検索する値を取得します。
+        /// </summary>
+        public string Comparison { get; }
+
+        /// <summary>
+        /// 比較方式を取得します。
+        /// </summary>
+        public StringComparison StringComparison { get; }
 
         /// <summary>
         /// <see cref="EndsWithValueChecker"/>の新しいインスタンスを初期化します。
@@ -21,8 +28,8 @@ namespace CuiLib.Checkers.Implementations
         {
             ThrowHelpers.ThrowIfNotDefined(stringComparison);
 
-            this.comparison = comparison.ToString();
-            this.stringComparison = stringComparison;
+            Comparison = comparison.ToString();
+            StringComparison = stringComparison;
         }
 
         /// <summary>
@@ -38,14 +45,14 @@ namespace CuiLib.Checkers.Implementations
             ThrowHelpers.ThrowIfNullOrEmpty(comparison);
             ThrowHelpers.ThrowIfNotDefined(stringComparison);
 
-            this.comparison = comparison;
-            this.stringComparison = stringComparison;
+            Comparison = comparison;
+            StringComparison = stringComparison;
         }
 
         /// <inheritdoc/>
         public ValueCheckState CheckValue(string value)
         {
-            if (value is null || !value.EndsWith(comparison, stringComparison)) return ValueCheckState.AsError($"値は'{comparison}'で終わる必要があります");
+            if (value is null || !value.EndsWith(Comparison, StringComparison)) return ValueCheckState.AsError($"値は'{Comparison}'で終わる必要があります");
             return ValueCheckState.Success;
         }
     }

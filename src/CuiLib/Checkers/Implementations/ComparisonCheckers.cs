@@ -11,8 +11,15 @@ namespace CuiLib.Checkers.Implementations
     internal sealed class GreaterThanValueChecker<T> : IValueChecker<T>
         where T : IComparable<T>
     {
-        private readonly IComparer<T> comparer;
-        private readonly T comparison;
+        /// <summary>
+        /// 比較に使用する<see cref="IComparer{T}"/>のインスタンスを取得します。
+        /// </summary>
+        public IComparer<T> Comparer { get; }
+
+        /// <summary>
+        /// 比較対象の値を取得します。
+        /// </summary>
+        public T Comparison { get; }
 
         /// <summary>
         /// <see cref="GreaterThanValueChecker{T}"/>の新しいインスタンスを初期化します。
@@ -21,15 +28,15 @@ namespace CuiLib.Checkers.Implementations
         /// <param name="comparer">比較オブジェクト。nullで<see cref="Comparer{T}.Default"/></param>
         internal GreaterThanValueChecker(T comparison, IComparer<T>? comparer)
         {
-            this.comparison = comparison;
-            this.comparer = comparer ?? Comparer<T>.Default;
+            Comparison = comparison;
+            Comparer = comparer ?? Comparer<T>.Default;
         }
 
         /// <inheritdoc/>
         public ValueCheckState CheckValue(T value)
         {
-            if (comparer.Compare(value, comparison) > 0) return ValueCheckState.Success;
-            return ValueCheckState.AsError($"値が{comparison}以下です");
+            if (Comparer.Compare(value, Comparison) > 0) return ValueCheckState.Success;
+            return ValueCheckState.AsError($"値が{Comparison}以下です");
         }
     }
 
@@ -41,8 +48,15 @@ namespace CuiLib.Checkers.Implementations
     internal sealed class GreaterThanOrEqualToValueChecker<T> : IValueChecker<T>
         where T : IComparable<T>
     {
-        private readonly IComparer<T> comparer;
-        private readonly T comparison;
+        /// <summary>
+        /// 比較に使用する<see cref="IComparer{T}"/>のインスタンスを取得します。
+        /// </summary>
+        public IComparer<T> Comparer { get; }
+
+        /// <summary>
+        /// 比較対象の値を取得します。
+        /// </summary>
+        public T Comparison { get; }
 
         /// <summary>
         /// <see cref="GreaterThanOrEqualToValueChecker{T}"/>の新しいインスタンスを初期化します。
@@ -51,15 +65,15 @@ namespace CuiLib.Checkers.Implementations
         /// <param name="comparer">比較オブジェクト。nullで<see cref="Comparer{T}.Default"/></param>
         internal GreaterThanOrEqualToValueChecker(T comparison, IComparer<T>? comparer)
         {
-            this.comparison = comparison;
-            this.comparer = comparer ?? Comparer<T>.Default;
+            Comparison = comparison;
+            Comparer = comparer ?? Comparer<T>.Default;
         }
 
         /// <inheritdoc/>
         public ValueCheckState CheckValue(T value)
         {
-            if (comparer.Compare(value, comparison) >= 0) return ValueCheckState.Success;
-            return ValueCheckState.AsError($"値が{comparison}未満です");
+            if (Comparer.Compare(value, Comparison) >= 0) return ValueCheckState.Success;
+            return ValueCheckState.AsError($"値が{Comparison}未満です");
         }
     }
 
@@ -71,8 +85,15 @@ namespace CuiLib.Checkers.Implementations
     internal sealed class LessThanValueChecker<T> : IValueChecker<T>
         where T : IComparable<T>
     {
-        private readonly IComparer<T> comparer;
-        private readonly T comparison;
+        /// <summary>
+        /// 比較に使用する<see cref="IComparer{T}"/>のインスタンスを取得します。
+        /// </summary>
+        public IComparer<T> Comparer { get; }
+
+        /// <summary>
+        /// 比較対象の値を取得します。
+        /// </summary>
+        public T Comparison { get; }
 
         /// <summary>
         /// <see cref="LessThanValueChecker{T}"/>の新しいインスタンスを初期化します。
@@ -81,15 +102,15 @@ namespace CuiLib.Checkers.Implementations
         /// <param name="comparer">比較オブジェクト。nullで<see cref="Comparer{T}.Default"/></param>
         internal LessThanValueChecker(T comparison, IComparer<T>? comparer)
         {
-            this.comparison = comparison;
-            this.comparer = comparer ?? Comparer<T>.Default;
+            Comparison = comparison;
+            Comparer = comparer ?? Comparer<T>.Default;
         }
 
         /// <inheritdoc/>
         public ValueCheckState CheckValue(T value)
         {
-            if (comparer.Compare(value, comparison) < 0) return ValueCheckState.Success;
-            return ValueCheckState.AsError($"値が{comparison}より大きいです");
+            if (Comparer.Compare(value, Comparison) < 0) return ValueCheckState.Success;
+            return ValueCheckState.AsError($"値が{Comparison}より大きいです");
         }
     }
 
@@ -101,8 +122,15 @@ namespace CuiLib.Checkers.Implementations
     internal sealed class LessThanOrEqualToValueChecker<T> : IValueChecker<T>
         where T : IComparable<T>
     {
-        private readonly IComparer<T> comparer;
-        private readonly T comparison;
+        /// <summary>
+        /// 比較に使用する<see cref="IComparer{T}"/>のインスタンスを取得します。
+        /// </summary>
+        public IComparer<T> Comparer { get; }
+
+        /// <summary>
+        /// 比較対象の値を取得します。
+        /// </summary>
+        public T Comparison { get; }
 
         /// <summary>
         /// <see cref="LessThanOrEqualToValueChecker{T}"/>の新しいインスタンスを初期化します。
@@ -111,15 +139,15 @@ namespace CuiLib.Checkers.Implementations
         /// <param name="comparer">比較オブジェクト。nullで<see cref="Comparer{T}.Default"/></param>
         internal LessThanOrEqualToValueChecker(T comparison, IComparer<T>? comparer)
         {
-            this.comparison = comparison;
-            this.comparer = comparer ?? Comparer<T>.Default;
+            Comparison = comparison;
+            Comparer = comparer ?? Comparer<T>.Default;
         }
 
         /// <inheritdoc/>
         public ValueCheckState CheckValue(T value)
         {
-            if (comparer.Compare(value, comparison) <= 0) return ValueCheckState.Success;
-            return ValueCheckState.AsError($"値が{comparison}より大きいです");
+            if (Comparer.Compare(value, Comparison) <= 0) return ValueCheckState.Success;
+            return ValueCheckState.AsError($"値が{Comparison}より大きいです");
         }
     }
 }

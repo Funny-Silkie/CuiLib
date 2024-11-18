@@ -24,15 +24,9 @@ namespace CuiLib.Checkers.Implementations
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj)
-        {
-            return obj is ExistsAsFileValueChecker;
-        }
+        public override bool Equals(object? obj) => obj is ExistsAsFileValueChecker;
 
         /// <inheritdoc/>
-        public override int GetHashCode()
-        {
-            return GetType().Name.GetHashCode();
-        }
+        public override int GetHashCode() => GetType().Name.GetHashCode();
     }
 }

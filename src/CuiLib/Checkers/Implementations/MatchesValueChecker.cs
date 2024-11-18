@@ -9,7 +9,10 @@ namespace CuiLib.Checkers.Implementations
     [Serializable]
     internal sealed class MatchesValueChecker : IValueChecker<string>
     {
-        private readonly Regex regex;
+        /// <summary>
+        /// 正規表現オブジェクトを取得します。
+        /// </summary>
+        public Regex Regex { get; }
 
         /// <summary>
         /// <see cref="MatchesValueChecker"/>の新しいインスタンスを初期化します。
@@ -20,13 +23,13 @@ namespace CuiLib.Checkers.Implementations
         {
             ThrowHelpers.ThrowIfNull(regex);
 
-            this.regex = regex;
+            Regex = regex;
         }
 
         public ValueCheckState CheckValue(string value)
         {
-            if (regex.IsMatch(value)) return ValueCheckState.Success;
-            return ValueCheckState.AsError($"正規表現'{regex}'にマッチしません");
+            if (Regex.IsMatch(value)) return ValueCheckState.Success;
+            return ValueCheckState.AsError($"正規表現'{Regex}'にマッチしません");
         }
     }
 }
