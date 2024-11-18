@@ -76,9 +76,10 @@ namespace CuiLib.Parsing
             Command? result = null;
             int startIndex = Index;
 
-            while (!EndOfArguments && commands.Count > 0 && commands.TryGetCommand(argumentRef, out result))
+            while (!EndOfArguments && commands.Count > 0 && commands.TryGetCommand(argumentRef, out Command? currentCommand))
             {
-                commands = result.Children;
+                result = currentCommand;
+                commands = currentCommand.Children;
                 Index++;
                 argumentRef = ref Unsafe.Add(ref argumentRef, 1);
             }
