@@ -58,7 +58,9 @@ namespace CuiLib.Options
         /// <inheritdoc/>
         internal override sealed Option GetActualOption(string name, bool isSingle)
         {
-            return Children.SingleOrDefault(x => x.MatchName(name)) ?? throw new ArgumentException($"無効なオプション名'-{(isSingle ? string.Empty : "-")}{name}'です");
+            Option result = Children.SingleOrDefault(x => x.MatchName(name)) ?? throw new ArgumentException($"無効なオプション名'-{(isSingle ? string.Empty : "-")}{name}'です");
+            if (result is GroupOption) return result.GetActualOption(name, isSingle);
+            return result;
         }
 
         /// <inheritdoc/>
