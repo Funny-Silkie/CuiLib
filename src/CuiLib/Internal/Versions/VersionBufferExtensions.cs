@@ -16,6 +16,9 @@ namespace CuiLib.Internal.Versions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string CreateString<TState>(int length, TState state, SpanAction<char, TState> action)
+#if NET9_0_OR_GREATER
+            where TState : allows ref struct
+#endif
         {
 #if NETSTANDARD2_1 || NET
             return string.Create(length, state, action);

@@ -8,6 +8,10 @@ namespace CuiLib.Checkers
     /// </summary>
     /// <typeparam name="T">検証する値の型</typeparam>
     public interface IValueChecker<in T>
+#if NET9_0_OR_GREATER
+        where T : allows ref struct
+#endif
+
     {
         /// <summary>
         /// 値の妥当性を検証します。

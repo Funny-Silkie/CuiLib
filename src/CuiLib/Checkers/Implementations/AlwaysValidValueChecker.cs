@@ -8,6 +8,9 @@ namespace CuiLib.Checkers.Implementations
     /// <typeparam name="T">検証する値の型</typeparam>
     [Serializable]
     internal sealed class AlwaysValidValueChecker<T> : IValueChecker<T>
+#if NET9_0_OR_GREATER
+        where T : allows ref struct
+#endif
     {
         /// <summary>
         /// <see cref="AlwaysValidValueChecker{T}"/>の新しいインスタンスを初期化します。

@@ -9,6 +9,9 @@ namespace CuiLib.Checkers.Implementations
     /// <typeparam name="T">検証する値の型</typeparam>
     [Serializable]
     internal sealed class AndValueChecker<T> : IValueChecker<T>
+#if NET9_0_OR_GREATER
+        where T : allows ref struct
+#endif
     {
         private IValueChecker<T>[] checkers;
 

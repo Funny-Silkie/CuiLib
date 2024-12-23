@@ -8,6 +8,9 @@ namespace CuiLib.Checkers.Implementations
     /// <typeparam name="T">検証する値の型</typeparam>
     [Serializable]
     internal sealed class DelegateValueChecker<T> : IValueChecker<T>
+#if NET9_0_OR_GREATER
+        where T : allows ref struct
+#endif
     {
         /// <summary>
         /// 条件判定関数を取得します。

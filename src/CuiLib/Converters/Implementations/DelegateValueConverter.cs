@@ -9,6 +9,10 @@ namespace CuiLib.Converters.Implementations
     /// <typeparam name="TOut">変換後の型</typeparam>
     [Serializable]
     internal sealed class DelegateValueConverter<TIn, TOut> : IValueConverter<TIn, TOut>
+#if NET9_0_OR_GREATER
+        where TIn : allows ref struct
+        where TOut : allows ref struct
+#endif
     {
         /// <summary>
         /// 実行する変換処理を取得します。

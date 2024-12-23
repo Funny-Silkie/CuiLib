@@ -8,6 +8,9 @@ namespace CuiLib.Converters.Implementations
     /// <typeparam name="T">扱う値の型</typeparam>
     [Serializable]
     internal sealed class ThroughValueConverter<T> : IValueConverter<T, T>
+#if NET9_0_OR_GREATER
+        where T : allows ref struct
+#endif
     {
         /// <summary>
         /// <see cref="ThroughValueConverter{T}"/>の新しいインスタンスを初期化します。

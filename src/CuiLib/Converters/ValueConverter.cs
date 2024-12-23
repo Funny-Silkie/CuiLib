@@ -24,6 +24,11 @@ namespace CuiLib.Converters
         /// <returns><typeparamref name="TIn"/>から<typeparamref name="TOut"/>へ変換を行う<see cref="IValueConverter{TIn, TOut}"/>のインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="second"/>がnull</exception>
         public static IValueConverter<TIn, TOut> Combine<TIn, TMid, TOut>(this IValueConverter<TIn, TMid> first, IValueConverter<TMid, TOut> second)
+#if NET9_0_OR_GREATER
+            where TIn : allows ref struct
+            where TMid : allows ref struct
+            where TOut : allows ref struct
+#endif
         {
             return new CombinedValueConverter<TIn, TMid, TOut>(first, second);
         }
@@ -39,6 +44,11 @@ namespace CuiLib.Converters
         /// <returns><typeparamref name="TIn"/>から<typeparamref name="TOut"/>へ変換を行う<see cref="IValueConverter{TIn, TOut}"/>のインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="first"/>または<paramref name="secondConverter"/>がnull</exception>
         public static IValueConverter<TIn, TOut> Combine<TIn, TMid, TOut>(this IValueConverter<TIn, TMid> first, Converter<TMid, TOut> secondConverter)
+#if NET9_0_OR_GREATER
+            where TIn : allows ref struct
+            where TMid : allows ref struct
+            where TOut : allows ref struct
+#endif
         {
             ThrowHelpers.ThrowIfNull(first);
 
@@ -52,6 +62,10 @@ namespace CuiLib.Converters
         /// <returns><paramref name="converter"/>で変換する<see cref="IValueConverter{TIn, TOut}"/>のインスタンス</returns>
         /// <exception cref="ArgumentNullException"><paramref name="converter"/>がnull</exception>
         public static IValueConverter<TIn, TOut> FromDelegate<TIn, TOut>(Converter<TIn, TOut> converter)
+#if NET9_0_OR_GREATER
+            where TIn : allows ref struct
+            where TOut : allows ref struct
+#endif
         {
             return new DelegateValueConverter<TIn, TOut>(converter);
         }
@@ -63,6 +77,9 @@ namespace CuiLib.Converters
         /// <returns>デフォルトのインスタンス</returns>
         /// <exception cref="NotSupportedException"><typeparamref name="T"/>が無効</exception>
         public static IValueConverter<string, T> GetDefault<T>()
+#if NET9_0_OR_GREATER
+            where T : allows ref struct
+#endif
         {
             return Unsafe.As<IValueConverter<string, T>>(GetDefault(typeof(T)));
         }
@@ -148,6 +165,9 @@ namespace CuiLib.Converters
         /// <typeparam name="T">値の型</typeparam>
         /// <returns><typeparamref name="T"/>に対応する文字列</returns>
         public static string GetValueTypeString<T>()
+#if NET9_0_OR_GREATER
+            where T : allows ref struct
+#endif
         {
             return GetValueTypeString(typeof(T));
         }

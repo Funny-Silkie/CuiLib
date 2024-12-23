@@ -1,4 +1,4 @@
-﻿using CuiLib.Checkers.Implementations;
+using CuiLib.Checkers.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -16,6 +16,9 @@ namespace CuiLib.Checkers
         /// 必ず<see cref="ValueCheckState.Success"/>を返すインスタンスを取得します。
         /// </summary>
         public static IValueChecker<T> AlwaysValid<T>()
+#if NET9_0_OR_GREATER
+            where T : allows ref struct
+#endif
         {
             return new AlwaysValidValueChecker<T>();
         }
@@ -26,6 +29,9 @@ namespace CuiLib.Checkers
         /// <param name="func">検証関数</param>
         /// <exception cref="ArgumentNullException"><paramref name="func"/>がnull</exception>
         public static IValueChecker<T> FromDelegate<T>(Func<T?, ValueCheckState> func)
+#if NET9_0_OR_GREATER
+            where T : allows ref struct
+#endif
         {
             return new DelegateValueChecker<T>(func);
         }
@@ -38,6 +44,9 @@ namespace CuiLib.Checkers
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
         [Obsolete($"Use And(ReadOnlySpan<IValueChecker<T>>) instead.")]
         public static IValueChecker<T> And<T>(params IValueChecker<T>[] source)
+#if NET9_0_OR_GREATER
+            where T : allows ref struct
+#endif
         {
             return new AndValueChecker<T>(source);
         }
@@ -48,6 +57,9 @@ namespace CuiLib.Checkers
         /// <param name="source">評価する関数のリスト</param>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
         public static IValueChecker<T> And<T>(params ReadOnlySpan<IValueChecker<T>> source)
+#if NET9_0_OR_GREATER
+            where T : allows ref struct
+#endif
         {
             return new AndValueChecker<T>(source);
         }
@@ -60,6 +72,9 @@ namespace CuiLib.Checkers
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
         [Obsolete($"Use Or(ReadOnlySpan<IValueChecker<T>>) instead.")]
         public static IValueChecker<T> Or<T>(params IValueChecker<T>[] source)
+#if NET9_0_OR_GREATER
+            where T : allows ref struct
+#endif
         {
             return new OrValueChecker<T>(source);
         }
@@ -70,6 +85,9 @@ namespace CuiLib.Checkers
         /// <param name="source">評価する関数のリスト</param>
         /// <exception cref="ArgumentException"><paramref name="source"/>の要素がnull</exception>
         public static IValueChecker<T> Or<T>(params ReadOnlySpan<IValueChecker<T>> source)
+#if NET9_0_OR_GREATER
+            where T : allows ref struct
+#endif
         {
             return new OrValueChecker<T>(source);
         }
